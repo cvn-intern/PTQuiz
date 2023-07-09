@@ -19,7 +19,7 @@ import { ResponseMessage } from '../decorators/responseMessage.decorator';
 import { ResTransformInterceptor } from '../interceptors/response.interceptor';
 import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
 import { JwtAuthGuard } from './guard/jwtGuard.guard';
-import { Payload, Tokens } from './types';
+import { Payload, Tokens, OAuth } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
 
@@ -27,6 +27,13 @@ import { TokenDto } from './dto/token.dto';
 @UseInterceptors(ResTransformInterceptor)
 export class AuthController {
     constructor(private authService: AuthService) {}
+
+    @Post('/oauth')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('User logged in successfully')
+    async oauth(@Body() dto: OAuth) {
+        return this.authService.OAuth(dto);
+    }
 
     @Post('/register')
     @HttpCode(HttpStatus.CREATED)

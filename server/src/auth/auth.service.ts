@@ -7,7 +7,7 @@ import { Payload } from './types/payload.type';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { MailerService } from '../mailer/mailer.service';
-import { Role, Status } from './types';
+import { Role, Status, OAuth } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
 @Injectable()
@@ -17,6 +17,74 @@ export class AuthService {
         private jwt: JwtService,
         private mailer: MailerService,
     ) {}
+
+    async OAuth(dto: OAuth) {
+        try {
+            const { authId, avatar, displayName, email, loginFrom } = dto;
+
+            let user = await this.prisma.users.findUnique({
+                where: {
+                    email: email,
+                },
+                select: {
+                    email: true,
+                    id: true,
+                    role: true,
+                    displayName: true,
+                    avatar: true,
+                    status: true,
+                },
+            });
+
+            if (!user) {
+                user = await this.prisma.users.create({
+                    data: {
+                        email: email,
+                        authId: authId,
+                        displayName: displayName,
+                        isLogin: true,
+                        role: Role.User,
+                        avatar: avatar,
+                        status: Status.Active,
+                        loginFrom: loginFrom,
+                        createdAt: new Date(),
+                    },
+                });
+            }
+
+            const payload: Payload = {
+                email: user.email,
+                id: user.id,
+                role: user.role as Role,
+                displayName: user.displayName,
+                avatar: user.avatar,
+                status: user.status,
+            };
+
+            const tokens = await this.generateTokens(payload);
+            await this.updateRefreshToken(user.id, tokens.refreshToken, true);
+
+            console.log('4', tokens);
+
+            const response = {
+                ...tokens,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    displayName: user.displayName,
+                    avatar: user.avatar,
+                    role: user.role,
+                    status: user.status,
+                },
+            };
+
+            console.log('5', response);
+            return response;
+        } catch (err) {
+            console.log('err', err);
+            throw new HttpException(err?.message, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     async register(dto: RegisterDto) {
         try {
