@@ -14,12 +14,13 @@ import {
     RefreshTokenDto,
     RegisterDto,
     ResetPasswordDto,
+    OAuthDto,
 } from './dto';
 import { ResponseMessage } from '../decorators/responseMessage.decorator';
 import { ResTransformInterceptor } from '../interceptors/response.interceptor';
 import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
 import { JwtAuthGuard } from './guard/jwtGuard.guard';
-import { Payload, Tokens, OAuth } from './types';
+import { Payload, Tokens } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
 
@@ -31,7 +32,7 @@ export class AuthController {
     @Post('/oauth')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('User logged in successfully')
-    async oauth(@Body() dto: OAuth) {
+    async oauth(@Body() dto: OAuthDto) {
         return this.authService.OAuth(dto);
     }
 

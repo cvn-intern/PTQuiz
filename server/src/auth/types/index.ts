@@ -3,4 +3,3 @@ export * from './tokens.type';
 export * from './payload.type';
 export * from './sendMail.type';
 export * from './status.enum';
-export * from './OAuth.type';

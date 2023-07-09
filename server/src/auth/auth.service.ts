@@ -1,13 +1,18 @@
 import { sendMailOptions } from './types/sendMail.type';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { RefreshTokenDto, RegisterDto, ResetPasswordDto } from './dto';
+import {
+    RefreshTokenDto,
+    RegisterDto,
+    ResetPasswordDto,
+    OAuthDto,
+} from './dto';
 import * as argon2 from 'argon2';
 import { Payload } from './types/payload.type';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { MailerService } from '../mailer/mailer.service';
-import { Role, Status, OAuth } from './types';
+import { Role, Status } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
 @Injectable()
@@ -18,7 +23,7 @@ export class AuthService {
         private mailer: MailerService,
     ) {}
 
-    async OAuth(dto: OAuth) {
+    async OAuth(dto: OAuthDto) {
         try {
             const { authId, avatar, displayName, email, loginFrom } = dto;
 
