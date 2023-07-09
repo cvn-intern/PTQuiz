@@ -1,6 +1,5 @@
 <script>
-	import FbIcon from '../icon/fbIcon.svelte';
-	import GoogeIcon from '../icon/googeIcon.svelte';
+	import Icon from '@iconify/svelte';
 </script>
 
 <section class="flex items-stretch text-white justify-center font-body">
@@ -32,6 +31,7 @@
 				<div class="pt-4">
 					<button
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
+					
 						>LOG IN</button
 					>
 				</div>
@@ -39,15 +39,26 @@
 			<div>
 				<p class="text-gray-500 text-center">or use SSO</p>
 				<div class="py-6 space-x-2 text-gray-500 flex">
-					<button class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center">
-						<FbIcon />
+					<button class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2">
+						<Icon icon="logos:facebook" class="text-2xl " />
 						<span>Facebook</span>
 					</button>
-					<button class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center">
-						<GoogeIcon />
+					<button class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2">
+						<Icon icon="flat-color-icons:google" class="text-2xl " />
 						<span>Google</span>
 					</button>
 				</div>
+			</div>
+			<div class=" text-gray-400">
+				<p>
+					Don't have an account? <a
+						class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
+						on:click={() => {
+							window.location.href = '/register';
+						}}
+						>Sign up
+						</a>
+				</p>
 			</div>
 		</div>
 	</div>

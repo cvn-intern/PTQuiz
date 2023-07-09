@@ -3,7 +3,7 @@
 </script>
 
 <footer class="bg-primary font-body flex flex-col items-center">
-	<div class="container flex flex-col gap-4 md:flex-row justify-between md:px-24 pt-4">
+	<div class="container flex flex-col gap-8 md:flex-row justify-between lg:px-24 pt-4">
 		<div class="location flex flex-col items-center gap-2">
 			<h1 class="text-xl font-bold">Our Location</h1>
 			<div class="flex flex-col gap-2">
@@ -26,7 +26,7 @@
 		</div>
 		<div class="about flex flex-col items-center gap-2">
 			<h1 class="text-xl font-bold">About Us</h1>
-			<div class="flex flex-col gap-2 r">
+			<div class="flex flex-col gap-2">
 				<p class="cursor-pointer">About us</p>
 				<p class="cursor-pointer">Help</p>
 				<p class="cursor-pointer">FAQS</p>
@@ -43,5 +43,5 @@
 			</div>
 		</div>
 	</div>
-	<div class="copyright flex justify-center">Copyrights by DarkHorse 2023</div>
+	<div class="copyright flex justify-center text-black font-semibold">Copyrights by DarkHorse 2023</div>
 </footer>

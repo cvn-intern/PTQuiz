@@ -53,9 +53,12 @@
 				<div class=" text-gray-400">
 					<p>
 						Already have an account? <a
-							href="#"
-							class="text-secondary hover:underline hover:text-darkGreen">Log In</a
-						>
+							class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
+							on:click={() => {
+								window.location.href = '/login';
+							}}
+							>Log In
+							</a>
 					</p>
 				</div>
 			</div>

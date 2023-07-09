@@ -16,7 +16,7 @@
 	import Icon from '@iconify/svelte';
 </script>
 
-<nav class="navbar bg-primary flex justify-between px-2 md:px-16 py-4 items-center">
+<nav class="navbar bg-primary flex justify-between px-2 lg:px-16 py-4 items-center">
 	<a class="logo" href="/">
 		<h1 class="text-3xl font-bold font-title text-darkGreen">PentaQuiz</h1>
 	</a>
@@ -31,6 +31,9 @@
 		<div class="flex gap-2">
 			<button
 				class="py-2 px-6 bg-secondary rounded-lg text-xl text-white font-body hover:bg-buttonHover"
+				on:click={() => {
+					window.location.href = '/login';
+				}}
 			>
 				Login
 			</button>
