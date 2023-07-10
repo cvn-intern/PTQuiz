@@ -3,11 +3,11 @@
   ### User Registration and Authentication
   Allow users to register and log in to the app to access the quiz game.
   ### Forgot Password
-  In case a user forgets their password, our app provides a convenient password reset feature. Users can request a password reset by entering their email address. They will receive an email containing a unique link to reset their password. By clicking on the link, users will be directed to a page where they can securely enter a new password of their choice.
+  If user forgets password, our app provides a convenient password reset feature. Users can request a password reset by entering their email address. They will receive an email containing a unique link to reset their password. By clicking on the link, users will be directed to a page where they can securely enter a new password of their choice.
   ### Quiz Categories
-  Users should be able to choose from a variety of quiz categories (e.g., Science, History, Math, ...). 
+  Users can choose from a variety of quiz categories (e.g., Science, History, Math, ...). 
   ### Clone the Quiz
-  Logged-in users should have the option to clone a public quiz, which will then be saved in their quizzes.
+  Logged-in users can clone a public quiz, which will then be saved in their quizzes.
   ### Create Quiz
   Users can create a quiz containing a list of questions. They should also be able to add tags to the quiz, which can be used for searching within categories.
   ### Create the question in a quiz
@@ -21,7 +21,7 @@
   ### Question Display
   Present participants with questions, one at a time, during gameplay.
   ### Answer Submission and Scoring
-  Participants should be able to select and submit an answer for each question. The app will keep track of the participant’s score as they progress through the question.
+  Participants can select and submit an answer for each question. The app will keep track of the participant’s score as they progress through the question.
   ### Progress and Results
   Display the user's progress (e.g., questions answered, remaining) and the final score upon completion.
   ### Leaderboard
@@ -31,13 +31,13 @@
 
 ## II/ Non-functional Requirements
   ### Performance
-  The app should respond quickly to user inputs and load questions without noticeable delay.
+  The app can respond quickly to user inputs and load questions without noticeable delay.
   ### Scalability
-  The system should be able to handle a large number of concurrent users without degradation in performance. (100 users in time)
+  The system can handle a large number of concurrent users without degradation in performance. (100 users in time)
   ### Security
   Users only access one device at a time. 
   ### Cross-platform Compatibility
-The app should work across various devices and browsers.
+The app can work across various devices and browsers.
 
 ## III/ Target users
 The target users are individuals who enjoy online games, specifically those that test knowledge or allow for learning new information in a fun and competitive way. This may include students, educators, trivia enthusiasts,...
