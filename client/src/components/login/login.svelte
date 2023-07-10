@@ -3,7 +3,7 @@
 </script>
 
 <section class="flex items-stretch text-white justify-center font-body">
-	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
+	<div class="w-[446px] rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
 			<h1 class=" text-secondary text-[20px] font-bold">Login to your Account</h1>
 			<form class="w-full px-4 lg:px-0 mx-auto" on:submit|preventDefault>
@@ -31,7 +31,6 @@
 				<div class="pt-4">
 					<button
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
-					
 						>LOG IN</button
 					>
 				</div>
@@ -39,11 +38,15 @@
 			<div>
 				<p class="text-gray-500 text-center">or use SSO</p>
 				<div class="py-6 space-x-2 text-gray-500 flex">
-					<button class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2">
+					<button
+						class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
+					>
 						<Icon icon="logos:facebook" class="text-2xl " />
 						<span>Facebook</span>
 					</button>
-					<button class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2">
+					<button
+						class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
+					>
 						<Icon icon="flat-color-icons:google" class="text-2xl " />
 						<span>Google</span>
 					</button>
@@ -57,7 +60,7 @@
 							window.location.href = '/register';
 						}}
 						>Sign up
-						</a>
+					</a>
 				</p>
 			</div>
 		</div>
