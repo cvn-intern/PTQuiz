@@ -1,13 +1,11 @@
 import 'firebase/auth';
-import { writable } from 'svelte/store';
-
-export const authResultStore = writable(null);
+import axios from 'axios';
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyA2unT_jGPlEJIT_UfsZeIg4KC1IihUp10',
-	authDomain: 'oauth---ptquiz.firebaseapp.com',
-	projectId: 'oauth---ptquiz',
-	storageBucket: 'oauth---ptquiz.appspot.com'
+	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+	authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+	projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
+	storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET
 };
 
 async function initializeFirebase(firebase) {
@@ -15,7 +13,6 @@ async function initializeFirebase(firebase) {
 }
 
 const uiConfig = (firebase) => ({
-	signInSuccessUrl: 'http://localhost:5173/',
 	signInOptions: [
 		firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 		firebase.auth.GithubAuthProvider.PROVIDER_ID,
@@ -25,45 +22,21 @@ const uiConfig = (firebase) => ({
 	callbacks: {
 		signInSuccessWithAuthResult: function (authResult) {
 			const { credential, user } = authResult;
-			fetch('http://localhost:8080/api/auth/oauth/', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					authId: user.uid,
-					email: user.email,
-					displayName: user.displayName,
-					avatar: user.photoURL,
-					loginFrom: credential.providerId
-				})
-			}).then((res) => {
-				console.log(res);
-				localStorage.setItem('accessToken', res.data.accessToken);
-				localStorage.setItem('refreshToken', res.data.refreshToken);
-			});
-
-			return false;
-		}
-	}
-});
-
-authResultStore.subscribe(async (authResult) => {
-	if (authResult) {
-		const { credential, user } = authResult;
-		fetch('http://localhost:8080/api/auth/oauth/', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
+			const request = axios.post(`${import.meta.env.VITE_HOST_BACKEND}/api/auth/oauth/`, {
 				authId: user.uid,
 				email: user.email,
 				displayName: user.displayName,
 				avatar: user.photoURL,
 				loginFrom: credential.providerId
-			})
-		}).then((res) => {
-			console.log(res);
-			localStorage.setItem('accessToken', res.data.accessToken);
-			localStorage.setItem('refreshToken', res.data.refreshToken);
-		});
+			});
+			request.then((res) => {
+				localStorage.setItem('accessToken', res.data.data.accessToken);
+				localStorage.setItem('refreshToken', res.data.data.refreshToken);
+				window.location.href = import.meta.env.VITE_HOST_FRONTEND;
+			});
+
+			return false;
+		}
 	}
 });
 

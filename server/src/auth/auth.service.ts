@@ -69,9 +69,7 @@ export class AuthService {
             const tokens = await this.generateTokens(payload);
             await this.updateRefreshToken(user.id, tokens.refreshToken, true);
 
-            console.log('4', tokens);
-
-            const response = {
+            return {
                 ...tokens,
                 user: {
                     id: user.id,
@@ -82,11 +80,7 @@ export class AuthService {
                     status: user.status,
                 },
             };
-
-            console.log('5', response);
-            return response;
         } catch (err) {
-            console.log('err', err);
             throw new HttpException(err?.message, HttpStatus.BAD_REQUEST);
         }
     }
