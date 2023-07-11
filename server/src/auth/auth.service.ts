@@ -10,6 +10,7 @@ import { MailerService } from '../mailer/mailer.service';
 import { Role, Status } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
+import { Error, JwtError } from '../error';
 @Injectable()
 export class AuthService {
     constructor(
@@ -127,7 +128,7 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    'Invalid token',
+                    JwtError.INVALID_TOKEN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -464,12 +465,15 @@ export class AuthService {
     }
 }
 
-export const exceptionHandler = (err: any) => {
-    if (err.name === 'JsonWebTokenError' || err.name === 'SyntaxError') {
-        throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
-    } else if (err.name === 'TokenExpiredError') {
-        throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
+export const exceptionHandler = (err: Error) => {
+    if (
+        err.name === JwtError.JSON_WEB_TOKEN_ERROR ||
+        err.name === JwtError.SYNTAX_ERROR
+    ) {
+        throw new HttpException(JwtError.INVALID_TOKEN, HttpStatus.BAD_REQUEST);
+    } else if (err.name === JwtError.TOKEN_EXPIRED_ERROR) {
+        throw new HttpException(JwtError.EXPIRED_TOKEN, HttpStatus.BAD_REQUEST);
     } else {
-        throw new HttpException(err?.message, HttpStatus.BAD_REQUEST);
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
     }
 };

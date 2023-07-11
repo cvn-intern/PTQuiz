@@ -21,7 +21,6 @@ export class MailerService {
 
     async sendMail(sendMail: sendMailOptions) {
         const { to, subject, displayName, token, type } = sendMail;
-        // const text = this.textBuilder(displayName, token, type);
         let text = '';
         let url = '';
         if (type === 'confirm') {
