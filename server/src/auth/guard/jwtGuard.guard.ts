@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Status } from '../types';
+import { JwtError } from '../../error';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
     constructor(private jwt: JwtService) {}
@@ -26,7 +27,10 @@ export class JwtAuthGuard implements CanActivate {
             request.user = payload;
             return true;
         } catch (error) {
-            throw new UnauthorizedException('Access token expired');
+            if (error.name === 'TokenExpiredError') {
+                throw new UnauthorizedException(JwtError.ACCESS_TOKEN_EXPIRED);
+            }
+            throw new UnauthorizedException(JwtError.INVALID_TOKEN);
         }
     }
 
