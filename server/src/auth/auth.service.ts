@@ -6,6 +6,7 @@ import {
     RegisterDto,
     ResetPasswordDto,
     OAuthDto,
+    ChangePasswordDto,
 } from './dto';
 import * as argon2 from 'argon2';
 import { Payload } from './types/payload.type';
@@ -422,6 +423,57 @@ export class AuthService {
                     role: updatedUser.role,
                     status: updatedUser.status,
                 },
+            };
+        } catch (err) {
+            return exceptionHandler(err);
+        }
+    }
+
+    async changePassword(dto: ChangePasswordDto, userId: string) {
+        try {
+            const { oldPassword, newPassword, confirmNewPassword } = dto;
+            if (newPassword !== confirmNewPassword) {
+                throw new HttpException(
+                    'Password do not match confirm password',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const user = await this.prisma.users.findUnique({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    id: true,
+                    password: true,
+                },
+            });
+            if (!user) {
+                throw new HttpException(
+                    'User not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const isPasswordValid = await this.verifyHash(
+                user.password,
+                oldPassword,
+            );
+            if (!isPasswordValid) {
+                throw new HttpException(
+                    'Old password is not valid',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const hashedPassword = await this.hashData(newPassword);
+            await this.prisma.users.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    password: hashedPassword,
+                },
+            });
+            return {
+                message: 'Password changed successfully',
             };
         } catch (err) {
             return exceptionHandler(err);
