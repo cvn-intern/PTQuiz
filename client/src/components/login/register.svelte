@@ -1,12 +1,12 @@
 <script>
 </script>
 
-<section class="flex items-stretch justify-center font-body">
+<section class="flex justify-center">
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
 			<h1 class=" text-secondary text-[20px] font-bold">Sign up</h1>
-			<form class="w-full px-4 lg:px-0 mx-auto " on:submit|preventDefault>
-				<div class="py-4 ">
+			<form class="w-full px-4 lg:px-0 mx-auto" on:submit|preventDefault>
+				<div class="py-4">
 					<input
 						type="text"
 						name="username"
@@ -58,7 +58,7 @@
 								window.location.href = '/login';
 							}}
 							>Log In
-							</a>
+						</a>
 					</p>
 				</div>
 			</div>

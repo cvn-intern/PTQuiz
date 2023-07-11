@@ -3,8 +3,3 @@
 </script>
 
 <LandingPage />
-
-<style lang="postcss">
-	:global(html) {
-	}
-</style>
