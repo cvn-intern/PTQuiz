@@ -1,10 +1,11 @@
 <script>
 	import LandingPage from "../components/landingPage/landingPage.svelte";
-	import Category from "../components/discovery/category.svelte";
+	import Discovery from "../components/discovery/discovery.svelte";
 </script>
 
 <!-- <LandingPage/> -->
-<Category/>
+<Discovery/>
+
 <style lang="postcss">
 	:global(html) {
 		background-color: theme(colors.gray.100);

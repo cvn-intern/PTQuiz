@@ -5,5 +5,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
+html {
+	height: 100%;
+	font-family: 'Sora', sans-serif;
+}
+body {
+	min-height: 100vh;
+}

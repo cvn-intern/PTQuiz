@@ -1,7 +1,12 @@
 import { sendMailOptions } from './types/sendMail.type';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { RefreshTokenDto, RegisterDto, ResetPasswordDto } from './dto';
+import {
+    RefreshTokenDto,
+    RegisterDto,
+    ResetPasswordDto,
+    OAuthDto,
+} from './dto';
 import * as argon2 from 'argon2';
 import { Payload } from './types/payload.type';
 import { JwtService } from '@nestjs/jwt';
@@ -10,6 +15,7 @@ import { MailerService } from '../mailer/mailer.service';
 import { Role, Status } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
+import { Error, JwtError } from '../error';
 @Injectable()
 export class AuthService {
     constructor(
@@ -17,6 +23,68 @@ export class AuthService {
         private jwt: JwtService,
         private mailer: MailerService,
     ) {}
+
+    async OAuth(dto: OAuthDto) {
+        try {
+            const { authId, avatar, displayName, email, loginFrom } = dto;
+
+            let user = await this.prisma.users.findUnique({
+                where: {
+                    email: email,
+                },
+                select: {
+                    email: true,
+                    id: true,
+                    role: true,
+                    displayName: true,
+                    avatar: true,
+                    status: true,
+                },
+            });
+
+            if (!user) {
+                user = await this.prisma.users.create({
+                    data: {
+                        email: email,
+                        authId: authId,
+                        displayName: displayName,
+                        isLogin: true,
+                        role: Role.User,
+                        avatar: avatar,
+                        status: Status.Active,
+                        loginFrom: loginFrom,
+                        createdAt: new Date(),
+                    },
+                });
+            }
+
+            const payload: Payload = {
+                email: user.email,
+                id: user.id,
+                role: user.role as Role,
+                displayName: user.displayName,
+                avatar: user.avatar,
+                status: user.status,
+            };
+
+            const tokens = await this.generateTokens(payload);
+            await this.updateRefreshToken(user.id, tokens.refreshToken, true);
+
+            return {
+                ...tokens,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    displayName: user.displayName,
+                    avatar: user.avatar,
+                    role: user.role,
+                    status: user.status,
+                },
+            };
+        } catch (err) {
+            throw new HttpException(err?.message, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     async register(dto: RegisterDto) {
         try {
@@ -127,7 +195,7 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    'Invalid token',
+                    JwtError.INVALID_TOKEN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -464,12 +532,15 @@ export class AuthService {
     }
 }
 
-export const exceptionHandler = (err: any) => {
-    if (err.name === 'JsonWebTokenError' || err.name === 'SyntaxError') {
-        throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
-    } else if (err.name === 'TokenExpiredError') {
-        throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
+export const exceptionHandler = (err: Error) => {
+    if (
+        err.name === JwtError.JSON_WEB_TOKEN_ERROR ||
+        err.name === JwtError.SYNTAX_ERROR
+    ) {
+        throw new HttpException(JwtError.INVALID_TOKEN, HttpStatus.BAD_REQUEST);
+    } else if (err.name === JwtError.TOKEN_EXPIRED_ERROR) {
+        throw new HttpException(JwtError.EXPIRED_TOKEN, HttpStatus.BAD_REQUEST);
     } else {
-        throw new HttpException(err?.message, HttpStatus.BAD_REQUEST);
+        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
     }
 };

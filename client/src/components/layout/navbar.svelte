@@ -16,12 +16,12 @@
 	import Icon from '@iconify/svelte';
 </script>
 
-<nav class="navbar bg-primary flex justify-between px-2 md:px-16 py-4 items-center">
+<nav class="navbar bg-primary w-full flex justify-between px-2 lg:px-16 py-4 items-center">
 	<a class="logo" href="/">
 		<h1 class="text-3xl font-bold font-title text-darkGreen">PentaQuiz</h1>
 	</a>
 	<div class="flex items-center gap-24">
-		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-body">
+		<ul class="hidden md:flex gap-2 md:gap-8 text-xl">
 			{#each navs as { title, href }}
 				<li>
 					<a {href} {title} class="hover:font-bold">{title}</a>
@@ -30,7 +30,10 @@
 		</ul>
 		<div class="flex gap-2">
 			<button
-				class="py-2 px-6 bg-secondary rounded-lg text-xl text-white font-body hover:bg-buttonHover"
+				class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover"
+				on:click={() => {
+					window.location.href = '/login';
+				}}
 			>
 				Login
 			</button>
