@@ -1,0 +1,174 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model users {
+    id String @id @default(cuid())
+
+    displayName String
+    password    String?
+    email       String  @unique
+    avatar      String? @db.Text
+    isLogin     Boolean
+    role        String
+    status      Int
+    authId      String?
+    loginFrom   String?
+    token       String? @db.Text
+
+    questions    questions[]
+    quizzes      quizzes[]
+    participants participants[]
+    rooms        rooms[]
+
+    createdAt      DateTime         @default(now())
+    updatedAt      DateTime         @updatedAt
+    user_questions user_questions[]
+}
+
+model questions {
+    id         String @id @default(cuid())
+    userId     String // owner
+    categoryId String
+
+    title   String  @db.Text
+    options String  @db.Text // ['a. answer1','b. answer2','c. answer3','d. answer4'] 
+    answers String  @db.Text // ['a','b','c','d']
+    image   String? @db.Text
+    type    Int
+
+    quizQuestions quiz_questions[]
+    user          users            @relation(fields: [userId], references: [id]) // owner
+    category      categories       @relation(fields: [categoryId], references: [id])
+
+    createdAt      DateTime         @default(now())
+    updatedAt      DateTime         @updatedAt
+    user_questions user_questions[]
+}
+
+model quizzes {
+    id     String @id @default(cuid())
+    userId String // owner
+
+    title           String   @db.Text
+    numberQuestions Int
+    description     String   @db.Text
+    image           String   @db.Text
+    durationMins    Int
+    isRandom        Boolean
+    isRandomOption  Boolean
+    attempts        Int
+    point           Int
+    passingPoint    Int
+    passed          Boolean
+    difficultyLevel Int      @default(0)
+    startDate       DateTime
+    endDate         DateTime
+    isActivated     Boolean
+    isShared        Boolean
+
+    user          users            @relation(fields: [userId], references: [id])
+    quizQuestions quiz_questions[]
+    participants  participants[]
+    room          rooms[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model categories {
+    id       String  @id @default(cuid())
+    parentId String?
+
+    name      String
+    icon      String @db.Text
+    status    Int    @default(1)
+    sortOrder Int    @default(0)
+
+    questions questions[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model quiz_questions {
+    id         String @id @default(cuid())
+    quizId     String
+    questionId String
+    sortOrder  Int
+
+    quiz     quizzes   @relation(fields: [quizId], references: [id])
+    question questions @relation(fields: [questionId], references: [id])
+}
+
+model participants {
+    id     String @id @default(cuid())
+    userId String
+    quizId String
+
+    questions    Int?
+    correct      Int?
+    totalAttempt Int       @default(1)
+    point        Int
+    startedAt    DateTime  @default(now())
+    completedAt  DateTime?
+
+    user                 users               @relation(fields: [userId], references: [id])
+    quiz                 quizzes             @relation(fields: [quizId], references: [id])
+    participantQuestions user_questions[]
+    roomParticipants     room_participants[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model user_questions {
+    id            String @id @default(cuid())
+    userId        String
+    participantId String
+    questionId    String
+
+    question     String
+    image        String?  @db.Text
+    options      String   @db.Text
+    correct      String   @db.Text
+    givenAnswers String   @db.Text
+    score        Int
+    timestamp    DateTime
+
+    participant participants? @relation(fields: [participantId], references: [id])
+    host        users         @relation(fields: [userId], references: [id])
+    questionRef questions     @relation(fields: [questionId], references: [id])
+}
+
+model rooms {
+    id     String @id @default(cuid())
+    PIN    String
+    userId String
+    quizId String
+
+    count     Int
+    isStarted Boolean
+    isPublic  Boolean
+    type      Int
+
+    host              users               @relation(fields: [userId], references: [id])
+    quiz              quizzes             @relation(fields: [quizId], references: [id])
+    room_participants room_participants[]
+
+    createdAt DateTime @default(now())
+}
+
+model room_participants {
+    id            String @id @default(cuid())
+    roomId        String
+    participantId String
+
+    participant participants @relation(fields: [participantId], references: [id])
+    room        rooms        @relation(fields: [roomId], references: [id])
+}
