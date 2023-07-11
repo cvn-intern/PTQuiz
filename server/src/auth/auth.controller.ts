@@ -14,6 +14,7 @@ import {
     RefreshTokenDto,
     RegisterDto,
     ResetPasswordDto,
+    OAuthDto,
 } from './dto';
 import { ResponseMessage } from '../decorators/responseMessage.decorator';
 import { ResTransformInterceptor } from '../interceptors/response.interceptor';
@@ -27,6 +28,13 @@ import { TokenDto } from './dto/token.dto';
 @UseInterceptors(ResTransformInterceptor)
 export class AuthController {
     constructor(private authService: AuthService) {}
+
+    @Post('/oauth')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('User logged in successfully')
+    async oauth(@Body() dto: OAuthDto) {
+        return this.authService.OAuth(dto);
+    }
 
     @Post('/register')
     @HttpCode(HttpStatus.CREATED)
