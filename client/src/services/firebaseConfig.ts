@@ -1,5 +1,7 @@
 import 'firebase/auth';
-import axios from 'axios';
+import { apiNoAuth } from '../utils/api';
+import { tokens } from '../stores/token';
+import { get } from 'svelte/store';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,21 +22,30 @@ const uiConfig = (firebase) => ({
 	],
 	signInFlow: 'popup',
 	callbacks: {
-		signInSuccessWithAuthResult: function (authResult) {
+		signInSuccessWithAuthResult: async function (authResult: any) {
 			const { credential, user } = authResult;
-			const request = axios.post(`${import.meta.env.VITE_HOST_BACKEND}/api/auth/oauth/`, {
+			const { data } = await apiNoAuth.post('/auth/oauth', {
 				authId: user.uid,
 				email: user.email,
 				displayName: user.displayName,
 				avatar: user.photoURL,
 				loginFrom: credential.providerId
 			});
-			request.then((res) => {
-				localStorage.setItem('accessToken', res.data.data.accessToken);
-				localStorage.setItem('refreshToken', res.data.data.refreshToken);
-				window.location.href = import.meta.env.VITE_HOST_FRONTEND;
-			});
 
+			if (data.statusCode === 200) {
+				tokens.update((tokens) => {
+					return {
+						...tokens,
+						accessToken: data.data.accessToken,
+						refreshToken: data.data.refreshToken
+					};
+				});
+
+				return {
+					status: 'Success',
+					message: data.message
+				};
+			}
 			return false;
 		}
 	}

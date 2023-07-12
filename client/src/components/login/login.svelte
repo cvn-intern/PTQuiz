@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { goto } from '$app/navigation';
+	import OAuth from '../OAuth.svelte';
 </script>
 
 <section class="flex text-white justify-center">
@@ -41,6 +42,7 @@
 				</div>
 			</form>
 			<div>
+				<OAuth />
 				<div class="py-6 space-x-2 text-gray-500 flex">
 					<button
 						class=" border-gray-200 border p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
