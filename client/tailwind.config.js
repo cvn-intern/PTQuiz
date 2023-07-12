@@ -32,7 +32,14 @@ export default {
 			},
 			loginWidth: {
 				panel: '446px'
-			}
+			},
+			width : {
+				desktop : '20rem',
+				ipad : '16rem',
+				mobile : '12rem'
+			},
+
+			
 		}
 	},
 	plugins: [require('flowbite/plugin')],

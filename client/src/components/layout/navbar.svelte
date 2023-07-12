@@ -10,7 +10,7 @@
 		},
 		{
 			title: 'Dashboard',
-			href: '/'
+			href: '/dashboard'
 		}
 	];
 	import Icon from '@iconify/svelte';
@@ -37,7 +37,7 @@
 			>
 				Login
 			</button>
-			<Icon icon="material-symbols:list" class="text-5xl md:hidden" />
+			<Icon icon="material-symbols:list" class="text-5xl md:hidden" on:click={()=>{}} />
 		</div>
 	</div>
 </nav>
