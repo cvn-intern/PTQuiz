@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 </script>
 
 <section class="flex justify-center">
@@ -52,13 +53,13 @@
 			<div>
 				<div class=" text-gray-400">
 					<p>
-						Already have an account? <a
+						Already have an account? <button
 							class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 							on:click={() => {
-								window.location.href = '/login';
+								goto('/login');
 							}}
 							>Log In
-						</a>
+						</button>
 					</p>
 				</div>
 			</div>
