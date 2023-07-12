@@ -8,5 +8,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
     cookies.delete("refreshToken", {
         path: '/'
     });
-    throw redirect(303, '/login');
+    return new Response(JSON.stringify({ message: "Logout success" }), {
+        status: 200,
+    })
 }

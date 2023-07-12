@@ -6,7 +6,7 @@
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
 			<h1 class=" text-secondary text-[20px] font-bold">Sign up</h1>
-			<form class="w-full px-4 lg:px-0 mx-auto" on:submit|preventDefault>
+			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="?/register">
 				<div class="py-4">
 					<input
 						type="text"

@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+	import { goto, invalidateAll } from '$app/navigation';
+	export let user;
 	const navs = [
 		{
 			title: 'Home',
@@ -14,6 +16,14 @@
 		}
 	];
 	import Icon from '@iconify/svelte';
+
+	const logout = async () => {
+		console.log('logout');
+		const response = await fetch('/api/auth/logout');
+		if (response.status === 200) {
+			invalidateAll();
+		}
+	};
 </script>
 
 <nav class="navbar bg-primary w-full flex justify-between px-2 lg:px-16 py-4 items-center">
@@ -28,15 +38,28 @@
 				</li>
 			{/each}
 		</ul>
-		<div class="flex gap-2">
-			<button
-				class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover"
-				on:click={() => {
-					window.location.href = '/login';
-				}}
-			>
-				Login
-			</button>
+		<div class="flex gap-2 items-center">
+			{#if user}
+				<div class="w-16">
+					<img src={user.avatar} alt="" />
+				</div>
+				<div class="">
+					<button
+						on:click={logout}
+						class="uppercase w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
+						>LOG OUT</button
+					>
+				</div>
+			{:else}
+				<button
+					class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover"
+					on:click={() => {
+						window.location.href = '/login';
+					}}
+				>
+					Login
+				</button>
+			{/if}
 			<Icon icon="material-symbols:list" class="text-5xl md:hidden" />
 		</div>
 	</div>

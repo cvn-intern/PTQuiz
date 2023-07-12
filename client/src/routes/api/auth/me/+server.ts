@@ -7,10 +7,17 @@ export const GET: RequestHandler = async ({ fetch, cookies }) => {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : `Bearer ${accessToken}`
+            'Authorization': `Bearer ${accessToken}`
         },
     })
     const result = await response.json();
-    if(result.error) throw error(400, result.error.message)
-    return json(result.data)
+    if (response.status === 200) {
+        return new Response(JSON.stringify(result.data), {
+            status: 200,
+        })
+    } else {
+        return new Response(JSON.stringify(result.message), {
+            status: 401,
+        });
+    }
 }

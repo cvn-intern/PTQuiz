@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
     // get data from request
     const data = await request.json();
-    const response = await fetch('http://localhost:8080/api/auth/login', {
+    const response = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -15,13 +15,7 @@ export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
     });
     const result = await response.json();
     if (response.status === 200) {
-        cookies.set('accessToken', result.data.accessToken, {
-            path: '/'
-        });
-        cookies.set('refreshToken', result.data.refreshToken, {
-            path: '/'
-        });
-        return new Response(JSON.stringify(result.data.user), {
+        return new Response(JSON.stringify(result.message), {
             status: 200,
         });
     } else {

@@ -1,13 +1,18 @@
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({fetch, url}) => {
+export const load: LayoutServerLoad = async ({ fetch }) => {
     const response = await fetch('/api/auth/me');
-    if(response.ok) {
-        const result = await response.json()
-        const {iat, exp, ...user} = result;
+    const result = await response.json()
+    if (response.status === 200) {
+        const { iat, exp, ...user } = result;
         return {
-            status : 200,
+            status: 'Success',
             user
         };
+    } else {
+        return {
+            status: 'Error',
+            user: null
+        }
     }
 }
