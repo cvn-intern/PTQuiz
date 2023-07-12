@@ -14,11 +14,12 @@ export const POST: RequestHandler = async ({ request, fetch, cookies }) => {
 	if (result.error) {
 		throw error(500, result.error.response);
 	}
-	cookies.set('accessToken', result.data.accessToken, {
+	await cookies.set('accessToken', result.data.accessToken, {
 		path: '/'
 	});
-	cookies.set('refreshToken', result.data.refreshToken, {
+	await cookies.set('refreshToken', result.data.refreshToken, {
 		path: '/'
 	});
+	console.log('result', result);
 	return json(result);
 };

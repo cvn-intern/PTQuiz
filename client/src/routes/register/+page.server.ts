@@ -1,23 +1,8 @@
-import { tokens } from '../../stores/token';
-import { getMe } from '../../utils/auth';
-import { createAPI } from '../../+server';
-
-export const load = async (request) => {
-	const { apiNoAuth, apiWithAuth } = createAPI(request);
-
-	const response = await apiWithAuth.get('/auth/me');
-	const result = response.data;
-
-	return {
-		props: {
-			user: result?.data
-		}
-	};
-
-	// const result = await getMe();
-	// return {
-	// 	props: {
-	// 		user: result?.data
-	// 	}
-	// };
+export const actions = {
+	register: async ({ fetch, request }) => {
+		const formData = await request.formData();
+		console.log(formData);
+	}
 };
+
+// export const load = async (request) => {};

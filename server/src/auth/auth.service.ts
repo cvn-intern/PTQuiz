@@ -431,8 +431,8 @@ export class AuthService {
 
     async changePassword(dto: ChangePasswordDto, userId: string) {
         try {
-            const { oldPassword, newPassword, confirmNewPassword } = dto;
-            if (newPassword !== confirmNewPassword) {
+            const { oldPassword, newPassword, confirmPassword } = dto;
+            if (newPassword !== confirmPassword) {
                 throw new HttpException(
                     'Password do not match confirm password',
                     HttpStatus.BAD_REQUEST,
@@ -445,11 +445,18 @@ export class AuthService {
                 select: {
                     id: true,
                     password: true,
+                    loginFrom: true,
                 },
             });
             if (!user) {
                 throw new HttpException(
                     'User not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.loginFrom !== null) {
+                throw new HttpException(
+                    'You are using OAuth, please change password in your OAuth account',
                     HttpStatus.BAD_REQUEST,
                 );
             }

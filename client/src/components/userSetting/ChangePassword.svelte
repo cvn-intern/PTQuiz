@@ -1,61 +1,50 @@
-<script>
-	let oldPassword = '';
-	let newPassword = '';
-	let confirmNewPassword = '';
-
-	function changePassword() {
-		// Logic to change password
-	}
-
-	function cancel() {
-		// Logic to cancel password change
-	}
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	export let form;
 </script>
 
 <div class="flex flex-col items-center">
-	<form action="" method="post" class="items-center flex flex-col gap-5">
+	{#if form?.error}
+		<p>{form.error}</p>
+	{/if}
+
+	<form
+		method="POST"
+		action="?/change_password"
+		use:enhance
+		class="items-center flex flex-col gap-5"
+	>
 		<div class="">
-			<label for="username" class="mb-1">Username</label>
+			<label for="oldPassword" class="mb-1">Old password</label>
 			<input
-				id="username"
+				id="oldPassword"
+				name="oldPassword"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-				disabled
-				placeholder="Username"
+				placeholder="Old password"
+				type="password"
 			/>
 
-			<label for="email" class="mb-1">Email</label>
+			<label for="newPassword" class="mb-1">New password</label>
 			<input
-				id="email"
+				id="newPassword"
+				name="newPassword"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-				disabled
-				placeholder="Email"
+				placeholder="New password"
+				type="password"
 			/>
 
-			<label for="displayName" class="mb-1">Display name</label>
+			<label for="confirmPassword" class="mb-1">Confirm new password</label>
 			<input
-				id="displayName"
+				id="confirmPassword"
+				name="confirmPassword"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-				placeholder="Display name"
+				placeholder="Confirm new password"
+				type="password"
 			/>
 		</div>
+		<div class="flex justify-end space-x-2">
+			<button class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800">Cancel</button>
+			<button class="px-4 py-2 rounded-lg bg-blue-500 text-white" type="submit">Save</button>
+		</div>
 	</form>
-
-	<div class="flex justify-end space-x-2">
-		<button class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800" on:click={cancel}
-			>Cancel</button
-		>
-		<button class="px-4 py-2 rounded-lg bg-blue-500 text-white" on:click={changePassword}
-			>Save</button
-		>
-	</div>
 </div>
-
-<style>
-	.tab-button {
-		border-bottom: 2px solid transparent;
-	}
-
-	.tab-button.active {
-		border-bottom-color: #48bb78;
-	}
-</style>

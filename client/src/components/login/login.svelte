@@ -43,20 +43,6 @@
 			</form>
 			<div>
 				<OAuth />
-				<div class="py-6 space-x-2 text-gray-500 flex">
-					<button
-						class=" border-gray-200 border p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
-					>
-						<Icon icon="logos:facebook" class="text-2xl " />
-						<span>Facebook</span>
-					</button>
-					<button
-						class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
-					>
-						<Icon icon="flat-color-icons:google" class="text-2xl " />
-						<span>Google</span>
-					</button>
-				</div>
 			</div>
 			<div class=" text-gray-400">
 				<div>

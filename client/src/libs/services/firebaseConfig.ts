@@ -12,6 +12,7 @@ async function initializeFirebase(firebase) {
 }
 
 const uiConfig = (firebase) => ({
+	// signInSuccessUrl: '',
 	signInOptions: [
 		firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 		firebase.auth.GithubAuthProvider.PROVIDER_ID,
@@ -19,9 +20,10 @@ const uiConfig = (firebase) => ({
 	],
 	signInFlow: 'popup',
 	callbacks: {
-		signInSuccessWithAuthResult: async function (authResult: any) {
+		signInSuccessWithAuthResult: function (authResult) {
 			const { credential, user } = authResult;
-			await fetch('/api/auth/oauth', {
+
+			return fetch('/api/auth/oauth', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -33,9 +35,17 @@ const uiConfig = (firebase) => ({
 					avatar: user.photoURL,
 					loginFrom: credential.providerId
 				})
-			}).then((res) => {
-				if (res.status === 200) window.location.href = '/';
-			});
+			})
+				.then((res) => {
+					if (res.status === 200) {
+						window.location.href = '/';
+					}
+					return false;
+				})
+				.catch((err) => {
+					console.error(err);
+					return false;
+				});
 		}
 	}
 });
