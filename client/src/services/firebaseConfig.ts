@@ -2,6 +2,7 @@ import 'firebase/auth';
 import { apiNoAuth } from '../utils/api';
 import { tokens } from '../stores/token';
 import { get } from 'svelte/store';
+import cookies from 'js-cookie';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -32,21 +33,20 @@ const uiConfig = (firebase) => ({
 				loginFrom: credential.providerId
 			});
 
-			if (data.statusCode === 200) {
-				tokens.update((tokens) => {
-					return {
-						...tokens,
-						accessToken: data.data.accessToken,
-						refreshToken: data.data.refreshToken
-					};
-				});
+			console.log('data', data);
 
-				return {
-					status: 'Success',
-					message: data.message
-				};
-			}
-			return false;
+			cookies.remove('accessToken');
+			cookies.remove('refreshToken');
+
+			cookies.set('accessToken', data.data.accessToken);
+			cookies.set('refreshToken', data.data.refreshToken);
+
+			return {
+				status: 'Success',
+				message: data.message
+			};
+			// }
+			// return false;
 		}
 	}
 });

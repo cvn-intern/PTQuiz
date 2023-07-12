@@ -18,7 +18,12 @@ const apiWithAuth = axios.create({
 
 apiWithAuth.interceptors.request.use(
 	(config) => {
-		const accessToken = get(tokens).accessToken;
+		const cookie = document.cookie;
+		const accessToken = cookie
+			.split('; ')
+			.find((row) => row.startsWith('accessToken'))
+			.split('=')[1];
+		console.log('cookie', cookie);
 		if (accessToken) {
 			config.headers.Authorization = `Bearer ${accessToken}`;
 		}

@@ -6,8 +6,9 @@
 	export let data;
 
 	onMount(async () => {
-		const result = await getMe()
-		console.log(result)
+		// const result = await getMe();
+		// console.log(result);
+		console.log(data);
 	});
 </script>
 

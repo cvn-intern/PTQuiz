@@ -8,16 +8,10 @@ export const login = async (email: any, password: any) => {
 			password
 		});
 		if (data.statusCode === 200) {
-			tokens.update((tokens) => {
-				return {
-					...tokens,
-					accessToken: data.data.accessToken,
-					refreshToken: data.data.refreshToken
-				};
-			});
 			return {
 				status: 'Success',
-				message: data.message
+				message: data.message,
+				data: data.data
 			};
 		}
 	} catch (error) {
