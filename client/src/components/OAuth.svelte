@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { initializeFirebase, startFirebaseUI } from '../services/firebaseConfig.ts';
+	import { initializeFirebase, startFirebaseUI } from '../../src/libs/services/firebaseConfig';
 
 	let ui;
 
