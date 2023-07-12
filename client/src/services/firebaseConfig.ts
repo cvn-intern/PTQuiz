@@ -33,7 +33,7 @@ const uiConfig = (firebase) => ({
 				loginFrom: credential.providerId
 			});
 
-			console.log('data', data);
+
 
 			cookies.remove('accessToken');
 			cookies.remove('refreshToken');

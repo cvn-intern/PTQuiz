@@ -7,7 +7,7 @@ export const load = async (request) => {
 
 	const response = await apiWithAuth.get('/auth/me');
 	const result = response.data;
-	console.log(result);
+
 	return {
 		props: {
 			user: result?.data
