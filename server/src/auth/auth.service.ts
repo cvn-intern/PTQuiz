@@ -187,7 +187,7 @@ export class AuthService {
             const decoded = await this.verifyToken(token);
             const user = await this.prisma.users.findUnique({
                 where: {
-                    id: decoded.userId,
+                    id: decoded.id,
                 },
                 select: {
                     id: true,
@@ -377,7 +377,7 @@ export class AuthService {
             const decoded = await this.verifyToken(token);
             const user = await this.prisma.users.findUnique({
                 where: {
-                    id: decoded.userId,
+                    id: decoded.id,
                 },
                 select: {
                     id: true,
@@ -486,7 +486,7 @@ export class AuthService {
             const decoded = await this.verifyToken(refreshToken);
             const user = await this.prisma.users.findFirst({
                 where: {
-                    id: decoded.userId,
+                    id: decoded.id,
                     token: refreshToken,
                 },
                 select: {
@@ -498,6 +498,12 @@ export class AuthService {
                     status: true,
                 },
             });
+            if (!user) {
+                throw new HttpException(
+                    'Invalid token',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
             if (user.status === Status.Inactive) {
                 throw new HttpException(
                     'Your account is not active, please confirm your email',
@@ -550,7 +556,7 @@ export class AuthService {
 
     async generateUserIdToken(userId: string) {
         const token = await this.jwt.signAsync(
-            { userId },
+            { id: userId },
             {
                 expiresIn: process.env.CONFIRM_TOKEN_TTL,
                 privateKey: process.env.PRIVATE_KEY,
