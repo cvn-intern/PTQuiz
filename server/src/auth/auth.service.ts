@@ -6,6 +6,7 @@ import {
     RegisterDto,
     ResetPasswordDto,
     OAuthDto,
+    ChangePasswordDto,
 } from './dto';
 import * as argon2 from 'argon2';
 import { Payload } from './types/payload.type';
@@ -428,6 +429,64 @@ export class AuthService {
         }
     }
 
+    async changePassword(dto: ChangePasswordDto, userId: string) {
+        try {
+            const { oldPassword, newPassword, confirmPassword } = dto;
+            if (newPassword !== confirmPassword) {
+                throw new HttpException(
+                    'Password do not match confirm password',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const user = await this.prisma.users.findUnique({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    id: true,
+                    password: true,
+                    loginFrom: true,
+                },
+            });
+            if (!user) {
+                throw new HttpException(
+                    'User not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.loginFrom !== null) {
+                throw new HttpException(
+                    'You are using OAuth, please change password in your OAuth account',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const isPasswordValid = await this.verifyHash(
+                user.password,
+                oldPassword,
+            );
+            if (!isPasswordValid) {
+                throw new HttpException(
+                    'Old password is not valid',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const hashedPassword = await this.hashData(newPassword);
+            await this.prisma.users.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    password: hashedPassword,
+                },
+            });
+            return {
+                message: 'Password changed successfully',
+            };
+        } catch (err) {
+            return exceptionHandler(err);
+        }
+    }
+
     async refreshTokens(dto: RefreshTokenDto) {
         try {
             const { refreshToken } = dto;
@@ -475,6 +534,42 @@ export class AuthService {
             const tokens = await this.generateTokens(payload);
             await this.updateRefreshToken(user.id, tokens.refreshToken, true);
             return tokens;
+        } catch (err) {
+            return exceptionHandler(err);
+        }
+    }
+
+    async getProfile(userId: string) {
+        try {
+            const user = await this.prisma.users.findUnique({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    displayName: true,
+                    avatar: true,
+                    role: true,
+                    status: true,
+                    loginFrom: true,
+                },
+            });
+            if (!user) {
+                throw new HttpException(
+                    'User not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            return {
+                id: user.id,
+                email: user.email,
+                displayName: user.displayName,
+                avatar: user.avatar,
+                role: user.role,
+                status: user.status,
+                loginFrom: user.loginFrom,
+            };
         } catch (err) {
             return exceptionHandler(err);
         }

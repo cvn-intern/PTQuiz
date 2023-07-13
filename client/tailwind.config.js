@@ -8,11 +8,12 @@ export default {
 		extend: {
 			colors: {
 				transparent: 'transparent',
-				primaryColor: '#f8fff0',
+				primary: '#f8fff0',
 				secondary: '#8daf74',
 				background: '#f5f5f5',
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
+				primaryColor: {
 				reddish: '#FF6B6B',
 				reddishHover: '#751D19',
 				graydish: "#E6E6E6",

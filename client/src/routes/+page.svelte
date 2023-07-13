@@ -1,10 +1,11 @@
-<script>
-	import LandingPage from "../components/landingPage/landingPage.svelte";
-	import Discovery from "../components/discovery/discovery.svelte";
+<script lang="ts">
+	import LandingPage from '../components/landingPage/landingPage.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 </script>
 
-<!-- <LandingPage/> -->
-<Discovery/>
+<LandingPage/>
 
 <style lang="postcss">
 	:global(html) {
@@ -12,8 +13,3 @@
 	}
 	
 </style>
-
-<!-- <Register /> -->
-<!-- <Login /> -->
-
-
