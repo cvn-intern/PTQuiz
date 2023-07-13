@@ -14,37 +14,32 @@ export default {
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
 				primaryColor: {
-					reddish: '#FF6B6B',
-					reddishHover: '#751D19',
-					graydish: '#E6E6E6',
-					primary: {
-						50: '#FFF5F2',
-						100: '#FFF1EE',
-						200: '#FFE4DE',
-						300: '#FFD5CC',
-						400: '#FFBCAD',
-						500: '#FE795D',
-						600: '#EF562F',
-						700: '#EB4F27',
-						800: '#CC4522',
-						900: '#A5371B'
-					}
-				},
-				fontFamily: {
-					body: ['Sora'],
-					title: ['Jost']
-				},
-				loginWidth: {
-					panel: '446px'
-				},
-				width: {
-					desktop: '20rem',
-					ipad: '16rem',
-					mobile: '12rem'
+					50: '#FFF5F2',
+					100: '#FFF1EE',
+					200: '#FFE4DE',
+					300: '#FFD5CC',
+					400: '#FFBCAD',
+					500: '#FE795D',
+					600: '#EF562F',
+					700: '#EB4F27',
+					800: '#CC4522',
+					900: '#A5371B'
 				}
+			},
+			fontFamily: {
+				body: ['Sora'],
+				title: ['Jost']
+			},
+			loginWidth: {
+				panel: '446px'
+			},
+			width: {
+				desktop: '20rem',
+				ipad: '16rem',
+				mobile: '12rem'
 			}
-		},
-		plugins: [require('flowbite/plugin')],
-		darkMode: 'class'
-	}
+		}
+	},
+	plugins: [require('flowbite/plugin')],
+	darkMode: 'class'
 };

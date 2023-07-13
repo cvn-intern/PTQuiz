@@ -41,7 +41,7 @@
 			{#each elementsSidebar as { isActive, icon, name, path }, i}
 				<li
 					on:click={() => {
-						path ? (window.location.href = path) : ""
+						path ? (window.location.href = path) : '';
 						changeActiveElement(i);
 					}}
 				>

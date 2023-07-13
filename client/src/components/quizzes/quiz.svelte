@@ -7,10 +7,10 @@
 </script>
 
 <section
-	class="w-full flex flex-row border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-300 transform hover:scale-95"
+	class="w-full flex flex-row border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-300 transform hover:scale-95 rounded-xl"
 >
 	<div class="">
-		<img class="w-[176px]" src={image} alt="" />
+		<img class="w-[176px] h-[120px]" src={image} alt="" />
 	</div>
 	<div class="flex flex-col w-full justify-between">
 		<div>

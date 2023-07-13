@@ -10,7 +10,7 @@
 		},
 		{
 			title: 'Discovery',
-			href: '/'
+			href: '/discovery'
 		},
 		{
 			title: 'Dashboard',
