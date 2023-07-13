@@ -9,16 +9,16 @@
 	export let imageFile;
 	let imageUrl;
 
+	function handleCancel() {
+		formUserInfo.displayName = data.displayName;
+	}
+
 	export const snapshot = {
 		capture: () => ({ formUserInfo }),
 		restore: (value) => {
 			formUserInfo = value.formUserInfo;
 		}
 	};
-
-	function handleCancel() {
-		history.back();
-	}
 
 	function handleFileChange(event) {
 		imageFile = event.target.files[0];
@@ -76,12 +76,15 @@
 			/>
 		</div>
 		<div class="flex justify-end space-x-2">
-			<button class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800" on:click={handleCancel}
-				>Cancel</button
+			<button
+				class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800"
+				on:click={handleCancel}
+				type="button">Cancel</button
 			>
 			<button class="px-4 py-2 rounded-lg bg-blue-500 text-white" type="submit">Save</button>
 		</div>
 	</form>
+
 	{#if form !== null}
 		<h4 class="text-red-600 font-light text-md text-center pt-4">
 			{form.message}
