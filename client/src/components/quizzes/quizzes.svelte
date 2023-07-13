@@ -6,7 +6,7 @@
 	export let quizzes: any[];
 </script>
 
-<section class="flex flex-col w-full h-full gap-4 p-5">
+<section class="flex flex-col w-full h-full gap-4 px-5">
 	<div class="">
 		<button
 			aria-label="Create quizzes"

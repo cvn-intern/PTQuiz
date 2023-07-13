@@ -52,17 +52,24 @@ export class AuthService {
                         avatar: avatar,
                         status: Status.Active,
                         loginFrom: loginFrom,
-                        createdAt: new Date(),
                     },
                 });
             }
             if (user.status === Status.Inactive) {
-                await this.prisma.users.update({
+                user = await this.prisma.users.update({
                     where: {
                         id: user.id,
                     },
                     data: {
+                        email: email,
+                        authId: authId,
+                        displayName: displayName,
+                        password: null,
+                        isLogin: true,
+                        role: Role.User,
+                        avatar: avatar,
                         status: Status.Active,
+                        loginFrom: loginFrom,
                     },
                 });
             }
