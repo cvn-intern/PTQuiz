@@ -15,6 +15,7 @@ import {
     RegisterDto,
     ResetPasswordDto,
     OAuthDto,
+    ChangePasswordDto,
 } from './dto';
 import { ResponseMessage } from '../decorators/responseMessage.decorator';
 import { ResTransformInterceptor } from '../interceptors/response.interceptor';
@@ -76,6 +77,14 @@ export class AuthController {
         return user;
     }
 
+    @Get('/profile')
+    @UseGuards(JwtAuthGuard)
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Profile retrieved successfully')
+    async getProfile(@GetCurrentUser('id') userId: string) {
+        return this.authService.getProfile(userId);
+    }
+
     @Post('/forgot-password')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Reset password link sent successfully')
@@ -89,6 +98,17 @@ export class AuthController {
     @ResponseMessage('Password reset successfully')
     async resetPassword(@Body() dto: ResetPasswordDto) {
         return this.authService.resetPassword(dto);
+    }
+
+    @Post('/change-password')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Password changed successfully')
+    @UseGuards(JwtAuthGuard)
+    async changePassword(
+        @GetCurrentUser('id') userId: string,
+        @Body() dto: ChangePasswordDto,
+    ) {
+        return this.authService.changePassword(dto, userId);
     }
 
     @Post('/refresh')

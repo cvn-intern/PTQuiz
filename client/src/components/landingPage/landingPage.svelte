@@ -1,7 +1,7 @@
 <script>
 	import PlayCard from './playCard.svelte';
-	import PlayGame from '../../libs/assets/playgame.png';
-	import CreateQuiz from '../../libs/assets/createquiz.png';
+	import PlayGame from '../../assets/playgame.png';
+	import CreateQuiz from '../../assets/createquiz.png';
 </script>
 
 <main class=" bg-background min-h-screen py-6 px-6 lg:px-16 flex justify-center md:items-center">

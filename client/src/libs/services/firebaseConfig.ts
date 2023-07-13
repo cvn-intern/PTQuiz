@@ -1,5 +1,4 @@
 import 'firebase/auth';
-import axios from 'axios';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,6 +12,7 @@ async function initializeFirebase(firebase) {
 }
 
 const uiConfig = (firebase) => ({
+	// signInSuccessUrl: '',
 	signInOptions: [
 		firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 		firebase.auth.GithubAuthProvider.PROVIDER_ID,
@@ -22,20 +22,30 @@ const uiConfig = (firebase) => ({
 	callbacks: {
 		signInSuccessWithAuthResult: function (authResult) {
 			const { credential, user } = authResult;
-			const request = axios.post(`${import.meta.env.VITE_HOST_BACKEND}/api/auth/oauth/`, {
-				authId: user.uid,
-				email: user.email,
-				displayName: user.displayName,
-				avatar: user.photoURL,
-				loginFrom: credential.providerId
-			});
-			request.then((res) => {
-				localStorage.setItem('accessToken', res.data.data.accessToken);
-				localStorage.setItem('refreshToken', res.data.data.refreshToken);
-				window.location.href = import.meta.env.VITE_HOST_FRONTEND;
-			});
 
-			return false;
+			return fetch('/api/auth/oauth', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					authId: user.uid,
+					email: user.email,
+					displayName: user.displayName,
+					avatar: user.photoURL,
+					loginFrom: credential.providerId
+				})
+			})
+				.then((res) => {
+					if (res.status === 200) {
+						window.location.href = '/';
+					}
+					return false;
+				})
+				.catch((err) => {
+					console.error(err);
+					return false;
+				});
 		}
 	}
 });

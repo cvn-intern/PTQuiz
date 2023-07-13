@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from './mailer/mailer.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { QuestionModule } from './question/question.module';
+import { UserModule } from './user/user.module';
 @Module({
     imports: [
         PrismaModule,
@@ -15,6 +16,7 @@ import { QuestionModule } from './question/question.module';
         MailerModule,
         QuizzesModule,
         QuestionModule,
+        UserModule,
     ],
     controllers: [],
     providers: [],

@@ -50,22 +50,21 @@ CREATE TABLE `users` (
 ```
 Columns description:
 
-| Column        | Type         | Description                                                 |
-| ------------- | ------------ | ----------------------------------------------------------- |
-| `id`          | VARCHAR(191) | Unique identifier for each user.                            |
-| `displayName` | VARCHAR(191) | User's display name.                                        |
-| `password`    | VARCHAR(191) | User's password can be possible null when user using Oauth. |
-| `email`       | VARCHAR(191) | User's email.                                               |
-| `avatar`      | TEXT         | User's avatar.                                              |
-| `isLogin`     | BOOLEAN      | Indicates whether the user is currently logged in.          |
-| `role`        | VARCHAR(191) | User's role.                                                |
-| `status`      | INTEGER      | User's status (0: Inactive, 1: Active, 2: Blocked).         |
-| `authId`      | VARCHAR(191) | Identifier for external authentication.                     |
-| `loginFrom`   | VARCHAR(191) | Source of the external authentication.                      |
-| `token`       | TEXT         | User's refresh token.                                       |
-| `createdAt`   | DATETIME(3)  | Date and time of user creation.                             |
-| `updatedAt`   | DATETIME(3)  | Date and time of last user update.                          |
-
+| Column        | Type         | Key         | Description                                    |
+| ------------- | ------------ | ----------- | ---------------------------------------------- |
+| `id`          | VARCHAR(191) | Primary key | Unique identifier for each user.               |
+| `displayName` | VARCHAR(191) |             | Display name of the user.                      |
+| `password`    | VARCHAR(191) |             | Password of the user.                          |
+| `email`       | VARCHAR(191) |             | Email of the user.                             |
+| `avatar`      | TEXT         |             | Avatar of the user.                            |
+| `isLogin`     | BOOLEAN      |             | Indicates whether the user is logged in.       |
+| `role`        | VARCHAR(191) |             | Role of the user (admin, user).                |
+| `status`      | INTEGER      |             | User status (0: Inactive, 1: Active).          |
+| `authId`      | VARCHAR(191) |             | Authentication ID of the user (if applicable). |
+| `loginFrom`   | VARCHAR(191) |             | Login from (if applicable).                    |
+| `token`       | TEXT         |             | Token of the user (if applicable).             |
+| `createdAt`   | DATETIME(3)  |             | Date and time of user creation.                |
+| `updatedAt`   | DATETIME(3)  |             | Date and time of last user update.             |
 
 ### 1.2. Questions
 
@@ -86,20 +85,23 @@ CREATE TABLE `questions` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `questions` ADD CONSTRAINT `questions_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `questions` ADD CONSTRAINT `questions_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 Columns description:
-| Column       | Type         | Description                                               |
-| ------------ | ------------ | --------------------------------------------------------- |
-| `id`         | VARCHAR(191) | Unique identifier for each question.                      |
-| `userId`     | VARCHAR(191) | Identifier of the user who created the question.          |
-| `categoryId` | VARCHAR(191) | Identifier of the category to which the question belongs. |
-| `title`      | TEXT         | Question's title.                                         |
-| `options`    | TEXT         | Options for the question.                                 |
-| `answers`    | TEXT         | Correct answers for the question.                         |
-| `image`      | TEXT         | Image associated with the question.                       |
-| `type`       | INTEGER      | Question type (MCQ, SCQ, Written).                        |
-| `createdAt`  | DATETIME(3)  | Date and time of question creation.                       |
-| `updatedAt`  | DATETIME(3)  | Date and time of last question update.                    |
+| Column       | Type         | Key         | Description                                               |
+| ------------ | ------------ | ----------- | --------------------------------------------------------- |
+| `id`         | VARCHAR(191) | Primary key | Unique identifier for each question.                      |
+| `userId`     | VARCHAR(191) | Foreign key | Identifier of the user who created the question .         |
+| `categoryId` | VARCHAR(191) | Foreign key | Identifier of the category to which the question belongs. |
+| `title`      | TEXT         |             | Question's title.                                         |
+| `options`    | TEXT         |             | Options for the question.                                 |
+| `answers`    | TEXT         |             | Correct answers for the question.                         |
+| `image`      | TEXT         |             | Image associated with the question.                       |
+| `type`       | INTEGER      |             | Question type (MCQ, SCQ, Written).                        |
+| `createdAt`  | DATETIME(3)  |             | Date and time of question creation.                       |
+| `updatedAt`  | DATETIME(3)  |             | Date and time of last question update.                    |
 
 ### 1.3. Quizzes
 
@@ -129,31 +131,33 @@ CREATE TABLE `quizzes` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `quizzes` ADD CONSTRAINT `quizzes_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 Columns description:
-| Column            | Type         | Description                                            |
-| ----------------- | ------------ | ------------------------------------------------------ |
-| `id`              | VARCHAR(191) | Unique identifier for each quiz.                       |
-| `userId`          | VARCHAR(191) | Identifier of the user who created the quiz.           |
-| `title`           | TEXT         | Quiz's title.                                          |
-| `numberQuestions` | INTEGER      | Number of questions in the quiz.                       |
-| `description`     | TEXT         | Description of the quiz.                               |
-| `image`           | TEXT         | Image associated with the quiz.                        |
-| `durationMins`    | INTEGER      | Duration of the quiz in minutes.                       |
-| `isRandom`        | BOOLEAN      | Indicates whether the quiz is randomized.   |
-| `isRandomOption`  | BOOLEAN      | Indicates whether the questions in quiz are randomized. |
-| `attempts`        | INTEGER      | Number of attempts allowed for the quiz.               |
-| `point`           | INTEGER      | Point value for the quiz.                              |
-| `passingPoint`    | INTEGER      | Minimum passing point for the quiz.                    |
-| `passed`          | BOOLEAN      | Indicates whether the user has passed the quiz.        |
-| `difficultyLevel` | INTEGER      | Difficulty level of the quiz (0: none, 1: easy, 2: medium,3: hard).        |
-| `startDate`       | DATETIME(3)  | Start date and time of the quiz.                       |
-| `endDate`         | DATETIME(3)  | End date and time of the quiz.                         |
-| `isActivated`     | BOOLEAN      | Indicates whether the quiz is activated.               |
-| `isShared`        | BOOLEAN      | Indicates whether the quiz is shared.                  |
-| `createdAt`       | DATETIME(3)  | Date and time of quiz creation.                        |
-| `updatedAt`       | DATETIME(3)  | Date and time of last quiz update.                     |
 
+| Column            | Type         | Key         | Description                                                    |
+| ----------------- | ------------ | ----------- | -------------------------------------------------------------- |
+| `id`              | VARCHAR(191) | Primary key | Unique identifier for each quiz.                               |
+| `userId`          | VARCHAR(191) | Foreign key | Identifier of the user who created the quiz.                   |
+| `title`           | TEXT         |             | Quiz's title.                                                  |
+| `numberQuestions` | INTEGER      |             | Number of questions in the quiz.                               |
+| `description`     | TEXT         |             | Quiz's description.                                            |
+| `image`           | TEXT         |             | Image associated with the quiz.                                |
+| `durationMins`    | INTEGER      |             | Quiz's duration in minutes.                                    |
+| `isRandom`        | BOOLEAN      |             | Indicates whether the questions in the quiz are randomized.    |
+| `isRandomOption`  | BOOLEAN      |             | Indicates whether the options in the questions are randomized. |
+| `attempts`        | INTEGER      |             | Number of attempts allowed for the quiz.                       |
+| `point`           | INTEGER      |             | Total points for the quiz.                                     |
+| `passingPoint`    | INTEGER      |             | Passing point for the quiz.                                    |
+| `passed`          | BOOLEAN      |             | Indicates whether the user has passed the quiz.                |
+| `difficultyLevel` | INTEGER      |             | Difficulty level of the quiz (0: Easy, 1: Medium, 2: Hard).    |
+| `startDate`       | DATETIME(3)  |             | Date and time when the quiz starts.                            |
+| `endDate`         | DATETIME(3)  |             | Date and time when the quiz ends.                              |
+| `isActivated`     | BOOLEAN      |             | Indicates whether the quiz is activated.                       |
+| `isShared`        | BOOLEAN      |             | Indicates whether the quiz is shared.                          |
+| `createdAt`       | DATETIME(3)  |             | Date and time of quiz creation.                                |
+| `updatedAt`       | DATETIME(3)  |             | Date and time of last quiz update.                             |
 
 ### 1.4. Categories
 
@@ -173,17 +177,16 @@ CREATE TABLE `categories` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 Columns description:
-| Column      | Type         | Description                                        |
-| ----------- | ------------ | -------------------------------------------------- |
-| `id`        | VARCHAR(191) | Unique identifier for each category.               |
-| `parentId`  | VARCHAR(191) | Identifier of the parent category (if applicable). |
-| `name`      | VARCHAR(191) | Name of the category.                              |
-| `icon`      | TEXT         | Icon associated with the category.                 |
-| `status`    | INTEGER      | Category status (0: Inactive, 1: Active).          |
-| `sortOrder` | INTEGER      | Sort order for the category.                       |
-| `createdAt` | DATETIME(3)  | Date and time of category creation.                |
-| `updatedAt` | DATETIME(3)  | Date and time of last category update.             |
-
+| Column      | Type         | Key         | Description                                        |
+| ----------- | ------------ | ----------- | -------------------------------------------------- |
+| `id`        | VARCHAR(191) | Primary key | Unique identifier for each category.               |
+| `parentId`  | VARCHAR(191) | Foreign key | Identifier of the parent category (if applicable). |
+| `name`      | VARCHAR(191) |             | Category's name.                                   |
+| `icon`      | TEXT         |             | Icon associated with the category.                 |
+| `status`    | INTEGER      |             | Category status (0: Inactive, 1: Active).          |
+| `sortOrder` | INTEGER      |             | Sort order for the category.                       |
+| `createdAt` | DATETIME(3)  |             | Date and time of category creation.                |
+| `updatedAt` | DATETIME(3)  |             | Date and time of last category update.             |
 
 ### 1.5. Quiz_questions
 
@@ -197,15 +200,17 @@ CREATE TABLE `quiz_questions` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `quiz_questions` ADD CONSTRAINT `quiz_questions_quizId_fkey` FOREIGN KEY (`quizId`) REFERENCES `quizzes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `quiz_questions` ADD CONSTRAINT `quiz_questions_questionId_fkey` FOREIGN KEY (`questionId`) REFERENCES `questions`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 Columns description:
-| Column       | Type         | Description                                                           |
-| ------------ | ------------ | --------------------------------------------------------------------- |
-| `id`         | VARCHAR(191) | Unique identifier for the relationship between quizzes and questions. |
-| `quizId`     | VARCHAR(191) | Identifier of the quiz.                                               |
-| `questionId` | VARCHAR(191) | Identifier of the question.                                           |
-| `sortOrder`  | INTEGER      | Sort order for the question within the quiz.                          |
-
+| Column       | Type         | Key         | Description                                               |
+| ------------ | ------------ | ----------- | --------------------------------------------------------- |
+| `id`         | VARCHAR(191) | Primary key | Unique identifier for each quiz-question relationship.    |
+| `quizId`     | VARCHAR(191) | Foreign key | Identifier of the quiz.                                   |
+| `questionId` | VARCHAR(191) | Foreign key | Identifier of the question.                               |
+| `sortOrder`  | INTEGER      |             | Sort order for the question in the quiz.                  |
 
 ### 1.6. Participants
 
@@ -226,23 +231,25 @@ CREATE TABLE `participants` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `participants` ADD CONSTRAINT `participants_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `participants` ADD CONSTRAINT `participants_quizId_fkey` FOREIGN KEY (`quizId`) REFERENCES `quizzes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 
 Columns description:
-| Column         | Type         | Description                                                    |
-| -------------- | ------------ | -------------------------------------------------------------- |
-| `id`           | VARCHAR(191) | Unique identifier for each participant.                        |
-| `userId`       | VARCHAR(191) | Identifier of the user participating in the quiz.              |
-| `quizId`       | VARCHAR(191) | Identifier of the quiz in which the participant is involved.   |
-| `questions`    | INTEGER      | Number of questions attempted by the participant.              |
-| `correct`      | INTEGER      | Number of correct answers by the participant.                  |
-| `totalAttempt` | INTEGER      | Total number of attempts by the participant, default value: 1. |
-| `point`        | INTEGER      | Total points earned by the participant.                        |
-| `startedAt`    | DATETIME(3)  | Date and time when the participant started the quiz.           |
-| `completedAt`  | DATETIME(3)  | Date and time when the participant completed the quiz.         |
-| `createdAt`    | DATETIME(3)  | Date and time of participant creation.                         |
-| `updatedAt`    | DATETIME(3)  | Date and time of last participant update.                      |
-
+| Column        | Type         | Key | Description                                                                 |
+| ------------- | ------------ | --- | --------------------------------------------------------------------------- |
+| `id`          | VARCHAR(191) | Primary key | Unique identifier for each participant.                                      |
+| `userId`      | VARCHAR(191) | Foreign key | Identifier of the user.                                                     |
+| `quizId`      | VARCHAR(191) | Foreign key | Identifier of the quiz.                                                     |
+| `questions`   | INTEGER      |     | Number of questions answered by the participant.                            |
+| `correct`     | INTEGER      |     | Number of correct answers given by the participant.                         |
+| `totalAttempt`| INTEGER      |     | Total number of attempts made by the participant.                           |
+| `point`       | INTEGER      |     | Total points earned by the participant.                                     |
+| `startedAt`   | DATETIME(3)  |     | Date and time when the participant started the quiz.                        |
+| `completedAt` | DATETIME(3)  |     | Date and time when the participant completed the quiz.                      |
+| `createdAt`   | DATETIME(3)  |     | Date and time of participant creation.                                      |
+| `updatedAt`   | DATETIME(3)  |     | Date and time of last participant update.                                   |
 ### 1.7. User_questions
 
 DDL command for creating `user_questions` table:
@@ -262,22 +269,26 @@ CREATE TABLE `user_questions` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `user_questions` ADD CONSTRAINT `user_questions_participantId_fkey` FOREIGN KEY (`participantId`) REFERENCES `participants`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_questions` ADD CONSTRAINT `user_questions_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_questions` ADD CONSTRAINT `user_questions_questionId_fkey` FOREIGN KEY (`questionId`) REFERENCES `questions`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 
 Columns description:
-| Column          | Type         | Description                                            |
-| --------------- | ------------ | ------------------------------------------------------ |
-| `id`            | VARCHAR(191) | Unique identifier for each user-question relationship. |
-| `userId`        | VARCHAR(191) | Identifier of the user.                                |
-| `participantId` | VARCHAR(191) | Identifier of the participant.                         |
-| `questionId`    | VARCHAR(191) | Identifier of the question.                            |
-| `question`      | VARCHAR(191) | The question itself.                                   |
-| `image`         | TEXT         | Image associated with the question (if applicable).    |
-| `options`       | TEXT         | Options for the question.                              |
-| `correct`       | TEXT         | Correct answer(s) for the question.                    |
-| `givenAnswers`  | TEXT         | Answers given by the user/participant.                 |
-| `score`         | INTEGER      | Score earned for the question.                         |
-| `timestamp`     | DATETIME(3)  | Date and time when the user answered the question.     |
+| Column          | Type         | Key | Description                                                                 |
+| --------------- | ------------ | --- | --------------------------------------------------------------------------- |
+| `id`            | VARCHAR(191) | Primary key | Unique identifier for each user-question relationship.                      |
+| `userId`        | VARCHAR(191) | Foreign key | Identifier of the user.                                                     |
+| `participantId` | VARCHAR(191) | Foreign key | Identifier of the participant.                                               |
+| `questionId`    | VARCHAR(191) | Foreign key | Identifier of the question.                                                  |
+| `question`      | VARCHAR(191) |     | Question's title.                                                            |
+| `image`         | TEXT         |     | Image associated with the question.                                          |
+| `options`       | TEXT         |     | Options for the question.                                                    |
+| `correct`       | TEXT         |     | Correct answers for the question.                                            |
+| `givenAnswers`  | TEXT         |     | Answers given by the user.                                                   |
+| `score`         | INTEGER      |     | Score earned by the user for the question.                                   |
+| `timestamp`     | DATETIME(3)  |     | Date and time when the user answered the question.                           |
 
 
 ### 1.8. Rooms
@@ -298,20 +309,23 @@ CREATE TABLE `rooms` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `rooms` ADD CONSTRAINT `rooms_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `rooms` ADD CONSTRAINT `rooms_quizId_fkey` FOREIGN KEY (`quizId`) REFERENCES `quizzes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 
 Columns description:
-| Column      | Type         | Description                                      |
-| ----------- | ------------ | ------------------------------------------------ |
-| `id`        | VARCHAR(191) | Unique identifier for each room.                 |
-| `PIN`       | VARCHAR(191) | PIN for accessing the room.                      |
-| `userId`    | VARCHAR(191) | Identifier of the user who created the room.     |
-| `quizId`    | VARCHAR(191) | Identifier of the quiz associated with the room. |
-| `count`     | INTEGER      | Count of participants in the room.               |
-| `isStarted` | BOOLEAN      | Indicates whether the room has started.          |
-| `isPublic`  | BOOLEAN      | Indicates whether the room is public.            |
-| `type`      | INTEGER      | Type of the room (1v1, group).                                |
-| `createdAt` | DATETIME(3)  | Date and time of room creation.                  |
+| Column      | Type         | Key | Description                                                                 |
+| ----------- | ------------ | --- | --------------------------------------------------------------------------- |
+| `id`        | VARCHAR(191) | Primary key | Unique identifier for each room.                                             |
+| `userId`    | VARCHAR(191) | Foreign key | Identifier of the user who created the room.                                 |
+| `quizId`    | VARCHAR(191) | Foreign key | Identifier of the quiz.                                                      |
+| `PIN`       | VARCHAR(191) |     | PIN of the room.                                                             |
+| `count`     | INTEGER      |     | Maximum number of participants in the room.                                          |
+| `isStarted` | BOOLEAN      |     | Indicates whether the room has started.                                      |
+| `isPublic`  | BOOLEAN      |     | Indicates whether the room is public.                                        |
+| `type`      | INTEGER      |     | Room type (0: Solo, 1: Group).                                                 |
+| `createdAt` | DATETIME(3)  |     | Date and time of room creation.                                              |
 
 ### 1.9. Room_participants
 
@@ -325,13 +339,17 @@ CREATE TABLE `room_participants` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `room_participants` ADD CONSTRAINT `room_participants_participantId_fkey` FOREIGN KEY (`participantId`) REFERENCES `participants`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `room_participants` ADD CONSTRAINT `room_participants_roomId_fkey` FOREIGN KEY (`roomId`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ```
 Columns description:
-| Column          | Type         | Description                                                            |
-| --------------- | ------------ | ---------------------------------------------------------------------- |
-| `id`            | VARCHAR(191) | Unique identifier for the relationship between rooms and participants. |
-| `roomId`        | VARCHAR(191) | Identifier of the room.                                                |
-| `participantId` | VARCHAR(191) | Identifier of the participant.                                         |
+| Column          | Type         | Key | Description                                                                 |
+| --------------- | ------------ | --- | --------------------------------------------------------------------------- |
+| `id`            | VARCHAR(191) | Primary key | Unique identifier for each room-participant relationship.                   |
+| `roomId`        | VARCHAR(191) | Foreign key | Identifier of the room.                                                     |
+| `participantId` | VARCHAR(191) | Foreign key | Identifier of the participant.                                               |
+
 
 
 ### 1.10. References between tables
@@ -381,22 +399,22 @@ ALTER TABLE `room_participants` ADD CONSTRAINT `room_participants_roomId_fkey` F
 ```
 Foreign key constraints description:
 
-| Table name         | Column name | Referenced table | Referenced column |
-| ------------------ | ----------- | ---------------- | ----------------- |
-| `questions`        | `userId`    | `users`          | `id`              |
-| `questions`        | `categoryId`| `categories`     | `id`              |
-| `quizzes`          | `userId`    | `users`          | `id`              |
-| `quiz_questions`   | `quizId`    | `quizzes`        | `id`              |
-| `quiz_questions`   | `questionId`| `questions`      | `id`              |
-| `participants`     | `userId`    | `users`          | `id`              |
-| `participants`     | `quizId`    | `quizzes`        | `id`              |
-| `user_questions`   | `participantId`| `participants`| `id`              |
-| `user_questions`   | `userId`    | `users`          | `id`              |
-| `user_questions`   | `questionId`| `questions`      | `id`              |
-| `rooms`            | `userId`    | `users`          | `id`              |
-| `rooms`            | `quizId`    | `quizzes`        | `id`              |
-| `room_participants`| `participantId`| `participants`| `id`              |
-| `room_participants`| `roomId`    | `rooms`          | `id`              |
+| Table name          | Column name     | Referenced table | Referenced column |
+| ------------------- | --------------- | ---------------- | ----------------- |
+| `questions`         | `userId`        | `users`          | `id`              |
+| `questions`         | `categoryId`    | `categories`     | `id`              |
+| `quizzes`           | `userId`        | `users`          | `id`              |
+| `quiz_questions`    | `quizId`        | `quizzes`        | `id`              |
+| `quiz_questions`    | `questionId`    | `questions`      | `id`              |
+| `participants`      | `userId`        | `users`          | `id`              |
+| `participants`      | `quizId`        | `quizzes`        | `id`              |
+| `user_questions`    | `participantId` | `participants`   | `id`              |
+| `user_questions`    | `userId`        | `users`          | `id`              |
+| `user_questions`    | `questionId`    | `questions`      | `id`              |
+| `rooms`             | `userId`        | `users`          | `id`              |
+| `rooms`             | `quizId`        | `quizzes`        | `id`              |
+| `room_participants` | `participantId` | `participants`   | `id`              |
+| `room_participants` | `roomId`        | `rooms`          | `id`              |
 
 
 ## 2. API Specification
@@ -443,13 +461,13 @@ Response body:
 ```
 
 Response codes:
-| S tatus Code | Message | Description |
-| ------------- | ------------------------------------------------ | ---------------------------------------------- |
-| 201 | Registered successfully, please check verification link in your email | Register successfully, sent verification link to registered email |
-400 | Validation failed | Validate request body with constraints and throw errors if any |
-400 | Password do not match confirm password | Password and confirm password don't match |
-400 | User with this email already exists, please confirm your email | User with this email already exists and account is not activated |
-400 | User with this email already exists, please login | User with this email already exists and account is activated |
+| S tatus Code | Message                                                               | Description                                                       |
+| ------------ | --------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| 201          | Registered successfully, please check verification link in your email | Register successfully, sent verification link to registered email |
+| 400          | Validation failed                                                     | Validate request body with constraints and throw errors if any    |
+| 400          | Password do not match confirm password                                | Password and confirm password don't match                         |
+| 400          | User with this email already exists, please confirm your email        | User with this email already exists and account is not activated  |
+| 400          | User with this email already exists, please login                     | User with this email already exists and account is activated      |
 
 ### 2.2. Login
 
@@ -503,7 +521,7 @@ Response codes:
 | Status Code | Message                                                  | Description                                                          |
 | ----------- | -------------------------------------------------------- | -------------------------------------------------------------------- |
 | 200         | User logged in successfully                              | Login successfully, return access token, refresh token and user info |
-| 400         | Validation failed                                        | Validate request body with constraints and throw errors if any   |
+| 400         | Validation failed                                        | Validate request body with constraints and throw errors if any       |
 | 400         | Your account is not activated, please confirm your email | User with this email already exists and account is not activated     |
 | 400         | Invalid credentials                                      | Invalid email or password                                            |
 
@@ -592,11 +610,11 @@ Response body :
 
 Response codes:
 
-| Status Code | Message                       | Description                                                        |
-| ----------- | ----------------------------- | ------------------------------------------------------------------ |
-| 201         | Tokens refreshed successfully | Refresh token successfully                                         |
+| Status Code | Message                       | Description                                                    |
+| ----------- | ----------------------------- | -------------------------------------------------------------- |
+| 201         | Tokens refreshed successfully | Refresh token successfully                                     |
 | 400         | Validation failed             | Validate request body with constraints and throw errors if any |
-| 400         | Invalid token                 | Refresh token is invalid                                           |
+| 400         | Invalid token                 | Refresh token is invalid                                       |
 
 ### 2.5. Logout
 
@@ -684,11 +702,11 @@ Response body :
 
 Response codes:
 
-| Status Code | Message           | Description                                                        |
-| ----------- | ----------------- | ------------------------------------------------------------------ |
-| 200         | Verify account    | Verify account successfully                                        |
+| Status Code | Message           | Description                                                    |
+| ----------- | ----------------- | -------------------------------------------------------------- |
+| 200         | Verify account    | Verify account successfully                                    |
 | 400         | Validation failed | Validate request body with constraints and throw errors if any |
-| 400         | Invalid token     | Token is invalid                                                   |
+| 400         | Invalid token     | Token is invalid                                               |
 
 ### 2.7. Resend verification token
 
@@ -726,12 +744,12 @@ Response body :
 
 Response codes:
 
-| Status Code | Message                             | Description                                                        |
-| ----------- | ----------------------------------- | ------------------------------------------------------------------ |
-| 200         | Verification link sent              | Verification link sent successfully                                |
+| Status Code | Message                             | Description                                                    |
+| ----------- | ----------------------------------- | -------------------------------------------------------------- |
+| 200         | Verification link sent              | Verification link sent successfully                            |
 | 400         | Validation failed                   | Validate request body with constraints and throw errors if any |
-| 400         | User with this email does not exist | User with this email not found                                     |
-| 400         | Email already confirmed             | User with this email already exists and account is activated       |
+| 400         | User with this email does not exist | User with this email not found                                 |
+| 400         | Email already confirmed             | User with this email already exists and account is activated   |
 
 ### 2.8. Forgot password
 
@@ -769,12 +787,12 @@ Response body :
 
 Response codes:
 
-| Status Code | Message                                               | Description                                                        |
-| ----------- | ----------------------------------------------------- | ------------------------------------------------------------------ |
-| 200         | Reset password link sent                              | Reset password link sent successfully                              |
-| 400         | Validation failed                                     | Validate request body with constraints and throw errors if any |
-| 400         | User with this email does not exist                   | User with this email not found                                     |
-| 400         | Your account is not active, please confirm your email | User with this email already exists and account is not activated   |
+| Status Code | Message                                               | Description                                                      |
+| ----------- | ----------------------------------------------------- | ---------------------------------------------------------------- |
+| 200         | Reset password link sent                              | Reset password link sent successfully                            |
+| 400         | Validation failed                                     | Validate request body with constraints and throw errors if any   |
+| 400         | User with this email does not exist                   | User with this email not found                                   |
+| 400         | Your account is not active, please confirm your email | User with this email already exists and account is not activated |
 
 ### 2.9. Reset password
 
@@ -827,9 +845,9 @@ Response body :
 
 Response codes:
 
-| Status Code | Message                                | Description                                                        |
-| ----------- | -------------------------------------- | ------------------------------------------------------------------ |
-| 200         | Password reset successfully            | Password reset successfully                                        |
+| Status Code | Message                                | Description                                                    |
+| ----------- | -------------------------------------- | -------------------------------------------------------------- |
+| 200         | Password reset successfully            | Password reset successfully                                    |
 | 400         | Validation failed                      | Validate request body with constraints and throw errors if any |
-| 400         | Invalid token                          | Token is invalid                                                   |
-| 400         | Password do not match confirm password | Password and confirm password don't match                          |
+| 400         | Invalid token                          | Token is invalid                                               |
+| 400         | Password do not match confirm password | Password and confirm password don't match                      |
