@@ -59,7 +59,7 @@
 			/>
 		</div>
 		<div class="flex justify-end space-x-2">
-			<button class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800">Cancel</button>
+			<button class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800" type="button">Cancel</button>
 			<button class="px-4 py-2 rounded-lg bg-blue-500 text-white" type="submit">Save</button>
 		</div>
 	</form>
