@@ -77,6 +77,14 @@ export class AuthController {
         return user;
     }
 
+    @Get('/profile')
+    @UseGuards(JwtAuthGuard)
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Profile retrieved successfully')
+    async getProfile(@GetCurrentUser('id') userId: string) {
+        return this.authService.getProfile(userId);
+    }
+
     @Post('/forgot-password')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Reset password link sent successfully')

@@ -1,9 +1,11 @@
 <script>
-	import { onMount } from 'svelte';
 	import EditProfile from './EditProfile.svelte';
 	import ChangePassword from './ChangePassword.svelte';
+	import { getContext } from 'svelte';
 
 	let currentTab = 'EditProfile';
+	let data = getContext('user');
+	// get cookie data
 
 	function switchTab(tab) {
 		currentTab = tab;
@@ -23,13 +25,15 @@
 		>
 			Edit Profile
 		</button>
-		<button
-			class="pb-1 border-b-2 border-transparent hover:border-blue-500"
-			class:active={currentTab === 'ChangePassword'}
-			on:click={() => switchTab('ChangePassword')}
-		>
-			Change Password
-		</button>
+		{#if data.loginFrom === null}
+			<button
+				class="pb-1 border-b-2 border-transparent hover:border-blue-500"
+				class:active={currentTab === 'ChangePassword'}
+				on:click={() => switchTab('ChangePassword')}
+			>
+				Change Password
+			</button>
+		{/if}
 	</div>
 </div>
 

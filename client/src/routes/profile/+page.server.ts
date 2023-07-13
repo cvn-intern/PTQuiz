@@ -1,8 +1,9 @@
-import { fail } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 
 export const actions = {
 	change_password: async ({ request, fetch }) => {
 		const formData = await request.formData();
+		console.log('formData: ', formData);
 		const response = await fetch('/api/auth/change-password', {
 			headers: {
 				'Content-Type': 'application/json'
@@ -16,8 +17,11 @@ export const actions = {
 		});
 		const result = await response.json();
 		if (!result.ok) {
-			console.log('result.message: ', result.message);
-			return fail(400, result.message);
+			// console.log('result.message: ', result.message);
+			return fail(400, {
+				message: result.message,
+				error: result.error
+			});
 		}
 		return result;
 	}

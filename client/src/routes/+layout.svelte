@@ -7,10 +7,7 @@
 	export let data: LayoutData;
 </script>
 
-<Navbar />
-<!-- {#if data.user}
- <p>Logged in as {data.user.name}</p>
-{/if} -->
+<Navbar user={data.user} />
 <div class="min-h-screen bg-background">
 	<slot />
 </div>

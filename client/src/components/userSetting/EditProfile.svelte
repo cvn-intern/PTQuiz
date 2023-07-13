@@ -3,22 +3,10 @@
 
 	let data = getContext('user');
 
-	console.log(data);
-	async function handleSave() {
-		const res = await fetch('/api/user', {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				displayName: data.data.user.displayName
-			})
-		});
-		if (res.ok) {
-			const resData = await res.json();
-			console.log(resData);
-		}
-	}
+	let form = getContext('form');
+
+	console.log(form);
+	async function handleSave() {}
 	function handleCancel() {
 		history.back();
 	}

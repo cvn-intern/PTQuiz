@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	export let form;
+	import type { ActionForm } from './$types';
+	export let form: ActionForm;
+	// console.log(form);
 </script>
 
 <div class="flex flex-col items-center">

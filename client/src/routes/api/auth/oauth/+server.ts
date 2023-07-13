@@ -11,15 +11,15 @@ export const POST: RequestHandler = async ({ request, fetch, cookies }) => {
 		body: JSON.stringify(bodyContent)
 	});
 	const result = await response.json();
-	if (result.error) {
-		throw error(500, result.error.response);
+	if (response.status !== 200) {
+		throw error(result.statusCode, result.message);
 	}
-	await cookies.set('accessToken', result.data.accessToken, {
+	cookies.set('accessToken', result.data.accessToken, {
 		path: '/'
 	});
-	await cookies.set('refreshToken', result.data.refreshToken, {
+	cookies.set('refreshToken', result.data.refreshToken, {
 		path: '/'
 	});
-	console.log('result', result);
-	return json(result);
+
+	return json(result.data);
 };

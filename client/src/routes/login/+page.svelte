@@ -2,6 +2,7 @@
 	import Icon from '@iconify/svelte';
 	import { goto } from '$app/navigation';
 	import OAuth from '../../components/OAuth.svelte';
+	export let form;
 </script>
 
 <section class="flex text-white justify-center">
@@ -71,6 +72,11 @@
 					</button>
 				</div>
 			</div>
+			{#if form}
+				<h4 class="text-red-600 font-light text-md text-center">
+					{form.error}
+				</h4>
+			{/if}
 		</div>
 	</div>
 </section>

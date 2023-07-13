@@ -3,8 +3,12 @@
 	import ProfileTabs from '../../components/userSetting/ProfileTabs.svelte';
 	import type { LayoutData } from '../$types';
 	import { setContext } from 'svelte';
+	import type { ActionData } from './$types';
 	export let data: LayoutData;
-	setContext('user', data.data.user);
+	export let form: ActionData;
+	console.log(form, data);
+	setContext('user', data.user);
+	setContext('form', form);
 </script>
 
 <div class="flex gap-6">

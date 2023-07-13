@@ -539,6 +539,42 @@ export class AuthService {
         }
     }
 
+    async getProfile(userId: string) {
+        try {
+            const user = await this.prisma.users.findUnique({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    displayName: true,
+                    avatar: true,
+                    role: true,
+                    status: true,
+                    loginFrom: true,
+                },
+            });
+            if (!user) {
+                throw new HttpException(
+                    'User not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            return {
+                id: user.id,
+                email: user.email,
+                displayName: user.displayName,
+                avatar: user.avatar,
+                role: user.role,
+                status: user.status,
+                loginFrom: user.loginFrom,
+            };
+        } catch (err) {
+            return exceptionHandler(err);
+        }
+    }
+
     async hashData(data: string) {
         return await argon2.hash(data);
     }
