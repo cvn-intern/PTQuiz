@@ -33,6 +33,7 @@
 		<div class="">
 			<label for="oldPassword" class="mb-1">Old password</label>
 			<input
+				aria-label="Old password"
 				id="oldPassword"
 				name="oldPassword"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
@@ -44,6 +45,7 @@
 
 			<label for="newPassword" class="mb-1">New password</label>
 			<input
+				aria-label="New password"
 				id="newPassword"
 				name="newPassword"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
@@ -66,6 +68,7 @@
 		</div>
 		<div class="flex justify-end space-x-2">
 			<button
+				aria-label="Cancel"
 				class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800"
 				type="button"
 				on:click={handleCancel}>Cancel</button

@@ -13,6 +13,7 @@
 		<div class=" text-gray-400">
 			<p>
 				If you still didn't receive it? <button
+				aria-label="Resend Email"
 					class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 					on:click={() => {
 						goto('/forgotPassword');

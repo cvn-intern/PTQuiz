@@ -18,6 +18,7 @@
 	</div>
 	<div class=" mt-auto">
 		<button
+			aria-label={title}
 			class="button bg-secondary py-2 px-14 rounded-xl text-white font-semibold hover:bg-buttonHover"
 			on:click={handleClick}
 		>
