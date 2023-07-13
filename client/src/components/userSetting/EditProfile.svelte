@@ -2,6 +2,7 @@
 	// @ts-nocheck
 
 	import { enhance } from '$app/forms';
+	import { Toast } from 'flowbite-svelte';
 
 	export let data;
 	export let formUserInfo;
@@ -33,6 +34,9 @@
 		enctype="multipart/form-data"
 		class="items-center flex flex-col gap-5"
 	>
+		{#if form && form.message}
+			<Toast>{form.message}</Toast>
+		{/if}
 		<div class="relative">
 			<img
 				accept=".jpg, .jpeg, .png, .webp"
@@ -92,10 +96,4 @@
 			>
 		</div>
 	</form>
-
-	{#if form !== null}
-		<h4 class="text-red-600 font-light text-md text-center pt-4">
-			{form.message}
-		</h4>
-	{/if}
 </div>
