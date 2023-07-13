@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
-	import { get } from 'svelte/store';
-	import type { ActionData } from '../../routes/profile/$types';
-	import { getContext } from 'svelte';
+	import { Toast } from 'flowbite-svelte';
 	export let user;
 	export let form;
 
@@ -30,7 +27,10 @@
 		use:enhance
 		class="items-center flex flex-col gap-5"
 	>
-		<div class="">
+		{#if form && form.error}
+			<Toast>{form.error}</Toast>
+		{/if}
+		<div>
 			<label for="oldPassword" class="mb-1">Old password</label>
 			<input
 				aria-label="Old password"
@@ -69,16 +69,15 @@
 		<div class="flex justify-end space-x-2">
 			<button
 				aria-label="Cancel"
-				class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800"
-				type="button"
-				on:click={handleCancel}>Cancel</button
+				class="w-full text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+				on:click={handleCancel}
+				type="button">Cancel</button
 			>
-			<button class="px-4 py-2 rounded-lg bg-blue-500 text-white" type="submit">Save</button>
+			<button
+				aria-label="Save"
+				class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+				type="submit">Save</button
+			>
 		</div>
 	</form>
-	{#if form !== null}
-		<h4 class="text-red-600 font-light text-md text-center pt-4">
-			{form.error}
-		</h4>
-	{/if}
 </div>

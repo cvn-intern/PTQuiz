@@ -11,48 +11,63 @@ async function initializeFirebase(firebase) {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 }
 
-const uiConfig = (firebase) => ({
-    // signInSuccessUrl: '',
-    signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID
-    ],
-    signInFlow: 'popup',
-    callbacks: {
-        signInSuccessWithAuthResult: function (authResult) {
-            const { credential, user } = authResult;
-
-            return fetch('/api/auth/oauth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    authId: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    avatar: user.photoURL,
-                    loginFrom: credential.providerId
-                })
-            })
-                .then((res) => {
-                    if (res.status === 200) {
-                        window.location.href = '/';
-                    }
-                    return false;
-                })
-                .catch((err) => {
-                    console.error(err);
-                    return false;
-                });
-        }
-    }
-});
-
-async function startFirebaseUI(firebase) {
-    const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
-    await ui.start('#firebaseui-auth-container', uiConfig(firebase));
+async function startSignInWithGoogle(firebase) {
+	const provider = new firebase.auth.GoogleAuthProvider();
+	await signInWithProvider(firebase, provider);
 }
 
-export { initializeFirebase, uiConfig, startFirebaseUI };
+async function startSignInWithFacebook(firebase) {
+	const provider = new firebase.auth.FacebookAuthProvider();
+	await signInWithProvider(firebase, provider);
+}
+
+async function startSignInWithGithub(firebase) {
+	const provider = new firebase.auth.GithubAuthProvider();
+	await signInWithProvider(firebase, provider);
+}
+
+async function signInWithProvider(firebase, provider) {
+	try {
+		const result = await firebase.auth().signInWithPopup(provider);
+		// This gives you a the provider's OAuth 2.0 access token if available.
+		const token = result.credential.accessToken;
+		// The signed-in user info.
+		const user = result.user;
+		return fetch('/api/auth/oauth', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				authId: user.uid,
+				email: user.email,
+				displayName: user.displayName,
+				avatar: user.photoURL,
+				loginFrom: result.credential.providerId
+			})
+		})
+			.then((res) => {
+				if (res.status === 200) {
+					window.location.href = '/';
+				}
+				return false;
+			})
+			.catch((err) => {
+				console.error(err);
+				return false;
+			});
+		// ...
+	} catch (error) {
+		const errorCode = error.code;
+		const errorMessage = error.message;
+		const email = error.email;
+		const credential = error.credential;
+	}
+}
+
+export {
+	initializeFirebase,
+	startSignInWithGoogle,
+	startSignInWithFacebook,
+	startSignInWithGithub
+};

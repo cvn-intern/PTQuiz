@@ -6,13 +6,13 @@ export const actions: Actions = {
 		if (!form.has('displayName')) {
 			return fail(400, {
 				message: 'Display name can not be empty',
-				error: 'Display name can not be empty'
+				// error: 'Display name can not be empty'
 			});
 		}
 		if (form.get('avatar') && form.get('avatar').size > 4 * 1024 * 1024) {
 			return fail(400, {
 				message: 'File size too large, max file size is 4MB',
-				error: 'File size too large, max file size is 4MB'
+				// error: 'File size too large, max file size is 4MB'
 			});
 		}
 		const response = await fetch('/api/auth/edit-profile', {
@@ -28,7 +28,7 @@ export const actions: Actions = {
 		if (result.statusCode !== 200) {
 			return fail(400, {
 				message: result.message,
-				error: result.message
+				// error: result.message
 			});
 		}
 
