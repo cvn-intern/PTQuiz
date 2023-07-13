@@ -30,7 +30,13 @@ export class JwtAuthGuard implements CanActivate {
             if (error.name === 'TokenExpiredError') {
                 throw new UnauthorizedException(JwtError.ACCESS_TOKEN_EXPIRED);
             }
-            throw new UnauthorizedException(JwtError.INVALID_TOKEN);
+            if (
+                error.name === JwtError.JSON_WEB_TOKEN_ERROR ||
+                error.name === JwtError.SYNTAX_ERROR
+            ) {
+                throw new UnauthorizedException(JwtError.INVALID_TOKEN);
+            }
+            throw new UnauthorizedException(error.message);
         }
     }
 

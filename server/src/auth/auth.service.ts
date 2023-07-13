@@ -28,7 +28,6 @@ export class AuthService {
     async OAuth(dto: OAuthDto) {
         try {
             const { authId, avatar, displayName, email, loginFrom } = dto;
-
             let user = await this.prisma.users.findUnique({
                 where: {
                     email: email,
@@ -42,7 +41,6 @@ export class AuthService {
                     status: true,
                 },
             });
-
             if (!user) {
                 user = await this.prisma.users.create({
                     data: {
@@ -54,23 +52,37 @@ export class AuthService {
                         avatar: avatar,
                         status: Status.Active,
                         loginFrom: loginFrom,
-                        createdAt: new Date(),
                     },
                 });
             }
-
+            if (user.status === Status.Inactive) {
+                user = await this.prisma.users.update({
+                    where: {
+                        id: user.id,
+                    },
+                    data: {
+                        email: email,
+                        authId: authId,
+                        displayName: displayName,
+                        password: null,
+                        isLogin: true,
+                        role: Role.User,
+                        avatar: avatar,
+                        status: Status.Active,
+                        loginFrom: loginFrom,
+                    },
+                });
+            }
             const payload: Payload = {
                 email: user.email,
                 id: user.id,
                 role: user.role as Role,
                 displayName: user.displayName,
                 avatar: user.avatar,
-                status: user.status,
+                status: Status.Active,
             };
-
             const tokens = await this.generateTokens(payload);
             await this.updateRefreshToken(user.id, tokens.refreshToken, true);
-
             return {
                 ...tokens,
                 user: {
@@ -633,15 +645,15 @@ export class AuthService {
     }
 }
 
-export const exceptionHandler = (err: Error) => {
+export const exceptionHandler = (error: Error) => {
     if (
-        err.name === JwtError.JSON_WEB_TOKEN_ERROR ||
-        err.name === JwtError.SYNTAX_ERROR
+        error.name === JwtError.JSON_WEB_TOKEN_ERROR ||
+        error.name === JwtError.SYNTAX_ERROR
     ) {
         throw new HttpException(JwtError.INVALID_TOKEN, HttpStatus.BAD_REQUEST);
-    } else if (err.name === JwtError.TOKEN_EXPIRED_ERROR) {
+    } else if (error.name === JwtError.TOKEN_EXPIRED_ERROR) {
         throw new HttpException(JwtError.EXPIRED_TOKEN, HttpStatus.BAD_REQUEST);
     } else {
-        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
 };

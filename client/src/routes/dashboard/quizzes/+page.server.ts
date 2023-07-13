@@ -1,6 +1,6 @@
-import img1 from '../../assets/testimg.png';
-import img2 from '../../assets/testimg2.png';
-import img3 from '../../assets/testimg3.png';
+import img1 from '../../../assets/testimg.png';
+import img2 from '../../../assets/testimg2.png';
+import img3 from '../../../assets/testimg3.png';
 
 export function load() {
 	return {

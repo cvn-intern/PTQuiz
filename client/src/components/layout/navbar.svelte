@@ -14,7 +14,7 @@
 		},
 		{
 			title: 'Dashboard',
-			href: '/dashboard'
+			href: '/dashboard/quizzes'
 		}
 	];
 	import Icon from '@iconify/svelte';
@@ -23,6 +23,7 @@
 		const response = await fetch('/api/auth/logout');
 		if (response.status === 200) {
 			invalidateAll();
+            window.location.href = '/';
 		}
 	};
 </script>
@@ -46,7 +47,7 @@
 					aria-label="profile"
 					class="w-16"
 					on:click={() => {
-						window.location.href = '/profile';
+						window.location.href = '/dashboard/profile';
 					}}
 				>
 					<img src={user.avatar} alt="user avatar" />
