@@ -18,10 +18,6 @@
 		}
 	];
 
-	let classNameElement =
-		'flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-md hover:bg-secondary dark:bg-gray-900 dark:text-white cursor-pointer';
-	let classNameElementActive = classNameElement + ' bg-secondary dark:bg-gray-800';
-
 	function changeActiveElement(index: number) {
 		elementsSidebar = elementsSidebar.map((element, i) => {
 			if (i === index) {
@@ -41,7 +37,11 @@
 		<ul class="space-y-1.5">
 			{#each elementsSidebar as { isActive, icon, name }, i}
 				<li on:click={() => changeActiveElement(i)}>
-					<p class={isActive ? classNameElementActive : classNameElement}>
+					<p
+						class="flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-md hover:bg-secondary dark:bg-gray-900 dark:text-white cursor-pointer {isActive
+							? 'bg-secondary'
+							: ''}"
+					>
 						<Icon {icon} class={'text-xl'} />
 						{name}
 					</p>
