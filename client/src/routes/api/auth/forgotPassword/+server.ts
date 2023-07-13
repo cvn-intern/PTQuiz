@@ -1,10 +1,8 @@
-import { error, json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ fetch, request }) => {
-	// get data from request
 	const data = await request.json();
-	const response = await fetch('http://localhost:8080/api/auth/register', {
+	const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -14,9 +12,9 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 		})
 	});
 	const result = await response.json();
-	if (response.status === 201) {
-		return new Response(JSON.stringify(result.message), {
-			status: 201
+	if (response.status === 200) {
+		return new Response(JSON.stringify(result.data), {
+			status: 200
 		});
 	} else {
 		return new Response(JSON.stringify(result.message), {

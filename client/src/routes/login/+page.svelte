@@ -15,7 +15,7 @@
 						name="email"
 						id="email"
 						placeholder="Email"
-						class="block w-full p-4 rounded-md border-gray text-zinc-400"
+						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
 					/>
 				</div>
@@ -25,12 +25,12 @@
 						name="password"
 						id="password"
 						placeholder="Password"
-						class="block w-full p-4 rounded-md border-gray text-zinc-400"
+						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
 					/>
 				</div>
 				<div class=" text-gray-400 hover:underline hover:text-gray-100">
-					<a href="/" class="text-secondary">Forgot your password?</a>
+					<a href="/forgotPassword" class="text-secondary">Forgot your password?</a>
 				</div>
 				<div class="pt-4">
 					<button
@@ -43,13 +43,13 @@
 			<div>
 				<div class="py-6 space-x-2 text-gray-500 flex">
 					<button
-						class=" border-gray-200 border p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
+						class=" border-gray-200 border border-spacing-1 p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
 					>
 						<Icon icon="logos:facebook" class="text-2xl " />
 						<span>Facebook</span>
 					</button>
 					<button
-						class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
+						class="border-gray-200 border border-spacing-1 p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
 					>
 						<Icon icon="flat-color-icons:google" class="text-2xl " />
 						<span>Google</span>
@@ -77,9 +77,3 @@
 		</div>
 	</div>
 </section>
-
-<style>
-	.border-gray {
-		@apply border border-spacing-1 border-zinc-200;
-	}
-</style>
