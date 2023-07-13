@@ -1,14 +1,15 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { Spinner } from 'flowbite-svelte';
+	import Icon from '@iconify/svelte';
 </script>
 
 <div class=" flex justify-center items-center">
 	<div
-		class="w-[446px] border border-gray-200 flex flex-col items-center my-6 p-12 gap-12 rounded-xl bg-white"
+		class="w-[446px] border border-gray-200 shadow-xl flex flex-col items-center my-6 p-12 gap-12 rounded-xl bg-white"
 	>
-		<Spinner size={'24'} color="red" />
-		<p>Check your Email</p>
+		<Icon icon="flat-color-icons:ok" class="text-9xl" />
+		<p class="font-semibold">Check your Email</p>
 		<div class=" text-gray-400">
 			<p>
 				If you still didn't receive it? <button
