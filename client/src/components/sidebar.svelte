@@ -39,20 +39,20 @@
 	<nav class="p-6 w-full flex flex-col flex-wrap">
 		<ul class="space-y-1.5">
 			{#each elementsSidebar as { isActive, icon, name, path }, i}
-				<li
-					on:click={() => {
-						path ? (window.location.href = path) : '';
-						changeActiveElement(i);
-					}}
-				>
-					<p
-						class="flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-md hover:bg-secondary dark:bg-gray-900 dark:text-white cursor-pointer {isActive
+				<li>
+					<button
+						aria-label={name}
+						class="flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-md hover:bg-secondary dark:bg-gray-900 dark:text-white cursor-pointer w-full {isActive
 							? 'bg-secondary'
 							: ''}"
+						on:click={() => {
+							path ? (window.location.href = path) : '';
+							changeActiveElement(i);
+						}}
 					>
 						<Icon {icon} class={'text-xl'} />
 						{name}
-					</p>
+					</button>
 				</li>
 			{/each}
 		</ul>

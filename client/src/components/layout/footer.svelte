@@ -1,12 +1,26 @@
 <script>
 	import Icon from '@iconify/svelte';
+
+	const aboutUs = [
+		'About us',
+		'Help',
+		'FAQS'
+	];
+
+	const contactIcons = [
+		'ic:baseline-facebook',
+		'mdi:twitter',
+		'ic:baseline-telegram',
+		'ri:instagram-fill',
+		'mdi:linkedin'
+	];
 </script>
 
 <footer class="bg-primary">
 	<div class="flex flex-col items-center">
 		<div class="container flex flex-col gap-8 md:flex-row justify-between lg:px-24 pt-4">
 			<div class="location flex flex-col items-center gap-2">
-				<h1 class="text-xl font-bold">Our Location</h1>
+				<h1 class="text-xl font-bold" aria-label="">Our Location</h1>
 				<div class="flex flex-col gap-2">
 					<span class="flex gap-2 items-center cursor-pointer">
 						<Icon icon="bxs:map" class="text-2xl" />
@@ -27,20 +41,18 @@
 			</div>
 			<div class="about flex flex-col items-center gap-2">
 				<h1 class="text-xl font-bold">About Us</h1>
-				<div class="flex flex-col gap-2">
-					<p class="cursor-pointer">About us</p>
-					<p class="cursor-pointer">Help</p>
-					<p class="cursor-pointer">FAQS</p>
-				</div>
+				<ul class="flex flex-col gap-2">
+					{#each aboutUs as item}
+						<li class="cursor-pointer" aria-label={item}>{item}</li>
+					{/each}
+				</ul>
 			</div>
 			<div class="contact flex flex-col items-center gap-2">
 				<h1 class="text-xl font-bold">Contact Us</h1>
 				<div class="flex gap-2 cursor-pointer">
-					<Icon icon="ic:baseline-facebook" class="text-2xl " />
-					<Icon icon="mdi:twitter" class="text-2xl" />
-					<Icon icon="ic:baseline-telegram" class="text-2xl" />
-					<Icon icon="ri:instagram-fill" class="text-2xl" />
-					<Icon icon="mdi:linkedin" class="text-2xl" />
+					{#each contactIcons as icon}
+						<Icon icon={icon} class="text-2xl" />
+					{/each}
 				</div>
 			</div>
 		</div>

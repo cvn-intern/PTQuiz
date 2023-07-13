@@ -52,6 +52,7 @@
 		<div class="">
 			<label for="username" class="mb-1">Username</label>
 			<input
+				aria-label="Username"
 				id="username"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				disabled
@@ -60,6 +61,7 @@
 
 			<label for="email" class="mb-1">Email</label>
 			<input
+				aria-label="Email"
 				id="email"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				disabled
@@ -68,6 +70,7 @@
 
 			<label for="displayName" class="mb-1">Display name</label>
 			<input
+				aria-label="Display name"
 				id="displayName"
 				name="displayName"
 				bind:value={formUserInfo.displayName}
@@ -77,11 +80,16 @@
 		</div>
 		<div class="flex justify-end space-x-2">
 			<button
-				class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800"
+				aria-label="Cancel"
+				class="w-full text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 				on:click={handleCancel}
 				type="button">Cancel</button
 			>
-			<button class="px-4 py-2 rounded-lg bg-blue-500 text-white" type="submit">Save</button>
+			<button
+				aria-label="Save"
+				class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+				type="submit">Save</button
+			>
 		</div>
 	</form>
 

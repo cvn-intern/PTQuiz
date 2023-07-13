@@ -14,6 +14,7 @@
 			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action={'?/reset'}>
 				<div class="py-4">
 					<input
+					aria-label="Password"
 						type="password"
 						name="password"
 						id="password"
@@ -24,6 +25,7 @@
 				</div>
 				<div class="py-4">
 					<input
+					aria-label="Confirm Password"
 						type="password"
 						name="confirmPassword"
 						id="confirmPassword"
@@ -34,6 +36,7 @@
 				</div>
 				<div class="pt-4">
 					<button
+					aria-label="Reset Password"
 						type="submit"
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
 						>Reset your Password</button
@@ -44,6 +47,7 @@
 				<div class=" text-gray-400">
 					<p>
 						Already have an account? <button
+						aria-label="Log In"
 							class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 							on:click={() => {
 								goto('/login');
