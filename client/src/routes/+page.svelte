@@ -3,7 +3,13 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	console.log(data);
 </script>
 
-<LandingPage />
+<LandingPage/>
+
+<style lang="postcss">
+	:global(html) {
+		background-color: theme(colors.gray.100);
+	}
+	
+</style>

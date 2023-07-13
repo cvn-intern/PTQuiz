@@ -14,6 +14,10 @@ export default {
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
 				primaryColor: {
+				reddish: '#FF6B6B',
+				reddishHover: '#751D19',
+				graydish: "#E6E6E6",
+				primary: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
 					200: '#FFE4DE',
