@@ -53,7 +53,6 @@ async function signInWithProvider(firebase, provider) {
 				return false;
 			})
 			.catch((err) => {
-				console.error(err);
 				return false;
 			});
 		// ...
