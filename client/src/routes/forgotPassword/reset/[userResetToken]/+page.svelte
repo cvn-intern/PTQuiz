@@ -10,7 +10,7 @@
 <section class="flex justify-center">
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
-			<h1 class=" text-secondary text-[20px] font-bold">Sign up</h1>
+			<h1 class=" text-secondary text-[20px] font-bold">Reset Password</h1>
 			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action={'?/reset'}>
 				<div class="py-4">
 					<input

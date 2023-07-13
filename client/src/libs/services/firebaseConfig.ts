@@ -1,8 +1,4 @@
 import 'firebase/auth';
-import { apiNoAuth } from '../utils/api';
-import { tokens } from '../stores/token';
-import { get } from 'svelte/store';
-import cookies from 'js-cookie';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,6 +12,7 @@ async function initializeFirebase(firebase) {
 }
 
 const uiConfig = (firebase) => ({
+	// signInSuccessUrl: '',
 	signInOptions: [
 		firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 		firebase.auth.GithubAuthProvider.PROVIDER_ID,
@@ -23,30 +20,32 @@ const uiConfig = (firebase) => ({
 	],
 	signInFlow: 'popup',
 	callbacks: {
-		signInSuccessWithAuthResult: async function (authResult: any) {
+		signInSuccessWithAuthResult: function (authResult) {
 			const { credential, user } = authResult;
-			const { data } = await apiNoAuth.post('/auth/oauth', {
-				authId: user.uid,
-				email: user.email,
-				displayName: user.displayName,
-				avatar: user.photoURL,
-				loginFrom: credential.providerId
-			});
 
-
-
-			cookies.remove('accessToken');
-			cookies.remove('refreshToken');
-
-			cookies.set('accessToken', data.data.accessToken);
-			cookies.set('refreshToken', data.data.refreshToken);
-
-			return {
-				status: 'Success',
-				message: data.message
-			};
-			// }
-			// return false;
+			return fetch('/api/auth/oauth', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					authId: user.uid,
+					email: user.email,
+					displayName: user.displayName,
+					avatar: user.photoURL,
+					loginFrom: credential.providerId
+				})
+			})
+				.then((res) => {
+					if (res.status === 200) {
+						window.location.href = '/';
+					}
+					return false;
+				})
+				.catch((err) => {
+					console.error(err);
+					return false;
+				});
 		}
 	}
 });

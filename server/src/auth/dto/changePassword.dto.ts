@@ -14,5 +14,5 @@ export class ChangePasswordDto {
     @Length(8, 20, {
         message: 'Confirm password must be between 8 and 20 characters',
     })
-    confirmNewPassword: string;
+    confirmPassword: string;
 }

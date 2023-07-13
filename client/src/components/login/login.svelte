@@ -1,23 +1,22 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { goto } from '$app/navigation';
-	import OAuth from '../../components/OAuth.svelte';
-	export let data;
-	export let form;
+	import OAuth from '../OAuth.svelte';
 </script>
 
 <section class="flex text-white justify-center">
 	<div class="w-[446px] rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
 			<h1 class=" text-secondary text-[20px] font-bold">Login to your Account</h1>
-			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="?/login">
+
+			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="/login">
 				<div class="py-4">
 					<input
 						type="email"
 						name="email"
 						id="email"
 						placeholder="Email"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
+						class="block w-full p-4 rounded-md border-gray text-zinc-400"
 						required
 					/>
 				</div>
@@ -27,12 +26,12 @@
 						name="password"
 						id="password"
 						placeholder="Password"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
+						class="block w-full p-4 rounded-md border-gray text-zinc-400"
 						required
 					/>
 				</div>
 				<div class=" text-gray-400 hover:underline hover:text-gray-100">
-					<a href="/forgotPassword" class="text-secondary">Forgot your password?</a>
+					<a href="/" class="text-secondary">Forgot your password?</a>
 				</div>
 				<div class="pt-4">
 					<button
@@ -58,11 +57,12 @@
 					</button>
 				</div>
 			</div>
-			{#if form}
-				<h4 class="text-red-600 font-light text-md text-center">
-					{form.error}
-				</h4>
-			{/if}
 		</div>
 	</div>
 </section>
+
+<style>
+	.border-gray {
+		@apply border border-spacing-1 border-zinc-200;
+	}
+</style>

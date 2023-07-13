@@ -14,7 +14,7 @@
 		},
 		{
 			title: 'Dashboard',
-			href: '/'
+			href: '/dashboard'
 		}
 	];
 	import Icon from '@iconify/svelte';
@@ -43,9 +43,14 @@
 		</ul>
 		<div class="flex gap-2 md:gap-6 items-center">
 			{#if user}
-				<div class="w-16">
+				<button
+					class="w-16"
+					on:click={() => {
+						window.location.href = '/profile';
+					}}
+				>
 					<img src={user.avatar} alt="" />
-				</div>
+				</button>
 				<div class="">
 					<button
 						on:click={logout}
