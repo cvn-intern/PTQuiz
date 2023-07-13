@@ -45,6 +45,9 @@
 		"dotenv": "^16.3.1",
 		"firebase": "^9.23.0",
 		"firebaseui": "^6.0.2",
-		"siema": "^1.5.1"
+		"flowbite": "^1.7.0",
+		"flowbite-svelte": "^0.39.2",
+		"svelte-toasts": "^1.1.2",
+		"tailwind-merge": "^1.13.2"
 	}
 }

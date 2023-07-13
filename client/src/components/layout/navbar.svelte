@@ -10,7 +10,7 @@
 		},
 		{
 			title: 'Dashboard',
-			href: '/'
+			href: '/dashboard'
 		}
 	];
 	import Icon from '@iconify/svelte';
@@ -30,6 +30,7 @@
 		</ul>
 		<div class="flex gap-2">
 			<button
+				aria-label="Close a popup"
 				class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover"
 				on:click={() => {
 					window.location.href = '/login';
