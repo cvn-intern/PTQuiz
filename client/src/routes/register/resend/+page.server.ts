@@ -1,19 +1,16 @@
 import { redirect } from '@sveltejs/kit';
 
 export const actions = {
-	register: async ({ fetch, request }) => {
+	resend: async ({ fetch, request }) => {
 		const data = await request.formData();
-		const response = await fetch('/api/auth/register', {
+		const response = await fetch('/api/auth/resend', {
 			method: 'POST',
 			body: JSON.stringify({
-				displayName: data.get('displayName'),
-				email: data.get('email'),
-				password: data.get('password'),
-				confirmPassword: data.get('confirmPassword')
+				email: data.get('email')
 			})
 		});
 		const result = await response.json();
-		if (response.status === 201) {
+		if (response.status === 200) {
 			throw redirect(303, '/register/loading');
 		} else {
 			return {

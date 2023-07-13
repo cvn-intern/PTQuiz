@@ -24,11 +24,11 @@ export class MailerService {
         let text = '';
         let url = '';
         if (type === 'confirm') {
-            url = `${process.env.CLIENT_URL}/confirm/${token}`;
+            url = `${process.env.CLIENT_URL}/register/confirm/${token}`;
             text = `Hi ${displayName},\n
             Please confirm your email by clicking on the following link: ${url}\n\nThanks,\nPTQuiz`;
         } else if (type === 'reset') {
-            url = `${process.env.CLIENT_URL}/reset/${token}`;
+            url = `${process.env.CLIENT_URL}/forgotPassword/reset/${token}`;
             text = `Hi ${displayName},\n
             Please reset your password by clicking on the following link: ${url}\n\nThanks,\nPTQuiz`;
         }

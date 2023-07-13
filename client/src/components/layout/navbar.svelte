@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
-	export let user;
+	export let user: {
+		avatar: string;
+	};
 	const navs = [
 		{
 			title: 'Home',
