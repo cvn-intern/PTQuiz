@@ -13,6 +13,9 @@ export default {
 				background: '#f5f5f5',
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
+				reddish: '#FF6B6B',
+				reddishHover: '#751D19',
+				graydish: "#E6E6E6",
 				primary: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -32,7 +35,14 @@ export default {
 			},
 			loginWidth: {
 				panel: '446px'
-			}
+			},
+			width : {
+				desktop : '20rem',
+				ipad : '16rem',
+				mobile : '12rem'
+			},
+
+			
 		}
 	},
 	plugins: [require('flowbite/plugin')],
