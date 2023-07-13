@@ -30,7 +30,7 @@
 		{#if form && form.error}
 			<Toast>{form.error}</Toast>
 		{/if}
-		<div class="">
+		<div>
 			<label for="oldPassword" class="mb-1">Old password</label>
 			<input
 				aria-label="Old password"

@@ -9,6 +9,7 @@
 <section class="flex flex-col w-full h-full gap-4 p-5">
 	<div class="">
 		<button
+			aria-label="Create quizzes"
 			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
 			>Create quizzes</button
 		>

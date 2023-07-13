@@ -12,6 +12,7 @@
 			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="/login">
 				<div class="py-4">
 					<input
+						aria-label="Email"
 						type="email"
 						name="email"
 						id="email"
@@ -22,6 +23,7 @@
 				</div>
 				<div class="py-4">
 					<input
+						aria-label="Password"
 						type="password"
 						name="password"
 						id="password"
@@ -31,10 +33,11 @@
 					/>
 				</div>
 				<div class=" text-gray-400 hover:underline hover:text-gray-100">
-					<a href="/" class="text-secondary">Forgot your password?</a>
+					<a href="/" class="text-secondary" aria-label="Forgot your password ">Forgot your password?</a>
 				</div>
 				<div class="pt-4">
 					<button
+					aria-label="Log in"
 						type="submit"
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
 						>LOG IN</button
@@ -48,6 +51,7 @@
 				<div>
 					Don't have an account?
 					<button
+						aria-label="Sign up"
 						class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 						on:click={() => {
 							goto('/register');

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	export let user: {
 		avatar: string;
 	};
@@ -20,7 +20,6 @@
 	import Icon from '@iconify/svelte';
 
 	const logout = async () => {
-		console.log('logout');
 		const response = await fetch('/api/auth/logout');
 		if (response.status === 200) {
 			invalidateAll();
@@ -41,31 +40,32 @@
 				</li>
 			{/each}
 		</ul>
-		<div class="flex gap-2 md:gap-6 items-center">
+		<div class="flex gap-2 md:gap-6 items-center" aria-labelledby="navbar">
 			{#if user}
 				<button
+					aria-label="profile"
 					class="w-16"
 					on:click={() => {
 						window.location.href = '/profile';
 					}}
 				>
-					<img src={user.avatar} alt="" />
+					<img src={user.avatar} alt="user avatar" />
 				</button>
-				<div class="">
-					<button
-						on:click={logout}
-						class="uppercase text-white w-full py-3 px-3 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
-						>LOG OUT</button
-					>
-				</div>
+				<button
+					aria-label="logout"
+					on:click={logout}
+					class="uppercase text-white w-full py-3 px-3 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
+					>LOG OUT</button
+				>
 			{:else}
 				<button
+					aria-label="login"
 					class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover focus:outline-none"
 					on:click={() => {
 						window.location.href = '/login';
 					}}
 				>
-					Login
+					LOGIN
 				</button>
 			{/if}
 		</div>

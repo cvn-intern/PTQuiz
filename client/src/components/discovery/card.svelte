@@ -1,16 +1,15 @@
 <script>
-
-	export let image ='';
+	export let image = '';
 	export let nameofquiz = '';
 	export let author = '';
 </script>
 
 <div
-	class=" h-full rounded-xl justify-center shadow-md transition duration-300 transform hover:scale-105 lg:pb-3"
+	class=" h-full rounded-xl justify-center shadow-lg transition duration-300 transform hover:scale-105 lg:pb-3"
 >
 	<div class="h-3/4 lg:h-4/5">
 		<img src={image} alt="" class="rounded-t-xl w-full h-4/5" />
-		<h1 class=" text-xs  font-semibold mx-[10px] mt-5 font-body md:text-lg">
+		<h1 class=" text-xs font-semibold mx-[10px] mt-5 font-body md:text-lg">
 			{nameofquiz}
 		</h1>
 	</div>
