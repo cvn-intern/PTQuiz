@@ -16,7 +16,7 @@
 						name="email"
 						id="email"
 						placeholder="Email"
-						class="block w-full p-4 rounded-md border-gray text-zinc-400"
+						class="block w-full p-4 rounded-md border-zinc-800 text-zinc-400"
 						required
 					/>
 				</div>
@@ -26,7 +26,7 @@
 						name="password"
 						id="password"
 						placeholder="Password"
-						class="block w-full p-4 rounded-md border-gray text-zinc-400"
+						class="block w-full p-4 rounded-md border-zinc-800 text-zinc-400"
 						required
 					/>
 				</div>
@@ -60,9 +60,3 @@
 		</div>
 	</div>
 </section>
-
-<style>
-	.border-gray {
-		@apply border border-spacing-1 border-zinc-200;
-	}
-</style>

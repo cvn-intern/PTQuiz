@@ -1,5 +1,5 @@
 <script>
-	import Category from './category.svelte';
+	import Category from '../../components/discovery/category.svelte';
 </script>
 
 <Category nameCategory={'Math'} />
