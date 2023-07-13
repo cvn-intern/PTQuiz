@@ -48,8 +48,6 @@ export class QuizzesController {
         @Body() dto: QuizzesDto,
         @GetCurrentUser('id') userId: string,
     ) {
-        console.log(dto);
-        console.log(userId);
         return await this.quizzesService.addQuizzes(dto, userId);
     }
 

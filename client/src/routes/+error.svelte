@@ -1,3 +1,6 @@
+<h1>My custom error page</h1>
+<p>Status: %sveltekit.status%</p>
+<p>Message: %sveltekit.error.message%</p>
 <div class="h-screen w-screen bg-gray-50 flex items-center">
 	<div
 		class="container flex flex-col md:flex-row sm:flex-row items-center justify-between px-5 text-gray-700"

@@ -1,7 +1,7 @@
 <script>
 	import Breadcrumb from '../../components/breadcrumb.svelte';
 	import SearchSort from '../../components/searchSort.svelte';
-	import Sidebar from '../../components/sidebar.svelte';
+	import Sidebar from '../../components/layout/sidebar.svelte';
 </script>
 
 <div class="flex gap-6">

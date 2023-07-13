@@ -2,7 +2,7 @@
 	import Breadcrumb from '../../components/breadcrumb.svelte';
 	import Quizzes from '../../components/quizzes/quizzes.svelte';
 	import SearchSort from '../../components/searchSort.svelte';
-	import Sidebar from '../../components/sidebar.svelte';
+	import Sidebar from '../../components/layout/sidebar.svelte';
 
 	export let data;
 	let { quizzes } = data;

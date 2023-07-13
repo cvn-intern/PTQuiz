@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Sidebar from '../../components/sidebar.svelte';
+	import Sidebar from '../../components/layout/sidebar.svelte';
 	import ProfileTabs from '../../components/userSetting/ProfileTabs.svelte';
 	import type { LayoutData } from '../$types';
 	import type { ActionData } from './$types';
