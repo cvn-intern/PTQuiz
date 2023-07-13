@@ -1,15 +1,23 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { ActionForm } from './$types';
-	export let form: ActionForm;
-	// console.log(form);
+	import { page } from '$app/stores';
+	import { get } from 'svelte/store';
+	import type { ActionData } from '../../routes/profile/$types';
+	import { getContext } from 'svelte';
+	export let user;
+	export let form;
+
+	export let formChangePassword;
+
+	export const snapshot = {
+		capture: () => ({ formChangePassword }),
+		restore: (value) => {
+			formChangePassword = value.formChangePassword;
+		}
+	};
 </script>
 
 <div class="flex flex-col items-center">
-	{#if form?.error}
-		<p>{form.error}</p>
-	{/if}
-
 	<form
 		method="POST"
 		action="?/change_password"
@@ -24,6 +32,8 @@
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				placeholder="Old password"
 				type="password"
+				bind:value={formChangePassword.oldPassword}
+				required
 			/>
 
 			<label for="newPassword" class="mb-1">New password</label>
@@ -33,6 +43,8 @@
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				placeholder="New password"
 				type="password"
+				bind:value={formChangePassword.newPassword}
+				required
 			/>
 
 			<label for="confirmPassword" class="mb-1">Confirm new password</label>
@@ -42,6 +54,8 @@
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				placeholder="Confirm new password"
 				type="password"
+				bind:value={formChangePassword.confirmPassword}
+				required
 			/>
 		</div>
 		<div class="flex justify-end space-x-2">
@@ -49,4 +63,9 @@
 			<button class="px-4 py-2 rounded-lg bg-blue-500 text-white" type="submit">Save</button>
 		</div>
 	</form>
+	{#if form !== null}
+		<h4 class="text-red-600 font-light text-md text-center pt-4">
+			{form.error}
+		</h4>
+	{/if}
 </div>

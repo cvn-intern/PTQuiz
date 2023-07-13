@@ -2,13 +2,11 @@
 	import Sidebar from '../../components/sidebar.svelte';
 	import ProfileTabs from '../../components/userSetting/ProfileTabs.svelte';
 	import type { LayoutData } from '../$types';
-	import { setContext } from 'svelte';
 	import type { ActionData } from './$types';
+	import { setContext } from 'svelte';
 	export let data: LayoutData;
 	export let form: ActionData;
-	console.log(form, data);
-	setContext('user', data.user);
-	setContext('form', form);
+	$: setContext('form', form);
 </script>
 
 <div class="flex gap-6">
@@ -16,6 +14,6 @@
 		<Sidebar />
 	</div>
 	<div class="xl:w-10/12 lg:w-9/12 md:w-8/12 sm:w-full w-full">
-		<ProfileTabs />
+		<ProfileTabs user={data.user} form={form} />
 	</div>
 </div>

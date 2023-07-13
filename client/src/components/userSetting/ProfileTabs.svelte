@@ -4,8 +4,18 @@
 	import { getContext } from 'svelte';
 
 	let currentTab = 'EditProfile';
-	let data = getContext('user');
-	// get cookie data
+	export let user;
+	export let form;
+
+	export let formChangePassword = {
+		oldPassword: '',
+		newPassword: '',
+		confirmPassword: ''
+	};
+
+	export let formUserInfo = {
+		displayName: user.displayName
+	};
 
 	function switchTab(tab) {
 		currentTab = tab;
@@ -25,7 +35,7 @@
 		>
 			Edit Profile
 		</button>
-		{#if data.loginFrom === null}
+		{#if user?.loginFrom === null}
 			<button
 				class="pb-1 border-b-2 border-transparent hover:border-blue-500"
 				class:active={currentTab === 'ChangePassword'}
@@ -40,9 +50,9 @@
 <div class="content">
 	<div class="w-full">
 		{#if currentTab === 'EditProfile'}
-			<EditProfile />
+			<EditProfile data={user} {formUserInfo} {form} />
 		{:else if currentTab === 'ChangePassword'}
-			<ChangePassword />
+			<ChangePassword {form} {formChangePassword} />
 		{/if}
 	</div>
 </div>

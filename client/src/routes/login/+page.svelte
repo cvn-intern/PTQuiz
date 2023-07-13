@@ -2,6 +2,7 @@
 	import Icon from '@iconify/svelte';
 	import { goto } from '$app/navigation';
 	import OAuth from '../../components/OAuth.svelte';
+	export let data;
 	export let form;
 </script>
 
