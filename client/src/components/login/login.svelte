@@ -42,7 +42,7 @@
 				</div>
 			</form>
 			<div>
-				<OAuth />
+				<!-- <OAuth /> -->
 			</div>
 			<div class=" text-gray-400">
 				<div>
