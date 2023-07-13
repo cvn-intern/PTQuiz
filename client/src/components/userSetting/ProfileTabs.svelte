@@ -1,23 +1,20 @@
-<script>
+<script lang="ts">
 	import EditProfile from './EditProfile.svelte';
 	import ChangePassword from './ChangePassword.svelte';
-	import { getContext } from 'svelte';
 
 	let currentTab = 'EditProfile';
-	export let user;
-	export let form;
-
-	export let formChangePassword = {
+	export let user: any;
+	export let form: any;
+	export let formChangePassword: any = {
 		oldPassword: '',
 		newPassword: '',
 		confirmPassword: ''
 	};
-
-	export let formUserInfo = {
+	export let formUserInfo: any = {
 		displayName: user.displayName
 	};
 
-	function switchTab(tab) {
+	function switchTab(tab: string) {
 		currentTab = tab;
 	}
 </script>
@@ -50,9 +47,9 @@
 <div class="content">
 	<div class="w-full">
 		{#if currentTab === 'EditProfile'}
-			<EditProfile data={user} {formUserInfo} {form} />
+			<EditProfile data={user} bind:formUserInfo bind:form />
 		{:else if currentTab === 'ChangePassword'}
-			<ChangePassword {form} {formChangePassword} />
+			<ChangePassword bind:form bind:formChangePassword />
 		{/if}
 	</div>
 </div>

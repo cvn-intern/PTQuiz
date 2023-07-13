@@ -3,15 +3,9 @@
 	import { Toast } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
-	export let data;
 	export let form;
 	import { onMount } from 'svelte';
-	import {
-		initializeFirebase,
-		startSignInWithGoogle,
-		startSignInWithFacebook,
-		startSignInWithGithub
-	} from '../../libs/services/firebaseConfig';
+	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -20,10 +14,10 @@
 			await initializeFirebase(firebase);
 		}
 	});
+	const signInProviders = ['Google', 'Facebook', 'Github'];
+	const signInIcons = ['flat-color-icons:google', 'logos:facebook', 'icon-park:github'];
 
-	const signInWithGoogle = () => startSignInWithGoogle(window.firebase);
-	const signInWithFacebook = () => startSignInWithFacebook(window.firebase);
-	const signInWithGithub = () => startSignInWithGithub(window.firebase);
+	const signIn = (providerName) => () => startSignIn(window.firebase, providerName);
 </script>
 
 <div class="flex justify-center items-center">
@@ -87,30 +81,18 @@
 			</form>
 			<div id="loading">
 				<div class="py-6 space-x-2 text-gray-500 flex">
-					<button
-						class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
-						on:click={signInWithFacebook}
-					>
-						<Icon icon="logos:facebook" class="text-2xl " />
-						<span>Facebook</span>
-					</button>
-					<button
-						class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
-						on:click={signInWithGoogle}
-					>
-						<Icon icon="flat-color-icons:google" class="text-2xl " />
-						<span>Google</span>
-					</button>
-					<button
-						class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
-						on:click={signInWithGithub}
-					>
-						<Icon icon="icon-park:github" class="text-2xl " />
-						<span>GitHub</span>
-					</button>
+					{#each signInProviders as provider, i}
+						<button
+							class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
+							on:click={signIn(provider)}
+						>
+							<Icon icon={signInIcons[i]} class="text-2xl " />
+							<span>{provider}</span>
+						</button>
+					{/each}
 				</div>
-				<!-- <OAuth /> -->
 			</div>
+
 			<div class=" text-gray-400">
 				<div>
 					Don't have an account?

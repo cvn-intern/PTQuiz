@@ -1,30 +1,29 @@
-<script>
-	// @ts-nocheck
-
+<script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Toast } from 'flowbite-svelte';
 
-	export let data;
-	export let formUserInfo;
-	export let form;
-	export let imageFile;
-	let imageUrl;
+	export let data: any;
+	export let formUserInfo: any;
+	export let form: any;
 
-	function handleCancel() {
-		formUserInfo.displayName = data.displayName;
-	}
+	let imageFile;
+	let imageUrl: string = data?.avatar;
 
-	export const snapshot = {
+	const snapshot = {
 		capture: () => ({ formUserInfo }),
-		restore: (value) => {
+		restore: (value: any) => {
 			formUserInfo = value.formUserInfo;
 		}
 	};
 
-	function handleFileChange(event) {
+	const handleCancel = () => {
+		formUserInfo.displayName = data.displayName;
+	};
+
+	const handleFileChange = (event: any) => {
 		imageFile = event.target.files[0];
 		imageUrl = URL.createObjectURL(imageFile);
-	}
+	};
 </script>
 
 <div class="flex flex-col items-center">
@@ -35,15 +34,11 @@
 		class="items-center flex flex-col gap-5"
 	>
 		{#if form && form.message}
-			<Toast>{form.message}</Toast>
+			<Toast position="top-right">{form.message}</Toast>
 		{/if}
+
 		<div class="relative">
-			<img
-				accept=".jpg, .jpeg, .png, .webp"
-				src={imageUrl || data.avatar}
-				alt="Avatar"
-				class="w-20 h-20 rounded-full cursor-pointer"
-			/>
+			<img src={imageUrl} alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer" />
 			<input
 				type="file"
 				name="avatar"
@@ -53,7 +48,7 @@
 			/>
 		</div>
 
-		<div class="">
+		<div>
 			<label for="username" class="mb-1">Username</label>
 			<input
 				aria-label="Username"
@@ -82,6 +77,7 @@
 				placeholder="Display name"
 			/>
 		</div>
+
 		<div class="flex justify-end space-x-2">
 			<button
 				aria-label="Cancel"

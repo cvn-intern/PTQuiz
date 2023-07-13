@@ -1,65 +1,3 @@
-// import 'firebase/auth';
-
-// const firebaseConfig = {
-// 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-// 	authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-// 	projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
-// 	storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET
-// };
-
-// async function initializeFirebase(firebase) {
-// 	if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-// }
-
-// const uiConfig = (firebase) => ({
-// 	// signInSuccessUrl: '',
-// 	signInOptions: [
-// 		firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-// 		firebase.auth.GithubAuthProvider.PROVIDER_ID,
-// 		firebase.auth.FacebookAuthProvider.PROVIDER_ID
-// 	],
-// 	signInFlow: 'popup',
-// 	callbacks: {
-// 		signInSuccessWithAuthResult: function (authResult) {
-// 			const { credential, user } = authResult;
-// 			document.getElementById('loading').style.display = 'none';
-
-// 			return fetch('/api/auth/oauth', {
-// 				method: 'POST',
-// 				headers: {
-// 					'Content-Type': 'application/json'
-// 				},
-// 				body: JSON.stringify({
-// 					authId: user.uid,
-// 					email: user.email,
-// 					displayName: user.displayName,
-// 					avatar: user.photoURL,
-// 					loginFrom: credential.providerId
-// 				})
-// 			})
-// 				.then((res) => {
-// 					if (res.status === 200) {
-// 						window.location.href = '/';
-// 					}
-// 					return false;
-// 				})
-// 				.catch((err) => {
-// 					console.error(err);
-// 					return false;
-// 				});
-// 		}
-// 	}
-// });
-
-// async function startFirebaseUI(firebase) {
-// 	const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
-// 	await ui.start('#firebaseui-auth-container', uiConfig(firebase));
-// }
-
-// ...
-
-// export { initializeFirebase, uiConfig, startFirebaseUI };
-
 import 'firebase/auth';
 
 const firebaseConfig = {
@@ -69,33 +7,36 @@ const firebaseConfig = {
 	storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET
 };
 
-async function initializeFirebase(firebase) {
+async function initializeFirebase(firebase: any) {
 	if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 }
 
-async function startSignInWithGoogle(firebase) {
-	const provider = new firebase.auth.GoogleAuthProvider();
-	await signInWithProvider(firebase, provider);
+function getProvider(firebase: any, providerName: string) {
+	switch(providerName) {
+		case 'Google':
+			return new firebase.auth.GoogleAuthProvider();
+		case 'Facebook':
+			return new firebase.auth.FacebookAuthProvider();
+		case 'Github':
+			return new firebase.auth.GithubAuthProvider();
+		default:
+			throw new Error(`Invalid provider name: ${providerName}`);
+	}
 }
 
-async function startSignInWithFacebook(firebase) {
-	const provider = new firebase.auth.FacebookAuthProvider();
-	await signInWithProvider(firebase, provider);
-}
-
-async function startSignInWithGithub(firebase) {
-	const provider = new firebase.auth.GithubAuthProvider();
-	await signInWithProvider(firebase, provider);
-}
-
-async function signInWithProvider(firebase, provider) {
+async function signInWithProvider(firebase: any, provider: string) {
 	try {
 		const result = await firebase.auth().signInWithPopup(provider);
-		// This gives you a the provider's OAuth 2.0 access token if available.
-		const token = result.credential.accessToken;
-		// The signed-in user info.
 		const user = result.user;
-		return fetch('/api/auth/oauth', {
+		return sendUserToServer(user, result.credential.providerId);
+	} catch (error: any) {
+		throw new Error(error);
+	}
+}
+
+async function sendUserToServer(user: any, providerId: string) {
+	try {
+		const response = await fetch('/api/auth/oauth', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -105,31 +46,24 @@ async function signInWithProvider(firebase, provider) {
 				email: user.email,
 				displayName: user.displayName,
 				avatar: user.photoURL,
-				loginFrom: result.credential.providerId
+				loginFrom: providerId
 			})
-		})
-			.then((res) => {
-				if (res.status === 200) {
-					window.location.href = '/';
-				}
-				return false;
-			})
-			.catch((err) => {
-				console.error(err);
-				return false;
-			});
-		// ...
+		});
+		if (response.status === 200) {
+			window.location.href = '/';
+		}
 	} catch (error) {
-		const errorCode = error.code;
-		const errorMessage = error.message;
-		const email = error.email;
-		const credential = error.credential;
+		console.error(error);
+		return false;
 	}
+}
+
+async function startSignIn(firebase: any, providerName: string) {
+	const provider = getProvider(firebase, providerName);
+	await signInWithProvider(firebase, provider);
 }
 
 export {
 	initializeFirebase,
-	startSignInWithGoogle,
-	startSignInWithFacebook,
-	startSignInWithGithub
+	startSignIn
 };
