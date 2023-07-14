@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { Toast } from 'flowbite-svelte';
+	import { Spinner, Toast } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	export let form;
@@ -17,7 +17,16 @@
 	const signInProviders = ['Google', 'Facebook', 'Github'];
 	const signInIcons = ['flat-color-icons:google', 'logos:facebook', 'icon-park:github'];
 
-	const signIn = (providerName: string) => () => startSignIn(window.firebase, providerName);
+	function showToast() {
+		const toast = document.getElementById('loading');
+		toast?.classList.remove('hidden');
+	}
+	const signIn = (providerName: string) => async () => {
+		startSignIn(window.firebase, providerName);
+		setTimeout(() => {
+			showToast();
+		}, 3000);
+	};
 </script>
 
 <div class="flex justify-center items-center">
@@ -64,7 +73,10 @@
 					>
 				</div>
 			</form>
-			<div id="loading">
+			<div>
+				<div id="loading" class="hidden">
+					<Toast position="bottom-right">Loading...</Toast>
+				</div>
 				<div class="py-6 space-x-2 text-gray-500 flex">
 					{#each signInProviders as provider, i}
 						<button
