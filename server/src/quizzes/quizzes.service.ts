@@ -29,7 +29,14 @@ export class QuizzesService {
 
         return mostCategoryInQuiz;
     }
-
+    findIndexOfCategory(discovery, category) {
+        for (let i = 0; i < discovery.length; i++) {
+            if (discovery[i].category === category) {
+                return i;
+            }
+        }
+        return -1;
+    }
     async getAllQuizzesofUser(userId: string) {
         const quizzesOfUser = await this.prisma.quizzes.findMany({
             where: {
@@ -54,27 +61,72 @@ export class QuizzesService {
                 },
             },
         });
-        const discovery = [];
+        const quizzesOfdiscovery = [];
         quizzes.forEach((quiz) => {
             const categories = [];
             quiz.quizQuestions.forEach((question) => {
                 categories.push(question.question.categoryId);
             });
-            discovery.push({
+            quizzesOfdiscovery.push({
                 quizId: quiz.id,
-                categories: categories,
+                categories: this.findMostCategoryInQuiz(categories),
             });
         });
-        const QuizzesWithCategory = [];
-        discovery.forEach((discovery) => {
-            QuizzesWithCategory.push({
-                quizId: discovery.quizId,
-                category: this.findMostCategoryInQuiz(discovery.categories),
-            });
-        });
-        return QuizzesWithCategory;
-    }
+        let discovery = [];
+        // quizzesOfdiscovery.forEach( async (quiz) => {
+        //     if (quiz.categories !== '') {
+        //         let indexofCategory = this.findIndexOfCategory(
+        //             discovery,
+        //             quiz.categories,
+        //         );
+        //         const quizes = await this.getInfo(quiz.quizId)
 
+        //         if (indexofCategory === -1) {
+        //             const category = await this.prisma.categories.findUnique({
+        //                 where:{
+        //                     id:quiz.categories
+        //                 }
+        //             })
+        //             discovery.push({
+        //                 category: category.name,
+        //                 quizzes: [quizes],
+        //             });
+        //             console.log(discovery)
+        //         } else {
+        //             discovery[indexofCategory].quizzes.push(quizes);
+        //         }
+        //     }
+        // });
+        for (let index = 0; index < quizzesOfdiscovery.length; index++) {
+            if (quizzesOfdiscovery[index].categories !== '') {
+                let category = await this.prisma.categories.findUnique({
+                    where: {
+                        id: quizzesOfdiscovery[index].categories,
+                    },
+                    select: {
+                        name: true,
+                    },
+                });
+                let indexOfCategory = this.findIndexOfCategory(
+                    discovery,
+                    category.name,
+                );
+                const quizzes = await this.getInfo(
+                    quizzesOfdiscovery[index].quizId,
+                );
+                if (indexOfCategory === -1) {
+                    discovery.push({
+                        category: category.name,
+                        quizzes: [quizzes],
+                    });
+                } else {
+                    discovery[indexOfCategory].quizzes.push(quizzes);
+                }
+            }
+        }
+
+        return discovery;
+    }
     async deleteQuizzes(userId: string, quizzesId: string) {
         const quizzes = await this.prisma.quizzes.findUnique({
             where: {
@@ -88,7 +140,7 @@ export class QuizzesService {
                 },
             });
         } else {
-            throw new UnauthorizedException('Unauthorized Exception');
+            throw new UnauthorizedException('Can not delete quiz');
         }
     }
 
@@ -122,5 +174,42 @@ export class QuizzesService {
             },
             data: dto,
         });
+    }
+
+    async getInfo(quizId: string) {
+        return await this.prisma.quizzes.findUnique({
+            where: {
+                id: quizId,
+            },
+            select: {
+                user: {
+                    select: {
+                        displayName: true,
+                    },
+                },
+                title: true,
+                description: true,
+                image: true,
+            },
+        });
+    }
+
+    async filterCategory(category: string) {
+        const IdofCategory = await this.prisma.categories.findFirst({
+            where: {
+                name: category,
+            },
+        });
+        if (IdofCategory) {
+            const categories = await this.getDiscovery();
+            categories.forEach((category) => {
+                if (category.category === IdofCategory.id) {
+                    console.log(category.quizzes);
+                    return category.quizzes;
+                }
+            });
+        } else {
+            throw new UnauthorizedException('Not category found');
+        }
     }
 }
