@@ -2,7 +2,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 	const data = await request.json();
-	const response = await fetch('http://localhost:8080/api/auth/reset-password', {
+	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/reset-password`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
