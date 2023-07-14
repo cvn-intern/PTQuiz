@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, fetch, cookies }) => {
 	const bodyContent = await request.json();
-	const response = await fetch('http://localhost:8080/api/auth/oauth', {
+	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/oauth`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -20,6 +20,5 @@ export const POST: RequestHandler = async ({ request, fetch, cookies }) => {
 	cookies.set('refreshToken', result.data.refreshToken, {
 		path: '/'
 	});
-
 	return json(result.data);
 };

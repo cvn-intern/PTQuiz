@@ -11,6 +11,7 @@
 			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="?/forgotPassword">
 				<div class="py-4">
 					<input
+						aria-label="Email"
 						type="email"
 						name="email"
 						id="email"
@@ -21,6 +22,7 @@
 				</div>
 				<div class="pt-4">
 					<button
+						aria-label="Send"
 						type="submit"
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
 						>Send</button

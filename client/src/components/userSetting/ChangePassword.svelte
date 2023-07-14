@@ -31,7 +31,7 @@
 		{#if form && form.type === 'change_password'}
 			<Toast position="top-right">{form.error}</Toast>
 		{/if}
-		<div class="">
+		<div>
 			<label for="oldPassword" class="mb-1">Old password</label>
 			<input
 				aria-label="Old password"

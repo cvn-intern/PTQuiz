@@ -30,17 +30,28 @@ export class QuizzesService {
         return mostCategoryInQuiz;
     }
 
-    async getAllQuizzesofUser(userId: string) {
+    async getAllQuizzesOfUser(userId: string) {
         const quizzesOfUser = await this.prisma.quizzes.findMany({
             where: {
                 userId: userId,
+            },
+            select: {
+                user: {
+                    select: {
+                        displayName: true,
+                    },
+                },
+                title: true,
+                description: true,
+                image: true,
+                numberQuestions: true,
             },
         });
         return quizzesOfUser;
     }
 
     async getDiscovery() {
-        let quizzes = await this.prisma.quizzes.findMany({
+        const quizzes = await this.prisma.quizzes.findMany({
             select: {
                 id: true,
                 quizQuestions: {

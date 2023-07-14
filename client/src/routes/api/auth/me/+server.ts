@@ -1,9 +1,8 @@
-import { error, json, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ fetch, cookies }) => {
 	const accessToken = cookies.get('accessToken');
-	const response = await fetch('http://localhost:8080/api/auth/profile', {
+	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',

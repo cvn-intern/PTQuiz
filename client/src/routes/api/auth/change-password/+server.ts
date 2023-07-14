@@ -3,8 +3,7 @@ import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 	const formData = await request.json();
-	console.log(formData);
-	const response = await fetch('http://localhost:8080/api/auth/change-password', {
+	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/change-password`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
