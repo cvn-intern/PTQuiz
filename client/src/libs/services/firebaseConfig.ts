@@ -1,10 +1,11 @@
 import 'firebase/auth';
+import type { Spinner } from 'flowbite-svelte';
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET
+	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+	authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+	projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
+	storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET
 };
 
 async function initializeFirebase(firebase: any) {
@@ -12,7 +13,7 @@ async function initializeFirebase(firebase: any) {
 }
 
 function getProvider(firebase: any, providerName: string) {
-	switch(providerName) {
+	switch (providerName) {
 		case 'Google':
 			return new firebase.auth.GoogleAuthProvider();
 		case 'Facebook':
@@ -63,7 +64,4 @@ async function startSignIn(firebase: any, providerName: string) {
 	await signInWithProvider(firebase, provider);
 }
 
-export {
-	initializeFirebase,
-	startSignIn
-};
+export { initializeFirebase, startSignIn };
