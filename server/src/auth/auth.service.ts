@@ -6,6 +6,7 @@ import {
     RegisterDto,
     ResetPasswordDto,
     OAuthDto,
+    ChangePasswordDto,
 } from './dto';
 import * as argon2 from 'argon2';
 import { Payload } from './types/payload.type';
@@ -27,7 +28,6 @@ export class AuthService {
     async OAuth(dto: OAuthDto) {
         try {
             const { authId, avatar, displayName, email, loginFrom } = dto;
-
             let user = await this.prisma.users.findUnique({
                 where: {
                     email: email,
@@ -41,7 +41,6 @@ export class AuthService {
                     status: true,
                 },
             });
-
             if (!user) {
                 user = await this.prisma.users.create({
                     data: {
@@ -53,23 +52,37 @@ export class AuthService {
                         avatar: avatar,
                         status: Status.Active,
                         loginFrom: loginFrom,
-                        createdAt: new Date(),
                     },
                 });
             }
-
+            if (user.status === Status.Inactive) {
+                user = await this.prisma.users.update({
+                    where: {
+                        id: user.id,
+                    },
+                    data: {
+                        email: email,
+                        authId: authId,
+                        displayName: displayName,
+                        password: null,
+                        isLogin: true,
+                        role: Role.User,
+                        avatar: avatar,
+                        status: Status.Active,
+                        loginFrom: loginFrom,
+                    },
+                });
+            }
             const payload: Payload = {
                 email: user.email,
                 id: user.id,
                 role: user.role as Role,
                 displayName: user.displayName,
                 avatar: user.avatar,
-                status: user.status,
+                status: Status.Active,
             };
-
             const tokens = await this.generateTokens(payload);
             await this.updateRefreshToken(user.id, tokens.refreshToken, true);
-
             return {
                 ...tokens,
                 user: {
@@ -186,7 +199,7 @@ export class AuthService {
             const decoded = await this.verifyToken(token);
             const user = await this.prisma.users.findUnique({
                 where: {
-                    id: decoded.userId,
+                    id: decoded.id,
                 },
                 select: {
                     id: true,
@@ -376,7 +389,7 @@ export class AuthService {
             const decoded = await this.verifyToken(token);
             const user = await this.prisma.users.findUnique({
                 where: {
-                    id: decoded.userId,
+                    id: decoded.id,
                 },
                 select: {
                     id: true,
@@ -428,13 +441,71 @@ export class AuthService {
         }
     }
 
+    async changePassword(dto: ChangePasswordDto, userId: string) {
+        try {
+            const { oldPassword, newPassword, confirmPassword } = dto;
+            if (newPassword !== confirmPassword) {
+                throw new HttpException(
+                    'Password do not match confirm password',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const user = await this.prisma.users.findUnique({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    id: true,
+                    password: true,
+                    loginFrom: true,
+                },
+            });
+            if (!user) {
+                throw new HttpException(
+                    'User not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.loginFrom !== null) {
+                throw new HttpException(
+                    'You are using OAuth, please change password in your OAuth account',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const isPasswordValid = await this.verifyHash(
+                user.password,
+                oldPassword,
+            );
+            if (!isPasswordValid) {
+                throw new HttpException(
+                    'Old password is not valid',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const hashedPassword = await this.hashData(newPassword);
+            await this.prisma.users.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    password: hashedPassword,
+                },
+            });
+            return {
+                message: 'Password changed successfully',
+            };
+        } catch (err) {
+            return exceptionHandler(err);
+        }
+    }
+
     async refreshTokens(dto: RefreshTokenDto) {
         try {
             const { refreshToken } = dto;
             const decoded = await this.verifyToken(refreshToken);
             const user = await this.prisma.users.findFirst({
                 where: {
-                    id: decoded.userId,
+                    id: decoded.id,
                     token: refreshToken,
                 },
                 select: {
@@ -446,6 +517,12 @@ export class AuthService {
                     status: true,
                 },
             });
+            if (!user) {
+                throw new HttpException(
+                    'Invalid token',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
             if (user.status === Status.Inactive) {
                 throw new HttpException(
                     'Your account is not active, please confirm your email',
@@ -469,6 +546,42 @@ export class AuthService {
             const tokens = await this.generateTokens(payload);
             await this.updateRefreshToken(user.id, tokens.refreshToken, true);
             return tokens;
+        } catch (err) {
+            return exceptionHandler(err);
+        }
+    }
+
+    async getProfile(userId: string) {
+        try {
+            const user = await this.prisma.users.findUnique({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    displayName: true,
+                    avatar: true,
+                    role: true,
+                    status: true,
+                    loginFrom: true,
+                },
+            });
+            if (!user) {
+                throw new HttpException(
+                    'User not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            return {
+                id: user.id,
+                email: user.email,
+                displayName: user.displayName,
+                avatar: user.avatar,
+                role: user.role,
+                status: user.status,
+                loginFrom: user.loginFrom,
+            };
         } catch (err) {
             return exceptionHandler(err);
         }
@@ -498,7 +611,7 @@ export class AuthService {
 
     async generateUserIdToken(userId: string) {
         const token = await this.jwt.signAsync(
-            { userId },
+            { id: userId },
             {
                 expiresIn: process.env.CONFIRM_TOKEN_TTL,
                 privateKey: process.env.PRIVATE_KEY,
@@ -532,15 +645,15 @@ export class AuthService {
     }
 }
 
-export const exceptionHandler = (err: Error) => {
+export const exceptionHandler = (error: Error) => {
     if (
-        err.name === JwtError.JSON_WEB_TOKEN_ERROR ||
-        err.name === JwtError.SYNTAX_ERROR
+        error.name === JwtError.JSON_WEB_TOKEN_ERROR ||
+        error.name === JwtError.SYNTAX_ERROR
     ) {
         throw new HttpException(JwtError.INVALID_TOKEN, HttpStatus.BAD_REQUEST);
-    } else if (err.name === JwtError.TOKEN_EXPIRED_ERROR) {
+    } else if (error.name === JwtError.TOKEN_EXPIRED_ERROR) {
         throw new HttpException(JwtError.EXPIRED_TOKEN, HttpStatus.BAD_REQUEST);
     } else {
-        throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
 };

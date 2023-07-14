@@ -4,6 +4,9 @@ import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from './mailer/mailer.module';
+import { QuizzesModule } from './quizzes/quizzes.module';
+import { QuestionModule } from './question/question.module';
+import { UserModule } from './user/user.module';
 @Module({
     imports: [
         PrismaModule,
@@ -11,6 +14,9 @@ import { MailerModule } from './mailer/mailer.module';
         CloudinaryModule,
         ConfigModule.forRoot(),
         MailerModule,
+        QuizzesModule,
+        QuestionModule,
+        UserModule,
     ],
     controllers: [],
     providers: [],
