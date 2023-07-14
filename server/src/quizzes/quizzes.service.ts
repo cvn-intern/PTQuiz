@@ -73,30 +73,6 @@ export class QuizzesService {
             });
         });
         let discovery = [];
-        // quizzesOfdiscovery.forEach( async (quiz) => {
-        //     if (quiz.categories !== '') {
-        //         let indexofCategory = this.findIndexOfCategory(
-        //             discovery,
-        //             quiz.categories,
-        //         );
-        //         const quizes = await this.getInfo(quiz.quizId)
-
-        //         if (indexofCategory === -1) {
-        //             const category = await this.prisma.categories.findUnique({
-        //                 where:{
-        //                     id:quiz.categories
-        //                 }
-        //             })
-        //             discovery.push({
-        //                 category: category.name,
-        //                 quizzes: [quizes],
-        //             });
-        //             console.log(discovery)
-        //         } else {
-        //             discovery[indexofCategory].quizzes.push(quizes);
-        //         }
-        //     }
-        // });
         for (let index = 0; index < quizzesOfdiscovery.length; index++) {
             if (quizzesOfdiscovery[index].categories !== '') {
                 let category = await this.prisma.categories.findUnique({
