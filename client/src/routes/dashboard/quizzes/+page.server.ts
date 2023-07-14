@@ -1,45 +1,33 @@
 import img1 from '../../../assets/testimg.png';
-import img2 from '../../../assets/testimg2.png';
-import img3 from '../../../assets/testimg3.png';
+import type { IQuiz, IQuizAPI } from './quiz.type';
 
-export function load() {
-	return {
-		quizzes: [
-			{
-				title: 'Quiz 1',
-				description: 'This is a quiz about the first topic',
-				username: 'user1',
-				numberOfQuestions: 5,
-				image: img1
-			},
-			{
-				title: 'Quiz 2',
-				description: 'This is a quiz about the second topic',
-				username: 'user2',
-				numberOfQuestions: 10,
-				image: img2
-			},
-			{
-				title: 'Quiz 3',
-				description: 'This is a quiz about the third topic',
-				username: 'user3',
-				numberOfQuestions: 15,
-				image: img3
-			},
-			{
-				title: 'Quiz 4',
-				description: 'This is a quiz about the third topic',
-				username: 'user3',
-				numberOfQuestions: 15,
-				image: 'https://images-cdn.kahoot.it/91a94ea1-0123-41f2-a9d8-23715d075d59?auto=webp&width=176'
-			}
-			// {
-			// 	title: 'Quiz 5',
-			// 	description: 'This is a quiz about the third topic',
-			// 	username: 'user3',
-			// 	numberOfQuestions: 15,
-			// 	image: 'https://images-cdn.kahoot.it/91a94ea1-0123-41f2-a9d8-23715d075d59?auto=webp&width=176'
-			// },
-		]
-	};
+export async function load({ fetch }) {
+	const response = await fetch('/api/quizzes/getAll');
+	const result = await response.json();
+	if (response.status === 200) {
+		const quizzes: IQuiz[] = result.map((quiz: IQuizAPI) => {
+			return {
+				title: quiz.title,
+				description: quiz.description,
+				username: quiz.user.displayName,
+				numberOfQuestions: quiz.numberOfQuestions,
+				image: quiz.image
+			};
+		});
+		return {
+			quizzes: quizzes
+		};
+	} else {
+		return {
+			quizzes: [
+				{
+					title: 'Cannot load quizzes',
+					description: 'Cannot load quizzes',
+					username: 'Cannot load quizzes',
+					numberOfQuestions: 0,
+					image: img1
+				}
+			]
+		};
+	}
 }

@@ -27,7 +27,7 @@ export class QuizzesController {
     @ResponseMessage('Get Quizzes successfully')
     @UseGuards(JwtAuthGuard)
     async getQuizzes(@GetCurrentUser('id') userId: string) {
-        return await this.quizzesService.getAllQuizzesofUser(userId);
+        return await this.quizzesService.getAllQuizzesOfUser(userId);
     }
 
     @Delete('delete-by-id')

@@ -24,12 +24,12 @@
 			</p>
 			<div class="flex flex-row gap-4">
 				<button
-				aria-label="Edit"
+					aria-label="Edit"
 					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
 					>Edit</button
 				>
 				<button
-				aria-label="Start"
+					aria-label="Start"
 					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
 					>Start</button
 				>

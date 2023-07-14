@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { Toast } from 'flowbite-svelte';
 	export let form;
 </script>
 
@@ -70,9 +71,9 @@
 				</div>
 			</div>
 			{#if form}
-				<h4 class="text-red-600 font-light text-md text-center">
+				<Toast position="top-right">
 					{form.error}
-				</h4>
+				</Toast>
 			{/if}
 		</div>
 	</div>
