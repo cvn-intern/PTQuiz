@@ -39,3 +39,5 @@ build
 *-lock.json
 prisma/migrations
 src/utils/testConnectionDb.ts
+
+.vercel
