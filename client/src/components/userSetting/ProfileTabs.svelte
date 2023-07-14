@@ -1,9 +1,10 @@
 <script lang="ts">
 	import EditProfile from './EditProfile.svelte';
 	import ChangePassword from './ChangePassword.svelte';
-
+	import type User from '../../interface/user.interface';
+	
 	let currentTab = 'EditProfile';
-	export let user: any;
+	export let user: User;
 	export let form: any;
 	export let formChangePassword: any = {
 		oldPassword: '',
@@ -16,6 +17,7 @@
 
 	function switchTab(tab: string) {
 		currentTab = tab;
+		form = null;
 	}
 </script>
 
@@ -32,7 +34,7 @@
 		>
 			Edit Profile
 		</button>
-		{#if user?.loginFrom === null}
+		{#if !user?.loginFrom}
 			<button
 				class="pb-1 border-b-2 border-transparent hover:border-blue-500"
 				class:active={currentTab === 'ChangePassword'}
@@ -47,7 +49,7 @@
 <div class="content">
 	<div class="w-full">
 		{#if currentTab === 'EditProfile'}
-			<EditProfile data={user} bind:formUserInfo bind:form />
+			<EditProfile bind:user bind:formUserInfo bind:form />
 		{:else if currentTab === 'ChangePassword'}
 			<ChangePassword bind:form bind:formChangePassword />
 		{/if}

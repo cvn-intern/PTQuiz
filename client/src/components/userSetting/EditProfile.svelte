@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { Toast } from 'flowbite-svelte';
+	import type User from '../../interface/user.interface';
 
-	export let data: any;
-	export let formUserInfo: any;
+	export let user: User;
+	export let formUserInfo: User;
 	export let form: any;
 
 	let imageFile;
-	let imageUrl: string = data?.avatar;
+	let imageUrl: string = user?.avatar;
 
-	const snapshot = {
+	export const snapshot = {
 		capture: () => ({ formUserInfo }),
 		restore: (value: any) => {
 			formUserInfo = value.formUserInfo;
@@ -17,7 +17,7 @@
 	};
 
 	const handleCancel = () => {
-		formUserInfo.displayName = data.displayName;
+		formUserInfo.displayName = user.displayName;
 	};
 
 	const handleFileChange = (event: any) => {
@@ -33,10 +33,9 @@
 		enctype="multipart/form-data"
 		class="items-center flex flex-col gap-5"
 	>
-		{#if form && form.message}
+		{#if form && form.type === 'edit_profile'}
 			<Toast position="top-right">{form.message}</Toast>
 		{/if}
-
 		<div class="relative">
 			<img src={imageUrl} alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer" />
 			<input
@@ -55,7 +54,7 @@
 				id="username"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				disabled
-				placeholder={data.id}
+				placeholder={user.id}
 			/>
 
 			<label for="email" class="mb-1">Email</label>
@@ -64,7 +63,7 @@
 				id="email"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				disabled
-				placeholder={data.email}
+				placeholder={user.email}
 			/>
 
 			<label for="displayName" class="mb-1">Display name</label>
@@ -75,6 +74,7 @@
 				bind:value={formUserInfo.displayName}
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				placeholder="Display name"
+				required
 			/>
 		</div>
 

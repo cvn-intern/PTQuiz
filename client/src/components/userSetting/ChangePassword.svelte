@@ -1,19 +1,16 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Toast } from 'flowbite-svelte';
-	// export let user: any;
+	import type FormChangePassword from './interface/formChangePassword.interface';
 	export let form: any;
-
-	export let formChangePassword: any = {
-		oldPassword: '',
-		newPassword: '',
-		confirmPassword: ''
-	};
+	export let formChangePassword: FormChangePassword;
 
 	function handleCancel() {
-		formChangePassword.oldPassword = '';
-		formChangePassword.newPassword = '';
-		formChangePassword.confirmPassword = '';
+		formChangePassword = {
+			oldPassword: '',
+			newPassword: '',
+			confirmPassword: ''
+		};
 	}
 
 	export const snapshot = {
@@ -31,7 +28,7 @@
 		use:enhance
 		class="items-center flex flex-col gap-5"
 	>
-		{#if form && form.error}
+		{#if form && form.type === 'change_password'}
 			<Toast position="top-right">{form.error}</Toast>
 		{/if}
 		<div class="">
