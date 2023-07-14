@@ -1,10 +1,6 @@
 <script lang="ts">
-	import type { TypeCategory } from '../../routes/discovery/category.type';
 	import Card from './card.svelte';
 	export let nameCategory = '';
-	import img1 from '../../assets/testimg.png';
-	import img2 from '../../assets/testimg2.png';
-	import img3 from '../../assets/testimg3.png';
 	export let cardList: any[] = [];
 </script>
 

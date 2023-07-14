@@ -10,7 +10,6 @@ export async function load({ fetch }) {
 				quizzes: category.quizzes
 			};
 		});
-		console.log(categories);
 		return { categories: categories };
 	} else {
 		return { categories: [] };

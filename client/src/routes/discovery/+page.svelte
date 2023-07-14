@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Category from '../../components/discovery/category.svelte';
-	import type { TypeCategory } from './category.type';
 	export let data;
 	let { categories } = data;
 </script>
