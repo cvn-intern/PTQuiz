@@ -3,7 +3,6 @@
 	import SearchSort from '../../../components/searchSort.svelte';
 	export let data;
 	let { quizzes } = data;
-	console.log(quizzes);
 </script>
 
 {#if quizzes.length !== 0}

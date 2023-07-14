@@ -68,4 +68,20 @@ export class QuizzesController {
     async getdiscovery() {
         return await this.quizzesService.getDiscovery();
     }
+    @Get('/info')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Get discovery successfully')
+    @UseGuards(JwtAuthGuard)
+    async getinfo(@Query('quizzesId') quizzesId: string) {
+        return await this.quizzesService.getInfo(quizzesId);
+    }
+
+    @Get('/filter')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Filter successfully')
+    @UseGuards(JwtAuthGuard)
+    async filterCategory(@Query('category') category: string){
+        return  this.quizzesService.filterCategory(category);
+    }
+
 }

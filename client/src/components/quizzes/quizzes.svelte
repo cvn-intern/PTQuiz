@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Pagination from "../pagination.svelte";
-	import Quiz from "./quiz.svelte";
+	import type { IQuiz } from '../../routes/dashboard/quizzes/quiz.type';
+	import Pagination from '../pagination.svelte';
+	import Quiz from './quiz.svelte';
 
-
-	export let quizzes: any[];
+	export let quizzes: IQuiz[] = [];
 </script>
 
 <section class="flex flex-col w-full h-full gap-4 px-5">
@@ -25,7 +25,7 @@
 			/>
 		{/each}
 	</div>
-    <div class="flex justify-end">
-        <Pagination />
-    </div>
+	<div class="flex justify-end">
+		<Pagination />
+	</div>
 </section>
