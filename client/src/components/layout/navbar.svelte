@@ -3,6 +3,8 @@
 	export let user: {
 		avatar: string;
 	};
+	let isOpen: boolean = false;
+
 	const navs = [
 		{
 			title: 'Home',
@@ -18,21 +20,28 @@
 		}
 	];
 	import Icon from '@iconify/svelte';
+	import SidebarModal from './sidebar/sidebarModal.svelte';
 
 	const logout = async () => {
 		const response = await fetch('/api/auth/logout');
 		if (response.status === 200) {
 			invalidateAll();
-            window.location.href = '/';
+			window.location.href = '/';
 		}
+	};
+	const toggleSidebar = () => {
+		isOpen = !isOpen;
 	};
 </script>
 
 <nav class="navbar bg-primary w-full flex justify-between px-2 lg:px-16 py-4 items-center">
-	<Icon icon="material-symbols:list" class="text-5xl md:hidden" />
 	<a class="logo" href="/">
 		<h1 class="hidden md:block text-3xl font-bold font-title text-darkGreen">PentaQuiz</h1>
 	</a>
+	<button on:click={toggleSidebar} class="absolute md:hidden">
+		<Icon icon="material-symbols:list" class="text-5xl " />
+	</button>
+	<SidebarModal showModal={isOpen} />
 	<div class="flex items-center gap-24">
 		<ul class="hidden md:flex gap-2 md:gap-8 text-xl">
 			{#each navs as { title, href }}
