@@ -1,18 +1,20 @@
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	edit_profile: async ({ request, fetch }) => {
 		const form = await request.formData();
 		if (!form.has('displayName')) {
 			return fail(400, {
-				message: 'Display name can not be empty',
-				// error: 'Display name can not be empty'
+				message: 'Display name cannot be empty',
+				error: 'Display name cannot be empty',
+				type: 'edit_profile'
 			});
 		}
 		if (form.get('avatar') && form.get('avatar').size > 4 * 1024 * 1024) {
 			return fail(400, {
 				message: 'File size too large, max file size is 4MB',
-				// error: 'File size too large, max file size is 4MB'
+				error: 'File size too large, max file size is 4MB',
+				type: 'edit_profile'
 			});
 		}
 		const response = await fetch('/api/auth/edit-profile', {
@@ -28,36 +30,43 @@ export const actions: Actions = {
 		if (result.statusCode !== 200) {
 			return fail(400, {
 				message: result.message,
-				// error: result.message
+				error: result.message,
+				type: 'edit_profile'
 			});
 		}
 
-		return result;
+		return {
+			...result,
+			type: 'edit_profile'
+		};
 	},
 	change_password: async ({ request, fetch }) => {
 		const form = await request.formData();
-		if (!form.has('oldPassword') || !form.has('newPassword') || !form.has('confirmPassword')) {
+		const oldPassword = form.get('oldPassword');
+		const newPassword = form.get('newPassword');
+		const confirmPassword = form.get('confirmPassword');
+
+		if (!oldPassword || !newPassword || !confirmPassword) {
 			return fail(400, {
 				message: 'Please fill in all fields',
-				error: 'Please fill in all fields'
+				error: 'Please fill in all fields',
+				type: 'change_password'
 			});
 		}
 
-		if (form.get('newPassword') !== form.get('confirmPassword')) {
+		if (newPassword !== confirmPassword) {
 			return fail(400, {
 				message: 'New password and confirm new password do not match',
-				error: 'New password and confirm new password do not match'
+				error: 'New password and confirm new password do not match',
+				type: 'change_password'
 			});
 		}
 
-		if (
-			form.get('newPassword').length < 8 ||
-			form.get('confirmPassword').length < 8 ||
-			form.get('oldPassword').length < 8
-		) {
+		if (newPassword.length < 8) {
 			return fail(400, {
 				message: 'Password must be at least 8 characters long',
-				error: 'Password must be at least 8 characters long'
+				error: 'Password must be at least 8 characters long',
+				type: 'change_password'
 			});
 		}
 
@@ -67,9 +76,9 @@ export const actions: Actions = {
 			},
 			method: 'POST',
 			body: JSON.stringify({
-				oldPassword: form.get('oldPassword'),
-				newPassword: form.get('newPassword'),
-				confirmPassword: form.get('confirmPassword')
+				oldPassword,
+				newPassword,
+				confirmPassword
 			})
 		});
 
@@ -77,9 +86,13 @@ export const actions: Actions = {
 		if (!result.ok) {
 			return fail(400, {
 				message: result.message,
-				error: result.message
+				error: result.message,
+				type: 'change_password'
 			});
 		}
-		return result;
+		return {
+			...result,
+			type: 'change_password'
+		};
 	}
 };

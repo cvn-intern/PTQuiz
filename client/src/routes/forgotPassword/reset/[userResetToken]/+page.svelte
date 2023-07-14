@@ -2,7 +2,7 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { Spinner } from 'flowbite-svelte';
+	import { Spinner, Toast } from 'flowbite-svelte';
 
 	export let form;
 </script>
@@ -58,9 +58,9 @@
 				</div>
 			</div>
 			{#if form}
-				<h4 class="text-red-600 font-light text-md text-center">
+				<Toast position="top-right">
 					{form.error}
-				</h4>
+				</Toast>
 			{/if}
 		</div>
 	</div>
