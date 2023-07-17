@@ -197,4 +197,37 @@ export class QuizzesService {
             );
         }
     }
+
+    async getAllQuestionsOfQuiz(userId: string, quizId: string) {
+        try {
+            const quiz = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+            const questions = await this.prisma.quiz_questions.findMany({
+                where: {
+                    quizId: quizId,
+                },
+                select: {
+                    question: true,
+                },
+            });
+            const allQuestions = questions.map((question) => question.question);
+            if (quiz.userId === userId) {
+                return allQuestions;
+            } else if (quiz.userId !== userId) {
+                if (quiz.isShared === false) {
+                    throw new HttpException(
+                        'Quiz is not shared',
+                        HttpStatus.BAD_REQUEST,
+                    );
+                } else {
+                    return allQuestions;
+                }
+            }
+        } catch (error) {
+            throw new HttpException('Quiz error', HttpStatus.BAD_REQUEST);
+        }
+    }
 }

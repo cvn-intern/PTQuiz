@@ -24,4 +24,17 @@ export class QuestionService {
             },
         });
     }
+
+    async getQuestion(questionId: string) {
+        try {
+            const question = await this.prisma.questions.findUnique({
+                where: {
+                    id: questionId,
+                },
+            });
+            return question;
+        } catch (err) {
+            throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
+        }
+    }
 }
