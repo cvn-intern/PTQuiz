@@ -18,7 +18,7 @@
 		${showModal ? 'opacity-100' : 'opacity-0'}`}
 		>
 			<div
-				class="translate w-1/2 shadow-lg h-full absolute left-0 bg-background outline-none focus:outline-none"
+				class="translate w-1/2 transform shadow-lg h-full absolute left-0 bg-background outline-none focus:outline-none"
 			>
 				<div class="w-full flex flex-col">
 					<button class="flex justify-end py-2" on:click={onClick}>

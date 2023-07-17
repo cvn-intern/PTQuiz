@@ -13,10 +13,6 @@
 		{
 			title: 'Discovery',
 			href: '/discovery'
-		},
-		{
-			title: 'Dashboard',
-			href: '/dashboard/quizzes'
 		}
 	];
 	import Icon from '@iconify/svelte';
@@ -34,23 +30,31 @@
 	};
 </script>
 
-<nav class="navbar bg-primary w-full flex justify-between px-2 lg:px-16 py-4 items-center">
-	<a class="logo" href="/">
-		<h1 class="hidden md:block text-3xl font-bold font-title text-darkGreen">PentaQuiz</h1>
-	</a>
-	<button on:click={toggleSidebar} class="absolute md:hidden">
-		<Icon icon="material-symbols:list" class="text-5xl " />
-	</button>
+<nav
+	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0"
+>
+	<div class="flex items-center gap-2">
+		{#if user}
+			<button on:click={toggleSidebar} class="md:hidden">
+				<Icon icon="material-symbols:list" class="text-4xl " />
+			</button>
+		{/if}
+		<a class="logo" href="/">
+			<h1 class="text-xl md:block md:text-3xl font-bold font-title text-darkGreen">
+				PentaQuiz
+			</h1>
+		</a>
+	</div>
 	<SidebarModal showModal={isOpen} />
 	<div class="flex items-center gap-24">
-		<ul class="hidden md:flex gap-2 md:gap-8 text-xl">
+		<ul class="hidden md:flex gap-2 md:gap-8 text-2xl">
 			{#each navs as { title, href }}
 				<li>
-					<a {href} {title} class="hover:font-bold">{title}</a>
+					<a {href} {title} class="hover:text-darkGreen">{title}</a>
 				</li>
 			{/each}
 		</ul>
-		<div class="flex gap-2 md:gap-6 items-center" aria-labelledby="navbar">
+		<div class="flex gap-2 items-center" aria-labelledby="navbar">
 			{#if user}
 				<button
 					aria-label="profile"
@@ -59,14 +63,16 @@
 						window.location.href = '/dashboard/profile';
 					}}
 				>
-					<img src={user.avatar} alt="user avatar" />
+					<img src={user.avatar} alt="user avatar" class="border rounded-full" />
 				</button>
 				<button
 					aria-label="logout"
 					on:click={logout}
-					class="uppercase text-white w-full py-3 px-3 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
-					>LOG OUT</button
+					class="py-3 px-3 flex gap-2 items-center"
 				>
+					<h1 class="text-black text-2xl">Log Out</h1>
+					<Icon icon="mdi:logout" class="text-2xl " />
+				</button>
 			{:else}
 				<button
 					aria-label="login"
