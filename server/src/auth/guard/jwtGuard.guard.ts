@@ -5,11 +5,13 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Status } from '../types';
+import { Payload, Status } from '../types';
 import { JwtError } from '../../error';
+import { PrismaService } from '../../prisma/prisma.service';
+import { ResponseError } from '../../error/responseError.enum';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-    constructor(private jwt: JwtService) {}
+    constructor(private jwt: JwtService, private prisma: PrismaService) {}
     async canActivate(context: ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
@@ -17,14 +19,25 @@ export class JwtAuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
         try {
-            const payload = await this.jwt.verifyAsync(token, {
+            const payload: Payload = await this.jwt.verifyAsync(token, {
                 secret: process.env.JWT_SECRET,
                 publicKey: process.env.PUBLIC_KEY,
             });
-            if (payload['status'] === Status.Inactive) {
-                throw new UnauthorizedException('Account is not active');
+            const user = await this.prisma.users.findUnique({
+                where: { id: payload.id },
+            });
+            if (!user) {
+                throw new UnauthorizedException(JwtError.INVALID_TOKEN);
             }
-            request.user = payload;
+            if (token != user.accessToken) {
+                throw new UnauthorizedException(JwtError.INVALID_TOKEN);
+            }
+            if (user.status === Status.INACTIVE) {
+                throw new UnauthorizedException(
+                    ResponseError.USER_NOT_ACTIVATED,
+                );
+            }
+            request.user = user;
             return true;
         } catch (error) {
             if (error.name === 'TokenExpiredError') {

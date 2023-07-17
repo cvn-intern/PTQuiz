@@ -51,12 +51,12 @@ export class AuthService {
                         isLogin: true,
                         role: Role.User,
                         avatar: avatar,
-                        status: Status.Active,
+                        status: Status.ACTIVE,
                         loginFrom: loginFrom,
                     },
                 });
             }
-            if (user.status === Status.Inactive) {
+            if (user.status === Status.INACTIVE) {
                 user = await this.prisma.users.update({
                     where: {
                         id: user.id,
@@ -69,7 +69,7 @@ export class AuthService {
                         isLogin: true,
                         role: Role.User,
                         avatar: avatar,
-                        status: Status.Active,
+                        status: Status.ACTIVE,
                         loginFrom: loginFrom,
                     },
                 });
@@ -80,7 +80,7 @@ export class AuthService {
                 role: user.role as Role,
                 displayName: user.displayName,
                 avatar: user.avatar,
-                status: Status.Active,
+                status: Status.ACTIVE,
             };
             const tokens = await this.generateTokens(payload);
             await this.updateTokens(
@@ -122,12 +122,12 @@ export class AuthService {
                     email: email,
                 },
             });
-            if (userExists && userExists.status === Status.Active) {
+            if (userExists && userExists.status === Status.ACTIVE) {
                 throw new HttpException(
                     'User with this email already exists, please login',
                     HttpStatus.BAD_REQUEST,
                 );
-            } else if (userExists && userExists.status === Status.Inactive) {
+            } else if (userExists && userExists.status === Status.INACTIVE) {
                 throw new HttpException(
                     'User with this email already exists, please confirm your email',
                     HttpStatus.BAD_REQUEST,
@@ -141,7 +141,7 @@ export class AuthService {
                     isLogin: false,
                     role: Role.User,
                     avatar: process.env.DEFAULT_AVATAR,
-                    status: Status.Inactive,
+                    status: Status.INACTIVE,
                 },
             });
             const confirmToken = await this.generateUserIdToken(newUser.id);
@@ -179,7 +179,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status === Status.Active) {
+            if (user.status === Status.ACTIVE) {
                 throw new HttpException(
                     ResponseError.USER_ALREADY_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
@@ -223,7 +223,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status === Status.Active) {
+            if (user.status === Status.ACTIVE) {
                 throw new HttpException(
                     ResponseError.USER_ALREADY_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
@@ -240,7 +240,7 @@ export class AuthService {
                     id: user.id,
                 },
                 data: {
-                    status: Status.Active,
+                    status: Status.ACTIVE,
                     confirmToken: null,
                 },
             });
@@ -300,7 +300,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status !== Status.Active) {
+            if (user.status !== Status.ACTIVE) {
                 throw new HttpException(
                     ResponseError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
@@ -389,7 +389,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status !== Status.Active) {
+            if (user.status !== Status.ACTIVE) {
                 throw new HttpException(
                     ResponseError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
@@ -446,7 +446,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status !== Status.Active) {
+            if (user.status !== Status.ACTIVE) {
                 throw new HttpException(
                     ResponseError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
@@ -583,7 +583,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status === Status.Inactive) {
+            if (user.status === Status.INACTIVE) {
                 throw new HttpException(
                     ResponseError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
