@@ -30,7 +30,6 @@ export class QuizzesController {
         return await this.quizzesService.getAllQuizzesOfUser(userId);
     }
 
-
     @Get('/discovery')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get discovery successfully')
@@ -42,16 +41,18 @@ export class QuizzesController {
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get info of Quiz successfully')
     @UseGuards(JwtAuthGuard)
-    async getinfo(@GetCurrentUser('id') userId: string,@Query('quizzesId') quizzesId: string) {
-        return await this.quizzesService.getInfoQuizzOfUser(userId,quizzesId);
+    async getinfo(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizzesId') quizzesId: string,
+    ) {
+        return await this.quizzesService.getInfoQuizzOfUser(userId, quizzesId);
     }
 
     @Get('/filter')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Filter successfully')
     @UseGuards(JwtAuthGuard)
-    async filterCategory(@Query('category') categoryName: string){
+    async filterCategory(@Query('category') categoryName: string) {
         return await this.quizzesService.filterCategory(categoryName);
     }
-
 }
