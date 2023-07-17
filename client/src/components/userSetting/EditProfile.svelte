@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { toast } from '@zerodevx/svelte-toast';
+	import toast from 'svelte-french-toast';
+
 	import { enhance } from '$app/forms';
 	import type User from '../../interface/user.interface';
 	import type { FormEditProfile } from './interface/form.interface';
@@ -39,21 +40,15 @@
 	>
 		<div class="hidden">
 			{#if form?.isSuccess && form?.tabs?.edit_profile}
-				{toast.push('Success!', {
-					theme: {
-						'--toastColor': 'mintcream',
-						'--toastBackground': 'rgba(72,187,120,0.9)',
-						'--toastBarBackground': '#2F855A'
-					}
+				{toast.success('Look at me!', {
+					style: ' font-size:24px;',
+
+					position: 'top-right'
 				})}
 			{/if}
 			{#if !form?.isSuccess && form?.tabs?.edit_profile}
-				{toast.push(`Fail!\n${form?.error.message}`, {
-					theme: {
-						'--toastColor': 'mintcream',
-						'--toastBackground': '#FF1111',
-						'--toastBarBackground': '#5c0f09'
-					}
+				{toast.error(`Fail!\n${form?.error.message}`, {
+					position: 'top-right'
 				})}
 			{/if}
 		</div>

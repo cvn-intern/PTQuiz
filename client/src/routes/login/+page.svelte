@@ -7,6 +7,8 @@
 	import { onMount } from 'svelte';
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
 
+	$: console.log(form);
+
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
 			const firebase = window.firebase;
@@ -41,26 +43,49 @@
 	<div class="w-[446px] rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
 			<h1 class=" text-secondary text-[20px] font-bold">Login to your Account</h1>
-			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="?/login" use:enhance>
+			<form
+				method="POST"
+				class="w-full px-4 lg:px-0 mx-auto"
+				action="?/login"
+				use:enhance={() => {
+					return async ({ update }) => {
+						await update({ reset: false });
+					};
+				}}
+			>
 				<div class="py-4">
+					{#if !form?.isSuccess && form?.error?.missing?.default}
+						<label for="common" class="mb-1 text-red-500"
+							>{form.error.message}<br /></label
+						>
+					{/if}
+					<label for="email" class="mb-1 text-black">Email</label>
+
 					<input
 						type="email"
 						name="email"
 						id="email"
 						placeholder="Email"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
 						required
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.email}
+						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
+					{/if}
 				</div>
 				<div class="py-4">
+					<label for="password" class="mb-1 text-black">Password</label>
 					<input
 						type="password"
 						name="password"
 						id="password"
 						placeholder="Password"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
 						required
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.password}
+						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
+					{/if}
 				</div>
 				<div class=" text-gray-400 hover:underline hover:text-gray-100">
 					<a href="/forgotPassword" class="text-secondary">Forgot your password?</a>

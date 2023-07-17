@@ -2,7 +2,6 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
-	// get data from request
 	const data = await request.json();
 	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
 		method: 'POST',
@@ -10,10 +9,12 @@ export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			...data
+			email: data.email,
+			password: data.password
 		})
 	});
 	const result = await response.json();
+	console.log(result);
 	if (response.status === 200) {
 		cookies.set('accessToken', result.data.accessToken, {
 			path: '/'
