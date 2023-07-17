@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Payload, Status } from '../types';
 import { JwtError } from '../../error';
 import { PrismaService } from '../../prisma/prisma.service';
-import { ResponseError } from '../../error/responseError.enum';
+import { AuthError } from '../../error/authError.enum';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
     constructor(private jwt: JwtService, private prisma: PrismaService) {}
@@ -25,6 +25,10 @@ export class JwtAuthGuard implements CanActivate {
             });
             const user = await this.prisma.users.findUnique({
                 where: { id: payload.id },
+                select: {
+                    accessToken: true,
+                    status: true,
+                },
             });
             if (!user) {
                 throw new UnauthorizedException(JwtError.INVALID_TOKEN);
@@ -33,14 +37,12 @@ export class JwtAuthGuard implements CanActivate {
                 throw new UnauthorizedException(JwtError.INVALID_TOKEN);
             }
             if (user.status === Status.INACTIVE) {
-                throw new UnauthorizedException(
-                    ResponseError.USER_NOT_ACTIVATED,
-                );
+                throw new UnauthorizedException(AuthError.USER_NOT_ACTIVATED);
             }
-            request.user = user;
+            request.user = payload;
             return true;
         } catch (error) {
-            if (error.name === 'TokenExpiredError') {
+            if (error.name === JwtError.TOKEN_EXPIRED_ERROR) {
                 throw new UnauthorizedException(JwtError.ACCESS_TOKEN_EXPIRED);
             }
             if (

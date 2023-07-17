@@ -17,7 +17,7 @@ import { Role, Status } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
 import { Error, JwtError } from '../error';
-import { ResponseError } from '../error/responseError.enum';
+import { AuthError } from '../error/authError.enum';
 @Injectable()
 export class AuthService {
     constructor(
@@ -112,7 +112,7 @@ export class AuthService {
             const { email, password, confirmPassword, displayName } = dto;
             if (password !== confirmPassword) {
                 throw new HttpException(
-                    ResponseError.USER_PASSWORDS_NOT_MATCH,
+                    AuthError.USER_PASSWORDS_NOT_MATCH,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -175,13 +175,13 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    ResponseError.USER_EMAIL_NOT_FOUND,
+                    AuthError.USER_EMAIL_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.status === Status.ACTIVE) {
                 throw new HttpException(
-                    ResponseError.USER_ALREADY_ACTIVATED,
+                    AuthError.USER_ALREADY_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -225,7 +225,7 @@ export class AuthService {
             }
             if (user.status === Status.ACTIVE) {
                 throw new HttpException(
-                    ResponseError.USER_ALREADY_ACTIVATED,
+                    AuthError.USER_ALREADY_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -292,17 +292,24 @@ export class AuthService {
                     displayName: true,
                     avatar: true,
                     status: true,
+                    authId: true,
                 },
             });
             if (!user) {
                 throw new HttpException(
-                    ResponseError.USER_INVALID_CREDENTIALS,
+                    AuthError.USER_INVALID_CREDENTIALS,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.status !== Status.ACTIVE) {
                 throw new HttpException(
-                    ResponseError.USER_NOT_ACTIVATED,
+                    AuthError.USER_NOT_ACTIVATED,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.authId !== null) {
+                throw new HttpException(
+                    AuthError.USER_OAUTH_LOGIN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -312,7 +319,7 @@ export class AuthService {
             );
             if (!isPasswordValid) {
                 throw new HttpException(
-                    ResponseError.USER_INVALID_CREDENTIALS,
+                    AuthError.USER_INVALID_CREDENTIALS,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -385,19 +392,19 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    ResponseError.USER_EMAIL_NOT_FOUND,
+                    AuthError.USER_EMAIL_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.status !== Status.ACTIVE) {
                 throw new HttpException(
-                    ResponseError.USER_NOT_ACTIVATED,
+                    AuthError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.authId !== null) {
                 throw new HttpException(
-                    ResponseError.USER_OAUTH_CHANGE_PASSWORD,
+                    AuthError.USER_OAUTH_CHANGE_PASSWORD,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -424,7 +431,7 @@ export class AuthService {
             const { password, confirmPassword, token } = dto;
             if (password !== confirmPassword) {
                 throw new HttpException(
-                    ResponseError.USER_PASSWORDS_NOT_MATCH,
+                    AuthError.USER_PASSWORDS_NOT_MATCH,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -448,7 +455,7 @@ export class AuthService {
             }
             if (user.status !== Status.ACTIVE) {
                 throw new HttpException(
-                    ResponseError.USER_NOT_ACTIVATED,
+                    AuthError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -506,7 +513,7 @@ export class AuthService {
             const { oldPassword, newPassword, confirmPassword } = dto;
             if (newPassword !== confirmPassword) {
                 throw new HttpException(
-                    ResponseError.USER_PASSWORDS_NOT_MATCH,
+                    AuthError.USER_PASSWORDS_NOT_MATCH,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -522,13 +529,13 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    ResponseError.USER_NOT_FOUND,
+                    AuthError.USER_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.loginFrom !== null) {
                 throw new HttpException(
-                    ResponseError.USER_OAUTH_CHANGE_PASSWORD,
+                    AuthError.USER_OAUTH_CHANGE_PASSWORD,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -538,7 +545,7 @@ export class AuthService {
             );
             if (!isPasswordValid) {
                 throw new HttpException(
-                    'Old password is not valid',
+                    AuthError.USER_OLD_PASSWORD_INVALID,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -585,7 +592,7 @@ export class AuthService {
             }
             if (user.status === Status.INACTIVE) {
                 throw new HttpException(
-                    ResponseError.USER_NOT_ACTIVATED,
+                    AuthError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -636,7 +643,7 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    ResponseError.USER_NOT_FOUND,
+                    AuthError.USER_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
