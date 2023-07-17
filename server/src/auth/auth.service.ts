@@ -17,6 +17,7 @@ import { Role, Status } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
 import { Error, JwtError } from '../error';
+import { ResponseError } from '../error/responseError.enum';
 @Injectable()
 export class AuthService {
     constructor(
@@ -82,7 +83,14 @@ export class AuthService {
                 status: Status.Active,
             };
             const tokens = await this.generateTokens(payload);
-            await this.updateRefreshToken(user.id, tokens.refreshToken, true);
+            await this.updateTokens(
+                user.id,
+                {
+                    accessToken: tokens.accessToken,
+                    refreshToken: tokens.refreshToken,
+                },
+                true,
+            );
             return {
                 ...tokens,
                 user: {
@@ -104,7 +112,7 @@ export class AuthService {
             const { email, password, confirmPassword, displayName } = dto;
             if (password !== confirmPassword) {
                 throw new HttpException(
-                    'Password do not match confirm password',
+                    ResponseError.USER_PASSWORDS_NOT_MATCH,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -137,6 +145,7 @@ export class AuthService {
                 },
             });
             const confirmToken = await this.generateUserIdToken(newUser.id);
+            await this.updateConfirmToken(newUser.id, confirmToken);
             const sendMailOptions: sendMailOptions = {
                 to: newUser.email,
                 subject: '[PTQuiz Email Confirmation]',
@@ -166,17 +175,18 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    'User with this email does not exist',
+                    ResponseError.USER_EMAIL_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.status === Status.Active) {
                 throw new HttpException(
-                    'Email already confirmed',
+                    ResponseError.USER_ALREADY_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             const confirmToken = await this.generateUserIdToken(user.id);
+            await this.updateConfirmToken(user.id, confirmToken);
             const sendMailOptions: sendMailOptions = {
                 to: user.email,
                 subject: '[PTQuiz Email Confirmation]',
@@ -204,6 +214,7 @@ export class AuthService {
                 select: {
                     id: true,
                     status: true,
+                    confirmToken: true,
                 },
             });
             if (!user) {
@@ -214,7 +225,13 @@ export class AuthService {
             }
             if (user.status === Status.Active) {
                 throw new HttpException(
-                    'Email already confirmed',
+                    ResponseError.USER_ALREADY_ACTIVATED,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.confirmToken !== token) {
+                throw new HttpException(
+                    JwtError.INVALID_TOKEN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -224,6 +241,7 @@ export class AuthService {
                 },
                 data: {
                     status: Status.Active,
+                    confirmToken: null,
                 },
             });
             const payload: Payload = {
@@ -235,9 +253,12 @@ export class AuthService {
                 status: updatedUser.status,
             };
             const tokens = await this.generateTokens(payload);
-            await this.updateRefreshToken(
-                updatedUser.id,
-                tokens.refreshToken,
+            await this.updateTokens(
+                user.id,
+                {
+                    accessToken: tokens.accessToken,
+                    refreshToken: tokens.refreshToken,
+                },
                 true,
             );
             return {
@@ -275,13 +296,13 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    'Invalid credentials',
+                    ResponseError.USER_INVALID_CREDENTIALS,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.status !== Status.Active) {
                 throw new HttpException(
-                    'Your account is not active, please confirm your email',
+                    ResponseError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -291,7 +312,7 @@ export class AuthService {
             );
             if (!isPasswordValid) {
                 throw new HttpException(
-                    'Invalid credentials',
+                    ResponseError.USER_INVALID_CREDENTIALS,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -304,7 +325,14 @@ export class AuthService {
                 status: user.status,
             };
             const tokens = await this.generateTokens(payload);
-            await this.updateRefreshToken(user.id, tokens.refreshToken, true);
+            await this.updateTokens(
+                user.id,
+                {
+                    accessToken: tokens.accessToken,
+                    refreshToken: tokens.refreshToken,
+                },
+                true,
+            );
             return {
                 ...tokens,
                 user: {
@@ -323,7 +351,14 @@ export class AuthService {
 
     async logout(userId: string) {
         try {
-            await this.updateRefreshToken(userId, '', false);
+            await this.updateTokens(
+                userId,
+                {
+                    accessToken: null,
+                    refreshToken: null,
+                },
+                true,
+            );
             return {
                 accessToken: '',
                 refreshToken: '',
@@ -345,21 +380,29 @@ export class AuthService {
                     id: true,
                     displayName: true,
                     status: true,
+                    authId: true,
                 },
             });
             if (!user) {
                 throw new HttpException(
-                    'User with this email does not exist',
+                    ResponseError.USER_EMAIL_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.status !== Status.Active) {
                 throw new HttpException(
-                    'Your account is not active, please confirm your email',
+                    ResponseError.USER_NOT_ACTIVATED,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.authId !== null) {
+                throw new HttpException(
+                    ResponseError.USER_OAUTH_CHANGE_PASSWORD,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             const resetToken = await this.generateUserIdToken(user.id);
+            await this.updateResetToken(user.id, resetToken);
             const sendMailOptions: sendMailOptions = {
                 to: user.email,
                 subject: '[PTQuiz Reset Password]',
@@ -381,7 +424,7 @@ export class AuthService {
             const { password, confirmPassword, token } = dto;
             if (password !== confirmPassword) {
                 throw new HttpException(
-                    'Password do not match confirm password',
+                    ResponseError.USER_PASSWORDS_NOT_MATCH,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -394,11 +437,24 @@ export class AuthService {
                 select: {
                     id: true,
                     status: true,
+                    resetToken: true,
                 },
             });
             if (!user) {
                 throw new HttpException(
-                    'Invalid token',
+                    JwtError.INVALID_TOKEN,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.status !== Status.Active) {
+                throw new HttpException(
+                    ResponseError.USER_NOT_ACTIVATED,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.resetToken !== token) {
+                throw new HttpException(
+                    JwtError.INVALID_TOKEN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -409,6 +465,7 @@ export class AuthService {
                 },
                 data: {
                     password: hashedPassword,
+                    resetToken: null,
                 },
             });
             const payload: Payload = {
@@ -420,9 +477,12 @@ export class AuthService {
                 status: updatedUser.status,
             };
             const tokens = await this.generateTokens(payload);
-            await this.updateRefreshToken(
-                updatedUser.id,
-                tokens.refreshToken,
+            await this.updateTokens(
+                user.id,
+                {
+                    accessToken: tokens.accessToken,
+                    refreshToken: tokens.refreshToken,
+                },
                 true,
             );
             return {
@@ -446,7 +506,7 @@ export class AuthService {
             const { oldPassword, newPassword, confirmPassword } = dto;
             if (newPassword !== confirmPassword) {
                 throw new HttpException(
-                    'Password do not match confirm password',
+                    ResponseError.USER_PASSWORDS_NOT_MATCH,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -462,13 +522,13 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    'User not found',
+                    ResponseError.USER_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.loginFrom !== null) {
                 throw new HttpException(
-                    'You are using OAuth, please change password in your OAuth account',
+                    ResponseError.USER_OAUTH_CHANGE_PASSWORD,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -519,19 +579,19 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    'Invalid token',
+                    JwtError.INVALID_TOKEN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (user.status === Status.Inactive) {
                 throw new HttpException(
-                    'Your account is not active, please confirm your email',
+                    ResponseError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (!user) {
                 throw new HttpException(
-                    'Invalid token',
+                    JwtError.INVALID_TOKEN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -544,7 +604,14 @@ export class AuthService {
                 status: user.status,
             };
             const tokens = await this.generateTokens(payload);
-            await this.updateRefreshToken(user.id, tokens.refreshToken, true);
+            await this.updateTokens(
+                user.id,
+                {
+                    accessToken: tokens.accessToken,
+                    refreshToken: tokens.refreshToken,
+                },
+                true,
+            );
             return tokens;
         } catch (err) {
             return exceptionHandler(err);
@@ -569,7 +636,7 @@ export class AuthService {
             });
             if (!user) {
                 throw new HttpException(
-                    'User not found',
+                    ResponseError.USER_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -628,9 +695,15 @@ export class AuthService {
         });
     }
 
-    async updateRefreshToken(
+    async updateTokens(
         userId: string,
-        refreshToken: string,
+        {
+            accessToken,
+            refreshToken,
+        }: {
+            accessToken: string;
+            refreshToken: string;
+        },
         isLogin: boolean,
     ) {
         await this.prisma.users.update({
@@ -638,8 +711,31 @@ export class AuthService {
                 id: userId,
             },
             data: {
+                accessToken: accessToken,
                 token: refreshToken,
                 isLogin,
+            },
+        });
+    }
+
+    async updateConfirmToken(userId: string, token: string) {
+        await this.prisma.users.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                confirmToken: token,
+            },
+        });
+    }
+
+    async updateResetToken(userId: string, token: string) {
+        await this.prisma.users.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                resetToken: token,
             },
         });
     }
