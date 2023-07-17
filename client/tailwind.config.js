@@ -13,7 +13,7 @@ export default {
 				background: '#f5f5f5',
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
-
+				textHover: '#557A46',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
