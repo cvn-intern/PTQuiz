@@ -1,6 +1,8 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { Toast } from 'flowbite-svelte';
+	import { enhance } from '$app/forms';
+	import { validationRegister } from '../login/interface/message.interface';
+
 	export let form;
 </script>
 
@@ -8,9 +10,22 @@
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
 			<h1 class=" text-secondary text-[20px] font-bold">Sign up</h1>
-			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="?/register">
+			<form
+				method="POST"
+				class="w-full px-4 lg:px-0 mx-auto"
+				action="?/register"
+				use:enhance={() => {
+					return async ({ update }) => {
+						await update({ reset: false });
+					};
+				}}
+			>
 				<div class="py-4">
+					<label for="displayName" class="mb-1 text-black">Display Name</label>
 					<input
+						on:input={(input) => {
+							form = validationRegister(input.target.value, 'displayName');
+						}}
 						type="text"
 						name="displayName"
 						id="displayName"
@@ -18,9 +33,18 @@
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.displayName}
+						<label for="displayName" class="mb-1 text-red-500"
+							>{form.error.message}</label
+						>
+					{/if}
 				</div>
 				<div class="py-4">
+					<label for="email" class="mb-1 text-black">Email</label>
 					<input
+						on:input={(input) => {
+							form = validationRegister(input.target.value, 'email');
+						}}
 						type="email"
 						name="email"
 						id="email"
@@ -28,8 +52,12 @@
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.email}
+						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
+					{/if}
 				</div>
 				<div class="py-4">
+					<label for="password" class="mb-1 text-black">Password</label>
 					<input
 						type="password"
 						name="password"
@@ -37,9 +65,16 @@
 						placeholder="Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
+						on:input={(input) => {
+							form = validationRegister(input.target.value, 'passport');
+						}}
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.password}
+						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
+					{/if}
 				</div>
 				<div class="py-4">
+					<label for="confirmPassword" class="mb-1 text-black">Confirm Password</label>
 					<input
 						type="password"
 						name="confirmPassword"
@@ -47,7 +82,15 @@
 						placeholder="Confirm Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
+						on:input={(input) => {
+							form = validationRegister(input.target.value, 'confirmPassword');
+						}}
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.confirmPassword}
+						<label for="confirmPassword" class="mb-1 text-red-500"
+							>{form.error.message}</label
+						>
+					{/if}
 				</div>
 				<div class="pt-4">
 					<button
@@ -70,11 +113,7 @@
 					</p>
 				</div>
 			</div>
-			{#if form}
-				<Toast position="top-right">
-					{form.error}
-				</Toast>
-			{/if}
+			<div class="flex justify-center items-center" />
 		</div>
 	</div>
 </section>

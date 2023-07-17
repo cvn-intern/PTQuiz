@@ -3,11 +3,12 @@
 	import { Spinner, Toast } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
-	export let form;
 	import { onMount } from 'svelte';
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
+	import { validationLogin } from './interface/message.interface';
+	import toast, { Toaster } from 'svelte-french-toast';
 
-	$: console.log(form);
+	export let form;
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -19,25 +20,40 @@
 	const signInProviders = ['Google', 'Facebook', 'Github'];
 	const signInIcons = ['flat-color-icons:google', 'logos:facebook', 'icon-park:github'];
 
-	function showToast() {
-		const toast = document.getElementById('loading');
-		toast?.classList.remove('hidden');
-	}
 	const signIn = (providerName: string) => async () => {
+		let status = true;
 		startSignIn(window.firebase, providerName);
-		setTimeout(() => {
-			showToast();
-		}, 3000);
+		await toast.success('Please wait...', {
+			duration: 20000
+		});
 	};
-</script>
+	async function handleSubmit() {
+		await new Promise<void>((resolve, reject) => {
+			setTimeout(() => {
+				resolve();
+			}, 1000);
+		});
 
-<div class="flex justify-center items-center">
-	{#if form}
-		<Toast position="top-right">
-			{form.error}
-		</Toast>
-	{/if}
-</div>
+		toast.promise(
+			new Promise((resolve, reject) => {
+				if (form.isSuccess) {
+					resolve('Success!');
+				} else {
+					reject(form.error.message || 'Invalid credentials');
+				}
+			}),
+			{
+				loading: 'Loading...',
+				success: (value) => {
+					return value;
+				},
+				error: (err) => {
+					return err;
+				}
+			}
+		);
+	}
+</script>
 
 <section class="flex text-white justify-center">
 	<div class="w-[446px] rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
@@ -68,6 +84,9 @@
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
 						required
+						on:input={(input) => {
+							form = validationLogin(input.target.value, 'email');
+						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
 						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
@@ -82,6 +101,9 @@
 						placeholder="Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
 						required
+						on:input={(input) => {
+							form = validationLogin(input.target.value, 'password');
+						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
 						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
@@ -93,15 +115,13 @@
 				<div class="pt-4">
 					<button
 						type="submit"
+						on:click={handleSubmit}
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
 						>LOG IN</button
 					>
 				</div>
 			</form>
 			<div>
-				<div id="loading" class="hidden">
-					<Toast position="bottom-right">Loading...</Toast>
-				</div>
 				<div class="py-6 space-x-2 text-gray-500 flex">
 					{#each signInProviders as provider, i}
 						<button

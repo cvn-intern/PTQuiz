@@ -15,11 +15,23 @@ export const actions = {
 			return fail(400, { ...message });
 		}
 
-		if (!data.get('password') || data.get('password')?.trim().length === 0) {
-			message.error.missing.password = true;
-			message.error.message = "Password can't be empty";
+		// use regex to validate email
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+		console.log(emailRegex.test(data.get('email') as string));
+
+		if (!emailRegex.test(data.get('email') as string)) {
+			console.log('invalid email');
+			message.error.missing.email = true;
+			message.error.message = 'Invalid email';
 			return fail(400, { ...message });
 		}
+
+		if (!data.get('email'))
+			if (!data.get('password') || data.get('password')?.trim().length === 0) {
+				message.error.missing.password = true;
+				message.error.message = "Password can't be empty";
+				return fail(400, { ...message });
+			}
 
 		if (data.get('password')?.trim().length < 8) {
 			message.error.missing.password = true;
@@ -35,7 +47,6 @@ export const actions = {
 			})
 		});
 		const result = await response.json();
-		console.log(result);
 
 		if (response.status === 200) {
 			throw redirect(303, '/');
