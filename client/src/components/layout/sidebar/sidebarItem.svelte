@@ -14,8 +14,8 @@
 	class={clsx(
 		'flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-md hover:bg-secondary dark:bg-gray-900 dark:text-white cursor-pointer w-full',
 		{
-			'bg-secondary dark:bg-darkGreen': $page.url.pathname === navigateTo,
-			'hover:bg-secondary dark:hover:bg-darkGreen': $page.url.pathname !== navigateTo
+			'bg-secondary dark:bg-darkGreen text-white': $page.url.pathname === navigateTo,
+			'hover:bg-primary dark:hover:bg-darkGreen': $page.url.pathname !== navigateTo
 		}
 	)}
 	on:click={() => {
