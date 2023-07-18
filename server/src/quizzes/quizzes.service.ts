@@ -244,7 +244,7 @@ export class QuizzesService {
             } else if (quiz.userId !== userId) {
                 if (quiz.isShared === false) {
                     throw new HttpException(
-                        'Quiz is not shared',
+                        QuizzesError.QUIZ_NOT_SHARED,
                         HttpStatus.BAD_REQUEST,
                     );
                 } else {
@@ -252,7 +252,10 @@ export class QuizzesService {
                 }
             }
         } catch (error) {
-            throw new HttpException('Quiz error', HttpStatus.BAD_REQUEST);
+            throw new HttpException(
+                QuizzesError.ERROR_QUIZ,
+                HttpStatus.BAD_REQUEST,
+            );
         }
     }
 }

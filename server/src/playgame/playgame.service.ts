@@ -8,7 +8,7 @@ import { PlayGameError } from 'src/error/playGameError.enum';
 export class PlaygameService {
     constructor(
         private prisma: PrismaService,
-        private quizzservice: QuizzesService,
+        private quizzesService: QuizzesService,
         private questionService: QuestionService,
     ) {}
 
@@ -16,19 +16,24 @@ export class PlaygameService {
         return answerOfUser.every((item) => answerOfQuestion.includes(item));
     }
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
-        return await this.quizzservice.getAllQuestionsOfQuiz(userId, quizId);
+        try{
+        return await this.quizzesService.getAllQuestionsOfQuiz(userId, quizId);
+        }
+        catch(err) {
+            throw new HttpException(PlayGameError.NOT_FOUND_QUIZ, HttpStatus.NOT_FOUND)
+        }
     }
-
+    
     async playGame(userId: string, quizId: string) {
         try {
-            const umCompleteGame = await this.prisma.participants.findFirst({
+            const unCompleteGame = await this.prisma.participants.findFirst({
                 where: {
                     userId: userId,
                     quizId: quizId,
                 },
             });
-            if (umCompleteGame != null) {
-                return umCompleteGame;
+            if (unCompleteGame != null) {
+                return unCompleteGame;
             }
             const quiz = await this.prisma.quizzes.findUnique({
                 where: {
