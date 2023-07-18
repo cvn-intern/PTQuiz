@@ -9,7 +9,10 @@ interface Message {
 			displayName: boolean;
 			default: boolean;
 			confirmEmail: boolean;
-		};
+		},
+		fill: {
+			email: string;
+		},
 		message: string;
 	};
 	success: {
@@ -29,6 +32,9 @@ function createDefaultMessage(): Message {
 				confirmPassword: false,
 				default: false,
 				confirmEmail: false
+			},
+			fill: {
+				email: '',
 			},
 			message: ''
 		},

@@ -24,13 +24,42 @@
 	const signInProviders = ['Google', 'Facebook', 'Github'];
 	const signInIcons = ['flat-color-icons:google', 'logos:facebook', 'icon-park:github'];
 
-	const signIn = (providerName: string) => async () => {
-		let status = true;
-		startSignIn(window.firebase, providerName);
-		await toast.success('Please wait...', {
-			duration: 20000
+	const resendEmail = (email: string) => async () => {
+		const response = await fetch('/api/auth/resend', {
+			method: 'POST',
+			body: JSON.stringify({
+				email: email
+			})
 		});
+		const result = await response.json();
+		if (response.status === 200) {
+			goto('/register/loading');
+		} else {
+			return {
+				error: result
+			};
+		}
 	};
+
+	const signIn = (providerName: string) => async () => {
+		toast.promise(
+			startSignIn(window.firebase, providerName),
+			{
+				loading: 'Loading...',
+				success: (value) => {
+					goto('/');
+					return 'Success!';
+				},
+				error: (err) => {
+					return err;
+				}
+			},
+			{
+				duration: 20000
+			}
+		);
+	};
+
 	async function handleSubmit() {
 		toast.promise(
 			new Promise((resolve, reject) => {
@@ -77,7 +106,10 @@
 						<label for="common" class="mb-1 text-red-500"
 							>{form.error.message}
 							{#if form?.error?.missing?.confirmEmail}
-								<a href="/register/resend" class="text-secondary">Resend</a>
+								<br />If you didn't receive the email, click
+								<a href="#" class="text-secondary" on:click={resendEmail(form?.error?.fill?.email)}
+									>here</a
+								> to resend it.
 							{/if}<br /></label
 						>
 					{/if}

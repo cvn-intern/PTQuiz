@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
+import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 
 let message: Message;
 
@@ -12,7 +13,7 @@ export const actions = {
 		if (!data.get('email') || data.get('email')?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.email = true;
-			message.error.message = "Email can't be empty";
+			message.error.message = MESSAGE.MISSING_EMAIL;
 			return fail(400, { ...message });
 		}
 
@@ -22,7 +23,7 @@ export const actions = {
 		if (!emailRegex.test(data.get('email') as string)) {
 			message.isDone = true;
 			message.error.missing.email = true;
-			message.error.message = 'Invalid email';
+			message.error.message = MESSAGE.INVALID_EMAIL;
 			return fail(400, { ...message });
 		}
 
@@ -30,14 +31,14 @@ export const actions = {
 			if (!data.get('password') || data.get('password')?.trim().length === 0) {
 				message.isDone = true;
 				message.error.missing.password = true;
-				message.error.message = "Password can't be empty";
+				message.error.message = MESSAGE.MISSING_PASSWORD;
 				return fail(400, { ...message });
 			}
 
 		if (data.get('password')?.trim().length < 8) {
 			message.isDone = true;
 			message.error.missing.password = true;
-			message.error.message = 'Password must be at least 8 characters';
+			message.error.message = MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS;
 			return fail(400, { ...message });
 		}
 
@@ -56,11 +57,12 @@ export const actions = {
 			message.isSuccess = true;
 			message.success.message = result;
 			return message;
-		} else if (result === 'Your account is not active, please confirm your email') {
+		} else if (result === MESSAGE.EMAIL_NOT_CONFIRMED) {
 			message.isDone = true;
 			message.error.missing.confirmEmail = true;
 			message.error.missing.default = true;
 			message.error.message = result;
+			message.error.fill.email = data.get('email') as string;
 			return fail(400, { ...message });
 		} else {
 			message.isDone = true;
