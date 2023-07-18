@@ -1,7 +1,8 @@
 <script>
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
-	import { Spinner } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
+
 </script>
 
 <div class=" flex justify-center items-center">

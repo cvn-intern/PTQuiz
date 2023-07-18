@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { enhance } from '$app/forms';
-	import { toast } from '@zerodevx/svelte-toast';
+	import toast from 'svelte-french-toast';
 	import type { FormChangePassword } from './interface/form.interface';
+	import { validationProfile } from '../../routes/dashboard/profile/interface/message.interface';
 	export let form: any;
 	export let formChangePassword: FormChangePassword;
 
@@ -16,31 +17,34 @@
 		};
 		inputFocused = false;
 	}
+	async function handleSubmit() {
+		toast.promise(
+			new Promise((resolve, reject) => {
+				setInterval(() => {
+					if (form?.isDone) {
+						if (form?.isSuccess) {
+							resolve('Success!');
+						} else {
+							reject(form?.error.message || 'Error!');
+						}
+					}
+				}, 100);
+			}),
+			{
+				loading: 'Loading...',
+				success: (value: any) => {
+					return value;
+				},
+				error: (err) => {
+					return err;
+				}
+			}
+		);
+	}
 </script>
 
 <div class="items-center">
 	<form method="POST" action="?/change_password" use:enhance>
-		<div class="hidden">
-			{#if form?.isSuccess && form?.tabs?.change_password}
-				{toast.push('Success!', {
-					theme: {
-						'--toastColor': 'mintcream',
-						'--toastBackground': 'rgba(72,187,120,0.9)',
-						'--toastBarBackground': '#2F855A'
-					}
-				})}
-			{/if}
-			{#if !form?.isSuccess && form?.tabs?.change_password}
-				{toast.push(`Fail!\n${form?.error.message}`, {
-					theme: {
-						'--toastColor': 'mintcream',
-						'--toastBackground': '#FF1111',
-						'--toastBarBackground': '#5c0f09'
-					}
-				})}
-			{/if}
-		</div>
-
 		<div class="relative">
 			<label for="oldPassword" class="mb-1">Old password</label>
 			{#if !form?.isSuccess && form?.error?.missing.oldPassword && form?.tabs.change_password}
@@ -59,6 +63,9 @@
 					bind:value={formChangePassword.oldPassword}
 					required
 					on:focus={() => (inputFocused = true)}
+					on:input={(input) => {
+						form = validationProfile(input.target.value, 'oldPassword');
+					}}
 				/>
 				{#if !inputFocused}
 					<Icon
@@ -86,6 +93,9 @@
 					bind:value={formChangePassword.newPassword}
 					required
 					on:focus={() => (inputFocused = true)}
+					on:input={(input) => {
+						form = validationProfile(input.target.value, 'newPassword');
+					}}
 				/>
 				{#if !inputFocused}
 					<Icon
@@ -111,6 +121,9 @@
 				bind:value={formChangePassword.confirmPassword}
 				required
 				on:focus={() => (inputFocused = true)}
+				on:input={(input) => {
+					form = validationProfile(input.target.value, 'confirmPassword');
+				}}
 			/>
 		</div>
 		{#if inputFocused}
@@ -124,6 +137,7 @@
 					>
 					<button
 						aria-label="Save"
+						on:click={handleSubmit}
 						class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 						type="submit">Save</button
 					>

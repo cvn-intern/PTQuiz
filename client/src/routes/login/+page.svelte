@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { Spinner, Toast } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
@@ -75,7 +74,7 @@
 			}),
 			{
 				loading: 'Loading...',
-				success: (value) => {
+				success: (value: any) => {
 					goto('/');
 					return value;
 				},
@@ -107,8 +106,10 @@
 							>{form.error.message}
 							{#if form?.error?.missing?.confirmEmail}
 								<br />If you didn't receive the email, click
-								<a href="#" class="text-secondary" on:click={resendEmail(form?.error?.fill?.email)}
-									>here</a
+								<a
+									href="#"
+									class="text-secondary"
+									on:click={resendEmail(form?.error?.fill?.email)}>here</a
 								> to resend it.
 							{/if}<br /></label
 						>
@@ -116,7 +117,7 @@
 					<label for="email" class="mb-1 text-black">Email</label>
 
 					<input
-						type="email"
+						type="text"
 						name="email"
 						id="email"
 						placeholder="Email"

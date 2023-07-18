@@ -12,5 +12,10 @@ export enum ResponseMessage {
 	CONFIRM_PASSWORD_TOO_LONG = 'Confirm password too long',
 	DISPLAY_NAME_TOO_LONG = 'Display name too long',
 	EMAIL_TOO_LONG = 'Email too long',
-	EMAIL_NOT_CONFIRMED = 'Your account is not active, please confirm your email'
+	EMAIL_NOT_CONFIRMED = 'Your account is not active, please confirm your email',
+    AVATAR_MUST_BE_LESS_THAN_5MB = 'Avatar must be less than 4MB',
+    OLD_PASSWORD_IS_REQUIRED = 'Old password is required',
+    NEW_PASSWORD_IS_REQUIRED = 'New password is required',
+    NEW_PASSWORD_TOO_LONG = 'New password is too long',
+    OLD_PASSWORD_TOO_LONG = 'Old password is too long',
 }
