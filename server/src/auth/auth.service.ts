@@ -171,11 +171,18 @@ export class AuthService {
                     id: true,
                     displayName: true,
                     status: true,
+                    authId: true,
                 },
             });
             if (!user) {
                 throw new HttpException(
                     AuthError.USER_EMAIL_NOT_FOUND,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.authId !== null) {
+                throw new HttpException(
+                    AuthError.USER_OAUTH_LOGIN,
                     HttpStatus.BAD_REQUEST,
                 );
             }
