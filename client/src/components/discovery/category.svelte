@@ -12,7 +12,7 @@
 	</h1>
 
 	<div
-		class=" grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center"
+		class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center grid-3xl"
 	>
 		{#each cardList as card}
 			<Card
@@ -27,3 +27,11 @@
 		{/each}
 	</div>
 </div>
+
+<style>
+	@media (min-width: 1700px) {
+		.grid-3xl {
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
+	}
+</style>
