@@ -4,7 +4,7 @@
 		'bg-buttonAnswer rounded-full text-white w-8 h-8 md:w-12 md:h-12 text-2xl md:text-4xl';
 </script>
 
-<div class="grid grid-cols-2 grid-rows-2 gap-4 min-h-[240px]">
+<div class="grid grid-cols-2 grid-rows-2 gap-4 md:gap-8 min-h-[208px]">
 	<button class=" bg-optionA rounded-2xl flex p-2 md:p-4 gap-2">
 		<div class="rounded-full">
 			<button class={buttonRounded}> A </button>
@@ -16,7 +16,7 @@
 		</p>
 	</button>
 
-	<button class="bg-optionB rounded-lg flex p-2 md:p-4 gap-2">
+	<button class="bg-optionB rounded-2xl flex p-2 md:p-4 gap-2">
 		<div class="rounded-full">
 			<button class={buttonRounded}> B </button>
 		</div>
@@ -27,7 +27,7 @@
 		</p>
 	</button>
 
-	<button class=" bg-optionC rounded-lg flex p-2 md:p-4 gap-2">
+	<button class=" bg-optionC rounded-2xl flex p-2 md:p-4 gap-2">
 		<div class="rounded-full">
 			<button class={buttonRounded}> C </button>
 		</div>
@@ -38,7 +38,7 @@
 		</p>
 	</button>
 
-	<button class=" bg-optionD rounded-lg flex p-2 md:p-4 gap-2">
+	<button class=" bg-optionD rounded-2xl flex p-2 md:p-4 gap-2">
 		<div class="rounded-full">
 			<button class={buttonRounded}> D </button>
 		</div>

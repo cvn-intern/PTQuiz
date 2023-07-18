@@ -1,11 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte';
 
-	const aboutUs = [
-		'About us',
-		'Help',
-		'FAQS'
-	];
+	const aboutUs = ['About us', 'Help', 'FAQS'];
 
 	const contactIcons = [
 		'ic:baseline-facebook',
@@ -51,7 +47,7 @@
 				<h1 class="text-xl font-bold">Contact Us</h1>
 				<div class="flex gap-2 cursor-pointer">
 					{#each contactIcons as icon}
-						<Icon icon={icon} class="text-2xl" />
+						<Icon {icon} class="text-2xl" />
 					{/each}
 				</div>
 			</div>

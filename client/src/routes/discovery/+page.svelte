@@ -4,7 +4,7 @@
 	let { categories } = data;
 </script>
 
-<div class="py-10">
+<div class="py-10 flex flex-grow">
 	{#each categories as category}
 		<Category nameCategory={category.category} cardList={category.quizzes} />
 	{/each}
