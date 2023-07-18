@@ -13,6 +13,7 @@ export default {
 				background: '#f5f5f5',
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
+				greenLight: '#DFF5E8',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -24,7 +25,10 @@ export default {
 					700: '#EB4F27',
 					800: '#CC4522',
 					900: '#A5371B'
-				}
+				},
+				purple: '#800080',
+				red: '#ff0000',
+				green: '#008000'
 			},
 			fontFamily: {
 				body: ['Sora'],
