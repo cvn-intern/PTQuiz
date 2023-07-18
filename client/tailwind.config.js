@@ -36,8 +36,17 @@ export default {
 			},
 			width: {
 				desktop: '20rem',
-				ipad: '16rem',
+				ipad: '17rem',
 				mobile: '12rem'
+			},
+			minHeight: {
+				titleCard: '3.5rem'
+			},
+			maxHeight: {
+				titleCard: '3.75rem'
+			},
+			maxWidth: {
+				tagName: '33%'
 			}
 		}
 	},
