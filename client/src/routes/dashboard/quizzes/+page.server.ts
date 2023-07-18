@@ -5,7 +5,7 @@ export async function load({ fetch }) {
 	const response = await fetch('/api/quizzes/getAll');
 	const result = await response.json();
 	if (response.status === 200) {
-		const quizzes: IQuiz[] = result.map((quiz: any) => {
+		const quizzes: IQuiz[] = result.map((quiz: IQuizAPI) => {
 			return {
 				title: quiz.title,
 				description: quiz.description,
