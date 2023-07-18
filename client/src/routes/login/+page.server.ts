@@ -10,6 +10,8 @@ export const actions = {
 		message = createDefaultMessage();
 		const data = await request.formData();
 
+		console.log(data);
+
 		if (!data.get('email') || data.get('email')?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.email = true;

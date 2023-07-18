@@ -5,6 +5,9 @@ export const load: LayoutData = async ({ url, data }) => {
 	// if (data.user && url.pathname === '/login') {
 	// 	throw redirect(303, '/');
 	// }
+	if (data.user && url.pathname.startsWith('/register')) {
+		throw redirect(303, '/');
+	}
 	if (!data && url.pathname !== '/login') {
 		throw redirect(307, '/login');
 	}

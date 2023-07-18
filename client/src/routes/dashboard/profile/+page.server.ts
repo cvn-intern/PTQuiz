@@ -1,6 +1,7 @@
 import { fail, type Actions, json } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
+import { ResponseMessage as MESSAGE } from '../../../libs/message/responseMessage.enum';
 
 let message: Message;
 
@@ -12,21 +13,25 @@ export const actions: Actions = {
 		const avatar = form.get('avatar');
 
 		message.tabs.edit_profile = true;
+		message.isSuccess = false;
 
 		if (!displayName || displayName.trim().length === 0) {
+			message.isDone = true;
 			message.error.missing.displayName = true;
-			message.error.message = "Display name can't be empty";
+			message.error.message = MESSAGE.MISSING_DISPLAY_NAME;
 			return fail(400, { ...message });
 		}
 
-		if (displayName.length < 8) {
+		if (displayName.length < 3) {
+			message.isDone = true;
 			message.error.missing.displayName = true;
-			message.error.message = 'Display name must be at least 8 characters long';
+			message.error.message = MESSAGE.DISPLAY_NAME_MUST_BE_AT_LEAST_3_CHARACTERS;
 			return fail(400, { ...message });
 		}
 
-		if (avatar && avatar.size > 4 * 1024 * 1024) {
-			message.error.message = 'Avatar must be less than 4MB';
+		if (avatar && avatar.size > import.meta.env.VITE_MAX_FILE_SIZE) {
+			message.isDone = true;
+			message.error.message = MESSAGE.AVATAR_MUST_BE_LESS_THAN_5MB;
 			return fail(400, { ...message });
 		}
 
@@ -41,11 +46,13 @@ export const actions: Actions = {
 		const result = await response.json();
 
 		if (result.statusCode !== 200) {
+			message.isDone = true;
 			message.error.message = result.message;
 			return fail(400, { ...message });
 		}
 
 		message.isSuccess = true;
+		message.isDone = true;
 		message.success.message = result.message;
 
 		return message;
@@ -63,7 +70,8 @@ export const actions: Actions = {
 			if (!oldPassword) message.error.missing.oldPassword = true;
 			if (!newPassword) message.error.missing.newPassword = true;
 			if (!confirmPassword) message.error.missing.confirmPassword = true;
-			message.error.message = 'Please fill in this field.';
+			message.error.message = MESSAGE.MISSING_PASSWORD;
+			message.isDone = true;
 			return fail(400, {
 				...message
 			});
@@ -71,7 +79,8 @@ export const actions: Actions = {
 
 		if (newPassword.length < 8) {
 			message.error.missing.newPassword = true;
-			message.error.message = 'New password must be at least 8 characters long';
+			message.isDone = true;
+			message.error.message = MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS;
 			return fail(400, {
 				...message
 			});
@@ -79,7 +88,8 @@ export const actions: Actions = {
 
 		if (newPassword !== confirmPassword) {
 			message.error.missing.confirmPassword = true;
-			message.error.message = 'New password and confirm new password do not match';
+			message.isDone = true;
+			message.error.message = MESSAGE.CONFIRM_PASSWORD_MUST_MATCH_PASSWORD;
 			return fail(400, {
 				...message
 			});
@@ -99,6 +109,7 @@ export const actions: Actions = {
 
 		const result = await response.json();
 		if (result.statusCode !== 200) {
+			message.isDone = true;
 			message.error.message = result.message;
 			return fail(400, {
 				...message
@@ -106,6 +117,7 @@ export const actions: Actions = {
 		}
 
 		message.isSuccess = true;
+		message.isDone = true;
 		message.success.message = result.message;
 		return message;
 	}

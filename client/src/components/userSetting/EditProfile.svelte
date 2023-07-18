@@ -5,6 +5,7 @@
 	import { enhance } from '$app/forms';
 	import type User from '../../interface/user.interface';
 	import type { FormEditProfile } from './interface/form.interface';
+	import { validationProfile } from '../../routes/dashboard/profile/interface/message.interface';
 
 	export let user: User;
 	export let formEditProfile: FormEditProfile;
@@ -24,6 +25,31 @@
 		imageUrl = URL.createObjectURL(imageFile);
 		inputFocused = true;
 	};
+
+	async function handleSubmit() {
+		toast.promise(
+			new Promise((resolve, reject) => {
+				setInterval(() => {
+					if (form?.isDone) {
+						if (form?.isSuccess) {
+							resolve('Success!');
+						} else {
+							reject(form?.error.message || 'Error!');
+						}
+					}
+				}, 100);
+			}),
+			{
+				loading: 'Loading...',
+				success: (value: any) => {
+					return value;
+				},
+				error: (err) => {
+					return err;
+				}
+			}
+		);
+	}
 </script>
 
 <div class="flex flex-col items-center">
@@ -38,21 +64,6 @@
 		enctype="multipart/form-data"
 		class="items-center flex flex-col gap-5"
 	>
-		<div class="hidden">
-			{#if form?.isSuccess && form?.tabs?.edit_profile}
-				{toast.success('Look at me!', {
-					style: ' font-size:24px;',
-
-					position: 'top-right'
-				})}
-			{/if}
-			{#if !form?.isSuccess && form?.tabs?.edit_profile}
-				{toast.error(`Fail!\n${form?.error.message}`, {
-					position: 'top-right'
-				})}
-			{/if}
-		</div>
-
 		<div class="relative">
 			<img src={imageUrl} alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer" />
 			<input
@@ -108,6 +119,9 @@
 					placeholder="Display name"
 					required
 					on:focus={() => (inputFocused = true)}
+					on:input={(input) => {
+						form = validationProfile(input.target.value, 'displayName');
+					}}
 				/>
 				<div class="absolute right-3 top-3">
 					<Icon icon="solar:pen-broken" width="20" height="20" />
@@ -125,6 +139,7 @@
 				>
 				<button
 					aria-label="Save"
+					on:click={handleSubmit}
 					class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 					type="submit">Save</button
 				>

@@ -1,7 +1,9 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { Toast } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
 	export let form;
+
 </script>
 
 <section class="flex justify-center">
