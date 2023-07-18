@@ -4,7 +4,7 @@
 	import Icon from '@iconify/svelte';
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
-	import logo from '../../assets/draft1.png';
+	import logo from '../../assets/logo.png';
 
 	export let user: {
 		avatar: string;
