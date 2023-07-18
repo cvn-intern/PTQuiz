@@ -7,9 +7,14 @@ import {
 import { QuizzesDto } from './dto/quizzes.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuizzesError } from 'src/error/quizzesError.enum';
+import { QuestionService } from 'src/question/question.service';
+import { QuestionResponse } from 'src/question/type/questionResponse.type';
 @Injectable()
 export class QuizzesService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private questionService: QuestionService,
+    ) {}
 
     findMostCategoryInQuiz(arrCategory) {
         const frequencyMap = {};
@@ -50,6 +55,8 @@ export class QuizzesService {
                     description: true,
                     image: true,
                     numberQuestions: true,
+                    durationMins: true,
+                    difficultyLevel: true,
                 },
             });
             return quizzesOfUser;
@@ -213,7 +220,25 @@ export class QuizzesService {
                     question: true,
                 },
             });
-            const allQuestions = questions.map((question) => question.question);
+            const allQuestions = questions.map((question) => {
+                const questionResponse: QuestionResponse = {
+                    id: question.question.id,
+                    userId: question.question.userId,
+                    categoryId: question.question.categoryId,
+                    title: question.question.title,
+                    options: this.questionService.splitStringAnswerToArray(
+                        question.question.options,
+                    ),
+                    answers: this.questionService.splitStringAnswerToArray(
+                        question.question.answers,
+                    ),
+                    image: question.question.image,
+                    type: question.question.type,
+                    createdAt: question.question.createdAt,
+                    updatedAt: question.question.updatedAt,
+                };
+                return questionResponse;
+            });
             if (quiz.userId === userId) {
                 return allQuestions;
             } else if (quiz.userId !== userId) {
