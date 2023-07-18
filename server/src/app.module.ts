@@ -7,7 +7,6 @@ import { MailerModule } from './mailer/mailer.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { QuestionModule } from './question/question.module';
 import { UserModule } from './user/user.module';
-import { PlaygameModule } from './src/playgame/playgame.module';
 import { PlaygameModule } from './playgame/playgame.module';
 @Module({
     imports: [
