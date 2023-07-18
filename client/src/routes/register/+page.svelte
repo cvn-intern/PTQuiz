@@ -1,9 +1,44 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
+	import { onMount } from 'svelte';
 	import { validationRegister } from '../login/interface/message.interface';
+	import toast, { Toaster } from 'svelte-french-toast';
 
 	export let form;
+	export let data;
+
+	onMount(async () => {
+		if (data.user) {
+			goto('/');
+		}
+	});
+
+	async function handleSubmit() {
+		toast.promise(
+			new Promise((resolve, reject) => {
+				setInterval(() => {
+					if (form?.isDone) {
+						if (form?.isSuccess) {
+							resolve('Success!');
+						} else {
+							reject(form?.error.message || 'Invalid credentials');
+						}
+					}
+				}, 100);
+			}),
+			{
+				loading: 'Loading...',
+				success: (value) => {
+					goto('/register/loading');
+					return value;
+				},
+				error: (err) => {
+					return err;
+				}
+			}
+		);
+	}
 </script>
 
 <section class="flex justify-center">
@@ -30,8 +65,7 @@
 						name="displayName"
 						id="displayName"
 						placeholder="Display Name"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.displayName}
 						<label for="displayName" class="mb-1 text-red-500"
@@ -49,8 +83,7 @@
 						name="email"
 						id="email"
 						placeholder="Email"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
 						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
@@ -63,10 +96,9 @@
 						name="password"
 						id="password"
 						placeholder="Password"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
 						on:input={(input) => {
-							form = validationRegister(input.target.value, 'passport');
+							form = validationRegister(input.target.value, 'password');
 						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
@@ -80,8 +112,7 @@
 						name="confirmPassword"
 						id="confirmPassword"
 						placeholder="Confirm Password"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
 						on:input={(input) => {
 							form = validationRegister(input.target.value, 'confirmPassword');
 						}}
@@ -92,9 +123,11 @@
 						>
 					{/if}
 				</div>
+
 				<div class="pt-4">
 					<button
 						type="submit"
+						on:click={handleSubmit}
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
 						>SIGN UP</button
 					>

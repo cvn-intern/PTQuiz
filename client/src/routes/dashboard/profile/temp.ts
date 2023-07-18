@@ -6,7 +6,6 @@ let message: Message;
 
 export const actions: Actions = {
 	edit_profile: async ({ request, fetch }) => {
-		console.log('edit_profile');
 		message = createDefaultMessage();
 		const form = await request.formData();
 		const displayName = form.get('displayName');

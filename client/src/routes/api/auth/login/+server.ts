@@ -14,7 +14,6 @@ export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 		})
 	});
 	const result = await response.json();
-	console.log(result);
 	if (response.status === 200) {
 		cookies.set('accessToken', result.data.accessToken, {
 			path: '/'

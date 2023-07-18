@@ -10,18 +10,21 @@ export const actions = {
 		message = createDefaultMessage();
 
 		if (!data.get('displayName') || data.get('displayName')?.trim().length === 0) {
+			message.isDone = true;
 			message.error.missing.displayName = true;
 			message.error.message = "Display name can't be empty";
 			return fail(400, { ...message });
 		}
 
 		if (data.get('displayName')?.trim().length < 3) {
+			message.isDone = true;
 			message.error.missing.displayName = true;
 			message.error.message = 'Display name must be at least 3 characters';
 			return fail(400, { ...message });
 		}
 
 		if (!data.get('email') || data.get('email')?.trim().length === 0) {
+			message.isDone = true;
 			message.error.missing.email = true;
 			message.error.message = "Email can't be empty";
 			return fail(400, { ...message });
@@ -30,30 +33,35 @@ export const actions = {
 		// use regex to validate email
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 		if (!emailRegex.test(data.get('email') as string)) {
+			message.isDone = true;
 			message.error.missing.email = true;
 			message.error.message = 'Invalid email';
 			return fail(400, { ...message });
 		}
 
 		if (!data.get('password') || data.get('password')?.trim().length === 0) {
+			message.isDone = true;
 			message.error.missing.password = true;
 			message.error.message = "Password can't be empty";
 			return fail(400, { ...message });
 		}
 
 		if (data.get('password')?.trim().length < 8) {
+			message.isDone = true;
 			message.error.missing.password = true;
 			message.error.message = 'Password must be at least 8 characters';
 			return fail(400, { ...message });
 		}
 
 		if (!data.get('confirmPassword') || data.get('confirmPassword')?.trim().length === 0) {
+			message.isDone = true;
 			message.error.missing.confirmPassword = true;
 			message.error.message = "Confirm password can't be empty";
 			return fail(400, { ...message });
 		}
 
 		if (data.get('confirmPassword') !== data.get('password')) {
+			message.isDone = true;
 			message.error.missing.confirmPassword = true;
 			message.error.message = 'Confirm password must match password';
 			return fail(400, { ...message });
@@ -70,10 +78,19 @@ export const actions = {
 		});
 		const result = await response.json();
 		if (response.status === 201) {
-			throw redirect(303, '/register/loading');
+			message.isDone = true;
+			message.isSuccess = true;
+			message.success.message = result;
+			return message;
+		} else if (result.message === 'Your account is not active, please confirm your email') {
+			message.isDone = true;
+			message.error.missing.confirmEmail = true;
+			message.error.message = result.message;
+			return fail(400, { ...message });
 		} else {
 			message.error.missing.default = true;
 			message.error.message = result;
+			message.isDone = true;
 			return fail(400, { ...message });
 		}
 	}

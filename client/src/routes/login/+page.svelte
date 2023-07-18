@@ -9,14 +9,18 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 
 	export let form;
+	export let data;
 
 	onMount(async () => {
+		if (data.user) {
+			goto('/');
+		}
 		if (typeof window !== 'undefined') {
 			const firebase = window.firebase;
-
 			await initializeFirebase(firebase);
 		}
 	});
+
 	const signInProviders = ['Google', 'Facebook', 'Github'];
 	const signInIcons = ['flat-color-icons:google', 'logos:facebook', 'icon-park:github'];
 
@@ -28,23 +32,22 @@
 		});
 	};
 	async function handleSubmit() {
-		await new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				resolve();
-			}, 1000);
-		});
-
 		toast.promise(
 			new Promise((resolve, reject) => {
-				if (form.isSuccess) {
-					resolve('Success!');
-				} else {
-					reject(form.error.message || 'Invalid credentials');
-				}
+				setInterval(() => {
+					if (form?.isDone) {
+						if (form?.isSuccess) {
+							resolve('Success!');
+						} else {
+							reject(form?.error.message || 'Invalid credentials');
+						}
+					}
+				}, 100);
 			}),
 			{
 				loading: 'Loading...',
 				success: (value) => {
+					goto('/');
 					return value;
 				},
 				error: (err) => {
@@ -72,7 +75,10 @@
 				<div class="py-4">
 					{#if !form?.isSuccess && form?.error?.missing?.default}
 						<label for="common" class="mb-1 text-red-500"
-							>{form.error.message}<br /></label
+							>{form.error.message}
+							{#if form?.error?.missing?.confirmEmail}
+								<a href="/register/resend" class="text-secondary">Resend</a>
+							{/if}<br /></label
 						>
 					{/if}
 					<label for="email" class="mb-1 text-black">Email</label>
@@ -83,7 +89,6 @@
 						id="email"
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						required
 						on:input={(input) => {
 							form = validationLogin(input.target.value, 'email');
 						}}
@@ -100,7 +105,6 @@
 						id="password"
 						placeholder="Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						required
 						on:input={(input) => {
 							form = validationLogin(input.target.value, 'password');
 						}}
