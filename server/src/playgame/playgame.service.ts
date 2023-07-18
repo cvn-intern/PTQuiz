@@ -16,14 +16,19 @@ export class PlaygameService {
         return answerOfUser.every((item) => answerOfQuestion.includes(item));
     }
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
-        try{
-        return await this.quizzesService.getAllQuestionsOfQuiz(userId, quizId);
-        }
-        catch(err) {
-            throw new HttpException(PlayGameError.NOT_FOUND_QUIZ, HttpStatus.NOT_FOUND)
+        try {
+            return await this.quizzesService.getAllQuestionsOfQuiz(
+                userId,
+                quizId,
+            );
+        } catch (err) {
+            throw new HttpException(
+                PlayGameError.NOT_FOUND_QUIZ,
+                HttpStatus.NOT_FOUND,
+            );
         }
     }
-    
+
     async playGame(userId: string, quizId: string) {
         try {
             const unCompleteGame = await this.prisma.participants.findFirst({
