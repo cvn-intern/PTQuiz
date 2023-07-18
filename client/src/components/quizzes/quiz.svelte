@@ -4,6 +4,16 @@
 	export let description: string;
 	export let numberOfQuestions: number;
 	export let image: string;
+	export let createdAt: string;
+
+	const dateObj = new Date(createdAt);
+	const hours = String(dateObj.getUTCHours()).padStart(2, '0');
+	const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
+	const seconds = String(dateObj.getUTCSeconds()).padStart(2, '0');
+	const day = String(dateObj.getUTCDate()).padStart(2, '0');
+	const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
+	const year = dateObj.getUTCFullYear();
+	const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
 </script>
 
 <section
@@ -20,7 +30,7 @@
 		</div>
 		<div class="flex flex-row justify-between items-center">
 			<p class="text-sm text-zinc-400">
-				Created by: <span class="text-zinc-300">{author}</span>
+				Created at: <span class="text-zinc-400">{formattedDateTime}</span>
 			</p>
 			<div class="flex flex-row gap-4">
 				<button

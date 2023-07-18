@@ -20,6 +20,9 @@ model users {
     authId      String?
     loginFrom   String?
     token       String? @db.Text
+    resetToken  String? @db.Text
+    confirmToken String? @db.Text
+    accessToken  String? @db.Text
 
     questions    questions[]
     quizzes      quizzes[]
