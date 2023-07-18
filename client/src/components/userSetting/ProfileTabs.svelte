@@ -2,22 +2,26 @@
 	import EditProfile from './EditProfile.svelte';
 	import ChangePassword from './ChangePassword.svelte';
 	import type User from '../../interface/user.interface';
-	
-	let currentTab = 'EditProfile';
+	import type { FormChangePassword, FormEditProfile } from './interface/form.interface';
+	import type { Actions } from '@sveltejs/kit';
+
+	export let currentTab = 'EditProfile';
 	export let user: User;
-	export let form: any;
-	export let formChangePassword: any = {
+	export let form: Actions;
+
+	export let formChangePassword: FormChangePassword = {
 		oldPassword: '',
 		newPassword: '',
 		confirmPassword: ''
 	};
-	export let formUserInfo: any = {
+
+	export let formEditProfile: FormEditProfile = {
 		displayName: user.displayName
 	};
 
 	function switchTab(tab: string) {
 		currentTab = tab;
-		form = null;
+		form = {};
 	}
 </script>
 
@@ -46,10 +50,10 @@
 	</div>
 </div>
 
-<div class="content">
+<div class="content px-4 sm:px-10 md:px-10 lg:px-40">
 	<div class="w-full">
 		{#if currentTab === 'EditProfile'}
-			<EditProfile bind:user bind:formUserInfo bind:form />
+			<EditProfile bind:user bind:formEditProfile bind:form />
 		{:else if currentTab === 'ChangePassword'}
 			<ChangePassword bind:form bind:formChangePassword />
 		{/if}
