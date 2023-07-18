@@ -10,7 +10,7 @@
 	export let amountOfQuestions = '';
 </script>
 
-<div class="max-w-md xl:w-desktop lg:w-ipad bg-gray-50 shadow-lg rounded-xl p-6">
+<div class="max-w-md xl:w-80 lg:w-72 2xl:w-80 bg-gray-50 shadow-lg rounded-xl p-6">
 	<div class="flex flex-col">
 		<div class="w-full mb-3">
 			<img
