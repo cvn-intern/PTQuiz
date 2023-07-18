@@ -22,6 +22,7 @@
 				description={quiz.description}
 				numberOfQuestions={quiz.numberOfQuestions}
 				image={quiz.image}
+				createdAt={quiz.createdAt}
 			/>
 		{/each}
 	</div>
