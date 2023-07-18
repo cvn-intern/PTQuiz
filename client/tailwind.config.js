@@ -13,7 +13,6 @@ export default {
 				background: '#f5f5f5',
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
-
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -36,8 +35,17 @@ export default {
 			},
 			width: {
 				desktop: '20rem',
-				ipad: '16rem',
+				ipad: '17rem',
 				mobile: '12rem'
+			},
+			minHeight: {
+				titleCard: '3.5rem'
+			},
+			maxHeight: {
+				titleCard: '3.75rem'
+			},
+			maxWidth: {
+				tagName: '33%'
 			}
 		}
 	},
