@@ -48,6 +48,7 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN, userId } = data;
+            console.log(roomPIN, userId, client.id);
             await this.socketService.joinRoom(roomPIN, userId, client.id);
             client.join(roomPIN);
             const roomParticipants =

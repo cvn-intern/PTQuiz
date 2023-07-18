@@ -106,6 +106,7 @@ export class SocketService {
                             select: {
                                 id: true,
                                 displayName: true,
+                                avatar: true,
                             },
                         },
                     },
@@ -117,6 +118,7 @@ export class SocketService {
             return {
                 id: roomParticipant.participant.user.id,
                 displayName: roomParticipant.participant.user.displayName,
+                avatar: roomParticipant.participant.user.avatar,
             };
         });
     }
