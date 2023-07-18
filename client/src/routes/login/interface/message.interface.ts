@@ -1,3 +1,5 @@
+import { ResponseMessage as MESSAGE } from '../../../libs/message/responseMessage.enum';
+
 interface Message {
 	isSuccess: boolean;
 	isDone: boolean;
@@ -9,10 +11,10 @@ interface Message {
 			displayName: boolean;
 			default: boolean;
 			confirmEmail: boolean;
-		},
+		};
 		fill: {
 			email: string;
-		},
+		};
 		message: string;
 	};
 	success: {
@@ -34,7 +36,7 @@ function createDefaultMessage(): Message {
 				confirmEmail: false
 			},
 			fill: {
-				email: '',
+				email: ''
 			},
 			message: ''
 		},
@@ -52,34 +54,34 @@ function validationLogin(values: string, field: string) {
 		if (!values || values.trim().length === 0) {
 			form.error.missing.email = true;
 			form.isDone = true;
-			form.error.message = 'Email is required';
+			form.error.message = MESSAGE.MISSING_EMAIL;
 		}
 		if (values.length > import.meta.env.VITE_MAX_INPUT_SIZE) {
 			form.error.missing.email = true;
 			form.isDone = true;
-			form.error.message = 'Email is too long';
+			form.error.message = MESSAGE.EMAIL_TOO_LONG;
 		}
 		const emailRegex = /^\S+@\S+\.\S+$/;
 		if (!emailRegex.test(values)) {
 			form.error.missing.email = true;
 			form.isDone = true;
-			form.error.message = 'Invalid email';
+			form.error.message = MESSAGE.INVALID_EMAIL;
 		}
 	} else if (field === 'password') {
 		if (!values || values.trim().length === 0) {
 			form.error.missing.password = true;
 			form.isDone = true;
-			form.error.message = 'Password is required';
+			form.error.message = MESSAGE.MISSING_PASSWORD;
 		}
 		if (values.length < 8) {
 			form.error.missing.password = true;
 			form.isDone = true;
-			form.error.message = 'Password must be at least 8 characters';
+			form.error.message = MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS;
 		}
 		if (values.length > import.meta.env.VITE_MAX_INPUT_SIZE) {
 			form.error.missing.password = true;
 			form.isDone = true;
-			form.error.message = 'Password is too long';
+			form.error.message = MESSAGE.PASSWORD_TOO_LONG;
 		}
 	} else form.isSuccess = true;
 	return form;
@@ -91,52 +93,49 @@ function validationRegister(values: string, field: string) {
 	if (field === 'displayName') {
 		if (!values || values.trim().length === 0) {
 			form.error.missing.displayName = true;
-			form.error.message = 'Display name is required';
+			form.error.message = MESSAGE.MISSING_DISPLAY_NAME;
 		}
 		if (values.length > import.meta.env.VITE_MAX_INPUT_SIZE) {
 			form.error.missing.displayName = true;
-			form.error.message = 'Display name is too long';
+			form.error.message = MESSAGE.DISPLAY_NAME_TOO_LONG;
 		}
 	} else if (field === 'email') {
 		if (!values || values.trim().length === 0) {
 			form.error.missing.email = true;
-			form.error.message = 'Email is required';
+			form.error.message = MESSAGE.MISSING_EMAIL;
 		}
 		if (values.length > import.meta.env.VITE_MAX_INPUT_SIZE) {
 			form.error.missing.email = true;
-			form.error.message = 'Email is too long';
+			form.error.message = MESSAGE.EMAIL_TOO_LONG;
 		}
-		// use regex to validate email
 		const emailRegex = /^\S+@\S+\.\S+$/;
 		if (!emailRegex.test(values)) {
 			form.error.missing.email = true;
-			form.error.message = 'Invalid email';
+			form.error.message = MESSAGE.INVALID_EMAIL;
 		}
 	} else if (field === 'password') {
 		if (!values || values.trim().length === 0) {
 			form.error.missing.password = true;
-			form.error.message = 'Password is required';
-		}
-		if (values.length < 8) {
+			form.error.message = MESSAGE.MISSING_PASSWORD;
+		} else if (values.length < 8) {
 			form.error.missing.password = true;
-			form.error.message = 'Password must be at least 8 characters';
-		}
-		if (values.length > import.meta.env.VITE_MAX_INPUT_SIZE) {
+			form.error.message = MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS;
+		} else if (values.length > import.meta.env.VITE_MAX_INPUT_SIZE) {
 			form.error.missing.password = true;
-			form.error.message = 'Password is too long';
+			form.error.message = MESSAGE.PASSWORD_TOO_LONG;
 		}
 	} else if (field === 'confirmPassword') {
 		if (!values || values.trim().length === 0) {
 			form.error.missing.confirmPassword = true;
-			form.error.message = 'Confirm password is required';
+			form.error.message = MESSAGE.MISSING_CONFIRM_PASSWORD;
 		}
 		if (values !== (document.getElementById('password') as HTMLInputElement).value) {
 			form.error.missing.confirmPassword = true;
-			form.error.message = 'Confirm password must match password';
+			form.error.message = MESSAGE.CONFIRM_PASSWORD_MUST_MATCH_PASSWORD;
 		}
 		if (values.length > import.meta.env.VITE_MAX_INPUT_SIZE) {
 			form.error.missing.confirmPassword = true;
-			form.error.message = 'Confirm password is too long';
+			form.error.message = MESSAGE.CONFIRM_PASSWORD_TOO_LONG;
 		}
 	} else form.isSuccess = true;
 	return form;

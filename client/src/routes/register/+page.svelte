@@ -79,7 +79,7 @@
 						on:input={(input) => {
 							form = validationRegister(input.target.value, 'email');
 						}}
-						type="email"
+						type="text"
 						name="email"
 						id="email"
 						placeholder="Email"
