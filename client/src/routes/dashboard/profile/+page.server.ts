@@ -1,22 +1,35 @@
-import { fail, type Actions } from '@sveltejs/kit';
+import { fail, type Actions, json } from '@sveltejs/kit';
+import type Message from './interface/message.interface';
+import { createDefaultMessage } from './interface/message.interface';
+
+let message: Message;
 
 export const actions: Actions = {
 	edit_profile: async ({ request, fetch }) => {
+		message = createDefaultMessage();
 		const form = await request.formData();
-		if (!form.has('displayName')) {
-			return fail(400, {
-				message: 'Display name cannot be empty',
-				error: 'Display name cannot be empty',
-				type: 'edit_profile'
-			});
+		const displayName = form.get('displayName');
+		const avatar = form.get('avatar');
+
+		message.tabs.edit_profile = true;
+
+		if (!displayName || displayName.trim().length === 0) {
+			message.error.missing.displayName = true;
+			message.error.message = "Display name can't be empty";
+			return fail(400, { ...message });
 		}
-		if (form.get('avatar') && form.get('avatar').size > 4 * 1024 * 1024) {
-			return fail(400, {
-				message: 'File size too large, max file size is 4MB',
-				error: 'File size too large, max file size is 4MB',
-				type: 'edit_profile'
-			});
+
+		if (displayName.length < 8) {
+			message.error.missing.displayName = true;
+			message.error.message = 'Display name must be at least 8 characters long';
+			return fail(400, { ...message });
 		}
+
+		if (avatar && avatar.size > 4 * 1024 * 1024) {
+			message.error.message = 'Avatar must be less than 4MB';
+			return fail(400, { ...message });
+		}
+
 		const response = await fetch('/api/auth/edit-profile', {
 			method: 'POST',
 			headers: {
@@ -28,45 +41,47 @@ export const actions: Actions = {
 		const result = await response.json();
 
 		if (result.statusCode !== 200) {
-			return fail(400, {
-				message: result.message,
-				error: result.message,
-				type: 'edit_profile'
-			});
+			message.error.message = result.message;
+			return fail(400, { ...message });
 		}
 
-		return {
-			...result,
-			type: 'edit_profile'
-		};
+		message.isSuccess = true;
+		message.success.message = result.message;
+
+		return message;
 	},
 	change_password: async ({ request, fetch }) => {
+		message = createDefaultMessage();
 		const form = await request.formData();
 		const oldPassword = form.get('oldPassword');
 		const newPassword = form.get('newPassword');
 		const confirmPassword = form.get('confirmPassword');
 
-		if (!oldPassword || !newPassword || !confirmPassword) {
-			return fail(400, {
-				message: 'Please fill in all fields',
-				error: 'Please fill in all fields',
-				type: 'change_password'
-			});
-		}
+		message.tabs.change_password = true;
 
-		if (newPassword !== confirmPassword) {
+		if (!oldPassword || !newPassword || !confirmPassword) {
+			if (!oldPassword) message.error.missing.oldPassword = true;
+			if (!newPassword) message.error.missing.newPassword = true;
+			if (!confirmPassword) message.error.missing.confirmPassword = true;
+			message.error.message = 'Please fill in this field.';
 			return fail(400, {
-				message: 'New password and confirm new password do not match',
-				error: 'New password and confirm new password do not match',
-				type: 'change_password'
+				...message
 			});
 		}
 
 		if (newPassword.length < 8) {
+			message.error.missing.newPassword = true;
+			message.error.message = 'New password must be at least 8 characters long';
 			return fail(400, {
-				message: 'Password must be at least 8 characters long',
-				error: 'Password must be at least 8 characters long',
-				type: 'change_password'
+				...message
+			});
+		}
+
+		if (newPassword !== confirmPassword) {
+			message.error.missing.confirmPassword = true;
+			message.error.message = 'New password and confirm new password do not match';
+			return fail(400, {
+				...message
 			});
 		}
 
@@ -83,16 +98,15 @@ export const actions: Actions = {
 		});
 
 		const result = await response.json();
-		if (!result.ok) {
+		if (result.statusCode !== 200) {
+			message.error.message = result.message;
 			return fail(400, {
-				message: result.message,
-				error: result.message,
-				type: 'change_password'
+				...message
 			});
 		}
-		return {
-			...result,
-			type: 'change_password'
-		};
+
+		message.isSuccess = true;
+		message.success.message = result.message;
+		return message;
 	}
 };
