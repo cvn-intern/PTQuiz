@@ -55,4 +55,15 @@ export class QuizzesController {
     async filterCategory(@Query('category') categoryName: string) {
         return await this.quizzesService.filterCategory(categoryName);
     }
+
+    @Get('/getAllQuestions')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Get all questions successfully')
+    @UseGuards(JwtAuthGuard)
+    async getAllQuestionOfQuiz(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+    ) {
+        return await this.quizzesService.getAllQuestionsOfQuiz(userId, quizId);
+    }
 }
