@@ -1,3 +1,4 @@
+import { invalidateAll } from '$app/navigation';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ fetch, cookies }) => {
