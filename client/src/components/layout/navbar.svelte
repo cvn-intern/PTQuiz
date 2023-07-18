@@ -70,7 +70,7 @@
 					<img
 						src={user.avatar}
 						alt="user avatar"
-						class="border-2 border-darkGreen shadow-lg rounded-full"
+						class="border-2 border-darkGreen rounded-full"
 					/>
 				</button>
 				<h1

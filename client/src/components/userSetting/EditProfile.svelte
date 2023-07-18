@@ -37,12 +37,12 @@
 			<Toast position="top-right">{form.message}</Toast>
 		{/if}
 		<div class="relative">
-			<img src={imageUrl} alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer z-10" />
+			<img src={imageUrl} alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer" />
 			<input
 				type="file"
 				name="avatar"
 				accept="image/*"
-				class="absolute inset-0 opacity-0 cursor-pointer z-0"
+				class="absolute inset-0 opacity-0 cursor-pointer"
 				on:change={handleFileChange}
 			/>
 		</div>
