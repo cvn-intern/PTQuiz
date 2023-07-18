@@ -4,7 +4,7 @@
 	import Icon from '@iconify/svelte';
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
-	import draft1 from '../../assets/draft1.png';
+	import logo from '../../assets/draft1.png';
 
 	export let user: {
 		avatar: string;
@@ -42,14 +42,14 @@
 			<Icon icon="material-symbols:list" class="text-5xl" />
 		</button>
 		<a class="logo flex items-center gap-2" href="/">
-			<img src={draft1} alt="logo" class="hidden md:block w-16" />
+			<img src={logo} alt="logo" class="hidden md:block w-16" />
 			<h1 class="hidden text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
 				PentaQuiz
 			</h1>
 		</a>
 	{:else}
 		<a class="logo flex items-center gap-2" href="/">
-			<img src={draft1} alt="logo" class="w-16" />
+			<img src={logo} alt="logo" class="w-16" />
 			<h1 class="text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
 				PentaQuiz
 			</h1>
