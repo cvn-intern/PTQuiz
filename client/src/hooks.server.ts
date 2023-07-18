@@ -6,7 +6,9 @@ export const handle = async ({ event, resolve }) => {
 	if (!access && event.route.id?.startsWith('/dashboard')) {
 		throw redirect(303, '/login');
 	}
-
+    if (!access && event.route.id?.startsWith('/room')) {
+        throw redirect(303, '/login');
+    }
 	const response = await resolve(event);
 	return response;
 };

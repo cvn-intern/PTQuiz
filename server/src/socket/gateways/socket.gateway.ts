@@ -5,15 +5,18 @@ import {
     OnGatewayInit,
     OnGatewayConnection,
     OnGatewayDisconnect,
+    WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Server, Socket } from 'socket.io';
+import { SocketService } from '../socket.service';
 
 @WebSocketGateway({ cors: '*' })
 export class SocketGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-    constructor(public prisma: PrismaService) {}
+    @WebSocketServer() server: Server;
+
+    constructor(public socketService: SocketService) {}
     private logger: Logger = new Logger('SocketGateway');
 
     handleConnection(@ConnectedSocket() client: Socket): void {
