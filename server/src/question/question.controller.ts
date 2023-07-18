@@ -32,4 +32,12 @@ export class QuestionController {
     ) {
         return await this.questionService.addQuestion(dto, userId, quizzesId);
     }
+
+    @Get('/get')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Get Question successfully')
+    @UseGuards(JwtAuthGuard)
+    async getQuestion(@Query('questionId') questionId: string) {
+        return await this.questionService.getQuestion(questionId);
+    }
 }
