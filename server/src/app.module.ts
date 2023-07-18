@@ -8,6 +8,7 @@ import { QuizzesModule } from './quizzes/quizzes.module';
 import { QuestionModule } from './question/question.module';
 import { UserModule } from './user/user.module';
 import { PlaygameModule } from './playgame/playgame.module';
+import { SocketModule } from './socket/socket.module';
 @Module({
     imports: [
         PrismaModule,
@@ -19,6 +20,7 @@ import { PlaygameModule } from './playgame/playgame.module';
         QuestionModule,
         UserModule,
         PlaygameModule,
+        SocketModule,
     ],
     controllers: [],
     providers: [],
