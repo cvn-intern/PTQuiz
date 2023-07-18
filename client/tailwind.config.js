@@ -13,6 +13,12 @@ export default {
 				background: '#f5f5f5',
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
+				buttonAnswer: '#6f49c3',
+				greenLight: '#DFF5E8',
+				optionA: '#fd696e',
+				optionB: '#63e890',
+				optionC: '#6c8ffc',
+				optionD: '#febf71',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
