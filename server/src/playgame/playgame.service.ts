@@ -79,7 +79,7 @@ export class PlaygameService {
                 where: {
                     userId: userId,
                     participantId: participantId,
-                    questionId: questionId
+                    questionId: questionId,
                 },
             });
             if (isAnswered) {

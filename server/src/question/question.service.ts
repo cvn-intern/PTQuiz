@@ -6,8 +6,8 @@ import { QuestionResponse } from './type/questionResponse.type';
 export class QuestionService {
     constructor(private prisma: PrismaService) {}
     arrayToString(array) {
-        const arrayResult = array.map(element =>("@An'" + element + "'nA@"))
-        return arrayResult.join(",")
+        const arrayResult = array.map((element) => "@An'" + element + "'nA@");
+        return arrayResult.join(',');
     }
     splitStringAnswerToArray(answer) {
         var regex = /@An'(.*?)'nA@/g;

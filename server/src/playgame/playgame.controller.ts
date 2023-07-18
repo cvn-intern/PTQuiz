@@ -38,16 +38,23 @@ export class PlaygameController {
     async answerQuestion(
         @GetCurrentUser('id') userId: string,
         @Body() dto: Answer,
-        @Query('participantId') participantId: string
+        @Query('participantId') participantId: string,
     ) {
-        return await this.playgameService.answerQuestion(userId, dto, participantId);
+        return await this.playgameService.answerQuestion(
+            userId,
+            dto,
+            participantId,
+        );
     }
 
     @Post('/play')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Play successfully')
     @UseGuards(JwtAuthGuard)
-    async playgame(@GetCurrentUser('id') userId: string, @Query('quizId') quizId: string){
+    async playgame(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+    ) {
         return await this.playgameService.playGame(userId, quizId);
     }
 }
