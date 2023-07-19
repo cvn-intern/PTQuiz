@@ -19,6 +19,7 @@ export default {
 				optionB: '#63e890',
 				optionC: '#6c8ffc',
 				optionD: '#febf71',
+				redLight: '#FF6B6B',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
