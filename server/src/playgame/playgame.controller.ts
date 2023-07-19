@@ -14,7 +14,7 @@ import { PlaygameService } from './playgame.service';
 import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
 import { GetCurrentUser } from 'src/decorators/getCurrentUser.decorator';
-import { Answer } from './dto/answer.dto';
+import {  AnswerDetail } from './dto/answer.dto';
 
 @Controller('play-game')
 @UseInterceptors(ResTransformInterceptor)
@@ -37,14 +37,9 @@ export class PlaygameController {
     @UseGuards(JwtAuthGuard)
     async answerQuestion(
         @GetCurrentUser('id') userId: string,
-        @Body() dto: Answer,
-        @Query('participantId') participantId: string,
+        @Body() dto: AnswerDetail,
     ) {
-        return await this.playgameService.answerQuestion(
-            userId,
-            dto,
-            participantId,
-        );
+        return await this.playgameService.answerQuestion(userId, dto);
     }
 
     @Post('/play')
