@@ -57,4 +57,15 @@ export class PlaygameController {
     ) {
         return await this.playgameService.playGame(userId, quizId);
     }
+
+    @Get('/end-game')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('End game successfully')
+    @UseGuards(JwtAuthGuard)
+    async endGame(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+    ) {
+        return await this.playgameService.endGame(userId, quizId);
+    }
 }

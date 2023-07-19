@@ -2,6 +2,22 @@
 	import HistoryAttempt from '../../components/endGame/historyAttempt.svelte';
 	import Result from '../../components/endGame/result.svelte';
 	import Score from '../../components/endGame/score.svelte';
+	import type { ResultGameInterface } from './resultGame.type';
+	export let data;
+	
+	const STATUS = {
+		PASS: 'Pass',
+		FAIL: 'Fail'
+	};
+	let { result } = data;
+	let currentResult: ResultGameInterface = result[0];
+	const attemptList = result.map((item: ResultGameInterface, index: number) => {
+		return {
+			attempt: index + 1,
+			points: item.point,
+			status: item.point >= 50 ? STATUS.PASS : STATUS.FAIL
+		};
+	});
 </script>
 
 <div class="bg-greenLight w-full">
@@ -11,8 +27,8 @@
 				>Leave game</button
 			>
 		</div>
-		<Score />
-		<Result />
-		<HistoryAttempt />
+		<Score score={currentResult.point} />
+		<Result amountCorrect={currentResult.correct} totalQuestion={currentResult.questions} />
+		<HistoryAttempt {attemptList} />
 	</div>
 </div>

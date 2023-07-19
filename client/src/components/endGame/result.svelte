@@ -1,5 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte';
+	export let amountCorrect;
+	export let totalQuestion;
 	const elementsResult = [
 		{
 			name: 'Completion',
@@ -8,17 +10,17 @@
 		},
 		{
 			name: 'Total Question',
-			value: '20',
+			value: `${totalQuestion}`,
 			color: 'purple'
 		},
 		{
 			name: 'Correct',
-			value: '13',
+			value: `${amountCorrect}`,
 			color: 'green'
 		},
 		{
 			name: 'Wrong',
-			value: '07',
+			value: `${totalQuestion - amountCorrect}`,
 			color: 'red'
 		}
 	];

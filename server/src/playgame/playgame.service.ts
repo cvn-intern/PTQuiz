@@ -4,6 +4,7 @@ import { QuestionService } from 'src/question/question.service';
 import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { Answer } from './dto/answer.dto';
 import { PlayGameError } from 'src/error/playGameError.enum';
+import { EndGameError } from 'src/error/endGameError.enum';
 @Injectable()
 export class PlaygameService {
     constructor(
@@ -132,6 +133,26 @@ export class PlaygameService {
         } catch (error) {
             throw new HttpException(
                 PlayGameError.CAN_NOT_ANSWER,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+    }
+    async endGame(userId: string, quizId: string) {
+        try {
+            const userResult = await this.prisma.participants.findMany({
+                where: {
+                    userId: userId,
+                    quizId: quizId,
+                    isSingleMode: true,
+                },
+                orderBy: {
+                    createdAt: 'desc',
+                },
+            });
+            return userResult;
+        } catch (error) {
+            throw new HttpException(
+                EndGameError.ERROR_ENDGAME,
                 HttpStatus.BAD_REQUEST,
             );
         }
