@@ -13,7 +13,7 @@ import { Payload } from './types/payload.type';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { MailerService } from '../mailer/mailer.service';
-import { Role, Status } from './types';
+import { Limit, Role, Status } from './types';
 import { EmailDto } from './dto/forgotPassword.dto';
 import { TokenDto } from './dto/token.dto';
 import { Error, JwtError } from '../error';
@@ -124,12 +124,12 @@ export class AuthService {
             });
             if (userExists && userExists.status === Status.ACTIVE) {
                 throw new HttpException(
-                    'User with this email already exists, please login',
+                    AuthError.USER_ALREADY_ACTIVATED_LOGIN,
                     HttpStatus.BAD_REQUEST,
                 );
             } else if (userExists && userExists.status === Status.INACTIVE) {
                 throw new HttpException(
-                    'User with this email already exists, please confirm your email',
+                    AuthError.USER_LOGIN_INACTIVE_ACCOUNT,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -192,6 +192,12 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
+            if (user.status === Status.BLOCKED) {
+                throw new HttpException(
+                    AuthError.USER_BLOCKED,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
             const confirmToken = await this.generateUserIdToken(user.id);
             await this.updateConfirmToken(user.id, confirmToken);
             const sendMailOptions: sendMailOptions = {
@@ -233,6 +239,12 @@ export class AuthService {
             if (user.status === Status.ACTIVE) {
                 throw new HttpException(
                     AuthError.USER_ALREADY_ACTIVATED,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.status === Status.BLOCKED) {
+                throw new HttpException(
+                    AuthError.USER_BLOCKED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -300,6 +312,7 @@ export class AuthService {
                     avatar: true,
                     status: true,
                     authId: true,
+                    attempts: true,
                 },
             });
             if (!user) {
@@ -308,9 +321,15 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status !== Status.ACTIVE) {
+            if (user.status === Status.INACTIVE) {
                 throw new HttpException(
                     AuthError.USER_NOT_ACTIVATED,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (user.status === Status.BLOCKED) {
+                throw new HttpException(
+                    AuthError.USER_BLOCKED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -325,6 +344,28 @@ export class AuthService {
                 password,
             );
             if (!isPasswordValid) {
+                const updatedUser = await this.prisma.users.update({
+                    where: {
+                        id: user.id,
+                    },
+                    data: {
+                        attempts: user.attempts + 1,
+                    },
+                });
+                if (updatedUser.attempts >= Limit.MAX_ATTEMPTS) {
+                    await this.prisma.users.update({
+                        where: {
+                            id: user.id,
+                        },
+                        data: {
+                            status: Status.BLOCKED,
+                        },
+                    });
+                    throw new HttpException(
+                        AuthError.USER_BLOCKED,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
                 throw new HttpException(
                     AuthError.USER_INVALID_CREDENTIALS,
                     HttpStatus.BAD_REQUEST,
@@ -347,6 +388,7 @@ export class AuthService {
                 },
                 true,
             );
+            await this.updateAttempts(user.id, 0);
             return {
                 ...tokens,
                 user: {
@@ -403,7 +445,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status !== Status.ACTIVE) {
+            if (user.status === Status.INACTIVE) {
                 throw new HttpException(
                     AuthError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
@@ -460,7 +502,7 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (user.status !== Status.ACTIVE) {
+            if (user.status === Status.INACTIVE) {
                 throw new HttpException(
                     AuthError.USER_NOT_ACTIVATED,
                     HttpStatus.BAD_REQUEST,
@@ -480,6 +522,7 @@ export class AuthService {
                 data: {
                     password: hashedPassword,
                     resetToken: null,
+                    status: Status.ACTIVE,
                 },
             });
             const payload: Payload = {
@@ -499,6 +542,7 @@ export class AuthService {
                 },
                 true,
             );
+            await this.updateAttempts(user.id, 0);
             return {
                 ...tokens,
                 user: {
@@ -580,7 +624,7 @@ export class AuthService {
             const user = await this.prisma.users.findFirst({
                 where: {
                     id: decoded.id,
-                    token: refreshToken,
+                    refreshToken: refreshToken,
                 },
                 select: {
                     email: true,
@@ -603,9 +647,9 @@ export class AuthService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (!user) {
+            if (user.status === Status.BLOCKED) {
                 throw new HttpException(
-                    JwtError.INVALID_TOKEN,
+                    AuthError.USER_BLOCKED,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -726,7 +770,7 @@ export class AuthService {
             },
             data: {
                 accessToken: accessToken,
-                token: refreshToken,
+                refreshToken: refreshToken,
                 isLogin,
             },
         });
@@ -750,6 +794,17 @@ export class AuthService {
             },
             data: {
                 resetToken: token,
+            },
+        });
+    }
+
+    async updateAttempts(userId: string, attempts: number) {
+        await this.prisma.users.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                attempts: attempts,
             },
         });
     }

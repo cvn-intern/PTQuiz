@@ -40,7 +40,7 @@ export class AuthController {
     @Post('/register')
     @HttpCode(HttpStatus.CREATED)
     @ResponseMessage(
-        'Registered successfully, please check  verification link in your email',
+        'Registered successfully, please check verification link in your email',
     )
     async register(@Body() dto: RegisterDto) {
         return this.authService.register(dto);

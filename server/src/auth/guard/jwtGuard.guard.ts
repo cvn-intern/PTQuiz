@@ -39,6 +39,9 @@ export class JwtAuthGuard implements CanActivate {
             if (user.status === Status.INACTIVE) {
                 throw new UnauthorizedException(AuthError.USER_NOT_ACTIVATED);
             }
+            if (user.status === Status.BLOCKED) {
+                throw new UnauthorizedException(AuthError.USER_BLOCKED);
+            }
             request.user = payload;
             return true;
         } catch (error) {

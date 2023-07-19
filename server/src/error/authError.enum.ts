@@ -8,4 +8,7 @@ export enum AuthError {
     USER_OAUTH_CHANGE_PASSWORD = 'You are using OAuth, please change password in your OAuth account',
     USER_OAUTH_LOGIN = 'You are using OAuth, please login with your OAuth account',
     USER_OLD_PASSWORD_INVALID = 'Old password is not valid',
+    USER_BLOCKED = 'Your account is blocked, please reset your password or contact for support',
+    USER_ALREADY_ACTIVATED_LOGIN = 'User with this email already exists, please login',
+    USER_LOGIN_INACTIVE_ACCOUNT = 'Your account is not active, please confirm your email',
 }
