@@ -20,9 +20,9 @@
 				author={card.user.displayName}
 				image={card.image}
 				category={nameCategory}
-				time={'10 minutes'}
-				amountOfQuestions={'10'}
-				level={'Hard'}
+				time={card.durationMins}
+				amountOfQuestions={card.numberQuestions}
+				level={card.difficultyLevel}
 			/>
 		{/each}
 	</div>
