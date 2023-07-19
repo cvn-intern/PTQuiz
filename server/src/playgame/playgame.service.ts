@@ -15,6 +15,9 @@ export class PlaygameService {
     isRightAnswer(answerOfUser, answerOfQuestion) {
         return answerOfUser.every((item) => answerOfQuestion.includes(item));
     }
+    arrayToString(array) {
+        return array.join(', ');
+      }
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
         try {
             return await this.quizzesService.getAllQuestionsOfQuiz(
@@ -99,7 +102,7 @@ export class PlaygameService {
                     },
                     data: {
                         givenAnswers:
-                            this.questionService.arrayToString(answerOfUser),
+                            this.arrayToString(answerOfUser),
                         score: score,
                         timestamp: new Date(),
                     },
@@ -112,15 +115,16 @@ export class PlaygameService {
                         questionId: questionId,
                         question: question.title,
                         image: question.image,
-                        options: this.questionService.arrayToString(
-                            question.options,
-                        ),
-                        correct:
-                            this.questionService.arrayToString(
-                                answerOfQuestion,
-                            ),
+                        optionA: question.options[0],
+                        optionB: question.options[1],
+                        optionC: question.options[2],
+                        optionD: question.options[3],
+                        answerA: question.answers[0],
+                        answerB: question.answers[1],
+                        answerC: question.answers[2],
+                        answerD: question.answers[3],
                         givenAnswers:
-                            this.questionService.arrayToString(answerOfUser),
+                            this.arrayToString(answerOfUser),
                         score: score,
                         timestamp: new Date(),
                     },
