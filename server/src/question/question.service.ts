@@ -5,22 +5,6 @@ import { QuestionResponse } from './type/questionResponse.type';
 @Injectable()
 export class QuestionService {
     constructor(private prisma: PrismaService) {}
-    arrayToString(array) {
-        const arrayResult = array.map((element) => "@An'" + element + "'nA@");
-        return arrayResult.join(',');
-    }
-    splitStringAnswerToArray(answer) {
-        var regex = /@An'(.*?)'nA@/g;
-        var matches = [];
-
-        var match;
-        while ((match = regex.exec(answer)) !== null) {
-            matches.push(match[1]);
-        }
-
-        return matches;
-    }
-
     async getQuestion(questionId: string) {
         try {
             const question = await this.prisma.questions.findUnique({
@@ -33,8 +17,15 @@ export class QuestionService {
                 userId,
                 categoryId,
                 title,
-                options,
-                answers,
+                optionA,
+                optionB,
+                optionC,
+                optionD,
+                answerA,
+                answerB,
+                answerC,
+                answerD,
+                written,
                 image,
                 type,
                 createdAt,
@@ -45,8 +36,9 @@ export class QuestionService {
                 userId: userId,
                 categoryId: categoryId,
                 title: title,
-                options: this.splitStringAnswerToArray(options),
-                answers: this.splitStringAnswerToArray(answers),
+                options: [optionA, optionB, optionC, optionD],
+                answers: [answerA, answerB, answerC, answerD],
+                written: written,
                 image: image,
                 type: type,
                 createdAt: createdAt,

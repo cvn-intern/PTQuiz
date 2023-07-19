@@ -227,12 +227,9 @@ export class QuizzesService {
                     userId: question.question.userId,
                     categoryId: question.question.categoryId,
                     title: question.question.title,
-                    options: this.questionService.splitStringAnswerToArray(
-                        question.question.options,
-                    ),
-                    answers: this.questionService.splitStringAnswerToArray(
-                        question.question.answers,
-                    ),
+                    options: [question.question.optionA,question.question.optionB,question.question.optionC,question.question.optionD ],
+                    answers: [question.question.answerA,question.question.answerB,question.question.answerC,question.question.answerD ],
+                    written: question.question.written,
                     image: question.question.image,
                     type: question.question.type,
                     createdAt: question.question.createdAt,
