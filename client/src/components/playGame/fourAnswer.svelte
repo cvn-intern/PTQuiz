@@ -4,25 +4,27 @@
 	let buttonRounded: string =
 		'bg-buttonAnswer rounded-full text-white w-8 h-8 md:w-12 md:h-12 text-2xl md:text-4xl';
 
+	export let opt;
+
 	const options = [
 		{
 			id: 'A',
-			content: 'Content for option A',
+			content: opt[0],
 			color: 'bg-optionA'
 		},
 		{
 			id: 'B',
-			content: 'Content for option B',
+			content: opt[1],
 			color: 'bg-optionB'
 		},
 		{
 			id: 'C',
-			content: 'Content for option C',
+			content: opt[2],
 			color: 'bg-optionC'
 		},
 		{
 			id: 'D',
-			content: 'Content for option D',
+			content: opt[3],
 			color: 'bg-optionD'
 		}
 	];
