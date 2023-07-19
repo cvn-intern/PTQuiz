@@ -3,7 +3,7 @@
 	import ProgressBar from '../../components/playGame/progressBar.svelte';
 </script>
 
-<main class=" bg-greenLight flex flex-grow flex-col justify-center">
+<div class=" bg-greenLight flex flex-col justify-center w-full">
 	<div class="px-4 md:px-16 py-6">
 		<ProgressBar />
 	</div>
@@ -20,4 +20,4 @@
 	<div class="px-4 md:px-16 py-8">
 		<FourAnswer />
 	</div>
-</main>
+</div>

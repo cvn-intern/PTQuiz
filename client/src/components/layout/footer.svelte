@@ -12,7 +12,7 @@
 	];
 </script>
 
-<footer class="bg-primary">
+<footer class="bg-primary flex flex-col flex-end">
 	<div class="flex flex-col items-center">
 		<div class="container flex flex-col gap-8 md:flex-row justify-between lg:px-24 pt-4">
 			<div class="location flex flex-col items-center gap-2">

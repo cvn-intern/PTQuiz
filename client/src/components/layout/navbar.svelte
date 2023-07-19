@@ -77,39 +77,38 @@
 				</Chevron>
 			</div>
 
-			<Dropdown>
+			<Dropdown class=" w-52 ">
 				<DropdownItem
 					class="flex gap-2 items-center"
 					on:click={() => {
 						goto('/dashboard/quizzes');
 					}}
 				>
-					<Icon icon="tabler:home" class={'text-xl'} />
-					My Quizzes</DropdownItem
-				>
+					<Icon icon="tabler:home" class={'text-2xl'} />
+					<h1 class="text-base">My Quizzes</h1>
+				</DropdownItem>
 				<DropdownItem
 					class="flex gap-2 items-center"
 					on:click={() => {
 						goto('/dashboard/history');
 					}}
 				>
-					<Icon icon="material-symbols:history" class={'text-xl'} />
-					History</DropdownItem
-				>
+					<Icon icon="material-symbols:history" class={'text-2xl'} />
+					<h1 class="text-base">History</h1>
+				</DropdownItem>
 				<DropdownItem
 					class="flex gap-2 items-center"
 					on:click={() => {
 						goto('/dashboard/profile');
 					}}
 				>
-					<Icon icon="mingcute:user-setting-fill" class={'text-xl'} />
-					Profile</DropdownItem
-				>
+					<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
+					<h1 class="text-base">Profile</h1>
+				</DropdownItem>
 				<DropdownItem slot="footer" class="flex gap-2 items-center" on:click={logout}>
-					<Icon icon="mdi:logout" class={'text-xl'} />
-
-					Sign out</DropdownItem
-				>
+					<Icon icon="mdi:logout" class={'text-2xl'} />
+					<h1 class="text-base">Sign Out</h1>
+				</DropdownItem>
 			</Dropdown>
 		{:else}
 			<button

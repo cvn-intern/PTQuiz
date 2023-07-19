@@ -9,8 +9,8 @@
 </script>
 
 <Toaster />
-<div class="min-h-screen flex flex-col bg-background">
-	<Navbar user={data.user} />
+<Navbar user={data.user} />
+<main class="flex flex-1 bg-background">
 	<slot />
-</div>
+</main>
 <Footer />
