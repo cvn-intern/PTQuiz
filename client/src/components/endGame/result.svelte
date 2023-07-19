@@ -30,7 +30,7 @@
 			<div class="flex gap-2">
 				<Icon icon={'icon-park-outline:dot'} {color} class={'text-2xl'} />
 				<div class="flex flex-col items-start md:text-lg text-base">
-					<p class="text-{color} font-semibold">{value}</p>
+					<p class="text-{color}-900 font-semibold">{value}</p>
 					<p>{name}</p>
 				</div>
 			</div>
