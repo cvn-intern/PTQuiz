@@ -78,4 +78,24 @@ export class SocketGateway
             });
         }
     }
+
+    @SubscribeMessage('send-message')
+    async handleMessage(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: any,
+    ) {
+        try {
+            const { roomPIN, userId, avatar, message, reaction } = data;
+            this.server.to(roomPIN).emit('room-messages', {
+                userId,
+                avatar,
+                message,
+                reaction,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
 }

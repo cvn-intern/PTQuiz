@@ -15,4 +15,5 @@ export interface IQuizAPI {
 	numberOfQuestions: number;
 	image: string;
 	createdAt: string;
+	id: string;
 }

@@ -23,6 +23,7 @@
 				numberOfQuestions={quiz.numberOfQuestions}
 				image={quiz.image}
 				createdAt={quiz.createdAt}
+				id={quiz.id}
 			/>
 		{/each}
 	</div>
