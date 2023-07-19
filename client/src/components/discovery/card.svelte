@@ -5,7 +5,17 @@
 	export let nameOfQuiz = '';
 	export let author = '';
 	export let category = '';
-	export let level = '';
+	export let level = 1;
+	let stringLevel = '';
+	if (level === 0) {
+		stringLevel = 'Easy';
+	} else if (level === 1) {
+		stringLevel = 'Medium';
+	} else if (level === 2) {
+		stringLevel = 'Hard';
+	} else {
+		stringLevel = 'Undefined';
+	}
 	export let time = '';
 	export let amountOfQuestions = '';
 </script>
@@ -57,11 +67,11 @@
 					<span class="font-semibold">Level: </span>
 					<span
 						class={clsx('px-2 py-1 rounded-lg shadow-md bg-opacity-80', {
-							'bg-green-100 text-green-400': level === 'Easy',
-							'bg-yellow-100 text-yellow-400': level === 'Medium',
-							'bg-red-100 text-red-400': level === 'Hard',
-							'bg-purple-100 text-purple-400': level === 'Undefined'
-						})}>{level !== 'Undefined' ? level : 'Mixed'}</span
+							'bg-green-100 text-green-400': stringLevel === 'Easy',
+							'bg-yellow-100 text-yellow-400': stringLevel === 'Medium',
+							'bg-red-100 text-red-400': stringLevel === 'Hard',
+							'bg-purple-100 text-purple-400': stringLevel === 'Undefined'
+						})}>{stringLevel !== 'Undefined' ? stringLevel : 'Mixed'}</span
 					>
 				</div>
 			</div>

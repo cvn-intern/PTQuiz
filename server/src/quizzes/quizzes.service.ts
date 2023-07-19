@@ -180,6 +180,7 @@ export class QuizzesService {
                     image: true,
                     difficultyLevel: true,
                     numberQuestions: true,
+                    durationMins: true,
                 },
             });
         } catch (err) {
