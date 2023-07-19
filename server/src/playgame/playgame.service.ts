@@ -17,7 +17,7 @@ export class PlaygameService {
     }
     arrayToString(array) {
         return array.join(', ');
-      }
+    }
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
         try {
             return await this.quizzesService.getAllQuestionsOfQuiz(
@@ -101,8 +101,7 @@ export class PlaygameService {
                         id: isAnswered.id,
                     },
                     data: {
-                        givenAnswers:
-                            this.arrayToString(answerOfUser),
+                        givenAnswers: this.arrayToString(answerOfUser),
                         score: score,
                         timestamp: new Date(),
                     },
@@ -123,8 +122,7 @@ export class PlaygameService {
                         answerB: question.answers[1],
                         answerC: question.answers[2],
                         answerD: question.answers[3],
-                        givenAnswers:
-                            this.arrayToString(answerOfUser),
+                        givenAnswers: this.arrayToString(answerOfUser),
                         score: score,
                         timestamp: new Date(),
                     },
