@@ -77,7 +77,7 @@
 				</Chevron>
 			</div>
 
-			<Dropdown class=" w-52 ">
+			<Dropdown>
 				<DropdownItem
 					class="flex gap-2 items-center"
 					on:click={() => {
