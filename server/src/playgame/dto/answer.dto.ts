@@ -1,4 +1,3 @@
-
 import { IsNotEmpty } from 'class-validator';
 
 export class AnswerDetail {
@@ -7,10 +6,7 @@ export class AnswerDetail {
     @IsNotEmpty({ message: 'AnswerOfUser can not be empty' })
     answerOfUser: Answer[];
 }
-export interface Answer{
+export interface Answer {
     questionId: string;
-    written: string;
     givenAnswers: string;
 }
-
-

@@ -26,6 +26,7 @@ export class PlaygameService {
     stringToArray(str) {
         return str.split(',').map((item) => item === 'true');
     }
+
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
         try {
             return await this.quizzesService.getAllQuestionsOfQuiz(
@@ -68,7 +69,7 @@ export class PlaygameService {
         }
     }
 
-    async answerQuestion(userId: string, dto: AnswerDetail) {
+    async submitAllQuestions(userId: string, dto: AnswerDetail) {
         try {
             const { participantId, answerOfUser } = dto;
             const participant = await this.prisma.participants.findUnique({
@@ -76,108 +77,87 @@ export class PlaygameService {
                     id: participantId,
                 },
             });
-            const quizIdofParticipant = participant.quizId;
-            let point = 0;
-            answerOfUser.map(async (answer) => {
-                const question = await this.questionService.getQuestion(
-                    answer.questionId,
-                );
-
-                const updateAnswerOfUser =
-                    await this.prisma.user_questions.create({
-                        data: {
-                            userId: userId,
-                            participantId: participantId,
-                            questionId: answer.questionId,
-                            question: question.title,
-                            image: question.image,
-                            optionA: question.options[0],
-                            optionB: question.options[1],
-                            optionC: question.options[2],
-                            optionD: question.options[3],
-                            answerA: question.answers[0],
-                            answerB: question.answers[1],
-                            answerC: question.answers[2],
-                            answerD: question.answers[3],
-                            written: answer.written,
-                            givenAnswers: answer.givenAnswers,
-                            score: 3,
-                            timestamp: new Date(),
-                        },
-                    });
+            const quizIdOfParticipant = participant.quizId;
+            const quiz = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizIdOfParticipant,
+                },
+                select: {
+                    numberQuestions: true,
+                    point: true,
+                    passingPoint: true,
+                },
             });
+            let totalPoint = 0;
+            let totalCorrect = 0;
+            await Promise.all(
+                answerOfUser.map(async (answer) => {
+                    let score = 0;
+
+                    const question = await this.questionService.getQuestion(
+                        answer.questionId,
+                    );
+                    if (question.type === 0 || question.type === 1) {
+                        const arrayGiveAnswer = this.stringToArray(
+                            answer.givenAnswers,
+                        );
+                        const checkTrue = this.isRightAnswer(
+                            arrayGiveAnswer,
+                            question.answers,
+                        );
+                        if (checkTrue) {
+                            score = quiz.point / quiz.numberQuestions;
+                        } else {
+                            score = 0;
+                        }
+                    } else if (question.type === 2) {
+                        if (answer.givenAnswers === question.written) {
+                            score = quiz.point / quiz.numberQuestions;
+                        } else {
+                            score = 0;
+                        }
+                    }
+                    if (score !== 0) {
+                        totalCorrect += 1;
+                    }
+                    totalPoint += score;
+                    const updateAnswerOfUser =
+                        await this.prisma.user_questions.create({
+                            data: {
+                                userId: userId,
+                                participantId: participantId,
+                                questionId: answer.questionId,
+                                question: question.title,
+                                image: question.image,
+                                optionA: question.options[0],
+                                optionB: question.options[1],
+                                optionC: question.options[2],
+                                optionD: question.options[3],
+                                answerA: question.answers[0],
+                                answerB: question.answers[1],
+                                answerC: question.answers[2],
+                                answerD: question.answers[3],
+                                written: question.written,
+                                givenAnswers: answer.givenAnswers,
+                                score: score,
+                                timestamp: new Date(),
+                            },
+                        });
+                }),
+            );
             const updateParticipan = await this.prisma.participants.update({
                 where: {
                     id: participantId,
                 },
                 data: {
                     completedAt: new Date(),
-                    point: 5,
+                    point: totalPoint,
+                    correct: totalCorrect,
                 },
             });
-            // const { questionId, answerOfUser } = dto;
-            // const question = await this.questionService.getQuestion(questionId);
-            // const answerOfQuestion = question.answers;
-            // const isCorrect = this.isRightAnswer(
-            //     answerOfUser,
-            //     answerOfQuestion,
-            // );
-            // const participant = await this.prisma.participants.findUnique({
-            //     where: {
-            //         id: participantId,
-            //     },
-            // });
-            // const quiz = await this.prisma.quizzes.findUnique({
-            //     where: {
-            //         id: participant.quizId,
-            //     },
-            // });
-
-            // const score = isCorrect ? quiz.point / quiz.numberQuestions : 0;
-            // const isAnswered = await this.prisma.user_questions.findFirst({
-            //     where: {
-            //         userId: userId,
-            //         participantId: participantId,
-            //         questionId: questionId,
-            //     },
-            // });
-            // if (isAnswered) {
-            //     await this.prisma.user_questions.update({
-            //         where: {
-            //             id: isAnswered.id,
-            //         },
-            //         data: {
-            //             givenAnswers: this.arrayToString(answerOfUser),
-            //             score: score,
-            //             timestamp: new Date(),
-            //         },
-            //     });
-            // } else {
-            //     await this.prisma.user_questions.create({
-            //         data: {
-            //             userId: userId,
-            //             participantId: participantId,
-            //             questionId: questionId,
-            //             question: question.title,
-            //             image: question.image,
-            //             optionA: question.options[0],
-            //             optionB: question.options[1],
-            //             optionC: question.options[2],
-            //             optionD: question.options[3],
-            //             answerA: question.answers[0],
-            //             answerB: question.answers[1],
-            //             answerC: question.answers[2],
-            //             answerD: question.answers[3],
-            //             givenAnswers: this.arrayToString(answerOfUser),
-            //             score: score,
-            //             timestamp: new Date(),
-            //         },
-            //     });
-            // }
-            // return isCorrect;
         } catch (error) {
             throw new HttpException(
-                PlayGameError.CAN_NOT_ANSWER,
+                PlayGameError.CAN_NOT_SUBMIT,
                 HttpStatus.BAD_REQUEST,
             );
         }

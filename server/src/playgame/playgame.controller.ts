@@ -14,7 +14,7 @@ import { PlaygameService } from './playgame.service';
 import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
 import { GetCurrentUser } from 'src/decorators/getCurrentUser.decorator';
-import {  AnswerDetail } from './dto/answer.dto';
+import { AnswerDetail } from './dto/answer.dto';
 
 @Controller('play-game')
 @UseInterceptors(ResTransformInterceptor)
@@ -31,15 +31,15 @@ export class PlaygameController {
         return await this.playgameService.getAllQuestionOfQuiz(userId, quizId);
     }
 
-    @Post('/answer')
+    @Post('/submit')
     @HttpCode(HttpStatus.OK)
-    @ResponseMessage('Answer successfully')
+    @ResponseMessage('Submit successfully')
     @UseGuards(JwtAuthGuard)
-    async answerQuestion(
+    async submitAllQuestion(
         @GetCurrentUser('id') userId: string,
         @Body() dto: AnswerDetail,
     ) {
-        return await this.playgameService.answerQuestion(userId, dto);
+        return await this.playgameService.submitAllQuestions(userId, dto);
     }
 
     @Post('/play')
