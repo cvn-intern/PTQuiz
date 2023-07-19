@@ -10,19 +10,20 @@ datasource db {
 model users {
     id String @id @default(cuid())
 
-    displayName String
-    password    String?
-    email       String  @unique
-    avatar      String? @db.Text
-    isLogin     Boolean
-    role        String
-    status      Int
-    authId      String?
-    loginFrom   String?
-    token       String? @db.Text
-    resetToken  String? @db.Text
+    displayName  String
+    password     String?
+    email        String  @unique
+    avatar       String? @db.Text
+    isLogin      Boolean
+    role         String
+    status       Int
+    authId       String?
+    loginFrom    String?
+    resetToken   String? @db.Text
     confirmToken String? @db.Text
     accessToken  String? @db.Text
+    refreshToken String? @db.Text
+    attempts     Int     @default(0)
 
     questions    questions[]
     quizzes      quizzes[]
@@ -39,10 +40,17 @@ model questions {
     userId     String // owner
     categoryId String
 
-    title   String  @db.Text
-    options String  @db.Text // ['a. answer1','b. answer2','c. answer3','d. answer4'] 
-    answers String  @db.Text // ['a','b','c','d']
-    image   String? @db.Text
+    title   String   @db.Text
+    optionA String?  @db.Text
+    optionB String?  @db.Text
+    optionC String?  @db.Text
+    optionD String?  @db.Text
+    answerA Boolean?
+    answerB Boolean?
+    answerC Boolean?
+    answerD Boolean?
+    written String?  @db.Text
+    image   String?  @db.Text
     type    Int
 
     quizQuestions quiz_questions[]
@@ -120,6 +128,7 @@ model participants {
     point        Int
     startedAt    DateTime  @default(now())
     completedAt  DateTime?
+    isSingleMode Boolean   @default(false)
 
     user                 users               @relation(fields: [userId], references: [id])
     quiz                 quizzes             @relation(fields: [quizId], references: [id])
@@ -138,8 +147,15 @@ model user_questions {
 
     question     String
     image        String?  @db.Text
-    options      String   @db.Text
-    correct      String   @db.Text
+    optionA      String?  @db.Text
+    optionB      String?  @db.Text
+    optionC      String?  @db.Text
+    optionD      String?  @db.Text
+    answerA      Boolean?
+    answerB      Boolean?
+    answerC      Boolean?
+    answerD      Boolean?
+    written      String?  @db.Text
     givenAnswers String   @db.Text
     score        Int
     timestamp    DateTime
@@ -168,9 +184,12 @@ model rooms {
 }
 
 model room_participants {
-    id            String @id @default(cuid())
+    id            String  @id @default(cuid())
     roomId        String
     participantId String
+    socketId      String
+    isFinished    Boolean @default(false)
+    isHost        Boolean @default(false)
 
     participant participants @relation(fields: [participantId], references: [id])
     room        rooms        @relation(fields: [roomId], references: [id])
