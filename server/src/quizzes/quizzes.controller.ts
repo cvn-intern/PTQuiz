@@ -22,7 +22,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
 export class QuizzesController {
     constructor(private quizzesService: QuizzesService) {}
 
-    @Get('/get-all')
+    @Get('/all-quizzes')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get Quizzes successfully')
     @UseGuards(JwtAuthGuard)
@@ -56,7 +56,7 @@ export class QuizzesController {
         return await this.quizzesService.filterCategory(categoryName);
     }
 
-    @Get('/getAllQuestions')
+    @Get('/all-questions')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get all questions successfully')
     @UseGuards(JwtAuthGuard)
