@@ -16,11 +16,11 @@ import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
 import { GetCurrentUser } from 'src/decorators/getCurrentUser.decorator';
 import { Answer } from './dto/answer.dto';
 
-@Controller('playgame')
+@Controller('play-game')
 @UseInterceptors(ResTransformInterceptor)
 export class PlaygameController {
     constructor(private playgameService: PlaygameService) {}
-    @Get('/getQuiz')
+    @Get('/quiz')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get quiz to play game successfully')
     @UseGuards(JwtAuthGuard)
