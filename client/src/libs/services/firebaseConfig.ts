@@ -62,6 +62,7 @@ async function sendUserToServer(user: any, providerId: string) {
 async function startSignIn(firebase: any, providerName: string) {
 	const provider = getProvider(firebase, providerName);
 	await signInWithProvider(firebase, provider);
+	return true;
 }
 
 export { initializeFirebase, startSignIn };

@@ -1,66 +1,150 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { Spinner, Toast } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
-	export let form;
 	import { onMount } from 'svelte';
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
+	import { validationLogin } from './interface/message.interface';
+	import toast, { Toaster } from 'svelte-french-toast';
+
+	export let form;
+	export let data;
 
 	onMount(async () => {
+		if (data.user) {
+			goto('/');
+		}
 		if (typeof window !== 'undefined') {
 			const firebase = window.firebase;
-
 			await initializeFirebase(firebase);
 		}
 	});
+
 	const signInProviders = ['Google', 'Facebook', 'Github'];
 	const signInIcons = ['flat-color-icons:google', 'logos:facebook', 'icon-park:github'];
 
-	function showToast() {
-		const toast = document.getElementById('loading');
-		toast?.classList.remove('hidden');
-	}
-	const signIn = (providerName: string) => async () => {
-		startSignIn(window.firebase, providerName);
-		setTimeout(() => {
-			showToast();
-		}, 3000);
+	const resendEmail = (email: string) => async () => {
+		const response = await fetch('/api/auth/resend', {
+			method: 'POST',
+			body: JSON.stringify({
+				email: email
+			})
+		});
+		const result = await response.json();
+		if (response.status === 200) {
+			goto('/register/loading');
+		} else {
+			return {
+				error: result
+			};
+		}
 	};
-</script>
 
-<div class="flex justify-center items-center">
-	{#if form}
-		<Toast position="top-right">
-			{form.error}
-		</Toast>
-	{/if}
-</div>
+	const signIn = (providerName: string) => async () => {
+		toast.promise(
+			startSignIn(window.firebase, providerName),
+			{
+				loading: 'Loading...',
+				success: (value) => {
+					goto('/');
+					return 'Success!';
+				},
+				error: (err) => {
+					return err;
+				}
+			},
+			{
+				duration: 20000
+			}
+		);
+	};
+
+	async function handleSubmit() {
+		toast.promise(
+			new Promise((resolve, reject) => {
+				setInterval(() => {
+					if (form?.isDone) {
+						if (form?.isSuccess) {
+							resolve('Success!');
+						} else {
+							reject(form?.error.message || 'Invalid credentials');
+						}
+					}
+				}, 100);
+			}),
+			{
+				loading: 'Loading...',
+				success: (value: any) => {
+					goto('/');
+					return value;
+				},
+				error: (err) => {
+					return err;
+				}
+			}
+		);
+	}
+</script>
 
 <section class="flex text-white justify-center">
 	<div class="w-[446px] rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
 			<h1 class=" text-secondary text-[20px] font-bold">Login to your Account</h1>
-			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action="?/login" use:enhance>
+			<form
+				method="POST"
+				class="w-full px-4 lg:px-0 mx-auto"
+				action="?/login"
+				use:enhance={() => {
+					return async ({ update }) => {
+						await update({ reset: false });
+					};
+				}}
+			>
 				<div class="py-4">
+					{#if !form?.isSuccess && form?.error?.missing?.default}
+						<label for="common" class="mb-1 text-red-500"
+							>{form.error.message}
+							{#if form?.error?.missing?.confirmEmail}
+								<br />If you didn't receive the email, click
+								<a
+									href="#"
+									class="text-secondary"
+									on:click={resendEmail(form?.error?.fill?.email)}>here</a
+								> to resend it.
+							{/if}<br /></label
+						>
+					{/if}
+					<label for="email" class="mb-1 text-black">Email</label>
+
 					<input
-						type="email"
+						type="text"
 						name="email"
 						id="email"
 						placeholder="Email"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						on:input={(input) => {
+							form = validationLogin(input.target.value, 'email');
+						}}
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.email}
+						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
+					{/if}
 				</div>
 				<div class="py-4">
+					<label for="password" class="mb-1 text-black">Password</label>
 					<input
 						type="password"
 						name="password"
 						id="password"
 						placeholder="Password"
-						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
+						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						on:input={(input) => {
+							form = validationLogin(input.target.value, 'password');
+						}}
 					/>
+					{#if !form?.isSuccess && form?.error?.missing?.password}
+						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
+					{/if}
 				</div>
 				<div class=" text-gray-400 hover:underline hover:text-gray-100">
 					<a href="/forgotPassword" class="text-secondary">Forgot your password?</a>
@@ -68,15 +152,13 @@
 				<div class="pt-4">
 					<button
 						type="submit"
+						on:click={handleSubmit}
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
 						>LOG IN</button
 					>
 				</div>
 			</form>
 			<div>
-				<div id="loading" class="hidden">
-					<Toast position="bottom-right">Loading...</Toast>
-				</div>
 				<div class="py-6 space-x-2 text-gray-500 flex">
 					{#each signInProviders as provider, i}
 						<button

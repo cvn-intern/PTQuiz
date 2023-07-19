@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { Dropdown, DropdownItem } from 'flowbite-svelte';
+	import { Chevron, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
@@ -57,7 +57,7 @@
 	{/if}
 	<SidebarModal hiddenModal={isHidden} />
 	<div class="flex items-center gap-24">
-		<ul class="hidden md:flex gap-2 md:gap-8 text-2xl font-medium">
+		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
 			{#each navs as { title, href }}
 				<li>
 					<a {href} {title} class="hover:text-secondary">{title}</a>
@@ -65,20 +65,18 @@
 			{/each}
 		</ul>
 		{#if user}
-			<div class="flex gap-2 items-center cursor-pointer" aria-labelledby="navbar">
-				<button aria-label="profile" class="w-14">
-					<img
-						src={user.avatar}
-						alt="user avatar"
-						class="border-2 border-darkGreen rounded-full"
-					/>
-				</button>
-				<h1
-					class="text-xl overflow-hidden whitespace-nowrap max-w-[200px] hover:text-secondary"
-				>
-					{user.displayName}
-				</h1>
+			<div class="flex items-center">
+				<Chevron>
+					<button
+						aria-label="profile"
+						class="flex items-center gap-2 text-xl overflow-hidden whitespace-nowrap max-w-[250px] hover:text-secondary"
+					>
+						<img src={user.avatar} alt="user avatar" class="rounded-full w-12" />
+						{user.displayName}
+					</button>
+				</Chevron>
 			</div>
+
 			<Dropdown>
 				<DropdownItem
 					class="flex gap-2 items-center"
