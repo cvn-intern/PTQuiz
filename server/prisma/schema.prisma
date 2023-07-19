@@ -175,6 +175,7 @@ model rooms {
     isStarted Boolean
     isPublic  Boolean
     type      Int
+    isClosed  Boolean @default(false)
 
     host              users               @relation(fields: [userId], references: [id])
     quiz              quizzes             @relation(fields: [quizId], references: [id])
