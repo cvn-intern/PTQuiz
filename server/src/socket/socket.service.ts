@@ -25,6 +25,7 @@ export class SocketService {
                 participant: {
                     userId: user.id,
                 },
+                isFinished: false,
             },
         });
         if (isJoined) {
@@ -40,7 +41,7 @@ export class SocketService {
 
         await this.prisma.room_participants.create({
             data: {
-                id: socketId,
+                socketId: socketId,
                 roomId: room.id,
                 participantId: participants.id,
             },
@@ -65,21 +66,27 @@ export class SocketService {
         if (!user) {
             throw new Error('User does not exist');
         }
-        const isJoined = await this.prisma.room_participants.findFirst({
+        const foundUser = await this.prisma.room_participants.findFirst({
             where: {
-                id: socketId,
+                socketId: socketId,
                 roomId: room.id,
                 participant: {
                     userId: user.id,
                 },
+                isFinished: false,
             },
         });
-        if (!isJoined) {
+        if (!foundUser) {
             throw new Error('User has not joined');
         }
         await this.prisma.room_participants.delete({
             where: {
-                id: socketId,
+                id: foundUser.id,
+            },
+        });
+        await this.prisma.participants.delete({
+            where: {
+                id: foundUser.participantId,
             },
         });
         return {
@@ -124,26 +131,51 @@ export class SocketService {
     }
 
     async leaveRoomImmediately(socketId: string) {
-        const isJoined = await this.prisma.room_participants.findFirst({
+        const foundUser = await this.prisma.room_participants.findFirst({
             where: {
-                id: socketId,
-            },
-        });
-        if (!isJoined) {
-            return null;
-        }
-        const { room } = await this.prisma.room_participants.delete({
-            where: {
-                id: socketId,
+                socketId: socketId,
+                isFinished: false,
             },
             select: {
+                id: true,
                 room: {
                     select: {
                         PIN: true,
                     },
                 },
+                participantId: true,
             },
         });
-        return room.PIN;
+        if (!foundUser) {
+            return null;
+        }
+        await this.prisma.room_participants.delete({
+            where: {
+                id: foundUser.id,
+            },
+        });
+        await this.prisma.participants.delete({
+            where: {
+                id: foundUser.participantId,
+            },
+        });
+        return foundUser.room.PIN;
+    }
+
+    async endRoom(roomPIN: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error('Room does not exist');
+        }
+        await this.prisma.room_participants.updateMany({
+            where: {
+                roomId: room.id,
+            },
+            data: {
+                isFinished: true,
+            },
+        });
     }
 }
