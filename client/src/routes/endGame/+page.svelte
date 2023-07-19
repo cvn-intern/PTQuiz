@@ -5,11 +5,12 @@
 </script>
 
 <div class="bg-greenLight w-full">
-	<div class="flex flex-col gap-10 items-center py-6 relative">
-		<button
-			class="absolute top-10 right-20 text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
-			>Leave game</button
-		>
+	<div class="flex flex-col gap-6 items-center py-6">
+		<div class="flex w-11/12 justify-end">
+			<button class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
+				>Leave game</button
+			>
+		</div>
 		<Score />
 		<Result />
 		<HistoryAttempt />
