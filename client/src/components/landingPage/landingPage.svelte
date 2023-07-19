@@ -4,8 +4,8 @@
 	import CreateQuiz from '../../assets/createquiz.png';
 </script>
 
-<main
-	class=" bg-background min-h-screen py-4 px-4 lg:px-16 flex md:items-center flex-col lg:flex-row lg:justify-between"
+<div
+	class=" bg-background py-4 px-4 lg:px-16 flex md:items-center lg:flex-row lg:justify-between w-screen"
 >
 	<div class="title flex flex-col justify-center py-4 lg:pb-20 gap-10">
 		<h1 class="text-5xl md:text-7xl font-bold font-title text-darkGreen">Penta Quiz</h1>
@@ -27,4 +27,4 @@
 			intro={'Create your own quiz'}
 		/>
 	</div>
-</main>
+</div>

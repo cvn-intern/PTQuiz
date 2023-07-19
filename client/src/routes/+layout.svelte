@@ -10,7 +10,7 @@
 
 <Toaster />
 <Navbar user={data.user} />
-<div class="min-h-screen bg-background">
+<main class="flex flex-1 bg-background">
 	<slot />
-</div>
+</main>
 <Footer />

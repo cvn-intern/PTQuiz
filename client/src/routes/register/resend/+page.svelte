@@ -1,12 +1,10 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { Toast } from 'flowbite-svelte';
-	import { onMount } from 'svelte';
 	export let form;
-
 </script>
 
-<section class="flex justify-center">
+<section class="flex flex-col justify-center items-center w-full">
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
 			<h1 class=" text-secondary text-[20px] font-bold">Send Email Verification</h1>

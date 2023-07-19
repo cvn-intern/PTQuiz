@@ -7,14 +7,14 @@
 	export let form;
 </script>
 
-<section class="flex justify-center">
+<section class="flex flex-col items-center justify-center w-full">
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
 			<h1 class=" text-secondary text-[20px] font-bold">Reset Password</h1>
 			<form method="POST" class="w-full px-4 lg:px-0 mx-auto" action={'?/reset'}>
 				<div class="py-4">
 					<input
-					aria-label="Password"
+						aria-label="Password"
 						type="password"
 						name="password"
 						id="password"
@@ -25,7 +25,7 @@
 				</div>
 				<div class="py-4">
 					<input
-					aria-label="Confirm Password"
+						aria-label="Confirm Password"
 						type="password"
 						name="confirmPassword"
 						id="confirmPassword"
@@ -36,7 +36,7 @@
 				</div>
 				<div class="pt-4">
 					<button
-					aria-label="Reset Password"
+						aria-label="Reset Password"
 						type="submit"
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
 						>Reset your Password</button
@@ -47,7 +47,7 @@
 				<div class=" text-gray-400">
 					<p>
 						Already have an account? <button
-						aria-label="Log In"
+							aria-label="Log In"
 							class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 							on:click={() => {
 								goto('/login');
