@@ -15,7 +15,9 @@ export class SocketService {
         const user = await this.prisma.users.findUnique({
             where: { id: userId },
         });
-
+        if (room.isClosed) {
+            throw new Error('Room is closed');
+        }
         if (!user) {
             throw new Error('User does not exist');
         }
