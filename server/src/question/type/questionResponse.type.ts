@@ -4,7 +4,8 @@ export type QuestionResponse = {
     categoryId: string;
     title: string;
     options: string[];
-    answers: string[];
+    answers: boolean[];
+    written: string;
     image: string;
     type: number;
     createdAt: Date;

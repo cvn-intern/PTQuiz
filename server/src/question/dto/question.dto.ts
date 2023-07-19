@@ -8,10 +8,10 @@ export class QuestionDto {
     title: string;
 
     @IsNotEmpty({ message: 'Options can not be empty' })
-    options: string;
+    options: string[];
 
     @IsNotEmpty({ message: 'Answer can not be empty' })
-    answers: string;
+    answers: string[];
 
     @IsNotEmpty({ message: 'Answer can not be empty' })
     image: string;

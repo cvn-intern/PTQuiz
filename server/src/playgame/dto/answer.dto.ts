@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class Answer {
     @IsNotEmpty({ message: 'QuestionId can not be empty' })
