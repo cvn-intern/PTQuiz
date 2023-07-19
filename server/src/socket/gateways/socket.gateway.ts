@@ -27,15 +27,21 @@ export class SocketGateway
         this.logger.log(`Client connected: ${client.id}`);
     }
     async handleDisconnect(@ConnectedSocket() client: Socket) {
-        this.logger.log(`Client disconnected: ${client.id}`);
-        const roomPIN = await this.socketService.leaveRoomImmediately(
-            client.id,
-        );
-        client.leave(roomPIN);
-        if (roomPIN) {
-            const roomParticipants =
-                await this.socketService.getRoomParticipants(roomPIN);
-            this.server.to(roomPIN).emit('room-users', roomParticipants);
+        try {
+            this.logger.log(`Client disconnected: ${client.id}`);
+            const roomPIN = await this.socketService.leaveRoomImmediately(
+                client.id,
+            );
+            client.leave(roomPIN);
+            if (roomPIN) {
+                const roomParticipants =
+                    await this.socketService.getRoomParticipants(roomPIN);
+                this.server.to(roomPIN).emit('room-users', roomParticipants);
+            }
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
         }
     }
     afterInit() {
