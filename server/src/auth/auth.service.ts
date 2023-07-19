@@ -367,7 +367,9 @@ export class AuthService {
                     );
                 }
                 throw new HttpException(
-                    AuthError.USER_INVALID_CREDENTIALS,
+                    `${AuthError.USER_INVALID_CREDENTIALS}, you have ${
+                        Limit.MAX_ATTEMPTS - updatedUser.attempts
+                    } attempts left`,
                     HttpStatus.BAD_REQUEST,
                 );
             }
