@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class Question {
+export class QuestionDto {
     @IsNotEmpty({ message: 'Categories can not be empty' })
     categoryId: string;
 

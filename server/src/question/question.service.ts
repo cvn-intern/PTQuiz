@@ -1,28 +1,24 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Question } from './dto/question.dto';
+import { QuestionDto } from './dto/question.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { QuestionResponse } from './type/questionResponse.type';
 @Injectable()
 export class QuestionService {
     constructor(private prisma: PrismaService) {}
-    async addQuestion(dto: Question, userId: string, quizzesId: string) {
-        const newQuestion = await this.prisma.questions.create({
-            data: {
-                userId: userId,
-                title: dto.title,
-                options: dto.options,
-                answers: dto.answers,
-                image: dto.image,
-                type: dto.type,
-                categoryId: dto.categoryId,
-            },
-        });
-        const quiz_question = await this.prisma.quiz_questions.create({
-            data: {
-                quizId: quizzesId,
-                questionId: newQuestion.id,
-                sortOrder: 1,
-            },
-        });
+    arrayToString(array) {
+        const arrayResult = array.map((element) => "@An'" + element + "'nA@");
+        return arrayResult.join(',');
+    }
+    splitStringAnswerToArray(answer) {
+        var regex = /@An'(.*?)'nA@/g;
+        var matches = [];
+
+        var match;
+        while ((match = regex.exec(answer)) !== null) {
+            matches.push(match[1]);
+        }
+
+        return matches;
     }
 
     async getQuestion(questionId: string) {
@@ -32,7 +28,31 @@ export class QuestionService {
                     id: questionId,
                 },
             });
-            return question;
+            const {
+                id,
+                userId,
+                categoryId,
+                title,
+                options,
+                answers,
+                image,
+                type,
+                createdAt,
+                updatedAt,
+            } = question;
+            const questionResponse: QuestionResponse = {
+                id: id,
+                userId: userId,
+                categoryId: categoryId,
+                title: title,
+                options: this.splitStringAnswerToArray(options),
+                answers: this.splitStringAnswerToArray(answers),
+                image: image,
+                type: type,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+            };
+            return questionResponse;
         } catch (err) {
             throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
         }
