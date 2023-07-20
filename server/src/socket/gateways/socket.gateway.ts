@@ -14,7 +14,12 @@ import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
 import { JoinLeaveRoomDto } from '../dto';
 
-@WebSocketGateway(443, { cors: true })
+@WebSocketGateway(443, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    },
+})
 export class SocketGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
