@@ -63,6 +63,9 @@ export default {
             animation: {
                 wiggle: 'wiggle 1s ease infinite',
             },
+			scale : {
+				102: '1.02'
+			}
 		},
 	},
 	plugins: [require('flowbite/plugin')],
