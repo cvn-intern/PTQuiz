@@ -42,7 +42,6 @@
 			})
 		});
 		const result = await response.json();
-		console.log(result);
 		if (response.status === 200) {
 			dismissLoadingToast();
 			toast.success('Success!');
@@ -55,27 +54,22 @@
 </script>
 
 <section
-	class="w-full flex flex-row border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-300 transform hover:scale-95 rounded-xl"
+	class="flex flex-row justify-center md:items-start items-center border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer"
 	aria-details="Quiz Details"
 >
-	<div class="">
-		<img class="w-[176px] h-[120px]" src={image} alt={title} />
+	<div>
+		<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
 	</div>
-	<div class="flex flex-col w-full justify-between">
+	<div class="flex flex-col w-full">
 		<div>
-			<h1 class="text-2xl font-bold">{title}</h1>
-			<p class="text-sm text-zinc-400">{description}</p>
+			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">{title}</h1>
+			<p class="text-sm text-zinc-400 md:w-full md:block hidden">{description}</p>
 		</div>
-		<div class="flex flex-row justify-between items-center">
+		<div class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2">
 			<p class="text-sm text-zinc-400">
-				Created at: <span class="text-zinc-400">{formattedDateTime}</span>
+				Created at: <span class="text-zinc-400"> {formattedDateTime}</span>
 			</p>
 			<div class="flex flex-row gap-4">
-				<button
-					aria-label="Edit"
-					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-					>Edit</button
-				>
 				<button
 					aria-label="Start"
 					on:click={handleStart}
