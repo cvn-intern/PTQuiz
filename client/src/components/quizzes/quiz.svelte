@@ -42,7 +42,6 @@
 			})
 		});
 		const result = await response.json();
-		console.log(result);
 		if (response.status === 200) {
 			dismissLoadingToast();
 			toast.success('Success!');
