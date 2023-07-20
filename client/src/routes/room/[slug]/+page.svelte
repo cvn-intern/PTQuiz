@@ -28,7 +28,7 @@
 	onMount(() => {
 		setTimeout(() => {
 			socket.emit('join-room', { roomPIN: $page.params.slug, userId: data.user.id });
-		}, 500);
+		}, 1000);
 
 		socket.on('room-users', (data) => {
 			isLoading = false;
@@ -38,7 +38,6 @@
 			isLoading = false;
 			errorMessage = data.message;
 		});
-
 		socket.on('room-messages', (data) => {
 			const newMessage = {
 				participant: { id: data.userId, displayName: data.userId, avatar: data.avatar },

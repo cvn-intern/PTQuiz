@@ -32,16 +32,21 @@
 
 	async function handleStart() {
 		sharedToastId = toast.loading('Loading...', { duration: 20000 });
-		const response = await fetch(`/api/quizzes/${id}/start`, {
+		const response = await fetch(`/api/room/open`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'application/json'
 			},
+			body: JSON.stringify({
+				quizId: id
+			})
 		});
 		const result = await response.json();
+		console.log(result);
 		if (response.status === 200) {
 			dismissLoadingToast();
-			goto(`/quiz/${id}`);
+			toast.success('Success!');
+			goto(`/room/${result.data.PIN}`);
 		} else {
 			dismissLoadingToast();
 			toast.error(result.message);
@@ -73,6 +78,7 @@
 				>
 				<button
 					aria-label="Start"
+					on:click={handleStart}
 					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
 					>Start</button
 				>

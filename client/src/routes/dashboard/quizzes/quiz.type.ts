@@ -5,6 +5,7 @@ export interface IQuiz {
 	numberOfQuestions: number;
 	image: string;
 	createdAt: string;
+	id: string;
 }
 export interface IQuizAPI {
 	title: string;

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { JoinLeaveRoomDto } from '../dto';
+import { JoinLeaveRoomDto, sendMessageDto } from '../dto';
 
 @WebSocketGateway({ cors: '*' })
 export class SocketGateway
