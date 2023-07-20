@@ -13,7 +13,7 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 	});
 	const result = await response.json();
 	if (response.status === 200) {
-		return new Response(JSON.stringify(result.data), {
+		return new Response(JSON.stringify(result.message), {
 			status: 200
 		});
 	} else {
