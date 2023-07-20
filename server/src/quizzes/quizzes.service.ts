@@ -1,14 +1,12 @@
 import {
     HttpException,
     HttpStatus,
-    Injectable,
-    UnauthorizedException,
+    Injectable
 } from '@nestjs/common';
-import { QuizzesDto } from './dto/quizzes.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { QuizzesError } from 'src/error/quizzesError.enum';
-import { QuestionService } from 'src/question/question.service';
-import { QuestionResponse } from 'src/question/type/questionResponse.type';
+import { QuestionService } from '../question/question.service';
+import { QuizzesError } from '../error/quizzesError.enum';
+import { QuestionResponse } from '../question/type/questionResponse.type';
 @Injectable()
 export class QuizzesService {
     constructor(

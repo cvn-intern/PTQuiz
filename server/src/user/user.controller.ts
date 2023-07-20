@@ -9,11 +9,11 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
-import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
 import { UserService } from './user.service';
-import { ResTransformInterceptor } from 'src/interceptors/response.interceptor';
-import { GetCurrentUser } from 'src/decorators/getCurrentUser.decorator';
+import { ResTransformInterceptor } from '../interceptors/response.interceptor';
+import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
+import { ResponseMessage } from '../decorators/responseMessage.decorator';
+import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
 
 @Controller('user')
 @UseInterceptors(ResTransformInterceptor)

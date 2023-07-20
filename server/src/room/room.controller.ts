@@ -9,11 +9,11 @@ import {
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
-import { GetCurrentUser } from 'src/decorators/getCurrentUser.decorator';
-import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
 import { RoomService } from './room.service';
-import { ResTransformInterceptor } from 'src/interceptors/response.interceptor';
+import { ResTransformInterceptor } from '../interceptors/response.interceptor';
+import { ResponseMessage } from '../decorators/responseMessage.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
+import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
 
 @Controller('room')
 @UseInterceptors(ResTransformInterceptor)

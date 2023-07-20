@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { QuizzesController } from './quizzes.controller';
-import { QuestionService } from 'src/question/question.service';
+import { QuestionService } from '../question/question.service';
 
 @Module({
     imports: [],

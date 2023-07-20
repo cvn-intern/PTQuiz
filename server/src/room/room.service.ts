@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class RoomService {
@@ -51,8 +51,6 @@ export class RoomService {
                     createdAt: new Date(),
                 },
             });
-
-            await this.prisma.rooms.update
             return room;
         } catch (err) {
             throw new HttpException(

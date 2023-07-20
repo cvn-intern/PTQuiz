@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { QuestionService } from 'src/question/question.service';
-import { QuizzesService } from 'src/quizzes/quizzes.service';
-import { Answer, AnswerDetail } from './dto/answer.dto';
-import { PlayGameError } from 'src/error/playGameError.enum';
-import { EndGameError } from 'src/error/endGameError.enum';
+import { AnswerDetail } from './dto/answer.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { QuizzesService } from '../quizzes/quizzes.service';
+import { QuestionService } from '../question/question.service';
+import { PlayGameError } from '../error/playGameError.enum';
+import { EndGameError } from '../error/endGameError.enum';
 @Injectable()
 export class PlaygameService {
     constructor(

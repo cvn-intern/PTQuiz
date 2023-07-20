@@ -1,21 +1,17 @@
 import { QuestionService } from './question.service';
-import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
-import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
-import { GetCurrentUser } from 'src/decorators/getCurrentUser.decorator';
 import {
-    Body,
     Controller,
     Get,
     HttpCode,
     HttpStatus,
-    Post,
     UseGuards,
     UseInterceptors,
     Query,
 } from '@nestjs/common';
 
-import { QuestionDto } from './dto/question.dto';
-import { ResTransformInterceptor } from 'src/interceptors/response.interceptor';
+import { ResponseMessage } from '../decorators/responseMessage.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
+import { ResTransformInterceptor } from '../interceptors/response.interceptor';
 @Controller('question')
 @UseInterceptors(ResTransformInterceptor)
 export class QuestionController {
