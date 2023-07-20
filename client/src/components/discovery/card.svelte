@@ -23,7 +23,7 @@
 	export let amountOfQuestions = '';
 
 	async function handleStart() {
-		goto(`${import.meta.env.VITE_HOST_FRONTEND}/playGame/${id}`);
+		goto(`/playGame/${id}`);
 	}
 </script>
 
