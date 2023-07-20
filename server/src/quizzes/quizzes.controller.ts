@@ -53,8 +53,8 @@ export class QuizzesController {
     @ResponseMessage('Filter successfully')
     @UseGuards(JwtAuthGuard)
     async filterCategory(
-        @Query('category') categoryName: string,
         @GetCurrentUser('id') userId: string,
+        @Query('category') categoryName: string,
     ) {
         return await this.quizzesService.filterCategory(userId, categoryName);
     }

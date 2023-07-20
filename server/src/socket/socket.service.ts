@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { SocketError } from '../error';
 
 @Injectable()
 export class SocketService {
@@ -10,7 +11,7 @@ export class SocketService {
             where: { PIN: roomPIN },
         });
         if (!room) {
-            throw new Error('Room does not exist');
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
         if (room.isClosed) {
             throw new Error('Room is closed');
@@ -19,10 +20,10 @@ export class SocketService {
             where: { id: userId },
         });
         if (room.isClosed) {
-            throw new Error('Room is closed');
+            throw new Error(SocketError.SOCKET_ROOM_CLOSED);
         }
         if (!user) {
-            throw new Error('User does not exist');
+            throw new Error(SocketError.SOCKET_USER_NOT_FOUND);
         }
         const isJoined = await this.prisma.room_participants.findFirst({
             where: {
@@ -34,7 +35,7 @@ export class SocketService {
             },
         });
         if (isJoined) {
-            throw new Error('User already joined');
+            throw new Error(SocketError.SOCKET_USER_ALREADY_CONNECTED);
         }
         const participants = await this.prisma.participants.create({
             data: {
@@ -62,14 +63,14 @@ export class SocketService {
             where: { PIN: roomPIN },
         });
         if (!room) {
-            throw new Error('Room does not exist');
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
         const user = await this.prisma.users.findUnique({
             where: { id: userId },
         });
 
         if (!user) {
-            throw new Error('User does not exist');
+            throw new Error(SocketError.SOCKET_USER_NOT_FOUND);
         }
         const foundUser = await this.prisma.room_participants.findFirst({
             where: {
@@ -82,7 +83,7 @@ export class SocketService {
             },
         });
         if (!foundUser) {
-            throw new Error('User has not joined');
+            throw new Error(SocketError.SOCKET_USER_ALREADY_CONNECTED);
         }
         await this.prisma.room_participants.delete({
             where: {
@@ -105,7 +106,7 @@ export class SocketService {
             where: { PIN: roomPIN },
         });
         if (!room) {
-            throw new Error('Room does not exist');
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
         const roomParticipants = await this.prisma.room_participants.findMany({
             where: {
@@ -172,7 +173,7 @@ export class SocketService {
             where: { PIN: roomPIN },
         });
         if (!room) {
-            throw new Error('Room does not exist');
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
         await this.prisma.room_participants.updateMany({
             where: {

@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QuestionService } from 'src/question/question.service';
 import { QuizzesService } from 'src/quizzes/quizzes.service';
-import { Answer } from './dto/answer.dto';
+import { Answer, AnswerDetail } from './dto/answer.dto';
 import { PlayGameError } from 'src/error/playGameError.enum';
 @Injectable()
 export class PlaygameService {
@@ -13,11 +13,20 @@ export class PlaygameService {
     ) {}
 
     isRightAnswer(answerOfUser, answerOfQuestion) {
-        return answerOfUser.every((item) => answerOfQuestion.includes(item));
+        return (
+            answerOfUser.length === answerOfQuestion.length &&
+            answerOfUser.every(
+                (element, index) => element === answerOfQuestion[index],
+            )
+        );
     }
     arrayToString(array) {
         return array.join(', ');
     }
+    stringToArray(str) {
+        return str.split(',').map((item) => item === 'true');
+    }
+
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
         try {
             return await this.quizzesService.getAllQuestionsOfQuiz(
@@ -34,15 +43,6 @@ export class PlaygameService {
 
     async playGame(userId: string, quizId: string) {
         try {
-            const unCompleteGame = await this.prisma.participants.findFirst({
-                where: {
-                    userId: userId,
-                    quizId: quizId,
-                },
-            });
-            if (unCompleteGame != null) {
-                return unCompleteGame;
-            }
             const quiz = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
@@ -56,6 +56,8 @@ export class PlaygameService {
                     correct: 0,
                     totalAttempt: 0,
                     point: 0,
+                    startedAt: new Date(),
+                    isSingleMode: true,
                 },
             });
             return participant;
@@ -67,71 +69,95 @@ export class PlaygameService {
         }
     }
 
-    async answerQuestion(userId: string, dto: Answer, participantId: string) {
+    async submitAllQuestions(userId: string, dto: AnswerDetail) {
         try {
-            const { questionId, answerOfUser } = dto;
-            const question = await this.questionService.getQuestion(questionId);
-            const answerOfQuestion = question.answers;
-            const isCorrect = this.isRightAnswer(
-                answerOfUser,
-                answerOfQuestion,
-            );
+            const { participantId, answerOfUser } = dto;
             const participant = await this.prisma.participants.findUnique({
                 where: {
                     id: participantId,
                 },
             });
+            const quizIdOfParticipant = participant.quizId;
             const quiz = await this.prisma.quizzes.findUnique({
                 where: {
-                    id: participant.quizId,
+                    id: quizIdOfParticipant,
+                },
+                select: {
+                    numberQuestions: true,
+                    point: true,
+                    passingPoint: true,
                 },
             });
+            let totalPoint = 0;
+            let totalCorrect = 0;
+            await Promise.all(
+                answerOfUser.map(async (answer) => {
+                    let score = 0;
 
-            const score = isCorrect ? quiz.point / quiz.numberQuestions : 0;
-            const isAnswered = await this.prisma.user_questions.findFirst({
+                    const question = await this.questionService.getQuestion(
+                        answer.questionId,
+                    );
+                    if (question.type === 0 || question.type === 1) {
+                        const arrayGiveAnswer = this.stringToArray(
+                            answer.givenAnswers,
+                        );
+                        const checkTrue = this.isRightAnswer(
+                            arrayGiveAnswer,
+                            question.answers,
+                        );
+                        if (checkTrue) {
+                            score = quiz.point / quiz.numberQuestions;
+                        } else {
+                            score = 0;
+                        }
+                    } else if (question.type === 2) {
+                        if (answer.givenAnswers === question.written) {
+                            score = quiz.point / quiz.numberQuestions;
+                        } else {
+                            score = 0;
+                        }
+                    }
+                    if (score !== 0) {
+                        totalCorrect += 1;
+                    }
+                    totalPoint += score;
+                    const updateAnswerOfUser =
+                        await this.prisma.user_questions.create({
+                            data: {
+                                userId: userId,
+                                participantId: participantId,
+                                questionId: answer.questionId,
+                                question: question.title,
+                                image: question.image,
+                                optionA: question.options[0],
+                                optionB: question.options[1],
+                                optionC: question.options[2],
+                                optionD: question.options[3],
+                                answerA: question.answers[0],
+                                answerB: question.answers[1],
+                                answerC: question.answers[2],
+                                answerD: question.answers[3],
+                                written: question.written,
+                                givenAnswers: answer.givenAnswers,
+                                score: score,
+                                timestamp: new Date(),
+                            },
+                        });
+                }),
+            );
+            const updateParticipan = await this.prisma.participants.update({
                 where: {
-                    userId: userId,
-                    participantId: participantId,
-                    questionId: questionId,
+                    id: participantId,
+                },
+                data: {
+                    completedAt: new Date(),
+                    point: totalPoint,
+                    correct: totalCorrect,
                 },
             });
-            if (isAnswered) {
-                await this.prisma.user_questions.update({
-                    where: {
-                        id: isAnswered.id,
-                    },
-                    data: {
-                        givenAnswers: this.arrayToString(answerOfUser),
-                        score: score,
-                        timestamp: new Date(),
-                    },
-                });
-            } else {
-                await this.prisma.user_questions.create({
-                    data: {
-                        userId: userId,
-                        participantId: participantId,
-                        questionId: questionId,
-                        question: question.title,
-                        image: question.image,
-                        optionA: question.options[0],
-                        optionB: question.options[1],
-                        optionC: question.options[2],
-                        optionD: question.options[3],
-                        answerA: question.answers[0],
-                        answerB: question.answers[1],
-                        answerC: question.answers[2],
-                        answerD: question.answers[3],
-                        givenAnswers: this.arrayToString(answerOfUser),
-                        score: score,
-                        timestamp: new Date(),
-                    },
-                });
-            }
-            return isCorrect;
         } catch (error) {
             throw new HttpException(
-                PlayGameError.CAN_NOT_ANSWER,
+                PlayGameError.CAN_NOT_SUBMIT,
                 HttpStatus.BAD_REQUEST,
             );
         }

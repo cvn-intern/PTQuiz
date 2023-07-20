@@ -74,8 +74,8 @@ export class QuizzesService {
             const quizzes = await this.prisma.quizzes.findMany({
                 where: {
                     isShared: true,
-                    userId: {
-                        not: userId,
+                    NOT: {
+                        userId: userId,
                     },
                 },
                 select: {
@@ -89,7 +89,6 @@ export class QuizzesService {
                             },
                         },
                     },
-                    isShared: true,
                 },
             });
             const quizzesOfdiscovery = quizzes.map((quiz) => {
@@ -204,7 +203,8 @@ export class QuizzesService {
             let resultFilter = categories.filter(
                 (category) => category.category === categoryName,
             );
-            return resultFilter[0].quizzes;
+            if (resultFilter.length !== 0) return resultFilter[0].quizzes;
+            else return [];
         } catch (exception) {
             throw new HttpException(
                 QuizzesError.NOT_FOUND_CATEGORY,
