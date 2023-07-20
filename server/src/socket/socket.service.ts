@@ -13,6 +13,9 @@ export class SocketService {
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
+        if (room.isClosed) {
+            throw new Error('Room is closed');
+        }
         const user = await this.prisma.users.findUnique({
             where: { id: userId },
         });

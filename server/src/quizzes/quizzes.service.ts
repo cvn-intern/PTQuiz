@@ -57,6 +57,7 @@ export class QuizzesService {
                     numberQuestions: true,
                     durationMins: true,
                     difficultyLevel: true,
+                    id: true,
                 },
             });
             return quizzesOfUser;

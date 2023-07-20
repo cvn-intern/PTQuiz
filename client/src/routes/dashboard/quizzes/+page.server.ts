@@ -12,7 +12,8 @@ export async function load({ fetch }) {
 				username: quiz.user.displayName,
 				numberOfQuestions: quiz.numberOfQuestions,
 				image: quiz.image,
-				createdAt: quiz.createdAt
+				createdAt: quiz.createdAt,
+				id: quiz.id
 			};
 		});
 		return {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onMount } from 'svelte';
 	import socket from '../../../libs/socket/socket';
 	import { page } from '$app/stores';
 	import type { LayoutData } from '../../$types';
@@ -8,11 +8,8 @@
 	import toast from 'svelte-french-toast';
 
 	export let data: LayoutData;
-	type Participant = {
-		id: string;
-		displayName: string;
-		avatar: string;
-	};
+
+	type Participant = { id: string; displayName: string; avatar: string };
 	type Message = {
 		participant: Participant;
 		content: string;
@@ -23,13 +20,14 @@
 	};
 	let isLoading: boolean = true;
 	let errorMessage: string = '';
-	let url = $page.url.href;
-	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 	let participants: Participant[] = [];
 	let messages: Message[] = [];
 	let messageContent: string = '';
 	let reactions = ['😄', '😍', '🤣', '😊', '🙌'];
 	let selectedReaction: string | null = null;
+	let url = $page.url.href;
+	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
+
 	function getNewParticipant(): Participant {
 		const id = participants.length + 1;
 		return {
@@ -40,10 +38,6 @@
 	}
 
 	onMount(() => {
-		if (!data.user) {
-			goto('/login');
-			return;
-		}
 		setTimeout(() => {
 			socket.emit('join-room', {
 				roomPIN: $page.params.slug,
@@ -58,25 +52,32 @@
 			isLoading = false;
 			errorMessage = data.message;
 		});
+		socket.on('room-messages', (data) => {
+			const newMessage = {
+				participant: { id: data.userId, displayName: data.userId, avatar: data.avatar },
+				content: data.message,
+				reaction: data.reaction,
+				id: Date.now(),
+				left: Math.random() * 80,
+				style: `position: absolute; left: ${
+					Math.random() * 80
+				}vw; animation: flyAndFade 5s linear forwards;`
+			};
+			messages = [...messages, newMessage];
+		});
 	});
+
 	function startGame() {}
 	async function sendMessage() {
-		const newMessage: Message = {
-			participant: participants[participants.length - 1],
-			content: messageContent,
-			reaction: selectedReaction,
-			id: Date.now(),
-			left: Math.random() * 80, // Random value between 0 and 80
-			style: `
-				position: absolute;
-				left: ${Math.random() * 80}vw;
-				animation: flyAndFade 4s linear forwards;
-			`
-		};
-		messages = [...messages, newMessage];
+		socket.emit('send-message', {
+			roomPIN: $page.params.slug,
+			userId: data.user.id,
+			avatar: data.user.avatar,
+			message: messageContent,
+			reaction: selectedReaction
+		});
 		messageContent = '';
 		selectedReaction = null;
-		await tick(); // Wait for the DOM to update
 	}
 	const handleCopy = () => {
 		navigator.clipboard.writeText(url);
@@ -141,44 +142,130 @@
 					</div>
 				</div>
 			</div>
-			<div class="">
-				<input
-					bind:value={messageContent}
-					placeholder="Type a message..."
-					class="border rounded px-2 py-1 w-64"
-				/>
-				{#each reactions as reaction}
+			<div>
+				<form on:submit|preventDefault={sendMessage} class="flex items-center space-x-2">
+					<input
+						bind:value={messageContent}
+						placeholder="Type a message..."
+						class="border-2 border-blue-500 rounded-lg px-4 py-2 w-64 focus:outline-none focus:border-blue-700 transition-colors duration-200 ease-in-out"
+					/>
+					<div class="relative group">
+						<button
+							on:click={() => {
+								selectedReaction = reactions[0];
+							}}
+							class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none"
+							>{reactions[0]}</button
+						>
+						<div
+							class="absolute left-0 mt-2 space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+						>
+							{#each reactions.slice(1) as reaction}
+								<button
+									on:click={() => {
+										selectedReaction = reaction;
+									}}
+									class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none"
+									>{reaction}</button
+								>
+							{/each}
+						</div>
+					</div>
 					<button
-						on:click={() => {
-							selectedReaction = reaction;
-						}}>{reaction}</button
+						type="submit"
+						class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none"
 					>
-				{/each}
-				<button on:click={sendMessage} class="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
-					>Send</button
-				>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M14 5l7 7m0 0l-7 7m7-7H3"
+							/>
+						</svg>
+					</button>
+				</form>
 			</div>
 			<style>
 				@keyframes flyAndFade {
 					0% {
-						transform: translateY(0);
+						transform: translateY(30vh);
 						opacity: 1;
 					}
 					100% {
-						transform: translateY(-100vh);
+						transform: translateY(0vh);
 						opacity: 0;
 					}
 				}
 			</style>
 			{#each messages as message (message.id)}
-				<div class="bg-green-500 text-white p-2 rounded-full" style={message.style}>
+				<div class="balloon flex items-center relative" style={message.style}>
 					<img
 						src={message.participant.avatar}
 						alt={message.participant.displayName}
-						class="w-12 h-12 rounded-full"
+						class="w-12 h-12 rounded-full mr-2"
 					/>
-					<p class="mt-2 text-center">{message.content} {message.reaction}</p>
+					<div class="text-center">
+						<p>{message.content} {message.reaction}</p>
+					</div>
 				</div>
+
+				<style>
+					body {
+						background: hsl(70, 31%, 85%);
+						text-align: center;
+					}
+					.balloon {
+						display: inline-block;
+						width: 120px;
+						height: 145px;
+						background: hsl(215, 50%, 65%);
+						border-radius: 80%;
+						position: relative;
+						box-shadow: inset -10px -10px 0 rgba(0, 0, 0, 0.07);
+						margin: 20px 30px;
+						transition: transform 0.5s ease;
+						z-index: 10;
+						animation: balloons 1s ease-in-out infinite;
+						transform-origin: bottom center;
+					}
+					@keyframes balloons {
+						0%,
+						100% {
+							transform: translateY(0) rotate(-4deg);
+						}
+						50% {
+							transform: translateY(-25px) rotate(4deg);
+						}
+					}
+					.balloon:before {
+						content: '▲';
+						font-size: 20px;
+						color: hsl(215, 30%, 50%);
+						display: block;
+						text-align: center;
+						width: 100%;
+						position: absolute;
+						bottom: -12px;
+						z-index: -100;
+					}
+					.balloon:after {
+						display: inline-block;
+						top: 153px;
+						position: absolute;
+						height: 250px;
+						width: 1px;
+						margin: 0 auto;
+						content: '';
+						background: rgba(0, 0, 0, 0.2);
+					}
+				</style>
 			{/each}
 		{/if}
 	</div>
