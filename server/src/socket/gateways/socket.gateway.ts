@@ -12,7 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { JoinLeaveRoomDto } from '../dto';
+import { JoinLeaveRoomDto, sendMessageDto } from '../dto';
 
 @WebSocketGateway({ cors: '*' })
 export class SocketGateway
@@ -72,6 +72,24 @@ export class SocketGateway
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
             this.server.to(roomPIN).emit('room-users', roomParticipants);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage('send-message')
+    async sendMessage(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: sendMessageDto,
+    ) {
+        try {
+            const { roomPIN, userId, message } = data;
+            this.server.to(roomPIN).emit('receive-message', {
+                userId,
+                message,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,

@@ -9,6 +9,8 @@ import { QuestionModule } from './question/question.module';
 import { UserModule } from './user/user.module';
 import { PlaygameModule } from './playgame/playgame.module';
 import { SocketModule } from './socket/socket.module';
+import { RoomController } from './room/room.controller';
+import { RoomModule } from './room/room.module';
 @Module({
     imports: [
         PrismaModule,
@@ -21,8 +23,9 @@ import { SocketModule } from './socket/socket.module';
         UserModule,
         PlaygameModule,
         SocketModule,
+        RoomModule,
     ],
-    controllers: [],
+    controllers: [RoomController],
     providers: [],
 })
 export class AppModule {}

@@ -76,9 +76,11 @@
 				loading: 'Loading...',
 				success: (value: any) => {
 					goto('/');
+					form = null;
 					return value;
 				},
 				error: (err) => {
+					form = null;
 					return err;
 				}
 			}

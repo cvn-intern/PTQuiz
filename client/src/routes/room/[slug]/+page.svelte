@@ -43,6 +43,10 @@
 		socket.on('exception', (data) => {
 			error = data.message;
 		});
+		socket.on('send-message', (data) => {
+			messages = [...messages, data];
+			console.log(messages?.content);
+		});
 	});
 	function startGame() {}
 	async function sendMessage() {
@@ -61,7 +65,12 @@
 		messages = [...messages, newMessage];
 		messageContent = '';
 		selectedReaction = null;
-		await tick(); // Wait for the DOM to update
+		await tick();
+		socket.emit('send-message', {
+			roomPIN: $page.params.slug,
+			userId: data.user.id,
+			message: newMessage
+		});
 	}
 </script>
 

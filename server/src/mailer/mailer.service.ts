@@ -88,7 +88,7 @@ export class MailerService {
         }
         const html = this.htmlBuilder(type, displayName, url);
         const mailOptions = {
-            from: process.env.EMAIL_USERNAME,
+            from: `Penta Quiz <${process.env.EMAIL_USERNAME}>`,
             to,
             subject,
             text,
