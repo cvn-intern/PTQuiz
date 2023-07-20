@@ -50,11 +50,6 @@
 		isAnswerChecked = true;
 		givenAn[questionPointer][options.findIndex((opt) => opt.id === id)] = true;
 		selectedAnswerIndex = index;
-		// for (let i = 0; i < 4; i++) {
-		// 	if (i !== index) {
-		// 		options[i].disabled = true;
-		// 	}
-		// }
 		timer = tweened(0);
 	}
 
@@ -117,9 +112,6 @@
 	$: {
 		if ($timer <= 0 && !isAnswerChecked) {
 			isAnswerChecked = true;
-			// for (let i = 0; i < 4; i++) {
-			// 	options[i].disabled = true;
-			// }
 		}
 	}
 
