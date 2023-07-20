@@ -85,7 +85,7 @@
 </script>
 
 {#if isLoading}
-	<div class="fixed inset-0 flex items-center justify-center w-full">
+	<div class="relative inset-0 flex items-center justify-center w-full">
 		<Spinner size={'48'} color="green" />
 	</div>
 {:else}
