@@ -6,10 +6,10 @@ export interface EndGameType {
     correct: number;
     totalAttempt: number;
     point: number;
-    startedAt: string;
-    completedAt: string;
+    startedAt: Date;
+    completedAt: Date;
     isSingleMode: boolean;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
     passed: boolean;
 }

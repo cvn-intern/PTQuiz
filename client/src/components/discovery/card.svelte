@@ -52,7 +52,7 @@
 				</div>
 				<div class="flex items-start w-full justify-between mt-4 gap-1">
 					<h2
-						class="text-lg cursor-pointer text-gray-600 hover:text-secondary truncate font-semibold whitespace-pre-wrap min-h-titleCard max-h-titleCard w-2/3 overflow-y-hidden"
+						class="text-lg text-gray-600 truncate font-semibold whitespace-pre-wrap min-h-titleCard max-h-titleCard w-2/3 overflow-y-hidden"
 					>
 						{nameOfQuiz}
 					</h2>
@@ -82,17 +82,12 @@
 					>
 				</div>
 			</div>
-			<div class="flex space-x-2 font-medium py-3 text-sm">
+			<div class="flex space-x-2 font-medium py-3">
 				<button
 					on:click={handleStart}
-					class="transition ease-in duration-300 inline-flex items-center font-medium mb-2 md:mb-0 bg-secondary px-4 py-2 hover:shadow-lg tracking-wider text-white rounded-xl hover:bg-darkGreen shadow-lg"
+					class="transition ease-in duration-300 items-center justify-center font-medium mb-2 md:mb-0 bg-secondary px-4 py-2 hover:shadow-lg tracking-wider text-white rounded-xl hover:bg-darkGreen shadow-lg w-full"
 				>
 					<span>Play</span>
-				</button>
-				<button
-					class="transition ease-in duration-300 inline-flex items-center font-medium mb-2 md:mb-0 bg-secondary px-4 py-2 hover:shadow-lg tracking-wider text-white rounded-xl hover:bg-darkGreen shadow-lg"
-				>
-					<span>Add to my Quizzes</span>
 				</button>
 			</div>
 		</div>

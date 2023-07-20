@@ -5,6 +5,8 @@ import { QuizzesService } from '../quizzes/quizzes.service';
 import { QuestionService } from '../question/question.service';
 import { PlayGameError } from '../error/playGameError.enum';
 import { EndGameError } from '../error/endGameError.enum';
+import { EndGameType } from './dto/endGame.type';
+
 @Injectable()
 export class PlaygameService {
     constructor(
@@ -181,7 +183,7 @@ export class PlaygameService {
                     passingPoint: true,
                 },
             });
-            const endGameResult = endGameParticipanList.map(
+            const endGameResult: EndGameType[] = endGameParticipanList.map(
                 (endGameParticipan) => {
                     const { point } = endGameParticipan;
                     const passed = point >= passingPoint;
