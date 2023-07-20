@@ -165,14 +165,30 @@ export class PlaygameService {
     }
     async endGame(userId: string, quizId: string) {
         try {
-            const userResult = await this.prisma.participants.findMany({
+            const endGameParticipanList =
+                await this.prisma.participants.findMany({
+                    where: {
+                        userId: userId,
+                        quizId: quizId,
+                        isSingleMode: true,
+                    },
+                });
+            const { passingPoint } = await this.prisma.quizzes.findUnique({
                 where: {
-                    userId: userId,
-                    quizId: quizId,
-                    isSingleMode: true,
+                    id: quizId,
+                },
+                select: {
+                    passingPoint: true,
                 },
             });
-            return userResult;
+            const endGameResult = endGameParticipanList.map(
+                (endGameParticipan) => {
+                    const { point } = endGameParticipan;
+                    const passed = point >= passingPoint;
+                    return { ...endGameParticipan, passed };
+                },
+            );
+            return endGameResult;
         } catch (error) {
             throw new HttpException(
                 EndGameError.ERROR_ENDGAME,
