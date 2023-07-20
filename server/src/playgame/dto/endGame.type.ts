@@ -1,5 +1,5 @@
-export interface ResultGameInterface {
-	id: string;
+export interface EndGameType {
+    id: string;
     userId: string;
     quizId: string;
     questions: number;
@@ -13,10 +13,3 @@ export interface ResultGameInterface {
     updatedAt: string;
     passed: boolean;
 }
-
-export interface Attempt {
-	attempt: number;
-	points: number;
-	status: string;
-}
-

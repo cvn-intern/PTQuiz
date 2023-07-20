@@ -1,15 +1,22 @@
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ fetch, cookies }) => {
+export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 	const accessToken = cookies.get('accessToken');
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/play-game/end-game`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${accessToken}`
+
+	const data = await request.json();
+	console.log(data);
+	const response = await fetch(
+		`${import.meta.env.VITE_API_URL}/play-game/end-game?quizId=${data.quizId}`,
+		{
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${accessToken}`
+			}
 		}
-	});
+	);
 	const result = await response.json();
+	console.log('result', result);
 	if (response.status === 200) {
 		return new Response(JSON.stringify(result.data), {
 			status: 200
