@@ -51,6 +51,8 @@ export class RoomService {
                     createdAt: new Date(),
                 },
             });
+
+            await this.prisma.rooms.update
             return room;
         } catch (err) {
             throw new HttpException(
@@ -89,8 +91,6 @@ export class RoomService {
                     isClosed: true,
                 },
             });
-
-            console.log(result);
 
             return result;
         } catch (err) {

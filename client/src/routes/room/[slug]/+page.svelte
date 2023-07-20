@@ -211,7 +211,7 @@
 						alt={message.participant.displayName}
 						class="w-12 h-12 rounded-full mr-2"
 					/>
-					<div class="text-center">
+					<div class="text-center truncate">
 						<p>{message.content} {message.reaction}</p>
 					</div>
 				</div>
@@ -238,10 +238,10 @@
 					@keyframes balloons {
 						0%,
 						100% {
-							transform: translateY(0) rotate(-4deg);
+							transform: translateY(0px) rotate(-4deg);
 						}
 						50% {
-							transform: translateY(-25px) rotate(4deg);
+							transform: translateY(-20px) rotate(4deg);
 						}
 					}
 					.balloon:before {
@@ -259,7 +259,7 @@
 						display: inline-block;
 						top: 153px;
 						position: absolute;
-						height: 250px;
+						height: 50px;
 						width: 1px;
 						margin: 0 auto;
 						content: '';
