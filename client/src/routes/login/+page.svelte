@@ -4,8 +4,8 @@
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
-	import { validationLogin } from './interface/message.interface';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import toast from 'svelte-french-toast';
+	import Error from '../+error.svelte';
 
 	export let form;
 	export let data;
@@ -40,50 +40,64 @@
 		}
 	};
 
-	const signIn = (providerName: string) => async () => {
-		toast.promise(
-			startSignIn(window.firebase, providerName),
-			{
-				loading: 'Loading...',
-				success: (value) => {
-					goto('/');
-					return 'Success!';
-				},
-				error: (err) => {
-					return err;
-				}
-			},
-			{
-				duration: 20000
-			}
-		);
+	let sharedToastId: string | number;
+	let isProcessing: boolean = false;
+
+	const showLoadingToast = (): void => {
+		sharedToastId = toast.loading('Loading...', { duration: 20000 });
 	};
 
-	async function handleSubmit() {
-		toast.promise(
-			new Promise((resolve, reject) => {
-				setInterval(() => {
-					if (form?.isDone) {
-						if (form?.isSuccess) {
-							resolve('Success!');
-						} else {
-							reject(form?.error.message || 'Invalid credentials');
-						}
-					}
-				}, 100);
-			}),
-			{
-				loading: 'Loading...',
-				success: (value: any) => {
-					goto('/');
-					return value;
-				},
-				error: (err) => {
-					return err;
-				}
+	const dismissLoadingToast = (): void => {
+		toast.dismiss(sharedToastId);
+	};
+
+	const signIn = (providerName: string) => async (): Promise<void> => {
+		if (isProcessing) return;
+		isProcessing = true;
+
+		showLoadingToast();
+
+		try {
+			const response = await startSignIn(window.firebase, providerName);
+
+			if (response) {
+				goto('/');
+				toast.success('Success!');
+			} else {
+				throw new Error('Invalid credentials');
 			}
-		);
-	}
+		} catch (err: any) {
+			dismissLoadingToast();
+			toast.error(err.message);
+		} finally {
+			isProcessing = false;
+		}
+	};
+
+	const handleSubmit = async (): Promise<void> => {
+		if (isProcessing) return;
+		isProcessing = true;
+
+		showLoadingToast();
+
+		form = null;
+
+		while (!form?.isDone) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+
+		dismissLoadingToast();
+
+		if (form?.isSuccess) {
+			goto('/');
+			toast.success('Success!');
+		} else {
+			dismissLoadingToast();
+			toast.error(form?.error.message || 'Invalid credentials');
+		}
+
+		isProcessing = false;
+	};
 </script>
 
 <section class="flex text-white justify-center w-full">
@@ -107,7 +121,6 @@
 							{#if form?.error?.missing?.confirmEmail}
 								<br />If you didn't receive the email, click
 								<a
-									href="#"
 									class="text-secondary"
 									on:click={resendEmail(form?.error?.fill?.email)}>here</a
 								> to resend it.
@@ -122,9 +135,6 @@
 						id="email"
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						on:input={(input) => {
-							form = validationLogin(input.target.value, 'email');
-						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
 						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
@@ -138,9 +148,6 @@
 						id="password"
 						placeholder="Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						on:input={(input) => {
-							form = validationLogin(input.target.value, 'password');
-						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
 						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>

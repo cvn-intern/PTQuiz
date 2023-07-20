@@ -57,6 +57,7 @@ export class QuizzesService {
                     numberQuestions: true,
                     durationMins: true,
                     difficultyLevel: true,
+                    id: true,
                 },
             });
             return quizzesOfUser;
@@ -68,9 +69,15 @@ export class QuizzesService {
         }
     }
 
-    async getDiscovery() {
+    async getDiscovery(userId: string) {
         try {
             const quizzes = await this.prisma.quizzes.findMany({
+                where: {
+                    isShared: true,
+                    NOT: {
+                        userId: userId,
+                    },
+                },
                 select: {
                     id: true,
                     quizQuestions: {
@@ -82,7 +89,6 @@ export class QuizzesService {
                             },
                         },
                     },
-                    isShared: true,
                 },
             });
             const quizzesOfdiscovery = quizzes.map((quiz) => {
@@ -191,13 +197,14 @@ export class QuizzesService {
         }
     }
 
-    async filterCategory(categoryName: string) {
+    async filterCategory(userId: string, categoryName: string) {
         try {
-            const categories = await this.getDiscovery();
+            const categories = await this.getDiscovery(userId);
             let resultFilter = categories.filter(
                 (category) => category.category === categoryName,
             );
-            return resultFilter[0].quizzes;
+            if (resultFilter.length !== 0) return resultFilter[0].quizzes;
+            else return [];
         } catch (exception) {
             throw new HttpException(
                 QuizzesError.NOT_FOUND_CATEGORY,

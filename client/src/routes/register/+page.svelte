@@ -1,44 +1,45 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
-	import { validationRegister } from '../login/interface/message.interface';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import toast from 'svelte-french-toast';
 
 	export let form;
-	export let data;
 
-	onMount(async () => {
-		if (data.user) {
-			goto('/');
+	let sharedToastId: string | number;
+	let isProcessing: boolean = false;
+
+	const showLoadingToast = (): void => {
+		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+	};
+
+	const dismissLoadingToast = (): void => {
+		toast.dismiss(sharedToastId);
+	};
+
+	const handleSubmit = async (): Promise<void> => {
+		if (isProcessing) return;
+		isProcessing = true;
+
+		showLoadingToast();
+
+		form = null;
+
+		while (!form?.isDone) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
 		}
-	});
 
-	async function handleSubmit() {
-		toast.promise(
-			new Promise((resolve, reject) => {
-				setInterval(() => {
-					if (form?.isDone) {
-						if (form?.isSuccess) {
-							resolve('Success!');
-						} else {
-							reject(form?.error.message || 'Invalid credentials');
-						}
-					}
-				}, 100);
-			}),
-			{
-				loading: 'Loading...',
-				success: (value) => {
-					goto('/register/loading');
-					return value;
-				},
-				error: (err) => {
-					return err;
-				}
-			}
-		);
-	}
+		dismissLoadingToast();
+
+		if (form?.isSuccess) {
+			goto('/register/loading');
+			toast.success('Success!');
+		} else {
+			dismissLoadingToast();
+			toast.error(form?.error.message || 'Invalid credentials');
+			isProcessing = false;
+		}
+	};
 </script>
 
 <section class="flex justify-center w-full">
@@ -58,9 +59,6 @@
 				<div class="py-4">
 					<label for="displayName" class="mb-1 text-black">Display Name</label>
 					<input
-						on:input={(input) => {
-							form = validationRegister(input.target.value, 'displayName');
-						}}
 						type="text"
 						name="displayName"
 						id="displayName"
@@ -76,9 +74,6 @@
 				<div class="py-4">
 					<label for="email" class="mb-1 text-black">Email</label>
 					<input
-						on:input={(input) => {
-							form = validationRegister(input.target.value, 'email');
-						}}
 						type="text"
 						name="email"
 						id="email"
@@ -97,9 +92,6 @@
 						id="password"
 						placeholder="Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						on:input={(input) => {
-							form = validationRegister(input.target.value, 'password');
-						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
 						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
@@ -113,9 +105,6 @@
 						id="confirmPassword"
 						placeholder="Confirm Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						on:input={(input) => {
-							form = validationRegister(input.target.value, 'confirmPassword');
-						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.confirmPassword}
 						<label for="confirmPassword" class="mb-1 text-red-500"
@@ -128,6 +117,7 @@
 					<button
 						type="submit"
 						on:click={handleSubmit}
+						id="submit"
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
 						>SIGN UP</button
 					>

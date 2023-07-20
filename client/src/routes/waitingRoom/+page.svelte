@@ -59,13 +59,13 @@
 	}
 </script>
 
-<div class="flex flex-col items-center justify-center min-h-screen text-black">
+<div class="flex flex-col w-full items-center justify-center min-h-screen text-black">
 	<h1 class="text-4xl mb-8">Welcome to the Game!</h1>
 	<h2 class="text-2xl mb-8">Participants: {participants.length}</h2>
 	<div class="flex flex-wrap justify-center">
 		{#each participants as participant (participant.name)}
 			<div
-				class="w-48 h-20 m-4 flex items-center justify-between bg-green-500 text-white p-2 rounded animate-bounce"
+				class="w-48 h-20 m-4 flex items-center justify-between bg-green-500 text-white p-2 rounded animate-bounce duration-300"
 			>
 				<p class="truncate w-32">{participant.name}</p>
 				<img

@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ fetch, cookies }) => {
 	const accessToken = cookies.get('accessToken');
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/quizzes/all-quizzes`, {
+	const response = await fetch(`${import.meta.env.VITE_API_URL}/play-game/end-game`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ fetch, cookies }) => {
 		});
 	} else {
 		return new Response(JSON.stringify(result.message), {
-			status: 401
+			status: 400
 		});
 	}
 };

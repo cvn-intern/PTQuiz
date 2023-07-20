@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import toast, { Toaster } from 'svelte-french-toast';
+
 	export let title: string;
 	export let author: string;
 	export let description: string;
 	export let numberOfQuestions: number;
 	export let image: string;
 	export let createdAt: string;
+	export let id: string;
 
 	const dateObj = new Date(createdAt);
 	const hours = String(dateObj.getUTCHours()).padStart(2, '0');
@@ -14,6 +18,39 @@
 	const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
 	const year = dateObj.getUTCFullYear();
 	const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+
+	let sharedToastId: string | number;
+	let isProcessing: boolean = false;
+
+	const showLoadingToast = (): void => {
+		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+	};
+
+	const dismissLoadingToast = (): void => {
+		toast.dismiss(sharedToastId);
+	};
+
+	async function handleStart() {
+		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+		const response = await fetch(`/api/room/open`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				quizId: id
+			})
+		});
+		const result = await response.json();
+		if (response.status === 200) {
+			dismissLoadingToast();
+			toast.success('Success!');
+			goto(`/room/${result.data.PIN}`);
+		} else {
+			dismissLoadingToast();
+			toast.error(result.message);
+		}
+	}
 </script>
 
 <section
@@ -40,6 +77,7 @@
 				>
 				<button
 					aria-label="Start"
+					on:click={handleStart}
 					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
 					>Start</button
 				>

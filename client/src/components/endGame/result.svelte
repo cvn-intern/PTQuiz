@@ -1,5 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte';
+	export let amountCorrect;
+	export let totalQuestion;
 	const elementsResult = [
 		{
 			name: 'Completion',
@@ -8,24 +10,24 @@
 		},
 		{
 			name: 'Total Question',
-			value: '20',
+			value: `${totalQuestion}`,
 			color: 'purple'
 		},
 		{
 			name: 'Correct',
-			value: '13',
+			value: `${amountCorrect}`,
 			color: 'green'
 		},
 		{
 			name: 'Wrong',
-			value: '07',
+			value: `${totalQuestion - amountCorrect}`,
 			color: 'red'
 		}
 	];
 </script>
 
-<div class="flex items-center justify-center">
-	<div class="grid grid-cols-2 bg-white shadow-lg md:w-96 max-w-md p-6 rounded-xl md:gap-6 gap-4">
+<div class="flex items-center justify-center sm:max-w-sm md:w-1/2">
+	<div class="grid grid-cols-2 bg-white shadow-lg max-w-md p-6 rounded-xl md:gap-6 gap-4">
 		{#each elementsResult as { name, value, color }}
 			<div class="flex gap-2">
 				<Icon icon={'icon-park-outline:dot'} {color} class={'text-2xl'} />
