@@ -171,9 +171,6 @@ export class PlaygameService {
                     quizId: quizId,
                     isSingleMode: true,
                 },
-                orderBy: {
-                    createdAt: 'desc',
-                },
             });
             return userResult;
         } catch (error) {

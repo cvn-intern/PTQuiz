@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Attempt } from '../../routes/endGame/resultGame.type';
+	import type { Attempt } from "../../routes/playGame/[quizzesId]/endGame/resultGame.type";
 	export let attemptList: Attempt[];
 </script>
 

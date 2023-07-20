@@ -20,11 +20,6 @@
 	const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
 
 	let sharedToastId: string | number;
-	let isProcessing: boolean = false;
-
-	const showLoadingToast = (): void => {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
-	};
 
 	const dismissLoadingToast = (): void => {
 		toast.dismiss(sharedToastId);

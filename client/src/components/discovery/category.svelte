@@ -23,6 +23,7 @@
 				time={card.durationMins}
 				amountOfQuestions={card.numberQuestions}
 				level={card.difficultyLevel}
+				id={card.id}
 			/>
 		{/each}
 	</div>

@@ -115,7 +115,7 @@
 				aria-label="login"
 				class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover focus:outline-none"
 				on:click={() => {
-					window.location.href = '/login';
+					goto('/login');
 				}}
 			>
 				LOGIN

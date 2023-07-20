@@ -1,11 +1,14 @@
-<script>
+<script lang="ts">
+	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import clsx from 'clsx';
+	import toast from 'svelte-french-toast';
 	export let image = '';
 	export let nameOfQuiz = '';
 	export let author = '';
 	export let category = '';
 	export let level = 1;
+	export let id = '';
 	let stringLevel = '';
 	if (level === 0) {
 		stringLevel = 'Easy';
@@ -18,6 +21,10 @@
 	}
 	export let time = '';
 	export let amountOfQuestions = '';
+
+	async function handleStart() {
+		goto(`${import.meta.env.VITE_HOST_FRONTEND}/playGame/${id}`);
+	}
 </script>
 
 <div class="max-w-sm lg:w-80 bg-gray-50 shadow-lg rounded-xl p-6">
@@ -77,6 +84,7 @@
 			</div>
 			<div class="flex space-x-2 font-medium py-3 text-sm">
 				<button
+					on:click={handleStart}
 					class="transition ease-in duration-300 inline-flex items-center font-medium mb-2 md:mb-0 bg-secondary px-4 py-2 hover:shadow-lg tracking-wider text-white rounded-xl hover:bg-darkGreen shadow-lg"
 				>
 					<span>Play</span>
