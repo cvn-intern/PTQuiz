@@ -1,8 +1,12 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class Answer {
-    @IsNotEmpty({ message: 'QuestionId can not be empty' })
-    questionId: string;
+export class AnswerDetail {
+    @IsNotEmpty({ message: 'ParticipantId can not be empty' })
+    participantId: string;
     @IsNotEmpty({ message: 'AnswerOfUser can not be empty' })
-    answerOfUser: string[];
+    answerOfUser: Answer[];
+}
+export interface Answer {
+    questionId: string;
+    givenAnswers: string;
 }
