@@ -22,14 +22,8 @@
 	export let time = '';
 	export let amountOfQuestions = '';
 
-	let sharedToastId: string | number;
-
-	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
-	};
-
 	async function handleStart() {
-		goto(`http://localhost:5173/playGame/${id}`);
+		goto(`${import.meta.env.VITE_HOST_FRONTEND}/playGame/${id}`);
 	}
 </script>
 
