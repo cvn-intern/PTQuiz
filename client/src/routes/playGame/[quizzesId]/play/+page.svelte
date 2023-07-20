@@ -33,9 +33,11 @@
 	givenAn = givenAn.map(() => new Array(4).fill(false));
 
 	function nextQuestion() {
+		selectedAnswerIndex = null;
 		if (questionPointer < quizzes.length - 1) {
 			if (!isAnswerChecked) {
 				isAnswerChecked = true;
+				timer = tweened(0);
 			} else {
 				questionPointer++;
 				timer = tweened(original);
@@ -54,7 +56,6 @@
 	}
 
 	let sharedToastId: string | number;
-	let isProcessing: boolean = false;
 
 	const showLoadingToast = (): void => {
 		sharedToastId = toast.loading('Loading...', { duration: 20000 });
@@ -121,28 +122,28 @@
 			color: 'bg-optionA',
 			contents: quizzes[questionPointer].options[0],
 			isCorrect: quizzes[questionPointer].answers[0],
-			disabled: isAnswerChecked? true : false
+			disabled: isAnswerChecked ? true : false
 		},
 		{
 			id: 'B',
 			color: 'bg-optionB',
 			contents: quizzes[questionPointer].options[1],
 			isCorrect: quizzes[questionPointer].answers[1],
-			disabled:  isAnswerChecked? true : false
+			disabled: isAnswerChecked ? true : false
 		},
 		{
 			id: 'C',
 			color: 'bg-optionC',
 			contents: quizzes[questionPointer].options[2],
 			isCorrect: quizzes[questionPointer].answers[2],
-			disabled:  isAnswerChecked? true : false
+			disabled: isAnswerChecked ? true : false
 		},
 		{
 			id: 'D',
 			color: 'bg-optionD',
 			contents: quizzes[questionPointer].options[3],
 			isCorrect: quizzes[questionPointer].answers[3],
-			disabled:  isAnswerChecked? true : false
+			disabled: isAnswerChecked ? true : false
 		}
 	];
 </script>
