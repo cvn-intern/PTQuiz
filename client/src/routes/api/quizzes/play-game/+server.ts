@@ -1,11 +1,12 @@
 import type { RequestHandler } from '../$types';
 
-export const GET: RequestHandler = async ({ fetch, cookies, params }) => {
+export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 	const accessToken = cookies.get('accessToken');
+	const data = await request.json();
 	const response = await fetch(
-		`${import.meta.env.VITE_API_URL}/quizzes/all-questions?quizId=${params.quizzesId}`,
+		`${import.meta.env.VITE_API_URL}/play-game/play?quizId=${data.quizzesId}`,
 		{
-			method: 'GET',
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${accessToken}`

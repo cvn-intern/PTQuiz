@@ -1,18 +1,22 @@
 import type { RequestHandler } from '../$types';
 
-export const GET: RequestHandler = async ({ fetch, cookies, params }) => {
+export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
+	console.log("test")
 	const accessToken = cookies.get('accessToken');
+	const data = await request.json();
 	const response = await fetch(
-		`${import.meta.env.VITE_API_URL}/quizzes/all-questions?quizId=${params.quizzesId}`,
+		`${import.meta.env.VITE_API_URL}/play-game/submit`,
 		{
-			method: 'GET',
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${accessToken}`
-			}
+			},
+            body: JSON.stringify(data)
 		}
 	);
 	const result = await response.json();
+	console.log(result)
 	if (response.status === 200) {
 		return new Response(JSON.stringify(result.data), {
 			status: 200

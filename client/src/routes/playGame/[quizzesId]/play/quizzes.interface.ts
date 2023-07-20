@@ -11,7 +11,19 @@ export interface Quiz {
 	updatedAt: string;
 	written: string | null;
 }
-
 export interface Quizzes {
 	quizzes: Quiz[];
 }
+
+export interface UserAnswer {
+	participantId: string;
+	answerOfUser: answerOfUser[];
+}
+
+export interface answerOfUser {
+	questionId: string;
+	givenAnswer: string[]
+}
+
+
+
