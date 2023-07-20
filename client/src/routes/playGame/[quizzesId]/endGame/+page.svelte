@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import HistoryAttempt from '../../../../components/endGame/historyAttempt.svelte';
 	import Result from '../../../../components/endGame/result.svelte';
 	import Score from '../../../../components/endGame/score.svelte';
+	import { navbarStore } from '../../../../libs/store/navbarStore';
 	import type { ResultGameInterface } from './resultGame.type';
 	export let data;
 
@@ -19,6 +21,17 @@
 			status: item.passed ? STATUS.PASS : STATUS.FAIL
 		};
 	});
+	const handleIsFullScreen = () => {
+		navbarStore.update((value) => {
+			return {
+				...value,
+				isFullScreen: !value.isFullScreen
+			};
+		});
+	};
+	onMount(() => {
+		handleIsFullScreen();
+	});
 </script>
 
 <div class="bg-greenLight w-full">
@@ -28,6 +41,7 @@
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
 				on:click={() => {
 					goto('/');
+					handleIsFullScreen()
 				}}>Leave game</button
 			>
 		</div>

@@ -6,6 +6,7 @@
 	import { page } from '$app/stores';
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
+	import Icon from '@iconify/svelte';
 	export let data: { result: Quizzes };
 
 	const quizzes: Quizzes = data.result;
@@ -148,15 +149,20 @@
 	];
 </script>
 
-<div class=" bg-greenLight flex flex-col justify-center w-full">
+<div class=" bg-greenLight flex flex-col justify-center w-full font-sans">
 	<div class="px-4 md:px-16 py-6">
 		<Progressbar progress={$timer.toString()} color="gray" />
 	</div>
 	<div class="flex justify-between px-4 py-4 md:px-16">
-		<button class="px-4 bg-red-500 text-xl rounded-2xl" on:click={submitQuiz}>End Game</button>
+		<button
+			class=" bg-red-700 text-xl rounded-2xl hover:bg-red-500 border "
+			on:click={submitQuiz}
+		>
+			<Icon icon={'carbon:stop-outline'} class={'w-14 h-14 text-white'} />
+		</button>
 		{#if questionPointer === quizzes.length - 1}
 			<button
-				class="px-4 bg-buttonHover text-xl rounded-2xl text-white"
+				class="px-4 bg-buttonHover text-xl rounded-2xl text-white hover:bg-optionB"
 				on:click={submitQuiz}
 			>
 				Submit
@@ -164,40 +170,36 @@
 		{:else}
 			<button
 				on:click={nextQuestion}
-				class="px-4 bg-buttonHover text-xl rounded-2xl text-white"
+				class=" bg-violet-900 text-xl rounded-2xl hover:bg-violet-600"
 			>
-				Next Question
+				<Icon icon={'fluent:next-48-regular'} class={'w-14 h-14 text-white'} />
 			</button>
 		{/if}
 	</div>
 	<div class="question px-8 md:px-32">
-		<div class="px-4 py-2 bg-secondary min-h-[208px] rounded-3xl">
+		<div class="px-4 py-2 bg-secondary min-h-[208px] rounded-3xl shadow-xl">
 			<h1 class="px-4 text-4xl text-white font-bold">Question</h1>
 			<p class="p-2 text-2xl text-white">{quizzes[questionPointer].title}</p>
 		</div>
 	</div>
 	<div class="answer px-4 md:px-16 py-8">
-		<div class="grid grid-cols-2 grid-rows-2 gap-4 md:gap-8 min-h-[208px]">
+		<div class="grid grid-cols-2 grid-rows-2 gap-4 md:gap-8 min-h-[208px] items-center">
 			{#each options as opt, index}
 				<button
 					on:click={() => pickAnswer(opt.id, index)}
-					class={`rounded-2xl flex p-2 md:p-4 gap-2 ${
+					class={`rounded-2xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl min-h-full ${
 						isAnswerChecked
 							? opt.isCorrect
 								? 'bg-green-500'
 								: selectedAnswerIndex === index
 								? 'bg-red-500'
 								: 'bg-gray-200'
-							: opt.color
+							: 'bg-white'
 					}`}
 					disabled={opt.disabled}
 				>
 					<div class="rounded-full">
-						<button
-							class="bg-buttonAnswer rounded-full text-white w-8 h-8 md:w-12 md:h-12 text-2xl md:text-3xl"
-						>
-							{opt.id}
-						</button>
+						<Icon icon={`twemoji:letter-${opt.id.toLowerCase()}`} class={`md:text-4xl text-2xl`}/>
 					</div>
 					<p class="text-sm md:text-xl font-semibold text-left">{opt.contents}</p>
 				</button>

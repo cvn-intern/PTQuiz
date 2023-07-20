@@ -4,6 +4,8 @@
 	import { gameInfoStore } from '../../../libs/store/gameInfoStore';
 	import logo from '../../../assets/logo.png';
 	import clsx from 'clsx';
+	import { navbarStore } from '../../../libs/store/navbarStore';
+	import { onMount } from 'svelte';
 	export let data;
 
 	let gameInfo = data.gameInfo;
@@ -20,10 +22,21 @@
 	setTimeout(() => {
 		isShowButton = true;
 	}, 1500);
+	const handleIsFullScreen = () => {
+		navbarStore.update((value) => {
+			return {
+				...value,
+				isFullScreen: !value.isFullScreen
+			};
+		});
+	};
+	onMount(() => {
+		handleIsFullScreen();
+	});
 </script>
 
 <div class="w-full bg-greenLight">
-	<div class="flex flex-col justify-center items-center gap-6 py-20 md:py-0 h-full">
+	<div class="flex flex-col justify-center items-center gap-10 py-20 md:py-0 h-full">
 		<div class="h-40">
 			<img src={logo} alt="logo" class="md:w-52 w-28 animate-wiggle" />
 		</div>
