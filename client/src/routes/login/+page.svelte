@@ -4,8 +4,8 @@
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
-	import { validationLogin } from './interface/message.interface';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import toast from 'svelte-french-toast';
+	import Error from '../+error.svelte';
 
 	export let form;
 	export let data;
@@ -66,7 +66,7 @@
 			} else {
 				throw new Error('Invalid credentials');
 			}
-		} catch (err) {
+		} catch (err: any) {
 			dismissLoadingToast();
 			toast.error(err.message);
 		} finally {
@@ -135,9 +135,6 @@
 						id="email"
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						on:input={(input) => {
-							form = validationLogin(input.target.value, 'email');
-						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
 						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
@@ -151,9 +148,6 @@
 						id="password"
 						placeholder="Password"
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
-						on:input={(input) => {
-							form = validationLogin(input.target.value, 'password');
-						}}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
 						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
