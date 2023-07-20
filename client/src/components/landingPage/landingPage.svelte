@@ -14,7 +14,7 @@
 	<div class="card flex flex-col md:flex-row gap-6 md:gap-20 md:justify-center">
 		<PlayCard
 			src={PlayGame}
-			href={'/'}
+			href={'/discovery'}
 			altText={'Play Game'}
 			title={'Play Game'}
 			intro={'Test your knowledge with our quiz'}
