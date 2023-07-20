@@ -1,9 +1,9 @@
 import type { RequestHandler } from '../$types';
 
 export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
-	console.log("test")
 	const accessToken = cookies.get('accessToken');
 	const data = await request.json();
+	console.log(data);
 	const response = await fetch(
 		`${import.meta.env.VITE_API_URL}/play-game/submit`,
 		{
@@ -16,9 +16,8 @@ export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 		}
 	);
 	const result = await response.json();
-	console.log(result)
 	if (response.status === 200) {
-		return new Response(JSON.stringify(result.data), {
+		return new Response(JSON.stringify(result.message), {
 			status: 200
 		});
 	} else {

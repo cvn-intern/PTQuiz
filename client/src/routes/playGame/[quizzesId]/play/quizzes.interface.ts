@@ -22,7 +22,7 @@ export interface UserAnswer {
 
 export interface answerOfUser {
 	questionId: string;
-	givenAnswer: string[]
+	givenAnswers: string[]
 }
 
 
