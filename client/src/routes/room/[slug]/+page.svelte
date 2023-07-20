@@ -5,6 +5,8 @@
 	import type { LayoutData } from '../../$types';
 	import { goto } from '$app/navigation';
 	import { Spinner } from 'flowbite-svelte';
+	import toast from 'svelte-french-toast';
+
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -21,6 +23,8 @@
 	};
 	let isLoading: boolean = true;
 	let errorMessage: string = '';
+	let url = $page.url.href;
+	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 	let participants: Participant[] = [];
 	let messages: Message[] = [];
 	let messageContent: string = '';
@@ -45,7 +49,7 @@
 				roomPIN: $page.params.slug,
 				userId: data.user.id
 			});
-		}, 500);
+		}, 1000);
 		socket.on('room-users', (data) => {
 			isLoading = false;
 			participants = data;
@@ -74,6 +78,10 @@
 		selectedReaction = null;
 		await tick(); // Wait for the DOM to update
 	}
+	const handleCopy = () => {
+		navigator.clipboard.writeText(url);
+		toast.success('Copied to clipboard');
+	};
 </script>
 
 {#if isLoading}
@@ -82,39 +90,42 @@
 	</div>
 {:else}
 	<div
-		class="w-full flex flex-col flex-grow items-center justify-center min-h-full text-black gap-4"
+		class="w-full flex flex-col flex-grow items-center justify-center min-h-full text-black px-4 lg:px-16 py-4 gap-4"
 	>
 		{#if errorMessage}
 			<h1>{errorMessage}</h1>
 		{:else}
-			<div class="flex flex-col justify-between w-full h-full">
-				<div class="flex flex-col w-full justify-center items-center">
-					<div class="px-4 lg:px-16 py-4 flex flex-row justify-between w-full">
-						<div class="flex gap-4">
+			<div class="flex flex-col justify-between w-full h-full gap-4">
+				<div class="flex flex-col w-full justify-center items-center gap-4">
+					<div class="flex flex-row justify-between w-full items-center">
+						<div class="flex gap-4 items-center">
 							<button
-								class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-								on:click={startGame}>Link</button
+								class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+								on:click={handleCopy}>Click here to copy link</button
 							>
-							<button
-								class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-								on:click={startGame}>QrCode</button
-							>
+							<img
+								class="hidden md:block"
+								width="120px"
+								src={qrCode}
+								alt=""
+								title=""
+							/>
 						</div>
 						<button
-							class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+							class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
 							on:click={startGame}>Start</button
 						>
 					</div>
 					<div class="flex flex-col gap-4 justify-center items-center">
-						<div class="text-4xl">Welcome to the game!</div>
+						<div class="text-4xl">Waiting for players...</div>
 						<div class="text-2xl">Participants: {participants.length}</div>
 					</div>
 				</div>
-				<div class="h-full">
-					<div class="flex flex-wrap items-start">
+				<div class="md:h-full">
+					<div class="hidden md:flex flex-wrap items-center justify-center gap-4">
 						{#each participants as participant (participant.displayName)}
 							<div
-								class="w-48 h-20 m-4 flex items-center justify-between text-white p-2 rounded animate-bounce bg-secondary"
+								class="rounded-xl w-48 h-20 flex items-center justify-between text-white p-2 bg-secondary hover:animate-wiggle"
 							>
 								<p class="truncate w-32">{participant.displayName}</p>
 								<img
@@ -124,6 +135,9 @@
 								/>
 							</div>
 						{/each}
+					</div>
+					<div class="flex justify-center h-full items-center md:hidden">
+						You can chat, throw react, and see others participants name on host screen
 					</div>
 				</div>
 			</div>
