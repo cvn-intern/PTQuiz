@@ -1,6 +1,5 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { Spinner } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 </script>
 

@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import socket from '../../../libs/socket/socket';
 	import { page } from '$app/stores';
 	import type { LayoutData } from '../../$types';
-	import { goto } from '$app/navigation';
 	import { Spinner } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 
@@ -27,15 +26,6 @@
 	let selectedReaction: string | null = null;
 	let url = $page.url.href;
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
-
-	function getNewParticipant(): Participant {
-		const id = participants.length + 1;
-		return {
-			id: id.toString(),
-			displayName: `Participant ${id}`,
-			avatar: `https://avatars.dicebear.com/api/avataaars/${id}.svg`
-		};
-	}
 
 	onMount(() => {
 		setTimeout(() => {
@@ -66,6 +56,13 @@
 			messages = [...messages, newMessage];
 		});
 	});
+
+    onDestroy(() => {
+        socket.emit('leave-room', {
+            roomPIN: $page.params.slug,
+            userId: data.user.id
+        });
+    });
 
 	function startGame() {}
 	async function sendMessage() {

@@ -5,7 +5,7 @@
 	import { Spinner } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 
-	let isSuccess = false;
+	let isSuccess = true;
 	let error: string;
 
 	const userToken = $page.params.userToken;
@@ -24,6 +24,7 @@
 			window.location.href = '/';
 			invalidateAll();
 		} else {
+            isSuccess = false;
 			error = res;
 		}
 	});

@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 		cookies.set('refreshToken', result.data.refreshToken, {
 			path: '/'
 		});
-		return new Response(JSON.stringify(result.data), {
+		return new Response(JSON.stringify(result.message), {
 			status: 200
 		});
 	} else {

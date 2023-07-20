@@ -14,7 +14,7 @@ export class SocketService {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
         if (room.isClosed) {
-            throw new Error('Room is closed');
+            throw new Error(SocketError.SOCKET_ROOM_CLOSED);
         }
         const user = await this.prisma.users.findUnique({
             where: { id: userId },
@@ -83,7 +83,7 @@ export class SocketService {
             },
         });
         if (!foundUser) {
-            throw new Error(SocketError.SOCKET_USER_ALREADY_CONNECTED);
+            throw new Error(SocketError.SOCKET_USER_NOT_JOINED);
         }
         await this.prisma.room_participants.delete({
             where: {
