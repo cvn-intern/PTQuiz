@@ -15,7 +15,7 @@
 		return {
 			attempt: index + 1,
 			points: item.point,
-			status: item.point >= 50 ? STATUS.PASS : STATUS.FAIL
+			status: item.point >= 5 ? STATUS.PASS : STATUS.FAIL
 		};
 	});
 </script>
