@@ -16,7 +16,7 @@ import { ResponseMessage } from '../decorators/responseMessage.decorator';
 import { ResTransformInterceptor } from '../interceptors/response.interceptor';
 import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
 import { QuizzesDto } from './dto/quizzes.dto';
-import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
+import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
 @Controller('quizzes')
 @UseInterceptors(ResTransformInterceptor)
 export class QuizzesController {

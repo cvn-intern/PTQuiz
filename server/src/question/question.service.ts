@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { QuestionDto } from './dto/question.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuestionResponse } from './type/questionResponse.type';
 @Injectable()

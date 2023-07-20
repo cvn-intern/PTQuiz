@@ -9,11 +9,11 @@ import {
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
-import { ResTransformInterceptor } from 'src/interceptors/response.interceptor';
+import { ResTransformInterceptor } from '../interceptors/response.interceptor';
 import { PlaygameService } from './playgame.service';
-import { ResponseMessage } from 'src/decorators/responseMessage.decorator';
-import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
-import { GetCurrentUser } from 'src/decorators/getCurrentUser.decorator';
+import { ResponseMessage } from '../decorators/responseMessage.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
+import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
 import { AnswerDetail } from './dto/answer.dto';
 
 @Controller('play-game')
