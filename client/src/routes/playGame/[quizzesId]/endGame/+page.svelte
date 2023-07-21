@@ -29,9 +29,6 @@
 			};
 		});
 	};
-	onMount(() => {
-		handleIsFullScreen();
-	});
 </script>
 
 <div class="bg-greenLight w-full">
@@ -41,7 +38,7 @@
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
 				on:click={() => {
 					goto('/');
-					handleIsFullScreen()
+					handleIsFullScreen();
 				}}>Leave game</button
 			>
 		</div>

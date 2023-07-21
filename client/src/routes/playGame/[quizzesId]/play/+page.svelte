@@ -87,6 +87,7 @@
 			participantId: gameInfo.id,
 			answerOfUser: formattedData
 		};
+
 		const confirm = await window.confirm('Are you sure you want to proceed?');
 		if (confirm) {
 			showLoadingToast();
@@ -102,8 +103,9 @@
 
 			if (response.status === 200) {
 				dismissLoadingToast();
+
 				toast.success('Success!');
-				window.location.href = `/playGame/${quizzesId}/endGame`;
+				goto(`/playGame/${quizzesId}/endGame`);
 			} else {
 				toast.error(result || 'Invalid submit');
 				dismissLoadingToast();
@@ -155,7 +157,7 @@
 	</div>
 	<div class="flex justify-between px-4 py-4 md:px-16">
 		<button
-			class=" bg-red-700 text-xl rounded-2xl hover:bg-red-500 border "
+			class=" bg-red-700 text-xl rounded-2xl hover:bg-red-500 border"
 			on:click={submitQuiz}
 		>
 			<Icon icon={'carbon:stop-outline'} class={'w-14 h-14 text-white'} />
@@ -199,7 +201,10 @@
 					disabled={opt.disabled}
 				>
 					<div class="rounded-full">
-						<Icon icon={`twemoji:letter-${opt.id.toLowerCase()}`} class={`md:text-4xl text-2xl`}/>
+						<Icon
+							icon={`twemoji:letter-${opt.id.toLowerCase()}`}
+							class={`md:text-4xl text-2xl`}
+						/>
 					</div>
 					<p class="text-sm md:text-xl font-semibold text-left">{opt.contents}</p>
 				</button>
