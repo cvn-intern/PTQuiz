@@ -6,15 +6,8 @@
 	export let quizzes: IQuiz[] = [];
 </script>
 
-<section class="flex flex-col w-full h-full gap-4 px-5">
-	<div class="">
-		<button
-			aria-label="Create quizzes"
-			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-			>Create quizzes</button
-		>
-	</div>
-	<div class="w-full h-fit flex flex-col gap-4">
+<section class="w-full h-full py-10">
+	<div class="w-11/12 h-fit flex flex-col gap-4 mx-auto">
 		{#each quizzes as quiz}
 			<Quiz
 				title={quiz.title}
@@ -22,10 +15,9 @@
 				description={quiz.description}
 				numberOfQuestions={quiz.numberOfQuestions}
 				image={quiz.image}
+				createdAt={quiz.createdAt}
+				id={quiz.id}
 			/>
 		{/each}
-	</div>
-	<div class="flex justify-end">
-		<Pagination />
 	</div>
 </section>

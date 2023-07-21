@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import { Chevron, Dropdown, DropdownItem } from 'flowbite-svelte';
+	import Icon from '@iconify/svelte';
+	import SidebarModal from './sidebar/sidebarModal.svelte';
+	import { goto } from '$app/navigation';
+	import logo from '../../assets/logo.png';
+	import { navbarStore } from '../../libs/store/navbarStore';
+	import clsx from 'clsx';
+
 	export let user: {
 		avatar: string;
+		displayName: string;
 	};
-	let isOpen: boolean = false;
-
+	let isHidden: boolean = true;
 	const navs = [
 		{
 			title: 'Home',
@@ -13,14 +21,8 @@
 		{
 			title: 'Discovery',
 			href: '/discovery'
-		},
-		{
-			title: 'Dashboard',
-			href: '/dashboard/quizzes'
 		}
 	];
-	import Icon from '@iconify/svelte';
-	import SidebarModal from './sidebar/sidebarModal.svelte';
 
 	const logout = async () => {
 		const response = await fetch('/api/auth/logout');
@@ -30,54 +32,103 @@
 		}
 	};
 	const toggleSidebar = () => {
-		isOpen = !isOpen;
+		isHidden = !isHidden;
 	};
+	$: isHiddenNavbar = false;
+	navbarStore.subscribe((value) => {
+		isHiddenNavbar = value.isFullScreen;
+	});
 </script>
 
-<nav class="navbar bg-primary w-full flex justify-between px-2 lg:px-16 py-4 items-center">
-	<a class="logo" href="/">
-		<h1 class="hidden md:block text-3xl font-bold font-title text-darkGreen">PentaQuiz</h1>
-	</a>
-	<button on:click={toggleSidebar} class="absolute md:hidden">
-		<Icon icon="material-symbols:list" class="text-5xl " />
-	</button>
-	<SidebarModal showModal={isOpen} />
+<nav
+	class={clsx('navbar bg-primary w-full flex justify-between px4 lg:px-16 py-4 items-center', {
+		hidden: isHiddenNavbar,
+		'sticky top-0 z-50': !isHiddenNavbar,
+	})}
+>
+	{#if user}
+		<button on:click={toggleSidebar} class="md:hidden">
+			<Icon icon="material-symbols:list" class="text-5xl" />
+		</button>
+		<a class="logo flex items-center gap-2" href="/">
+			<img src={logo} alt="logo" class="hidden md:block w-16" />
+			<h1 class="hidden text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
+				PentaQuiz
+			</h1>
+		</a>
+	{:else}
+		<a class="logo flex items-center gap-2" href="/">
+			<img src={logo} alt="logo" class="w-16" />
+			<h1 class="text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
+				PentaQuiz
+			</h1>
+		</a>
+	{/if}
+	<SidebarModal hiddenModal={isHidden} />
 	<div class="flex items-center gap-24">
-		<ul class="hidden md:flex gap-2 md:gap-8 text-xl">
+		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
 			{#each navs as { title, href }}
 				<li>
-					<a {href} {title} class="hover:font-bold">{title}</a>
+					<a {href} {title} class="hover:text-secondary">{title}</a>
 				</li>
 			{/each}
 		</ul>
-		<div class="flex gap-2 md:gap-6 items-center" aria-labelledby="navbar">
-			{#if user}
-				<button
-					aria-label="profile"
-					class="w-16"
+		{#if user}
+			<div class="flex items-center">
+				<Chevron>
+					<button
+						aria-label="profile"
+						class="flex items-center gap-2 text-xl overflow-hidden whitespace-nowrap max-w-[250px] hover:text-secondary"
+					>
+						<img src={user.avatar} alt="user avatar" class="rounded-full w-12" />
+						{user.displayName}
+					</button>
+				</Chevron>
+			</div>
+
+			<Dropdown>
+				<DropdownItem
+					class="flex gap-2 items-center"
 					on:click={() => {
-						window.location.href = '/dashboard/profile';
+						goto('/dashboard/quizzes');
 					}}
 				>
-					<img src={user.avatar} alt="user avatar" />
-				</button>
-				<button
-					aria-label="logout"
-					on:click={logout}
-					class="uppercase text-white w-full py-3 px-3 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
-					>LOG OUT</button
-				>
-			{:else}
-				<button
-					aria-label="login"
-					class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover focus:outline-none"
+					<Icon icon="tabler:home" class={'text-2xl'} />
+					<h1 class="text-base">My Quizzes</h1>
+				</DropdownItem>
+				<DropdownItem
+					class="flex gap-2 items-center"
 					on:click={() => {
-						window.location.href = '/login';
+						goto('/dashboard/history');
 					}}
 				>
-					LOGIN
-				</button>
-			{/if}
-		</div>
+					<Icon icon="material-symbols:history" class={'text-2xl'} />
+					<h1 class="text-base">History</h1>
+				</DropdownItem>
+				<DropdownItem
+					class="flex gap-2 items-center"
+					on:click={() => {
+						goto('/dashboard/profile');
+					}}
+				>
+					<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
+					<h1 class="text-base">Profile</h1>
+				</DropdownItem>
+				<DropdownItem slot="footer" class="flex gap-2 items-center" on:click={logout}>
+					<Icon icon="mdi:logout" class={'text-2xl'} />
+					<h1 class="text-base">Sign Out</h1>
+				</DropdownItem>
+			</Dropdown>
+		{:else}
+			<button
+				aria-label="login"
+				class="py-2 px-6 bg-secondary rounded-lg text-xl text-white hover:bg-buttonHover focus:outline-none"
+				on:click={() => {
+					goto('/login');
+				}}
+			>
+				LOGIN
+			</button>
+		{/if}
 	</div>
 </nav>

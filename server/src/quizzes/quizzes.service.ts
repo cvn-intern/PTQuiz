@@ -1,15 +1,18 @@
 import {
     HttpException,
     HttpStatus,
-    Injectable,
-    UnauthorizedException,
+    Injectable
 } from '@nestjs/common';
-import { QuizzesDto } from './dto/quizzes.dto';
 import { PrismaService } from '../prisma/prisma.service';
-
+import { QuestionService } from '../question/question.service';
+import { QuizzesError } from '../error/quizzesError.enum';
+import { QuestionResponse } from '../question/type/questionResponse.type';
 @Injectable()
 export class QuizzesService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private questionService: QuestionService,
+    ) {}
 
     findMostCategoryInQuiz(arrCategory) {
         const frequencyMap = {};
@@ -30,174 +33,242 @@ export class QuizzesService {
         return mostCategoryInQuiz;
     }
     findIndexOfCategory(discovery, category) {
-        for (let i = 0; i < discovery.length; i++) {
-            if (discovery[i].category === category) {
-                return i;
-            }
-        }
-        return -1;
+        return discovery.findIndex((item) => item.category === category);
     }
 
     async getAllQuizzesOfUser(userId: string) {
-        const quizzesOfUser = await this.prisma.quizzes.findMany({
-            where: {
-                userId: userId,
-            },
-            select: {
-                user: {
-                    select: {
-                        displayName: true,
-                    },
+        try {
+            const quizzesOfUser = await this.prisma.quizzes.findMany({
+                where: {
+                    userId: userId,
                 },
-                title: true,
-                description: true,
-                image: true,
-                numberQuestions: true,
-            },
-        });
-        return quizzesOfUser;
+                select: {
+                    user: {
+                        select: {
+                            displayName: true,
+                        },
+                    },
+                    createdAt: true,
+                    title: true,
+                    description: true,
+                    image: true,
+                    numberQuestions: true,
+                    durationMins: true,
+                    difficultyLevel: true,
+                    id: true,
+                },
+            });
+            return quizzesOfUser;
+        } catch (err) {
+            throw new HttpException(
+                QuizzesError.FAILED_GET_ALL_QUIZZES,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
     }
 
-    async getDiscovery() {
-        const quizzes = await this.prisma.quizzes.findMany({
-            select: {
-                id: true,
-                quizQuestions: {
-                    select: {
-                        question: {
-                            select: {
-                                categoryId: true,
+    async getDiscovery(userId: string) {
+        try {
+            const quizzes = await this.prisma.quizzes.findMany({
+                where: {
+                    isShared: true,
+                    NOT: {
+                        userId: userId,
+                    },
+                },
+                select: {
+                    id: true,
+                    quizQuestions: {
+                        select: {
+                            question: {
+                                select: {
+                                    categoryId: true,
+                                },
                             },
                         },
                     },
                 },
-            },
-        });
-        const quizzesOfdiscovery = [];
-        quizzes.forEach((quiz) => {
-            const categories = [];
-            quiz.quizQuestions.forEach((question) => {
-                categories.push(question.question.categoryId);
             });
-            quizzesOfdiscovery.push({
-                quizId: quiz.id,
-                categories: this.findMostCategoryInQuiz(categories),
+            const quizzesOfdiscovery = quizzes.map((quiz) => {
+                const categories = quiz.quizQuestions.map(
+                    (question) => question.question.categoryId,
+                );
+                return {
+                    quizId: quiz.id,
+                    categories: this.findMostCategoryInQuiz(categories),
+                };
             });
-        });
-        let discovery = [];
-        for (let index = 0; index < quizzesOfdiscovery.length; index++) {
-            if (quizzesOfdiscovery[index].categories !== '') {
-                let category = await this.prisma.categories.findUnique({
-                    where: {
-                        id: quizzesOfdiscovery[index].categories,
-                    },
-                    select: {
-                        name: true,
-                    },
-                });
-                let indexOfCategory = this.findIndexOfCategory(
-                    discovery,
-                    category.name,
-                );
-                const quizzes = await this.getInfo(
-                    quizzesOfdiscovery[index].quizId,
-                );
-                if (indexOfCategory === -1) {
-                    discovery.push({
-                        category: category.name,
-                        quizzes: [quizzes],
+            let discovery = [];
+            for (let index = 0; index < quizzesOfdiscovery.length; index++) {
+                if (quizzesOfdiscovery[index].categories !== '') {
+                    let category = await this.prisma.categories.findUnique({
+                        where: {
+                            id: quizzesOfdiscovery[index].categories,
+                        },
+                        select: {
+                            name: true,
+                        },
                     });
-                } else {
-                    discovery[indexOfCategory].quizzes.push(quizzes);
+                    let indexOfCategory = this.findIndexOfCategory(
+                        discovery,
+                        category.name,
+                    );
+                    const quizzes = await this.getInfoOfPublicQuiz(
+                        quizzesOfdiscovery[index].quizId,
+                    );
+
+                    if (indexOfCategory === -1) {
+                        discovery.push({
+                            category: category.name,
+                            quizzes: [quizzes],
+                        });
+                    } else {
+                        discovery[indexOfCategory].quizzes.push(quizzes);
+                    }
                 }
             }
-        }
 
-        return discovery;
+            return discovery;
+        } catch (error) {
+            throw new HttpException(
+                QuizzesError.FAILED_GET_DISCOVERY,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
     }
-    async deleteQuizzes(userId: string, quizzesId: string) {
-        const quizzes = await this.prisma.quizzes.findUnique({
-            where: {
-                id: quizzesId,
-            },
-        });
-        if (quizzes.userId === userId) {
-            await this.prisma.quizzes.delete({
+
+    async getInfoQuizzOfUser(userId: string, quizId: string) {
+        try {
+            return await this.prisma.quizzes.findUnique({
                 where: {
-                    id: quizzesId,
+                    id: quizId,
+                    userId: userId,
+                },
+                select: {
+                    user: {
+                        select: {
+                            displayName: true,
+                        },
+                    },
+                    title: true,
+                    description: true,
+                    image: true,
+                    isShared: true,
+                    numberQuestions: true,
+                    startDate: true,
                 },
             });
-        } else {
-            throw new UnauthorizedException('Can not delete quiz');
+        } catch (err) {
+            throw new HttpException(
+                QuizzesError.NOT_FOUND_QUIZZES,
+                HttpStatus.NOT_FOUND,
+            );
+        }
+    }
+    async getInfoOfPublicQuiz(quizId: string) {
+        try {
+            return await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                    isShared: true,
+                },
+                select: {
+                    user: {
+                        select: {
+                            displayName: true,
+                        },
+                    },
+                    id: true,
+                    title: true,
+                    description: true,
+                    image: true,
+                    difficultyLevel: true,
+                    numberQuestions: true,
+                    durationMins: true,
+                },
+            });
+        } catch (err) {
+            throw new HttpException(
+                QuizzesError.FAILED_GET_ALL_PUBLIC_QUIZZES,
+                HttpStatus.NOT_FOUND,
+            );
         }
     }
 
-    async addQuizzes(dto: QuizzesDto, userId: string) {
-        const newQuizzes = await this.prisma.quizzes.create({
-            data: {
-                userId: userId,
-                title: dto.title,
-                numberQuestions: dto.numberQuestions,
-                description: dto.description,
-                image: dto.image,
-                durationMins: dto.durationMins,
-                isRandom: dto.isRandom,
-                isRandomOption: dto.isRandomOption,
-                attempts: dto.attempts,
-                point: dto.point,
-                passingPoint: dto.passingPoint,
-                passed: dto.passed,
-                difficultyLevel: dto.difficultyLevel,
-                startDate: new Date(dto.startDate),
-                endDate: new Date(dto.endDate),
-                isActivated: dto.isActivated,
-                isShared: dto.isShared,
-            },
-        });
-    }
-    async changeInfoQuizzes(dto: QuizzesDto, quizzesId: string) {
-        await this.prisma.quizzes.update({
-            where: {
-                id: quizzesId,
-            },
-            data: dto,
-        });
+    async filterCategory(userId: string, categoryName: string) {
+        try {
+            const categories = await this.getDiscovery(userId);
+            let resultFilter = categories.filter(
+                (category) => category.category === categoryName,
+            );
+            if (resultFilter.length !== 0) return resultFilter[0].quizzes;
+            else return [];
+        } catch (exception) {
+            throw new HttpException(
+                QuizzesError.NOT_FOUND_CATEGORY,
+                HttpStatus.NOT_FOUND,
+            );
+        }
     }
 
-    async getInfo(quizId: string) {
-        return await this.prisma.quizzes.findUnique({
-            where: {
-                id: quizId,
-            },
-            select: {
-                user: {
-                    select: {
-                        displayName: true,
-                    },
+    async getAllQuestionsOfQuiz(userId: string, quizId: string) {
+        try {
+            const quiz = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
                 },
-                title: true,
-                description: true,
-                image: true,
-            },
-        });
-    }
-
-    async filterCategory(category: string) {
-        const IdofCategory = await this.prisma.categories.findFirst({
-            where: {
-                name: category,
-            },
-        });
-        if (IdofCategory) {
-            const categories = await this.getDiscovery();
-            categories.forEach((category) => {
-                if (category.category === IdofCategory.id) {
-                    console.log(category.quizzes);
-                    return category.quizzes;
-                }
             });
-        } else {
-            throw new UnauthorizedException('Not category found');
+            const questions = await this.prisma.quiz_questions.findMany({
+                where: {
+                    quizId: quizId,
+                },
+                select: {
+                    question: true,
+                },
+            });
+            const allQuestions = questions.map((question) => {
+                const questionResponse: QuestionResponse = {
+                    id: question.question.id,
+                    userId: question.question.userId,
+                    categoryId: question.question.categoryId,
+                    title: question.question.title,
+                    options: [
+                        question.question.optionA,
+                        question.question.optionB,
+                        question.question.optionC,
+                        question.question.optionD,
+                    ],
+                    answers: [
+                        question.question.answerA,
+                        question.question.answerB,
+                        question.question.answerC,
+                        question.question.answerD,
+                    ],
+                    written: question.question.written,
+                    image: question.question.image,
+                    type: question.question.type,
+                    createdAt: question.question.createdAt,
+                    updatedAt: question.question.updatedAt,
+                };
+                return questionResponse;
+            });
+            if (quiz.userId === userId) {
+                return allQuestions;
+            } else if (quiz.userId !== userId) {
+                if (quiz.isShared === false) {
+                    throw new HttpException(
+                        QuizzesError.QUIZ_NOT_SHARED,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                } else {
+                    return allQuestions;
+                }
+            }
+        } catch (error) {
+            throw new HttpException(
+                QuizzesError.ERROR_QUIZ,
+                HttpStatus.BAD_REQUEST,
+            );
         }
     }
 }

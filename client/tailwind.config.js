@@ -13,7 +13,13 @@ export default {
 				background: '#f5f5f5',
 				darkGreen: '#1E3F20',
 				buttonHover: '#1e3f20',
-
+				buttonAnswer: '#6f49c3',
+				greenLight: '#DFF5E8',
+				optionA: '#fd696e',
+				optionB: '#63e890',
+				optionC: '#6c8ffc',
+				optionD: '#febf71',
+				redLight: '#FF6B6B',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -36,10 +42,31 @@ export default {
 			},
 			width: {
 				desktop: '20rem',
-				ipad: '16rem',
+				ipad: '17rem',
 				mobile: '12rem'
+			},
+			minHeight: {
+				titleCard: '3.5rem'
+			},
+			maxHeight: {
+				titleCard: '3.75rem'
+			},
+			maxWidth: {
+				tagName: '33%'
+			},
+            keyframes: {
+                wiggle: {
+                    '0%, 100%': { transform: 'rotate(-2deg)' },
+                    '50%': { transform: 'rotate(2deg)' },
+                }
+            },
+            animation: {
+                wiggle: 'wiggle 1s ease infinite',
+            },
+			scale : {
+				102: '1.02'
 			}
-		}
+		},
 	},
 	plugins: [require('flowbite/plugin')],
 	darkMode: 'class'

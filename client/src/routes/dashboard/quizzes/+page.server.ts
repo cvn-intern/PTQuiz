@@ -11,7 +11,9 @@ export async function load({ fetch }) {
 				description: quiz.description,
 				username: quiz.user.displayName,
 				numberOfQuestions: quiz.numberOfQuestions,
-				image: quiz.image
+				image: quiz.image,
+				createdAt: quiz.createdAt,
+				id: quiz.id
 			};
 		});
 		return {
@@ -25,7 +27,8 @@ export async function load({ fetch }) {
 					description: 'Cannot load quizzes',
 					username: 'Cannot load quizzes',
 					numberOfQuestions: 0,
-					image: img1
+					image: img1,
+					createdAt: 'Cannot load quizzes'
 				}
 			]
 		};

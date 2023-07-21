@@ -16,13 +16,13 @@ import { ResponseMessage } from '../decorators/responseMessage.decorator';
 import { ResTransformInterceptor } from '../interceptors/response.interceptor';
 import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
 import { QuizzesDto } from './dto/quizzes.dto';
-import { JwtAuthGuard } from 'src/auth/guard/jwtGuard.guard';
+import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
 @Controller('quizzes')
 @UseInterceptors(ResTransformInterceptor)
 export class QuizzesController {
     constructor(private quizzesService: QuizzesService) {}
 
-    @Get('/get-all')
+    @Get('/all-quizzes')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get Quizzes successfully')
     @UseGuards(JwtAuthGuard)
@@ -30,58 +30,43 @@ export class QuizzesController {
         return await this.quizzesService.getAllQuizzesOfUser(userId);
     }
 
-    @Delete('delete-by-id')
-    @ResponseMessage('Delete Quizzes successfully')
-    @UseGuards(JwtAuthGuard)
-    async deleteQuizzes(
-        @GetCurrentUser('id') userId: string,
-        quizzesId: string,
-    ) {
-        return await this.quizzesService.deleteQuizzes(userId, quizzesId);
-    }
-
-    @Post('/add')
-    @HttpCode(HttpStatus.OK)
-    @ResponseMessage('Add Quizzes successfully')
-    @UseGuards(JwtAuthGuard)
-    async addQuizzes(
-        @Body() dto: QuizzesDto,
-        @GetCurrentUser('id') userId: string,
-    ) {
-        return await this.quizzesService.addQuizzes(dto, userId);
-    }
-
-    @Put('/changeinfo')
-    @ResponseMessage('Change info Quizzes successfully')
-    @UseGuards(JwtAuthGuard)
-    async changeInfo(
-        @Body() dto: QuizzesDto,
-        @Query('quizzesId') quizzesId: string,
-    ) {
-        return await this.quizzesService.changeInfoQuizzes(dto, quizzesId);
-    }
-
     @Get('/discovery')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get discovery successfully')
     @UseGuards(JwtAuthGuard)
-    async getdiscovery() {
-        return await this.quizzesService.getDiscovery();
+    async getdiscovery(@GetCurrentUser('id') userId: string) {
+        return await this.quizzesService.getDiscovery(userId);
     }
     @Get('/info')
     @HttpCode(HttpStatus.OK)
-    @ResponseMessage('Get discovery successfully')
+    @ResponseMessage('Get info of Quiz successfully')
     @UseGuards(JwtAuthGuard)
-    async getinfo(@Query('quizzesId') quizzesId: string) {
-        return await this.quizzesService.getInfo(quizzesId);
+    async getinfo(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizzesId') quizzesId: string,
+    ) {
+        return await this.quizzesService.getInfoQuizzOfUser(userId, quizzesId);
     }
 
     @Get('/filter')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Filter successfully')
     @UseGuards(JwtAuthGuard)
-    async filterCategory(@Query('category') category: string){
-        return  this.quizzesService.filterCategory(category);
+    async filterCategory(
+        @GetCurrentUser('id') userId: string,
+        @Query('category') categoryName: string,
+    ) {
+        return await this.quizzesService.filterCategory(userId, categoryName);
     }
 
+    @Get('/all-questions')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Get all questions successfully')
+    @UseGuards(JwtAuthGuard)
+    async getAllQuestionOfQuiz(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+    ) {
+        return await this.quizzesService.getAllQuestionsOfQuiz(userId, quizId);
+    }
 }

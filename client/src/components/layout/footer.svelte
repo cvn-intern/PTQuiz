@@ -1,11 +1,8 @@
 <script>
 	import Icon from '@iconify/svelte';
+	import { navbarStore } from '../../libs/store/navbarStore';
 
-	const aboutUs = [
-		'About us',
-		'Help',
-		'FAQS'
-	];
+	const aboutUs = ['About us', 'Help', 'FAQS'];
 
 	const contactIcons = [
 		'ic:baseline-facebook',
@@ -14,9 +11,13 @@
 		'ri:instagram-fill',
 		'mdi:linkedin'
 	];
+	$: isHiddenFooter = false;
+	navbarStore.subscribe((value) => {
+		isHiddenFooter = value.isFullScreen;
+	});
 </script>
 
-<footer class="bg-primary">
+<footer class="bg-primary flex flex-col flex-end {isHiddenFooter ? 'hidden' : ''}">
 	<div class="flex flex-col items-center">
 		<div class="container flex flex-col gap-8 md:flex-row justify-between lg:px-24 pt-4">
 			<div class="location flex flex-col items-center gap-2">
@@ -51,7 +52,7 @@
 				<h1 class="text-xl font-bold">Contact Us</h1>
 				<div class="flex gap-2 cursor-pointer">
 					{#each contactIcons as icon}
-						<Icon icon={icon} class="text-2xl" />
+						<Icon {icon} class="text-2xl" />
 					{/each}
 				</div>
 			</div>

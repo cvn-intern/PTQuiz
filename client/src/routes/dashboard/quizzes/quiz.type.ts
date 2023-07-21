@@ -4,6 +4,8 @@ export interface IQuiz {
 	username: string;
 	numberOfQuestions: number;
 	image: string;
+	createdAt: string;
+	id: string;
 }
 export interface IQuizAPI {
 	title: string;
@@ -13,4 +15,6 @@ export interface IQuizAPI {
 	};
 	numberOfQuestions: number;
 	image: string;
+	createdAt: string;
+	id: string;
 }

@@ -3,7 +3,6 @@ import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 	const formData = await request.formData();
-	// upload file
 	const form = new FormData();
 	if (!formData.get('avatar')) {
 		form.append('avatar', '');

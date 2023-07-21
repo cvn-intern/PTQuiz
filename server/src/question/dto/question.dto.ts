@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class Question {
+export class QuestionDto {
     @IsNotEmpty({ message: 'Categories can not be empty' })
     categoryId: string;
 
@@ -8,10 +8,10 @@ export class Question {
     title: string;
 
     @IsNotEmpty({ message: 'Options can not be empty' })
-    options: string;
+    options: string[];
 
     @IsNotEmpty({ message: 'Answer can not be empty' })
-    answers: string;
+    answers: string[];
 
     @IsNotEmpty({ message: 'Answer can not be empty' })
     image: string;

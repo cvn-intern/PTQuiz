@@ -1,5 +1,5 @@
 export interface TypeCategory {
-    category: string;
+	category: string;
 	quizzes: quiz[];
 }
 export interface quiz {
@@ -7,4 +7,7 @@ export interface quiz {
 	description: string;
 	user: string;
 	image: string;
+	difficultyLevel: number;
+	numberQuestions: number;
+	durationMins: number;
 }
