@@ -5,6 +5,8 @@
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
 	import logo from '../../assets/logo.png';
+	import { navbarStore } from '../../libs/store/navbarStore';
+	import clsx from 'clsx';
 
 	export let user: {
 		avatar: string;
@@ -32,10 +34,17 @@
 	const toggleSidebar = () => {
 		isHidden = !isHidden;
 	};
+	$: isHiddenNavbar = false;
+	navbarStore.subscribe((value) => {
+		isHiddenNavbar = value.isFullScreen;
+	});
 </script>
 
 <nav
-	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0 z-40"
+	class={clsx('navbar bg-primary w-full flex justify-between px4 lg:px-16 py-4 items-center', {
+		hidden: isHiddenNavbar,
+		'sticky top-0 z-50': !isHiddenNavbar,
+	})}
 >
 	{#if user}
 		<button on:click={toggleSidebar} class="md:hidden">

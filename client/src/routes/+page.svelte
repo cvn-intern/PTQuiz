@@ -5,11 +5,10 @@
 	export let data: PageData;
 </script>
 
-<LandingPage/>
+<LandingPage />
 
 <style lang="postcss">
 	:global(html) {
 		background-color: theme(colors.gray.100);
 	}
-	
 </style>
