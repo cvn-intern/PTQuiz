@@ -12,7 +12,6 @@
 		<h2 class="text-3xl font-semibold">Exploring your full potential</h2>
 	</div>
 	<div class="card flex flex-col md:flex-row gap-6 md:gap-20 md:justify-center">
-		<!-- <button on:click={handleIsFullScreen} class={'bg-gray-500 h-6'}> FullScreen </button> -->
 		<PlayCard
 			src={PlayGame}
 			href={'/discovery'}
