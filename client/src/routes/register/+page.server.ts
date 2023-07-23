@@ -1,30 +1,30 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type Message from '../login/interface/message.interface';
 import { createDefaultMessage } from '../login/interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 
 let message: Message;
 
-export const actions = {
+export const actions:Actions = {
 	register: async ({ fetch, request }) => {
 		const data = await request.formData();
 		message = createDefaultMessage();
 
-		if (!data.get('displayName') || data.get('displayName')?.trim().length === 0) {
+		if (!String(data.get('displayName')) || String(data.get('displayName'))?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.displayName = true;
 			message.error.message = MESSAGE.MISSING_DISPLAY_NAME;
 			return fail(400, { ...message });
 		}
 
-		if (data.get('displayName')?.trim().length < 3) {
+		if (String(data.get('displayName'))?.trim().length < 3) {
 			message.isDone = true;
 			message.error.missing.displayName = true;
 			message.error.message = MESSAGE.DISPLAY_NAME_MUST_BE_AT_LEAST_3_CHARACTERS;
 			return fail(400, { ...message });
 		}
 
-		if (!data.get('email') || data.get('email')?.trim().length === 0) {
+		if (!String(data.get('email')) || String(data.get('email'))?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.email = true;
 			message.error.message = MESSAGE.MISSING_EMAIL;
@@ -40,21 +40,21 @@ export const actions = {
 			return fail(400, { ...message });
 		}
 
-		if (!data.get('password') || data.get('password')?.trim().length === 0) {
+		if (!String(data.get('password')) || String(data.get('password'))?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.password = true;
 			message.error.message = MESSAGE.MISSING_PASSWORD;
 			return fail(400, { ...message });
 		}
 
-		if (data.get('password')?.trim().length < 8) {
+		if (String(data.get('password'))?.trim().length < 8) {
 			message.isDone = true;
 			message.error.missing.password = true;
 			message.error.message = MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS;
 			return fail(400, { ...message });
 		}
 
-		if (!data.get('confirmPassword') || data.get('confirmPassword')?.trim().length === 0) {
+		if (!String(data.get('confirmPassword')) || String(data.get('confirmPassword'))?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.confirmPassword = true;
 			message.error.message = MESSAGE.MISSING_CONFIRM_PASSWORD;

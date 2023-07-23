@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { tweened } from 'svelte/motion';
-	import type { Quizzes, UserAnswer } from './quizzes.interface.js';
+	import type { QuizzesType, UserAnswer } from './quizzes.interface.js';
 	import { gameInfoStore } from '../../../../libs/store/gameInfoStore.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
-	export let data: { result: Quizzes };
+	export let data;
 
-	const quizzes: Quizzes = data.result;
+	const quizzes: QuizzesType = data.result;
 	let quizzesId = $page.params.quizzesId;
 
 	let gameInfo: any;
@@ -91,7 +91,7 @@
 		const confirm = await window.confirm('Are you sure you want to proceed?');
 		if (confirm) {
 			showLoadingToast();
-			const response = await fetch('/api/quizzes/play-game/submit', {
+			const response = await fetch('/api/play-game/submit', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
