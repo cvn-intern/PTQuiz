@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
-	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
 
 	export let form;

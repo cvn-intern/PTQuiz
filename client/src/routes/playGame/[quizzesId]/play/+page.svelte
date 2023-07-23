@@ -7,6 +7,8 @@
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
+	import FourAnswer from '../../../../components/playGame/fourAnswer.svelte';
+	import DisplayQuestion from '../../../../components/playGame/displayQuestion.svelte';
 	export let data;
 
 	const quizzes: QuizzesType = data.result;
@@ -16,9 +18,8 @@
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	let realtime = 20;
 	let original = 100;
-	let intervalValue = original / realtime;
+	let intervalValue = original / 20;
 	let timer = tweened(original);
 
 	setInterval(() => {
@@ -26,9 +27,10 @@
 	}, 100);
 
 	let questionPointer = 0;
-	let options: any[];
-
+	let fourOptions: any[];
 	let isAnswerChecked: boolean = false;
+	let selectedAnswerIndex: any = null;
+	let sharedToastId: string | number;
 
 	let givenAn: boolean[][] = new Array(quizzes.length).fill([]);
 	givenAn = givenAn.map(() => new Array(4).fill(false));
@@ -47,16 +49,12 @@
 		}
 	}
 
-	let selectedAnswerIndex: any = null;
-
 	function pickAnswer(id: string, index: number) {
 		isAnswerChecked = true;
-		givenAn[questionPointer][options.findIndex((opt) => opt.id === id)] = true;
+		givenAn[questionPointer][fourOptions.findIndex((opt) => opt.id === id)] = true;
 		selectedAnswerIndex = index;
 		timer = tweened(0);
 	}
-
-	let sharedToastId: string | number;
 
 	const showLoadingToast = (): void => {
 		sharedToastId = toast.loading('Loading...', { duration: 20000 });
@@ -67,29 +65,25 @@
 	};
 
 	async function submitQuiz() {
-		isAnswerChecked = true;
-		timer = tweened(0);
+		try {
+			isAnswerChecked = true;
+			timer = tweened(0);
 
-		const answerOfUser = givenAn.map((givenAn, index) => {
-			const questionId = quizzes[index].id;
-			return {
-				questionId,
-				givenAn: givenAn
+			const answerOfUser = givenAn.map((givenAnswers, index) => ({
+				questionId: quizzes[index].id,
+				givenAnswers: givenAnswers.join(',')
+			}));
+
+			const userAnswer: UserAnswer = {
+				participantId: gameInfo.id,
+				answerOfUser: answerOfUser
 			};
-		});
 
-		const formattedData = answerOfUser.map((item) => ({
-			questionId: item.questionId,
-			givenAnswers: item.givenAn.join(',')
-		}));
+			const confirm = await window.confirm('Are you sure you want to proceed?');
+			if (!confirm) {
+				return;
+			}
 
-		const userAnswer: UserAnswer = {
-			participantId: gameInfo.id,
-			answerOfUser: formattedData
-		};
-
-		const confirm = await window.confirm('Are you sure you want to proceed?');
-		if (confirm) {
 			showLoadingToast();
 			const response = await fetch('/api/play-game/submit', {
 				method: 'POST',
@@ -102,14 +96,16 @@
 			const result = await response.json();
 
 			if (response.status === 200) {
-				dismissLoadingToast();
-
 				toast.success('Success!');
 				goto(`/playGame/${quizzesId}/endGame`);
 			} else {
 				toast.error(result || 'Invalid submit');
-				dismissLoadingToast();
 			}
+
+			dismissLoadingToast();
+		} catch (error) {
+			toast.error('An error occurred while submitting the quiz');
+			dismissLoadingToast();
 		}
 	}
 
@@ -119,36 +115,13 @@
 		}
 	}
 
-	$: options = [
-		{
-			id: 'A',
-			color: 'bg-optionA',
-			contents: quizzes[questionPointer].options[0],
-			isCorrect: quizzes[questionPointer].answers[0],
-			disabled: isAnswerChecked ? true : false
-		},
-		{
-			id: 'B',
-			color: 'bg-optionB',
-			contents: quizzes[questionPointer].options[1],
-			isCorrect: quizzes[questionPointer].answers[1],
-			disabled: isAnswerChecked ? true : false
-		},
-		{
-			id: 'C',
-			color: 'bg-optionC',
-			contents: quizzes[questionPointer].options[2],
-			isCorrect: quizzes[questionPointer].answers[2],
-			disabled: isAnswerChecked ? true : false
-		},
-		{
-			id: 'D',
-			color: 'bg-optionD',
-			contents: quizzes[questionPointer].options[3],
-			isCorrect: quizzes[questionPointer].answers[3],
-			disabled: isAnswerChecked ? true : false
-		}
-	];
+	$: fourOptions = quizzes[questionPointer]?.options.map((option, index) => ({
+		id: String.fromCharCode(65 + index),
+		color: `bg-option${String.fromCharCode(65 + index)}`,
+		contents: option,
+		isCorrect: quizzes[questionPointer].answers[index],
+		disabled: isAnswerChecked ? true : false
+	}));
 </script>
 
 <div class=" bg-greenLight flex flex-col justify-center w-full font-sans">
@@ -178,36 +151,17 @@
 			</button>
 		{/if}
 	</div>
-	<div class="question px-8 md:px-32">
-		<div class="px-4 py-2 bg-secondary min-h-[208px] rounded-3xl shadow-xl">
-			<h1 class="px-4 text-4xl text-white font-bold">Question</h1>
-			<p class="p-2 text-2xl text-white">{quizzes[questionPointer].title}</p>
-		</div>
-	</div>
+	<DisplayQuestion question={quizzes[questionPointer]} />
 	<div class="answer px-4 md:px-16 py-8">
 		<div class="grid grid-cols-2 grid-rows-2 gap-4 md:gap-8 min-h-[208px] items-center">
-			{#each options as opt, index}
-				<button
-					on:click={() => pickAnswer(opt.id, index)}
-					class={`rounded-2xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl min-h-full ${
-						isAnswerChecked
-							? opt.isCorrect
-								? 'bg-green-500'
-								: selectedAnswerIndex === index
-								? 'bg-red-500'
-								: 'bg-gray-200'
-							: 'bg-white'
-					}`}
-					disabled={opt.disabled}
-				>
-					<div class="rounded-full">
-						<Icon
-							icon={`twemoji:letter-${opt.id.toLowerCase()}`}
-							class={`md:text-4xl text-2xl`}
-						/>
-					</div>
-					<p class="text-sm md:text-xl font-semibold text-left">{opt.contents}</p>
-				</button>
+			{#each fourOptions as opt, index}
+				<FourAnswer
+					option={opt}
+					{index}
+					{isAnswerChecked}
+					{selectedAnswerIndex}
+					{pickAnswer}
+				/>
 			{/each}
 		</div>
 	</div>

@@ -1,4 +1,4 @@
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 import type Message from '../../login/interface/message.interface.js';
 import { createDefaultMessage } from '../../login/interface/message.interface.js';
 import { ResponseMessage } from '../../../libs/message/responseMessage.enum.js';
