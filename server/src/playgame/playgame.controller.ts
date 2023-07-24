@@ -1,3 +1,4 @@
+import { CryptoService } from './../crypto/crypto.service';
 import {
     Body,
     Controller,
@@ -19,7 +20,10 @@ import { AnswerDetail } from './dto/answer.dto';
 @Controller('play-game')
 @UseInterceptors(ResTransformInterceptor)
 export class PlaygameController {
-    constructor(private playgameService: PlaygameService) {}
+    constructor(
+        private playgameService: PlaygameService,
+        private cryptoService: CryptoService,
+    ) {}
     @Get('/quiz')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get quiz to play game successfully')
@@ -28,7 +32,11 @@ export class PlaygameController {
         @GetCurrentUser('id') userId: string,
         @Query('quizId') quizId: string,
     ) {
-        return await this.playgameService.getAllQuestionOfQuiz(userId, quizId);
+        const quiz = await this.playgameService.getAllQuestionOfQuiz(
+            userId,
+            quizId,
+        );
+        return this.cryptoService.encryptData(JSON.stringify(quiz));
     }
 
     @Post('/submit')
