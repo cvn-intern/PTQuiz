@@ -51,7 +51,6 @@
 		"firebaseui": "^6.0.2",
 		"flowbite": "^1.7.0",
 		"flowbite-svelte": "^0.39.2",
-		"js-cookie": "^3.0.5",
 		"socket.io-client": "^4.7.1",
 		"svelte-french-toast": "^1.1.0",
 		"svelte-toasts": "^1.1.2",
