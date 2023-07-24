@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutData } from './$types';
-import { addTranslations, setLocale, setRoute } from '../libs/i18n/translations';
+import { addTranslations, setLocale, setRoute } from '$i18n/translations';
 
 export const load: LayoutData = async ({ url, data }) => {
 	if (data.user && url.pathname.startsWith('/register')) {

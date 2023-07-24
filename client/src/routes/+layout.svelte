@@ -4,13 +4,11 @@
 	import Footer from '../components/layout/footer.svelte';
 	import { Toaster } from 'svelte-french-toast';
 	import type { LayoutData } from './$types';
-	import { locales, locale, t } from '../libs/i18n/translations';
-	import { navbarStore } from '../libs/store/navbarStore';
-	import { get } from 'svelte/store';
 	import Cookies from 'js-cookie';
+	import { locale, t, locales } from '$i18n/translations';
 
 	const handleChange = ({ currentTarget }) => {
-        Cookies.set('lang', currentTarget.value);
+		Cookies.set('lang', currentTarget.value);
 	};
 	export let data: LayoutData;
 </script>
