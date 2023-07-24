@@ -13,10 +13,10 @@
 		FAIL: 'Fail'
 	};
 	let { result } = data;
-	let currentResult: ResultGameInterface = result[result.length - 1];
+	let currentResult: ResultGameInterface = result[0];
 	const attemptList = result.map((item: ResultGameInterface, index: number) => {
 		return {
-			attempt: index + 1,
+			attempt: result.length - index,
 			points: item.point,
 			status: item.passed ? STATUS.PASS : STATUS.FAIL
 		};
