@@ -43,7 +43,7 @@
 <nav
 	class={clsx('navbar bg-primary w-full flex justify-between px4 lg:px-16 py-4 items-center', {
 		hidden: isHiddenNavbar,
-		'sticky top-0 z-50': !isHiddenNavbar,
+		'sticky top-0 z-50': !isHiddenNavbar
 	})}
 >
 	{#if user}
@@ -74,7 +74,7 @@
 			{/each}
 		</ul>
 		{#if user}
-			<div class="flex items-center">
+			<div class="flex items-center cursor-pointer">
 				<Chevron>
 					<button
 						aria-label="profile"
