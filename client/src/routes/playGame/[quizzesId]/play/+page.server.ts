@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 		method: 'GET'
 	});
 
-	let result = await response.json();
+	const result = await response.json();
 	return {
 		title: 'Play Game',
 		result
