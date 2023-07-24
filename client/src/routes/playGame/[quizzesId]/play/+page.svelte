@@ -7,6 +7,8 @@
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
+	import { navbarStore } from '../../../../libs/store/navbarStore.js';
+	import { onDestroy, onMount } from 'svelte';
 	export let data: { result: Quizzes };
 
 	const quizzes: Quizzes = data.result;
@@ -149,6 +151,22 @@
 			disabled: isAnswerChecked ? true : false
 		}
 	];
+
+	const isFullScreen = true;
+	const handleIsFullScreen = (isFullScreen: boolean) => {
+		navbarStore.update((value) => {
+			return {
+				...value,
+				isFullScreen: isFullScreen
+			};
+		});
+	};
+	onMount(() => {
+		handleIsFullScreen(isFullScreen);
+	});
+	onDestroy(() => {
+		handleIsFullScreen(false);
+	});
 </script>
 
 <div class=" bg-greenLight flex flex-col justify-center w-full font-sans">

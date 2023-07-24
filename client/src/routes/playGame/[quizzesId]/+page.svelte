@@ -5,12 +5,14 @@
 	import logo from '../../../assets/logo.png';
 	import clsx from 'clsx';
 	import { navbarStore } from '../../../libs/store/navbarStore';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import Icon from '@iconify/svelte';
 	export let data;
 
 	let gameInfo = data.gameInfo;
 	gameInfoStore.update((val) => (val = gameInfo));
 	let quizzesId = $page.params.quizzesId;
+
 	$: textReady = 'ARE';
 	setTimeout(() => {
 		textReady = 'YOU';
@@ -22,16 +24,21 @@
 	setTimeout(() => {
 		isShowButton = true;
 	}, 1500);
-	const handleIsFullScreen = () => {
+
+	const isFullScreen = true;
+	const handleIsFullScreen = (isFullScreen: boolean) => {
 		navbarStore.update((value) => {
 			return {
 				...value,
-				isFullScreen: !value.isFullScreen
+				isFullScreen: isFullScreen
 			};
 		});
 	};
 	onMount(() => {
-		handleIsFullScreen();
+		handleIsFullScreen(isFullScreen);
+	});
+	onDestroy(() => {
+		handleIsFullScreen(false);
 	});
 </script>
 
@@ -44,6 +51,19 @@
 			<h1 class="ease-in-out transition-all duration-100">{textReady}</h1>
 		</div>
 		<div>
+			<button
+				class={clsx(
+					' text-white font-bold justify-center transition duration-200 ease-in-out transform px-4 py-2 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-red-700 rounded-2xl hover:translate-y-px',
+					{
+						hidden: !isShowButton
+					}
+				)}
+				on:click={() => {
+					goto('/discovery')
+				}}
+			>
+				<span>Exit</span>
+			</button>
 			<button
 				class={clsx(
 					' text-white font-bold justify-center transition duration-200 ease-in-out transform px-4 py-2 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-secondary rounded-2xl hover:translate-y-px',
