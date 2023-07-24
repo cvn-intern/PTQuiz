@@ -35,7 +35,6 @@ export const {
 	loadTranslations,
 	translations,
 	setLocale,
-	setRoute
 } = new i18n(config);
 
 loading.subscribe(($loading) => $loading && console.log('Loading translations...', $loading));
