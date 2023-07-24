@@ -1,5 +1,4 @@
 import type { LayoutServerLoad } from './$types';
-import { loadTranslations, locales, translations } from '$i18n/translations';
 export const load: LayoutServerLoad = async ({ cookies, request, fetch, url }) => {
 	const response = await fetch('/api/auth/me');
 	const result = await response.json();
@@ -12,7 +11,7 @@ export const load: LayoutServerLoad = async ({ cookies, request, fetch, url }) =
 		defaultLocale = 'vi';
 	}
 	const currentCookies = cookies.get('lang');
-	if (!currentCookies) {
+	if (!request.headers.get('user-agent')?.includes('Googlebot') && !currentCookies) {
 		cookies.set('lang', defaultLocale, {
 			path: '/'
 		});
@@ -24,15 +23,13 @@ export const load: LayoutServerLoad = async ({ cookies, request, fetch, url }) =
 		return {
 			status: 'Success',
 			user,
-			i18n: { locale, route: pathname },
-			translations: translations.get()
+			i18n: { locale, route: pathname }
 		};
 	} else {
 		return {
 			status: 'Error',
 			user: null,
-			i18n: { locale, route: pathname },
-			translations: translations.get()
+			i18n: { locale, route: pathname }
 		};
 	}
 };
