@@ -10,7 +10,8 @@
 	import FourAnswer from '../../../../components/playGame/fourAnswer.svelte';
 	import DisplayQuestion from '../../../../components/playGame/displayQuestion.svelte';
 	import { Modal } from 'flowbite-svelte';
-
+	import { navbarStore } from '../../../../libs/store/navbarStore.js';
+	import { onDestroy, onMount } from 'svelte';
 	export let data;
 
 	const quizzes: QuizzesType = data.result;
@@ -133,6 +134,22 @@
 		isCorrect: quizzes[questionPointer].answers[index],
 		disabled: isAnswerChecked ? true : false
 	}));
+
+	const isFullScreen = true;
+	const handleIsFullScreen = (isFullScreen: boolean) => {
+		navbarStore.update((value) => {
+			return {
+				...value,
+				isFullScreen: isFullScreen
+			};
+		});
+	};
+	onMount(() => {
+		handleIsFullScreen(isFullScreen);
+	});
+	onDestroy(() => {
+		handleIsFullScreen(false);
+	});
 </script>
 
 <div class=" bg-greenLight flex flex-col justify-center w-full font-sans">
