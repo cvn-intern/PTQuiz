@@ -52,6 +52,7 @@ model questions {
     written String?  @db.Text
     image   String?  @db.Text
     type    Int
+    time    Int?
 
     quizQuestions quiz_questions[]
     user          users            @relation(fields: [userId], references: [id]) // owner

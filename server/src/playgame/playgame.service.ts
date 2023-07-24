@@ -34,11 +34,10 @@ export class PlaygameService {
 
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
         try {
-            const data = await this.quizzesService.getAllQuestionsOfQuiz(
+            return await this.quizzesService.getAllQuestionsOfQuiz(
                 userId,
                 quizId,
             );
-            return this.cryptoService.encrypt(JSON.stringify(data));
         } catch (err) {
             throw new HttpException(
                 PlayGameError.NOT_FOUND_QUIZ,

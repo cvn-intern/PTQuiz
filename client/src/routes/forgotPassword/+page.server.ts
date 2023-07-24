@@ -1,15 +1,15 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 import type Message from '../login/interface/message.interface.js';
 import { createDefaultMessage } from '../login/interface/message.interface.js';
 import { ResponseMessage } from '../../libs/message/responseMessage.enum.js';
 let message: Message;
 
-export const actions = {
+export const actions: Actions = {
 	forgotPassword: async ({ fetch, request }) => {
 		message = createDefaultMessage();
 
 		const data = await request.formData();
-		if (!data.get('email') || data.get('email')?.trim().length === 0) {
+		if (!String(data.get('email')) || String(data.get('email'))?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.email = true;
 			message.error.message = ResponseMessage.MISSING_EMAIL;

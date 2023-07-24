@@ -7,8 +7,9 @@
 	import { showLoadingToast, dismissLoadingToast, showToast } from '../../libs/toast/toast';
 	import toast from 'svelte-french-toast';
 	import Error from '../+error.svelte';
+	import type { ActionData } from './$types.js';
 
-	export let form;
+	export let form: ActionData;
 	export let data;
 
 	onMount(async () => {
@@ -111,9 +112,9 @@
 							>{form.error.message}
 							{#if form?.error?.missing?.confirmEmail}
 								<br />If you didn't receive the email, click
-								<a
+								<button
 									class="text-secondary"
-									on:click={resendEmail(form?.error?.fill?.email)}>here</a
+									on:click={resendEmail(form?.error?.fill?.email)}>here</button
 								> to resend it.
 							{/if}<br /></label
 						>

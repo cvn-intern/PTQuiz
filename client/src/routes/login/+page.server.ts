@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fail } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
@@ -14,7 +14,7 @@ const LoginFormSchema = z.object({
 
 let message: Message;
 
-export const actions = {
+export const actions: Actions = {
 	login: async ({ fetch, request }) => {
 		message = createDefaultMessage();
 		const data = await request.formData();
