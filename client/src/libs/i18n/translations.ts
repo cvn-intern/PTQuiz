@@ -27,14 +27,6 @@ const config: Config = {
 	]
 };
 
-export const {
-	t,
-	loading,
-	locales,
-	locale,
-	loadTranslations,
-	translations,
-	setLocale,
-} = new i18n(config);
+export const { t, loading, locales, locale, loadTranslations } = new i18n(config);
 
 loading.subscribe(($loading) => $loading && console.log('Loading translations...', $loading));
