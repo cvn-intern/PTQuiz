@@ -57,6 +57,7 @@
 		"svelte-forms-lib": "^2.0.1",
 		"svelte-french-toast": "^1.1.0",
 		"svelte-toasts": "^1.1.2",
+		"sveltekit-i18n": "^2.4.2",
 		"tailwind-merge": "^1.13.2",
 		"yup": "^1.2.0",
 		"zod": "^3.21.4"
