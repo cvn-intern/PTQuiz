@@ -1,6 +1,6 @@
 {
     "hello": "Xin chào",
-    "home": "Home",
+    "home": "Trang Home",
     "discovery": "Khám phá",
     "login": "Đăng nhập",
     "forgotPassword": "Quên mật khẩu",
@@ -18,5 +18,24 @@
     "contactUs": "Liên hệ chúng tôi",
     "copyRights": "Bản quyền thuộc về DarkHorse 2023",
     "address": "106 Nguyễn Văn Trỗi, Quận",
-    "city": "Phú Nhuận, Thành phố Hồ Chí Minh"
+    "city": "Phú Nhuận, Thành phố Hồ Chí Minh",
+    "myQuizzes": "Quizzes của tôi",
+    "history": "Lịch sử",
+    "profile": "Hồ sơ",
+    "loginToYourAccount": "Đăng nhập vào tài khoản của bạn",
+    "explore" : "Khám phá tiềm năng của bạn",
+    "playGameIntro": "Kiểm tra kiến thức của bạn với trò chơi của chúng tôi",
+    "createQuizIntro": "Tạo trò chơi của riêng bạn",
+    "playGame": "Chơi trò chơi",
+    "createQuiz": "Tạo trò chơi",
+    "send": "Gửi",
+    "checkYourEmail": "Kiểm tra email của bạn",
+    "ifYouDontSeeEmail": "Nếu bạn không thấy email? ",
+    "resend": "Gửi lại",
+    "resetPassword": "Đặt lại mật khẩu",
+    "newPassword": "Mật khẩu mới",
+    "checkYourEmailToVerify": "Kiểm tra email của bạn để xác minh tài khoản",
+    "sendEmailVerification": "Gửi email xác minh",
+    "createdAt": "Ngày tạo",
+    "startBtn": "Bắt đầu"
 }

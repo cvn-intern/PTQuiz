@@ -6,6 +6,7 @@
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
 	import toast from 'svelte-french-toast';
 	import Error from '../+error.svelte';
+	import { t } from '../../libs/i18n/translations';
 
 	export let form;
 	export let data;
@@ -103,7 +104,7 @@
 <section class="flex text-white justify-center w-full">
 	<div class="w-[446px] rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
-			<h1 class=" text-secondary text-[20px] font-bold">Login to your Account</h1>
+			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.loginToYourAccount')}</h1>
 			<form
 				method="POST"
 				class="w-full px-4 lg:px-0 mx-auto"
@@ -127,7 +128,7 @@
 							{/if}<br /></label
 						>
 					{/if}
-					<label for="email" class="mb-1 text-black">Email</label>
+					<label for="email" class="mb-1 text-black">{$t('common.email')}</label>
 
 					<input
 						type="text"
@@ -141,12 +142,12 @@
 					{/if}
 				</div>
 				<div class="py-4">
-					<label for="password" class="mb-1 text-black">Password</label>
+					<label for="password" class="mb-1 text-black">{$t('common.password')}</label>
 					<input
 						type="password"
 						name="password"
 						id="password"
-						placeholder="Password"
+						placeholder={$t('common.password')}
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
@@ -154,14 +155,16 @@
 					{/if}
 				</div>
 				<div class=" text-gray-400 hover:underline hover:text-gray-100">
-					<a href="/forgotPassword" class="text-secondary">Forgot your password?</a>
+					<a href="/forgotPassword" class="text-secondary"
+						>{$t('common.forgotPassword')}</a
+					>
 				</div>
 				<div class="pt-4">
 					<button
 						type="submit"
 						on:click={handleSubmit}
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
-						>LOG IN</button
+						>{$t('common.login')}</button
 					>
 				</div>
 			</form>
@@ -181,14 +184,14 @@
 
 			<div class=" text-gray-400">
 				<div>
-					Don't have an account?
+					{$t('common.dontHaveAnAccount')}
 					<button
 						class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 						on:click={() => {
 							goto('/register');
 						}}
 					>
-						Sign up
+						{$t('common.signUp')}
 					</button>
 				</div>
 			</div>
