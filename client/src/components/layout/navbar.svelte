@@ -84,7 +84,7 @@
 			</li>
 		</ul>
 		{#if user}
-			<div class="flex items-center">
+			<div class="flex items-center cursor-pointer">
 				<Chevron>
 					<button
 						aria-label="profile"

@@ -6,6 +6,7 @@ import { QuestionService } from '../question/question.service';
 import { PlayGameError } from '../error/playGameError.enum';
 import { EndGameError } from '../error/endGameError.enum';
 import { EndGameType } from './dto/endGame.type';
+import { CryptoService } from '../crypto/crypto.service';
 
 @Injectable()
 export class PlaygameService {
@@ -13,6 +14,7 @@ export class PlaygameService {
         private prisma: PrismaService,
         private quizzesService: QuizzesService,
         private questionService: QuestionService,
+        private readonly cryptoService: CryptoService,
     ) {}
 
     isRightAnswer(answerOfUser, answerOfQuestion) {
@@ -173,6 +175,9 @@ export class PlaygameService {
                         userId: userId,
                         quizId: quizId,
                         isSingleMode: true,
+                    },
+                    orderBy: {
+                        completedAt: 'desc',
                     },
                 });
             const { passingPoint } = await this.prisma.quizzes.findUnique({

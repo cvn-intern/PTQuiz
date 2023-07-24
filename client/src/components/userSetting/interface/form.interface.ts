@@ -6,8 +6,6 @@ interface FormChangePassword {
 
 interface FormEditProfile {
 	displayName: string;
-	isDone: boolean;
-	isSuccess: boolean;
 }
 
 export type { FormChangePassword, FormEditProfile };

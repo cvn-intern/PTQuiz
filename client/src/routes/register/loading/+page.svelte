@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
 </script>
 
 <div class=" flex flex-col justify-center items-center w-full">

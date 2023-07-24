@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import HistoryAttempt from '../../../../components/endGame/historyAttempt.svelte';
 	import Result from '../../../../components/endGame/result.svelte';
 	import Score from '../../../../components/endGame/score.svelte';
@@ -13,22 +13,29 @@
 		FAIL: 'Fail'
 	};
 	let { result } = data;
-	let currentResult: ResultGameInterface = result[result.length - 1];
+	let currentResult: ResultGameInterface = result[0];
 	const attemptList = result.map((item: ResultGameInterface, index: number) => {
 		return {
-			attempt: index + 1,
+			attempt: result.length - index,
 			points: item.point,
 			status: item.passed ? STATUS.PASS : STATUS.FAIL
 		};
 	});
-	const handleIsFullScreen = () => {
+	const isFullScreen = true;
+	const handleIsFullScreen = (isFullScreen: boolean) => {
 		navbarStore.update((value) => {
 			return {
 				...value,
-				isFullScreen: !value.isFullScreen
+				isFullScreen: isFullScreen
 			};
 		});
 	};
+	onMount(() => {
+		handleIsFullScreen(isFullScreen);
+	});
+	onDestroy(() => {
+		handleIsFullScreen(!isFullScreen);
+	});
 </script>
 
 <div class="bg-greenLight w-full">
@@ -38,7 +45,6 @@
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
 				on:click={() => {
 					goto('/');
-					handleIsFullScreen();
 				}}>Leave game</button
 			>
 		</div>

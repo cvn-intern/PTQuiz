@@ -4,11 +4,13 @@
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
+	import { showLoadingToast, dismissLoadingToast, showToast } from '../../libs/toast/toast';
 	import toast from 'svelte-french-toast';
 	import Error from '../+error.svelte';
 	import { t } from '../../libs/i18n/translations';
+	import type { ActionData } from './$types.js';
 
-	export let form;
+	export let form: ActionData;
 	export let data;
 
 	onMount(async () => {
@@ -41,17 +43,7 @@
 		}
 	};
 
-	let sharedToastId: string | number;
 	let isProcessing: boolean = false;
-
-	const showLoadingToast = (): void => {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
-	};
-
-	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
-	};
-
 	const signIn = (providerName: string) => async (): Promise<void> => {
 		if (isProcessing) return;
 		isProcessing = true;
@@ -121,9 +113,9 @@
 							>{form.error.message}
 							{#if form?.error?.missing?.confirmEmail}
 								<br />If you didn't receive the email, click
-								<a
+								<button
 									class="text-secondary"
-									on:click={resendEmail(form?.error?.fill?.email)}>here</a
+									on:click={resendEmail(form?.error?.fill?.email)}>here</button
 								> to resend it.
 							{/if}<br /></label
 						>
