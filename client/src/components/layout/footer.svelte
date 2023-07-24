@@ -1,7 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte';
 	import { navbarStore } from '../../libs/store/navbarStore';
-	import { t } from '../../libs/i18n/translations';
+	import { t } from '$i18n/translations';
 
 	const contactIcons = [
 		'ic:baseline-facebook',

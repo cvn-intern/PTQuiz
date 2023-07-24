@@ -1,6 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-import { defaultLocale, loadTranslations, locales, translations } from '../libs/i18n/translations';
-
+import { defaultLocale, loadTranslations, locales, translations } from '$i18n/translations';
 export const load: LayoutServerLoad = async ({ cookies, request, fetch, url }) => {
 	const response = await fetch('/api/auth/me');
 	const result = await response.json();

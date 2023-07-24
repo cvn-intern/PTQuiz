@@ -7,8 +7,7 @@
 	import logo from '../../assets/logo.png';
 	import { navbarStore } from '../../libs/store/navbarStore';
 	import clsx from 'clsx';
-	import { t } from '../../libs/i18n/translations';
-
+	import { t } from '$i18n/translations';
 	export let user: {
 		avatar: string;
 		displayName: string;
