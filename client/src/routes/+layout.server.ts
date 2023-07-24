@@ -6,9 +6,14 @@ export const load: LayoutServerLoad = async ({ cookies, request, fetch, url }) =
 	const { pathname } = url;
 	let locale = (cookies.get('lang') || '').toLowerCase();
 	if (!locale) {
-		locale = `${`${request.headers.get('accept-language')}`.match(
-			/[a-zA-Z]+?(?=-|_|,|;)/
-		)}`.toLowerCase();
+		if (
+			request.headers.has('accept-language') &&
+			!request.headers.get('user-agent')?.includes('Googlebot')
+		) {
+			locale = `${`${request.headers.get('accept-language')}`.match(
+				/[a-zA-Z]+?(?=-|_|,|;)/
+			)}`.toLowerCase();
+		}
 	}
 	const supportedLocales = locales.get().map((locale) => locale.toLowerCase());
 
