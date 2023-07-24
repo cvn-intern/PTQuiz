@@ -6,6 +6,7 @@ import { QuestionService } from '../question/question.service';
 import { PlayGameError } from '../error/playGameError.enum';
 import { EndGameError } from '../error/endGameError.enum';
 import { EndGameType } from './dto/endGame.type';
+import { CryptoService } from '../crypto/crypto.service';
 
 @Injectable()
 export class PlaygameService {
@@ -13,6 +14,7 @@ export class PlaygameService {
         private prisma: PrismaService,
         private quizzesService: QuizzesService,
         private questionService: QuestionService,
+        private readonly cryptoService: CryptoService,
     ) {}
 
     isRightAnswer(answerOfUser, answerOfQuestion) {
@@ -32,10 +34,11 @@ export class PlaygameService {
 
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
         try {
-            return await this.quizzesService.getAllQuestionsOfQuiz(
+            const data = await this.quizzesService.getAllQuestionsOfQuiz(
                 userId,
                 quizId,
             );
+            return this.cryptoService.encrypt(JSON.stringify(data));
         } catch (err) {
             throw new HttpException(
                 PlayGameError.NOT_FOUND_QUIZ,

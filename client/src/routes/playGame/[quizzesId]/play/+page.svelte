@@ -9,6 +9,7 @@
 	import Icon from '@iconify/svelte';
 	export let data: { result: Quizzes };
 
+	$: console.log(data)
 	const quizzes: Quizzes = data.result;
 	let quizzesId = $page.params.quizzesId;
 
