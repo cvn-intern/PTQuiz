@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { Attempt } from "../../routes/playGame/[quizzesId]/endGame/resultGame.type";
 	export let attemptList: Attempt[];
+	import { t } from '$i18n/translations';
+	import type { Attempt } from '../../interface/endGame.interface';
 </script>
 
 <div class="w-full md:w-7/12">
@@ -8,16 +9,17 @@
 		<table class="w-full text-left text-gray-500 dark:text-gray-400">
 			<thead class="uppercase bg-darkGreen text-white">
 				<tr>
-					<th scope="col" class="px-6 py-3"> No. </th>
-					<th scope="col" class="px-6 py-3"> Points </th>
-					<th scope="col" class="px-6 py-3"> Status </th>
+					<th scope="col" class="px-6 py-3"> {$t('common.no')} No. </th>
+					<th scope="col" class="px-6 py-3"> {$t('common.point')} </th>
+					<th scope="col" class="px-6 py-3"> {$t('common.stt')} </th>
 				</tr>
 			</thead>
 			<tbody class="text-gray-900">
 				{#each attemptList as { attempt, points, status }}
 					<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 						<th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-							Attempt {attempt}
+							{$t('common.attempt')}
+							{attempt}
 						</th>
 						<td class="px-6 py-4"> {points} </td>
 						<td class="px-6 py-4"> {status} </td>

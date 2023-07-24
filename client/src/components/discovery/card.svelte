@@ -3,6 +3,8 @@
 	import Icon from '@iconify/svelte';
 	import clsx from 'clsx';
 	import toast from 'svelte-french-toast';
+	import { t } from '$i18n/translations';
+
 	export let image = '';
 	export let nameOfQuiz = '';
 	export let author = '';
@@ -42,12 +44,12 @@
 					<div class="flex items-center gap-2">
 						<Icon icon="ph:question" color="red" />
 						<span class="text-gray-400 whitespace-nowrap mr-3"
-							>{amountOfQuestions} Questions</span
+							>{amountOfQuestions} {$t('common.questions')}</span
 						>
 					</div>
 					<div class="flex items-center gap-2">
 						<Icon icon={'ph:clock'} color={'blue'} />
-						<span class="mr-2 text-gray-400"> Time: {time}</span>
+						<span class="mr-2 text-gray-400"> {$t('common.time')}: {time}</span>
 					</div>
 				</div>
 				<div class="flex items-start w-full justify-between mt-4 gap-1">
@@ -60,26 +62,28 @@
 						<p
 							class="flex items-center bg-green-400 text-white text-xs px-2 py-1 rounded-lg mt-1 whitespace-pre-wrap max-h-titleCard overflow-y-hidden"
 						>
-							{category}
+							{$t(`common.${category}`)}
 						</p>
 					</div>
 				</div>
 			</div>
 			<div class="text-base text-gray-600 py-2">
 				<div>
-					<span class="font-semibold">Author: </span>
+					<span class="font-semibold">{$t('common.author')}: </span>
 					<span class="p-1 py-0">{author}</span>
 				</div>
 				<div>
-					<span class="font-semibold">Level: </span>
+					<span class="font-semibold">{$t('common.level')}: </span>
 					<span
 						class={clsx('px-2 py-1 rounded-lg shadow-md bg-opacity-80', {
 							'bg-green-100 text-green-400': stringLevel === 'Easy',
 							'bg-yellow-100 text-yellow-400': stringLevel === 'Medium',
 							'bg-red-100 text-red-400': stringLevel === 'Hard',
 							'bg-purple-100 text-purple-400': stringLevel === 'Undefined'
-						})}>{stringLevel !== 'Undefined' ? stringLevel : 'Mixed'}</span
+						})}
 					>
+						{stringLevel !== 'Undefined' ? $t(`common.${stringLevel}`) : 'Mixed'}
+					</span>
 				</div>
 			</div>
 			<div class="flex space-x-2 font-medium py-3">
@@ -87,7 +91,7 @@
 					on:click={handleStart}
 					class="transition ease-in duration-300 items-center justify-center font-medium mb-2 md:mb-0 bg-secondary px-4 py-2 hover:shadow-lg tracking-wider text-white rounded-xl hover:bg-darkGreen shadow-lg w-full"
 				>
-					<span>Play</span>
+					<span>{$t('common.play')}</span>
 				</button>
 			</div>
 		</div>

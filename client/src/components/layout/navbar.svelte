@@ -104,7 +104,7 @@
 					}}
 				>
 					<Icon icon="tabler:home" class={'text-2xl'} />
-					<h1 class="text-base">My Quizzes</h1>
+					<h1 class="text-base">{$t('common.myQuizzes')}</h1>
 				</DropdownItem>
 				<DropdownItem
 					class="flex gap-2 items-center"
@@ -113,7 +113,7 @@
 					}}
 				>
 					<Icon icon="material-symbols:history" class={'text-2xl'} />
-					<h1 class="text-base">History</h1>
+					<h1 class="text-base">{$t('common.history')}</h1>
 				</DropdownItem>
 				<DropdownItem
 					class="flex gap-2 items-center"
@@ -122,11 +122,11 @@
 					}}
 				>
 					<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
-					<h1 class="text-base">Profile</h1>
+					<h1 class="text-base">{$t('common.profile')}</h1>
 				</DropdownItem>
 				<DropdownItem slot="footer" class="flex gap-2 items-center" on:click={logout}>
 					<Icon icon="mdi:logout" class={'text-2xl'} />
-					<h1 class="text-base">Sign Out</h1>
+					<h1 class="text-base">{$t('common.signOut')}</h1>
 				</DropdownItem>
 			</Dropdown>
 		{:else}
