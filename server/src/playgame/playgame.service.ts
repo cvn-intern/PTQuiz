@@ -174,6 +174,9 @@ export class PlaygameService {
                         quizId: quizId,
                         isSingleMode: true,
                     },
+                    orderBy: {
+                        completedAt: 'desc',
+                    },
                 });
             const { passingPoint } = await this.prisma.quizzes.findUnique({
                 where: {
