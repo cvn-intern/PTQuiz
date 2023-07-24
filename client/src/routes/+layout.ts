@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutData } from './$types';
+import { addTranslations, setLocale, setRoute } from '../libs/i18n/translations';
 
 export const load: LayoutData = async ({ url, data }) => {
 	if (data.user && url.pathname.startsWith('/register')) {
@@ -8,6 +9,13 @@ export const load: LayoutData = async ({ url, data }) => {
 	if (!data && url.pathname !== '/login') {
 		throw redirect(307, '/login');
 	}
-	
-	return { user: data.user };
+	const { i18n, translations } = data;
+	const { locale, route } = i18n;
+
+	addTranslations(translations);
+
+	await setRoute(route);
+	await setLocale(locale);
+
+	return { user: data.user, i18n };
 };

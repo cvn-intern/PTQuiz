@@ -7,6 +7,7 @@
 	import logo from '../../assets/logo.png';
 	import { navbarStore } from '../../libs/store/navbarStore';
 	import clsx from 'clsx';
+	import { t } from '../../libs/i18n/translations';
 
 	export let user: {
 		avatar: string;
@@ -15,11 +16,11 @@
 	let isHidden: boolean = true;
 	const navs = [
 		{
-			title: 'Home',
+			title: $t('common.home'),
 			href: '/'
 		},
 		{
-			title: 'Discovery',
+			title: $t('common.discovery'),
 			href: '/discovery'
 		}
 	];
@@ -43,7 +44,7 @@
 <nav
 	class={clsx('navbar bg-primary w-full flex justify-between px4 lg:px-16 py-4 items-center', {
 		hidden: isHiddenNavbar,
-		'sticky top-0 z-50': !isHiddenNavbar,
+		'sticky top-0 z-50': !isHiddenNavbar
 	})}
 >
 	{#if user}
@@ -67,11 +68,21 @@
 	<SidebarModal hiddenModal={isHidden} />
 	<div class="flex items-center gap-24">
 		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
-			{#each navs as { title, href }}
+			<!-- {#each navs as { title, href }}
 				<li>
 					<a {href} {title} class="hover:text-secondary">{title}</a>
 				</li>
-			{/each}
+			{/each} -->
+			<li>
+				<a href="/" title={$t('common.home')} class="hover:text-secondary"
+					>{$t('common.home')}</a
+				>
+			</li>
+			<li>
+				<a href="/discovery" title={$t('common.discovery')} class="hover:text-secondary">
+					{$t('common.discovery')}
+				</a>
+			</li>
 		</ul>
 		{#if user}
 			<div class="flex items-center">
@@ -127,7 +138,7 @@
 					goto('/login');
 				}}
 			>
-				LOGIN
+				{$t('common.login')}
 			</button>
 		{/if}
 	</div>
