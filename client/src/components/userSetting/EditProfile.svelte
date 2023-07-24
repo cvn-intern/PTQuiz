@@ -5,11 +5,13 @@
 	import { enhance } from '$app/forms';
 	import type User from '../../interface/user.interface';
 	import type { FormEditProfile } from './interface/form.interface';
-	import { validationProfile } from '../../routes/dashboard/profile/interface/message.interface';
+	import { dismissLoadingToast, showLoadingToast } from '../../libs/toast/toast';
 
 	export let user: User;
 	export let formEditProfile: FormEditProfile;
 	export let form: any;
+
+	$: console.log(form);
 
 	let imageFile;
 	let inputFocused = false;
@@ -26,30 +28,29 @@
 		inputFocused = true;
 	};
 
-	async function handleSubmit() {
-		toast.promise(
-			new Promise((resolve, reject) => {
-				setInterval(() => {
-					if (form?.isDone) {
-						if (form?.isSuccess) {
-							resolve('Success!');
-						} else {
-							reject(form?.error.message || 'Error!');
-						}
-					}
-				}, 100);
-			}),
-			{
-				loading: 'Loading...',
-				success: (value: any) => {
-					return value;
-				},
-				error: (err) => {
-					return err;
-				}
-			}
-		);
-	}
+	let isProcessing: boolean = false;
+
+	const handleSubmit = async (): Promise<void> => {
+		if (isProcessing) return;
+		isProcessing = true;
+		form = null;
+
+		showLoadingToast();
+
+		while (!form?.isDone) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+
+		dismissLoadingToast();
+
+		if (form?.isSuccess) {
+			toast.success('Success!');
+		} else {
+			dismissLoadingToast();
+			toast.error(form?.error.message);
+			isProcessing = false;
+		}
+	};
 </script>
 
 <div class="flex flex-col items-center">
@@ -117,11 +118,7 @@
 					bind:value={formEditProfile.displayName}
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 					placeholder="Display name"
-					required
 					on:focus={() => (inputFocused = true)}
-					on:input={(input) => {
-						form = validationProfile(input.target.value, 'displayName');
-					}}
 				/>
 				<div class="absolute right-3 top-3">
 					<Icon icon="solar:pen-broken" width="20" height="20" />

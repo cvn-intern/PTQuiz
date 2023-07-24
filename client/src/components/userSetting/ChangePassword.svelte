@@ -3,7 +3,7 @@
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
 	import type { FormChangePassword } from './interface/form.interface';
-	import { validationProfile } from '../../routes/dashboard/profile/interface/message.interface';
+	import { dismissLoadingToast, showLoadingToast } from '../../libs/toast/toast';
 	export let form: any;
 	export let formChangePassword: FormChangePassword;
 
@@ -17,30 +17,30 @@
 		};
 		inputFocused = false;
 	}
-	async function handleSubmit() {
-		toast.promise(
-			new Promise((resolve, reject) => {
-				setInterval(() => {
-					if (form?.isDone) {
-						if (form?.isSuccess) {
-							resolve('Success!');
-						} else {
-							reject(form?.error.message || 'Error!');
-						}
-					}
-				}, 100);
-			}),
-			{
-				loading: 'Loading...',
-				success: (value: any) => {
-					return value;
-				},
-				error: (err) => {
-					return err;
-				}
-			}
-		);
-	}
+
+	let isProcessing: boolean = false;
+
+	const handleSubmit = async (): Promise<void> => {
+		if (isProcessing) return;
+		isProcessing = true;
+		form = null;
+
+		showLoadingToast();
+
+		while (!form?.isDone) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+
+		dismissLoadingToast();
+
+		if (form?.isSuccess) {
+			toast.success('Success!');
+		} else {
+			dismissLoadingToast();
+			toast.error(form?.error.message);
+			isProcessing = false;
+		}
+	};
 </script>
 
 <div class="items-center">
@@ -61,11 +61,7 @@
 					placeholder="Old password"
 					type="password"
 					bind:value={formChangePassword.oldPassword}
-					required
 					on:focus={() => (inputFocused = true)}
-					on:input={(input) => {
-						form = validationProfile(input.target.value, 'oldPassword');
-					}}
 				/>
 				{#if !inputFocused}
 					<Icon
@@ -91,11 +87,7 @@
 					placeholder="New password"
 					type="password"
 					bind:value={formChangePassword.newPassword}
-					required
 					on:focus={() => (inputFocused = true)}
-					on:input={(input) => {
-						form = validationProfile(input.target.value, 'newPassword');
-					}}
 				/>
 				{#if !inputFocused}
 					<Icon
@@ -119,11 +111,7 @@
 				placeholder="Confirm new password"
 				type="password"
 				bind:value={formChangePassword.confirmPassword}
-				required
 				on:focus={() => (inputFocused = true)}
-				on:input={(input) => {
-					form = validationProfile(input.target.value, 'confirmPassword');
-				}}
 			/>
 		</div>
 		{#if inputFocused}
