@@ -2,19 +2,12 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
+	import { dismissLoadingToast, showLoadingToast } from '../../libs/toast/toast.js';
+	import type Message from '../login/interface/message.interface.js';
 
-	export let form;
+	export let form: Message;
 
-	let sharedToastId: string | number;
 	let isProcessing: boolean = false;
-
-	const showLoadingToast = (): void => {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
-	};
-
-	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
-	};
 
 	const handleSubmit = async (): Promise<void> => {
 		if (isProcessing) return;

@@ -3,7 +3,7 @@ import type { RequestHandler } from '../$types';
 export const GET: RequestHandler = async ({ fetch, cookies, params }) => {
 	const accessToken = cookies.get('accessToken');
 	const response = await fetch(
-		`${import.meta.env.VITE_API_URL}/quizzes/all-questions?quizId=${params.quizzesId}`,
+		`${import.meta.env.VITE_API_URL}/play-game/quiz?quizId=${params.quizzesId}`,
 		{
 			method: 'GET',
 			headers: {

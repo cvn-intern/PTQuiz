@@ -1,5 +1,4 @@
 import 'firebase/auth';
-import type { Spinner } from 'flowbite-svelte';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

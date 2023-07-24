@@ -11,6 +11,7 @@ import { PlaygameModule } from './playgame/playgame.module';
 import { SocketModule } from './socket/socket.module';
 import { RoomController } from './room/room.controller';
 import { RoomModule } from './room/room.module';
+import { CryptoService } from './crypto/crypto.service';
 @Module({
     imports: [
         PrismaModule,
@@ -26,6 +27,6 @@ import { RoomModule } from './room/room.module';
         RoomModule,
     ],
     controllers: [RoomController],
-    providers: [],
+    providers: [CryptoService],
 })
 export class AppModule {}
