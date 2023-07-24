@@ -1,35 +1,31 @@
 import type { LayoutServerLoad } from './$types';
-export const load: LayoutServerLoad = async ({ cookies, request, fetch, url }) => {
-	const response = await fetch('/api/auth/me');
-	const result = await response.json();
-	const { pathname } = url;
-	const accepted = request.headers.get('accept-language')?.match(/[a-zA-Z]+?(?=-|_|,|;)/) || [
-		'en'
-	];
-	let defaultLocale = 'en';
-	if (accepted.includes('vi')) {
-		defaultLocale = 'vi';
-	}
-	const currentCookies = cookies.get('lang');
-	if (!request.headers.get('user-agent')?.includes('Googlebot') && !currentCookies) {
-		cookies.set('lang', defaultLocale, {
-			path: '/'
-		});
-	}
-	const locale = cookies.get('lang') || defaultLocale;
+export const load: LayoutServerLoad = async ({ cookies, request, url }) => {
+	if (
+		request.headers.has('accept-language') &&
+		!request.headers.get('user-agent')?.includes('Googlebot')
+	) {
+		const accepted = request.headers.get('accept-language')?.match(/[a-zA-Z]+?(?=-|_|,|;)/) || [
+			'en'
+		];
+		let defaultLocale = 'en'; // get from cookie, user session, ...
+		if (accepted.includes('vi')) {
+			defaultLocale = 'vi';
+		}
+		const currentCookie = cookies.get('lang');
+		if (!currentCookie) {
+			cookies.set('lang', defaultLocale, {
+				path: '/'
+			});
+		}
+		const initLocale = cookies.get('lang') || defaultLocale; // set default if no locale already set
 
-	if (response.status === 200) {
-		const { iat, exp, ...user } = result;
 		return {
-			status: 'Success',
-			user,
-			i18n: { locale, route: pathname }
-		};
-	} else {
-		return {
-			status: 'Error',
-			user: null,
-			i18n: { locale, route: pathname }
+			lang: initLocale,
+			pathname: url.pathname
 		};
 	}
+	return {
+		lang: null,
+		pathname: url.pathname
+	};
 };
