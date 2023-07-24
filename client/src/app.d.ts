@@ -22,4 +22,7 @@ declare global {
     }
 }
 
+export type KeyValueObject = {
+    [key: string]: string;
+};
 export { };

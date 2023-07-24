@@ -1,8 +1,9 @@
 import i18n, { type Config } from 'sveltekit-i18n';
+import type { KeyValueObject } from '$types';
 
 export const defaultLocale = 'en';
 
-const lang = {
+const lang: KeyValueObject = {
 	en: 'English',
 	vi: 'Tiếng Việt'
 };
@@ -13,26 +14,16 @@ const config: Config = {
 		vi: { lang }
 	},
 	loaders: [
-		{
-			locale: 'en',
+		...Object.entries(lang).map(([locale]) => ({
+			locale,
 			key: 'common',
-			loader: async () => (await import('./locale/en/common.json')).default
-		},
-		{
-			locale: 'vi',
-			key: 'common',
-			loader: async () => (await import('./locale/vi/common.json')).default
-		},
-		{
-			locale: 'en',
+			loader: async () => await import(`./locales/${locale}/common.json`)
+		})),
+		...Object.entries(lang).map(([locale]) => ({
+			locale,
 			key: 'validation',
-			loader: async () => (await import('./locale/en/validation.json')).default
-		},
-		{
-			locale: 'vi',
-			key: 'validation',
-			loader: async () => (await import('./locale/vi/validation.json')).default
-		}
+			loader: async () => await import(`./locales/${locale}/validation.json`)
+		}))
 	]
 };
 
@@ -47,3 +38,5 @@ export const {
 	setLocale,
 	setRoute
 } = new i18n(config);
+
+loading.subscribe(($loading) => $loading && console.log('Loading translations...', $loading));
