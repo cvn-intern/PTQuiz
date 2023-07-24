@@ -9,7 +9,6 @@ export const actions = {
 	login: async ({ fetch, request }) => {
 		message = createDefaultMessage();
 		const data = await request.formData();
-
 		if (!data.get('email') || data.get('email')?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.email = true;

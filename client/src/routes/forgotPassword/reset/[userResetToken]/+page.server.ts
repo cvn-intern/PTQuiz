@@ -2,6 +2,8 @@ import { fail, redirect } from '@sveltejs/kit';
 import type Message from '../../../login/interface/message.interface.js';
 import { createDefaultMessage } from '../../../login/interface/message.interface.js';
 import { ResponseMessage } from '../../../../libs/message/responseMessage.enum.js';
+import { get } from 'svelte/store';
+import { t } from '../../../../libs/i18n/translations.js';
 
 let message: Message;
 

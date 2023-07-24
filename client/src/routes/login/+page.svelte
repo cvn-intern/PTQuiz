@@ -6,6 +6,7 @@
 	import { initializeFirebase, startSignIn } from '../../libs/services/firebaseConfig';
 	import toast from 'svelte-french-toast';
 	import Error from '../+error.svelte';
+	import { t } from '../../libs/i18n/translations';
 
 	export let form;
 	export let data;

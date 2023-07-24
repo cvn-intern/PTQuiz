@@ -1,7 +1,11 @@
 import i18n, { type Config } from 'sveltekit-i18n';
-import lang from './lang.json';
 
 export const defaultLocale = 'en';
+
+const lang = {
+	en: 'English',
+	vi: 'Tiếng Việt'
+};
 
 const config: Config = {
 	translations: {
@@ -12,12 +16,22 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'common',
-			loader: async () => (await import('./locale/common/en.json')).default
+			loader: async () => (await import('./locale/en/common.json')).default
 		},
 		{
 			locale: 'vi',
 			key: 'common',
-			loader: async () => (await import('./locale/common/vi.json')).default
+			loader: async () => (await import('./locale/vi/common.json')).default
+		},
+		{
+			locale: 'en',
+			key: 'validation',
+			loader: async () => (await import('./locale/en/validation.json')).default
+		},
+		{
+			locale: 'vi',
+			key: 'validation',
+			loader: async () => (await import('./locale/vi/validation.json')).default
 		}
 	]
 };

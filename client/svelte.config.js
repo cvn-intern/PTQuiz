@@ -16,6 +16,7 @@ const config = {
             $actions: 'src/lib/actions',
             $helpers: 'src/lib/helpers',
             $stores: 'src/lib/stores',
+            $i18n : 'src/libs/i18n'
         }
     },
     preprocess: vitePreprocess()
