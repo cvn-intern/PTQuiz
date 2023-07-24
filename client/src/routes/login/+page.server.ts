@@ -1,16 +1,16 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 
 let message: Message;
 
-export const actions = {
+export const actions: Actions = {
 	login: async ({ fetch, request }) => {
 		message = createDefaultMessage();
 		const data = await request.formData();
 
-		if (!data.get('email') || data.get('email')?.trim().length === 0) {
+		if (!String(data.get('email')) || String(data.get('email'))?.trim().length === 0) {
 			message.isDone = true;
 			message.error.missing.email = true;
 			message.error.message = MESSAGE.MISSING_EMAIL;
@@ -28,14 +28,17 @@ export const actions = {
 		}
 
 		if (!data.get('email'))
-			if (!data.get('password') || data.get('password')?.trim().length === 0) {
+			if (
+				!String(data.get('password')) ||
+				String(data.get('password'))?.trim().length === 0
+			) {
 				message.isDone = true;
 				message.error.missing.password = true;
 				message.error.message = MESSAGE.MISSING_PASSWORD;
 				return fail(400, { ...message });
 			}
 
-		if (data.get('password')?.trim().length < 8) {
+		if (String(data.get('password'))?.trim().length < 8) {
 			message.isDone = true;
 			message.error.missing.password = true;
 			message.error.message = MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS;

@@ -1,7 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
 </script>
 
 <div class=" flex flex-col justify-center items-center w-full">
