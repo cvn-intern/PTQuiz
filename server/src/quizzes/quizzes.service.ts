@@ -247,6 +247,7 @@ export class QuizzesService {
                     written: question.question.written,
                     image: question.question.image,
                     type: question.question.type,
+                    time: question.question.time,
                     createdAt: question.question.createdAt,
                     updatedAt: question.question.updatedAt,
                 };

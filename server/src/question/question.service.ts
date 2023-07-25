@@ -27,6 +27,7 @@ export class QuestionService {
                 written,
                 image,
                 type,
+                time,
                 createdAt,
                 updatedAt,
             } = question;
@@ -40,6 +41,7 @@ export class QuestionService {
                 written: written,
                 image: image,
                 type: type,
+                time: time,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
             };

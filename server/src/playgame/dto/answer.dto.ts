@@ -8,5 +8,6 @@ export class AnswerDetail {
 }
 export interface Answer {
     questionId: string;
-    givenAnswers: string;
+    givenAnswers: boolean[];
+    writenAnswer: string;
 }

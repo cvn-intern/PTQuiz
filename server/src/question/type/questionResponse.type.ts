@@ -8,6 +8,7 @@ export type QuestionResponse = {
     written: string;
     image: string;
     type: number;
+    time: number;
     createdAt: Date;
     updatedAt: Date;
 };

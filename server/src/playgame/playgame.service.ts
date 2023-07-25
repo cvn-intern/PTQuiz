@@ -102,10 +102,8 @@ export class PlaygameService {
                     const question = await this.questionService.getQuestion(
                         answer.questionId,
                     );
-                    if (question.type === 0 || question.type === 1) {
-                        const arrayGiveAnswer = this.stringToArray(
-                            answer.givenAnswers,
-                        );
+                    if (question.type === 0 || question.type === 1 || question.type === 3) {
+                        const arrayGiveAnswer = answer.givenAnswers
                         const checkTrue = this.isRightAnswer(
                             arrayGiveAnswer,
                             question.answers,
@@ -116,7 +114,7 @@ export class PlaygameService {
                             score = 0;
                         }
                     } else if (question.type === 2) {
-                        if (answer.givenAnswers === question.written) {
+                        if (answer.writenAnswer === question.written) {
                             score = quiz.point / quiz.numberQuestions;
                         } else {
                             score = 0;
@@ -143,7 +141,7 @@ export class PlaygameService {
                                 answerC: question.answers[2],
                                 answerD: question.answers[3],
                                 written: question.written,
-                                givenAnswers: answer.givenAnswers,
+                                givenAnswers:(question.type!==2)?this.arrayToString(answer.givenAnswers): answer.writenAnswer,
                                 score: score,
                                 timestamp: new Date(),
                             },
