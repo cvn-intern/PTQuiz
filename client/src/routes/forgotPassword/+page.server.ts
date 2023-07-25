@@ -1,3 +1,4 @@
+import { translateValidation } from '$helpers/translateValidation';
 import { fail, type Actions } from '@sveltejs/kit';
 import type Message from '../login/interface/message.interface.js';
 import { createDefaultMessage } from '../login/interface/message.interface.js';
@@ -32,7 +33,8 @@ export const actions: Actions = {
 				message.isDone = true;
 				message.isSuccess = false;
 				message.error.missing.default = true;
-				message.error.message = result;
+				const i18nTranslate = translateValidation(result);
+				message.error.message = i18nTranslate;
 				return fail(400, { ...message });
 			}
 		} catch (err: any) {

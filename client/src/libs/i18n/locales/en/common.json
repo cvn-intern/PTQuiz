@@ -84,5 +84,10 @@
     "PNGorJPG": "PNG or JPG",
     "typeYourQuestionHere": "Type your question here",
     "trueAnswer": "True",
-    "falseAnswer": "False"
+    "falseAnswer": "False",
+    "success": "Success!",
+    "loading": "Loading...",
+    "ifYouDidNotReceiveEmail": "If you didn't receive the email, click",
+    "here": "here",
+    "toResendIt": "to resend it"
 }

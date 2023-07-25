@@ -7,7 +7,7 @@
 	import { showLoadingToast, dismissLoadingToast, showToast } from '../../libs/toast/toast';
 	import toast from 'svelte-french-toast';
 	import Error from '../+error.svelte';
-	import { t } from '../../libs/i18n/translations';
+	import { t } from '$i18n/translations';
 	import type { ActionData } from './$types.js';
 
 	export let form: ActionData;
@@ -55,7 +55,7 @@
 
 			if (response) {
 				goto('/');
-				toast.success('Success!');
+				toast.success($t('common.success'));
 			} else {
 				throw new Error('Invalid credentials');
 			}
@@ -83,7 +83,7 @@
 
 		if (form?.isSuccess) {
 			goto('/');
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message || 'Invalid credentials');
@@ -112,11 +112,13 @@
 						<label for="common" class="mb-1 text-red-500"
 							>{form.error.message}
 							{#if form?.error?.missing?.confirmEmail}
-								<br />If you didn't receive the email, click
+								<br />{$t('common.ifYouDidNotReceiveEmail')}
 								<button
 									class="text-secondary"
-									on:click={resendEmail(form?.error?.fill?.email)}>here</button
-								> to resend it.
+									on:click={resendEmail(form?.error?.fill?.email)}
+									>{$t('common.here')}</button
+								>
+								{$t('common.toResendIt')}.
 							{/if}<br /></label
 						>
 					{/if}
