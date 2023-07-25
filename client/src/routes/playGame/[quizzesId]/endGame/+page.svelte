@@ -5,7 +5,7 @@
 	import Result from '../../../../components/endGame/result.svelte';
 	import Score from '../../../../components/endGame/score.svelte';
 	import { navbarStore } from '../../../../libs/store/navbarStore';
-	import type { ResultGameInterface } from './resultGame.type';
+	import type { ResultGameInterface } from '../../../../interface/endGame.interface';
 	export let data;
 
 	const STATUS = {
