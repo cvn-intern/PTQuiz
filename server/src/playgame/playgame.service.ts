@@ -7,6 +7,7 @@ import { PlayGameError } from '../error/playGameError.enum';
 import { EndGameError } from '../error/endGameError.enum';
 import { EndGameType } from './dto/endGame.type';
 import { CryptoService } from '../crypto/crypto.service';
+import { Option, TypeQuestion } from 'src/question/type';
 
 @Injectable()
 export class PlaygameService {
@@ -102,8 +103,12 @@ export class PlaygameService {
                     const question = await this.questionService.getQuestion(
                         answer.questionId,
                     );
-                    if (question.type === 0 || question.type === 1 || question.type === 3) {
-                        const arrayGiveAnswer = answer.givenAnswers
+                    if (
+                        question.type === TypeQuestion.MULTIPLE_CHOICE ||
+                        question.type === TypeQuestion.SINGLE_CHOICE ||
+                        question.type === TypeQuestion.TRUE_FALSE
+                    ) {
+                        const arrayGiveAnswer = answer.givenAnswers;
                         const checkTrue = this.isRightAnswer(
                             arrayGiveAnswer,
                             question.answers,
@@ -113,7 +118,7 @@ export class PlaygameService {
                         } else {
                             score = 0;
                         }
-                    } else if (question.type === 2) {
+                    } else if (question.type === TypeQuestion.ESSAY) {
                         if (answer.writenAnswer === question.written) {
                             score = quiz.point / quiz.numberQuestions;
                         } else {
@@ -132,16 +137,21 @@ export class PlaygameService {
                                 questionId: answer.questionId,
                                 question: question.title,
                                 image: question.image,
-                                optionA: question.options[0],
-                                optionB: question.options[1],
-                                optionC: question.options[2],
-                                optionD: question.options[3],
-                                answerA: question.answers[0],
-                                answerB: question.answers[1],
-                                answerC: question.answers[2],
-                                answerD: question.answers[3],
+                                optionA: question.options[Option.A],
+                                optionB: question.options[Option.B],
+                                optionC: question.options[Option.C],
+                                optionD: question.options[Option.D],
+                                answerA: question.answers[Option.A],
+                                answerB: question.answers[Option.B],
+                                answerC: question.answers[Option.C],
+                                answerD: question.answers[Option.D],
                                 written: question.written,
-                                givenAnswers:(question.type!==2)?this.arrayToString(answer.givenAnswers): answer.writenAnswer,
+                                givenAnswers:
+                                    question.type !== TypeQuestion.ESSAY
+                                        ? this.arrayToString(
+                                              answer.givenAnswers,
+                                          )
+                                        : answer.writenAnswer,
                                 score: score,
                                 timestamp: new Date(),
                             },
