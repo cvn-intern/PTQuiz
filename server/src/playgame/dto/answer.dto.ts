@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { AnswerType } from 'src/question/type/questionInput.type';
 
 export class AnswerDetail {
     @IsNotEmpty({ message: 'ParticipantId can not be empty' })
@@ -8,6 +9,6 @@ export class AnswerDetail {
 }
 export interface Answer {
     questionId: string;
-    givenAnswers: boolean[];
+    givenAnswers: AnswerType;
     writtenAnswer: string;
 }
