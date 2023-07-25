@@ -55,7 +55,7 @@
 
 			if (response) {
 				goto('/');
-				toast.success('Success!');
+				toast.success($t('common.success'));
 			} else {
 				throw new Error('Invalid credentials');
 			}
@@ -83,7 +83,7 @@
 
 		if (form?.isSuccess) {
 			goto('/');
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message || 'Invalid credentials');

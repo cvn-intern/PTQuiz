@@ -34,3 +34,8 @@ export enum AuthError {
 	USER_ALREADY_ACTIVATED_LOGIN = 'User with this email already exists, please login',
 	USER_LOGIN_INACTIVE_ACCOUNT = 'Your account is not active, please confirm your email'
 }
+
+export enum JwtError {
+    INVALID_TOKEN = 'Invalid token',
+    EXPIRED_TOKEN = 'Token expired',
+}

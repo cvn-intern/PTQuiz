@@ -3,6 +3,7 @@ import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { AuthError, ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 import { LoginFormSchema } from '../../libs/schema/index';
+import { translateValidation } from '../../libs/helpers/translateValidation';
 
 let message: Message;
 
@@ -31,9 +32,9 @@ export const actions: Actions = {
 			} else {
 				message.isSuccess = false;
 				message.error.missing.default = true;
-				message.error.message = result;
+				const i18nTranslate = translateValidation(result);
+				message.error.message = i18nTranslate;
 				if (result === AuthError.USER_NOT_ACTIVATED) {
-                    message.error.message = 
 					message.error.missing.confirmEmail = true;
 					message.error.fill.email = data.get('email') as string;
 				}

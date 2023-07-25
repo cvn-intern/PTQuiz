@@ -84,5 +84,7 @@
     "PNGorJPG": "PNG or JPG",
     "typeYourQuestionHere": "Type your question here",
     "trueAnswer": "True",
-    "falseAnswer": "False"
+    "falseAnswer": "False",
+    "success": "Success!",
+    "loading": "Loading..."
 }

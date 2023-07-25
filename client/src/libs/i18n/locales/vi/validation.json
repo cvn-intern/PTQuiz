@@ -30,4 +30,7 @@
     "USER_BLOCKED": "Tài khoản của bạn đã bị khóa, vui lòng đặt lại mật khẩu hoặc liên hệ với quản trị viên",
     "USER_ALREADY_ACTIVATED_LOGIN": "Tài khoản của bạn đã được kích hoạt, vui lòng đăng nhập",
     "USER_LOGIN_INACTIVE_ACCOUNT": "Tài khoản của bạn chưa được kích hoạt, vui lòng xác nhận email của bạn",
+    "INVALID_TOKEN": "Token không hợp lệ",
+    "EXPIRED_TOKEN": "Token đã hết hạn",
+    "USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT": "Email hoặc mật khẩu không đúng, bạn còn {{attemptsLeft}} lần thử"
 }
