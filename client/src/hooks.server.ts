@@ -1,14 +1,128 @@
-import { redirect } from '@sveltejs/kit';
+import type { Handle, HandleFetch, HandleServerError } from '@sveltejs/kit';
+import { HEADER_NAMES } from '$constants/headers';
+import { checkValidToken, getProfile, refreshToken } from '$helpers/auth';
 
-export const handle = async ({ event, resolve }) => {
-	const access = event.cookies.get('accessToken');
+export const handle: Handle = async ({ event, resolve }) => {
+	try {
+		event.locals.accessToken = event.cookies.get('accessToken');
+		if (!event.locals.accessToken) {
+			event.locals.user = undefined;
+			event.locals.accessToken = undefined;
+			event.locals.lastPage = event.url.pathname;
 
-	if (!access && event.route.id?.startsWith('/dashboard')) {
-		throw redirect(303, '/login');
+			return await resolve(event);
+		}
+
+		const isAccessTokenValid = await checkValidToken(event.locals.accessToken);
+		if (isAccessTokenValid.status === false) {
+			if (isAccessTokenValid.message === 'Token is expired') {
+				const isRefreshTokenValid = await checkValidToken(
+					event.cookies.get('refreshToken')
+				);
+				if (isRefreshTokenValid.status === false) {
+					event.locals.user = undefined;
+					event.locals.accessToken = undefined;
+					event.locals.lastPage = event.url.pathname;
+					event.cookies.delete('accessToken', {
+						path: '/'
+					});
+					event.cookies.delete('refreshToken', {
+						path: '/'
+					});
+
+					return await resolve(event);
+				}
+
+				const response = await refreshToken(event.cookies.get('refreshToken'));
+				if (!response) {
+					event.locals.user = undefined;
+					event.locals.accessToken = undefined;
+					event.locals.lastPage = event.url.pathname;
+					event.cookies.delete('accessToken', {
+						path: '/'
+					});
+					event.cookies.delete('refreshToken', {
+						path: '/'
+					});
+
+					return await resolve(event);
+				} else if (response.message === 'Tokens refreshed successfully') {
+					event.cookies.set('accessToken', response.data.accessToken, {
+						path: '/'
+					});
+					event.cookies.set('refreshToken', response.data.refreshToken, {
+						path: '/'
+					});
+					event.locals.accessToken = event.cookies.get('accessToken');
+					event.locals.user = await getProfile(event.locals.accessToken);
+					if (!event.locals.user) {
+						event.locals.user = undefined;
+						event.locals.accessToken = undefined;
+						event.cookies.delete('accessToken', {
+							path: '/'
+						});
+						event.cookies.delete('refreshToken', {
+							path: '/'
+						});
+						event.locals.lastPage = event.url.pathname;
+					}
+
+					return await resolve(event);
+				}
+			} else {
+				event.locals.user = undefined;
+				event.locals.accessToken = undefined;
+				event.cookies.delete('accessToken', {
+					path: '/'
+				});
+				event.cookies.delete('refreshToken', {
+					path: '/'
+				});
+
+				return await resolve(event);
+			}
+		}
+
+		if (event.locals.user !== undefined) {
+			return await resolve(event);
+		}
+
+		event.locals.user = await getProfile(event.locals.accessToken);
+		if (!event.locals.user) {
+			event.locals.user = undefined;
+			event.locals.accessToken = undefined;
+			event.cookies.delete('accessToken', {
+				path: '/'
+			});
+			event.cookies.delete('refreshToken', {
+				path: '/'
+			});
+			event.locals.lastPage = event.url.pathname;
+		}
+
+		return await resolve(event);
+	} catch (err: any) {
+		event.locals.user = undefined;
+		event.locals.accessToken = undefined;
+		event.locals.lastPage;
+
+		return await resolve(event);
 	}
-    if (!access && event.route.id?.startsWith('/room')) {
-        throw redirect(303, '/login');
-    }
-	const response = await resolve(event);
-	return response;
+};
+
+export const handleFetch: HandleFetch = async ({ event, request, fetch }): Promise<Response> => {
+	const token = event.locals.accessToken;
+	if (token) {
+		request.headers.set(HEADER_NAMES.AUTHORIZATION, `Bearer ${token}`);
+	}
+
+	return fetch(request);
+};
+export const handleError: HandleServerError = async ({ error }) => {
+	const err: any = error;
+
+	return {
+		code: err?.status || 500,
+		message: err?.body?.message || 'Internal Server Error'
+	};
 };
