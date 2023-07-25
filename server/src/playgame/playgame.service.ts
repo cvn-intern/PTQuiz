@@ -119,7 +119,7 @@ export class PlaygameService {
                             score = 0;
                         }
                     } else if (question.type === TypeQuestion.ESSAY) {
-                        if (answer.writenAnswer === question.written) {
+                        if (answer.writtenAnswer === question.written) {
                             score = quiz.point / quiz.numberQuestions;
                         } else {
                             score = 0;
@@ -151,7 +151,7 @@ export class PlaygameService {
                                         ? this.arrayToString(
                                               answer.givenAnswers,
                                           )
-                                        : answer.writenAnswer,
+                                        : answer.writtenAnswer,
                                 score: score,
                                 timestamp: new Date(),
                             },
