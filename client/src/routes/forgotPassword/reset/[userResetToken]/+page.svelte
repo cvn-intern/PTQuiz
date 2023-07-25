@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
 	import type { LayoutData } from '../../../$types.js';
 	import { enhance } from '$app/forms';
+	import { t } from '$i18n/translations';
 	export let data: LayoutData;
 
 	export let form;
@@ -52,7 +52,7 @@
 <section class="flex flex-col items-center justify-center w-full">
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
-			<h1 class=" text-secondary text-[20px] font-bold">Reset Password</h1>
+			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.resetPassword')}</h1>
 			<form
 				method="POST"
 				class="w-full px-4 lg:px-0 mx-auto"
@@ -69,7 +69,7 @@
 						type="password"
 						name="password"
 						id="password"
-						placeholder="New Password"
+						placeholder={$t('common.newPassword')}
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
 					/>
@@ -80,7 +80,7 @@
 						type="password"
 						name="confirmPassword"
 						id="confirmPassword"
-						placeholder="Confirm Password"
+						placeholder={$t('common.confirmPassword')}
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 						required
 					/>
@@ -91,20 +91,21 @@
 						aria-label="Reset Password"
 						type="submit"
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
-						>Reset your Password</button
+						>{$t('common.resetPassword')}</button
 					>
 				</div>
 			</form>
 			<div>
 				<div class=" text-gray-400">
 					<p>
-						Already have an account? <button
+						{$t('common.alreadyHaveAnAccount')}
+						<button
 							aria-label="Log In"
 							class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 							on:click={() => {
 								goto('/login');
 							}}
-							>Log In
+							>{$t('common.login')}
 						</button>
 					</p>
 				</div>

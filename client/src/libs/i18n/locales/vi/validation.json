@@ -1,0 +1,22 @@
+{
+    "hello": "Hello",
+    "home": "Home",
+    "discovery": "Discovery",
+    "login": "Login",
+    "forgotPassword": "Forgot Password",
+    "password": "Password",
+    "dontHaveAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "confirmPassword": "Confirm Password",
+    "displayName": "Display Name",
+    "email": "Email",
+    "alreadyHaveAccount": "Already have an account?",
+    "ourLocation": "Our Location",
+    "aboutUs": "About Us",
+    "help": "Help",
+    "faq": "FAQs",
+    "contactUs": "Contact Us",
+    "copyRights": "Copyrights by DarkHorse 2023",
+    "address": "106 Nguyen Van Troi, Phu Nhuan",
+    "city": "District, Ho Chi Minh City"
+}

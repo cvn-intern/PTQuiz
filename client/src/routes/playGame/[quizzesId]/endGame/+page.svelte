@@ -5,7 +5,7 @@
 	import Result from '../../../../components/endGame/result.svelte';
 	import Score from '../../../../components/endGame/score.svelte';
 	import { navbarStore } from '../../../../libs/store/navbarStore';
-	import type { ResultGameInterface } from './resultGame.type';
+	import type { ResultGameInterface } from '../../../../interface/endGame.interface';
 	export let data;
 
 	const STATUS = {
@@ -13,10 +13,10 @@
 		FAIL: 'Fail'
 	};
 	let { result } = data;
-	let currentResult: ResultGameInterface = result[result.length - 1];
+	let currentResult: ResultGameInterface = result[0];
 	const attemptList = result.map((item: ResultGameInterface, index: number) => {
 		return {
-			attempt: index + 1,
+			attempt: result.length - index,
 			points: item.point,
 			status: item.passed ? STATUS.PASS : STATUS.FAIL
 		};

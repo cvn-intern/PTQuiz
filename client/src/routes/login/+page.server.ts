@@ -25,8 +25,6 @@ export const actions: Actions = {
 				password: data.get('password')
 			});
 
-			console.log(validatedData);
-
 			const response = await fetch('/api/auth/login', {
 				method: 'POST',
 				body: JSON.stringify(validatedData)

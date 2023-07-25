@@ -7,6 +7,7 @@
 	import { navbarStore } from '../../../libs/store/navbarStore';
 	import { onDestroy, onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
+	import { t } from '$i18n/translations';
 	export let data;
 
 	let gameInfo = data.gameInfo;
@@ -62,7 +63,7 @@
 					goto('/discovery')
 				}}
 			>
-				<span>Exit</span>
+				<span>{$t('common.exit')}</span>
 			</button>
 			<button
 				class={clsx(
@@ -75,7 +76,7 @@
 					goto(`/playGame/${quizzesId}/play`);
 				}}
 			>
-				Play Game
+				{$t('common.play')}
 			</button>
 		</div>
 	</div>
