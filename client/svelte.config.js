@@ -18,6 +18,7 @@ const config = {
             $stores: 'src/libs/stores',
             $i18n : 'src/libs/i18n',
             $types: 'src/app.d.ts',
+            $constants: 'src/libs/constant',
         }
     },
     preprocess: vitePreprocess()

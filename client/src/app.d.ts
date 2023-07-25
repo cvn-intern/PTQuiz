@@ -5,18 +5,9 @@ declare global {
 			message: string;
 		}
 		interface Locals {
-			user: UserDto;
+			user: UserDto | undefined;
 			accessToken: string | undefined;
 			lastPage: string;
-		}
-		interface PageData {
-			user: {
-				email: string;
-				displayName: string;
-				accessToken: string;
-				refreshToken: string;
-			};
-			title: string;
 		}
 	}
 }
@@ -32,5 +23,5 @@ export type UserDto = {
 	role: string;
 	status: number;
 	loginFrom: string;
-} | undefined;
+};
 export {};
