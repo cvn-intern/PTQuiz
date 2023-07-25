@@ -11,7 +11,7 @@
 			color: 'black'
 		},
 		{
-			name: `${$t('common.totalQuestion')}`,
+			name: `${$t('common.totalQuestions')}`,
 			value: `${totalQuestion}`,
 			color: 'purple'
 		},

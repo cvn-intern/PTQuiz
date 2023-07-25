@@ -1,6 +1,6 @@
 {
 	"hello": "Xin chào",
-	"home": "Trang Home",
+	"home": "Trang chủ",
 	"discovery": "Khám phá",
 	"login": "Đăng nhập",
 	"forgotPassword": "Quên mật khẩu",
@@ -76,5 +76,24 @@
 	"hard": "Khó",
 	"medium": "Trung bình",
 	"easy": "Dễ",
-	"mixed": "Hỗn hợp"
+	"mixed": "Hỗn hợp",
+	"titleQuizzes": "Tiêu đề bộ câu hỏi",
+	"category": "Thể loại",
+	"shareYourQuizzes": "Chia sẻ bộ câu hỏi của bạn",
+	"customizeTimeQuestion": "Tùy chỉnh thời gian của câu hỏi",
+	"startDate": "Ngày bắt đầu",
+	"endDate": "Ngày kết thúc",
+	"thumbnail": "Ảnh đại diện",
+	"defaultSetting": "Mặc định",
+	"customized": "Tùy chỉnh",
+	"literature": "Văn học",
+	"other": "Khác",
+	"physical": "Vật lý",
+	"informationQuizzes": "Thông tin bộ câu hỏi",
+	"changeInformationQuizzes": "Thay đổi thông tin bộ câu hỏi",
+	"pass": "Đã đạt",
+	"fail": "Chưa đạt",
+	"geography": "Địa lý",
+	"publicQuizzes": "Công khai",
+	"privateQuizzes": "Riêng tư"
 }
