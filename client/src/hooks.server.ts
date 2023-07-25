@@ -30,7 +30,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 					return await resolve(event);
 				}
 				const response = await refreshToken(event.cookies.get('refreshToken'));
-				if (response.message === 'Tokens refreshed successfully') {
+                if(!response) {
+                    event.locals.user = undefined;
+                    event.locals.accessToken = undefined;
+                    event.locals.lastPage = event.url.pathname;
+                    event.cookies.delete('accessToken', {
+                        path: '/'
+                    });
+                    event.cookies.delete('refreshToken', {
+                        path: '/'
+                    });
+                    return await resolve(event);
+                }
+				else if (response.message === 'Tokens refreshed successfully') {
 					event.cookies.set('accessToken', response.data.accessToken, {
 						path: '/'
 					});
@@ -63,6 +75,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 				event.cookies.delete('refreshToken', {
 					path: '/'
 				});
+
+                return await resolve(event);
 			}
 		}
 		if (event.locals.user !== undefined) {

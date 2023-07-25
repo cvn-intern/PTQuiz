@@ -36,7 +36,7 @@ export const getProfile = async (token: string | undefined) => {
 	if (!token) {
 		return undefined;
 	}
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
