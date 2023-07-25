@@ -1,7 +1,7 @@
 import { error, json, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ cookies }) => {
+export const POST: RequestHandler = async ({ cookies }) => {
 	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
 		method: 'POST',
 		headers: {
