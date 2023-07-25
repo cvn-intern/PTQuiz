@@ -2,24 +2,26 @@
 	import Icon from '@iconify/svelte';
 	export let amountCorrect;
 	export let totalQuestion;
+	import { t } from '$i18n/translations';
+
 	const elementsResult = [
 		{
-			name: 'Completion',
+			name: `${$t('common.completion')}`,
 			value: '100%',
 			color: 'black'
 		},
 		{
-			name: 'Total Question',
+			name: `${$t('common.totalQuestion')}`,
 			value: `${totalQuestion}`,
 			color: 'purple'
 		},
 		{
-			name: 'Correct',
+			name: `${$t('common.correct')}`,
 			value: `${amountCorrect}`,
 			color: 'green'
 		},
 		{
-			name: 'Wrong',
+			name: `${$t('common.wrong')}`,
 			value: `${totalQuestion - amountCorrect}`,
 			color: 'red'
 		}
