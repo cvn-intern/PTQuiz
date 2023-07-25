@@ -69,7 +69,6 @@
 						id="email"
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
 					/>
 				</div>
 				<div class="pt-4">

@@ -1,16 +1,8 @@
-import { z } from 'zod';
 import { fail, type Actions } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
-
-const LoginFormSchema = z.object({
-	email: z.string().email(MESSAGE.INVALID_EMAIL),
-	password: z
-		.string()
-		.min(8, MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-		.max(50, MESSAGE.PASSWORD_TOO_LONG)
-});
+import { LoginFormSchema } from '../../libs/schema/index';
 
 let message: Message;
 

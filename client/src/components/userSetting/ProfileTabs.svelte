@@ -4,7 +4,7 @@
 	import type User from '../../interface/user.interface';
 	import type { FormChangePassword, FormEditProfile } from './interface/form.interface';
 	import type { Actions } from '@sveltejs/kit';
-
+	import { t } from '$i18n/translations';
 	export let currentTab = 'EditProfile';
 	export let user: User;
 	export let form: Actions;
@@ -27,7 +27,7 @@
 
 <div class="profile">
 	<div class="w-full h-20 flex items-center justify-center">
-		<h1 class="text-2xl font-bold text-center">Profile</h1>
+		<h1 class="text-2xl font-bold text-center">{$t('common.profile')}</h1>
 	</div>
 
 	<div class="flex justify-center space-x-4 mb-8">
@@ -36,7 +36,7 @@
 			class:active={currentTab === 'EditProfile'}
 			on:click={() => switchTab('EditProfile')}
 		>
-			Edit Profile
+			{$t('common.editProfile')}
 		</button>
 		{#if !user?.loginFrom}
 			<button
@@ -44,7 +44,7 @@
 				class:active={currentTab === 'ChangePassword'}
 				on:click={() => switchTab('ChangePassword')}
 			>
-				Change Password
+				{$t('common.changePassword')}
 			</button>
 		{/if}
 	</div>
