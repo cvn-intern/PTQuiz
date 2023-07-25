@@ -51,52 +51,91 @@ export class QuestionService {
         }
     }
 
-    private async updateIfChanged(updatedQuestion: Partial<QuestionResponse>) {
-        if (!updatedQuestion.id) {
-            return this.prisma.questions.create({
-                data: updatedQuestion as QuestionResponse,
-            });
-        }
-
-        const question = await this.prisma.questions.findUnique({
-            where: { id: updatedQuestion.id },
-        });
-
-        if (!question) {
-            throw new Error('Question not found');
-        }
-
-        let data: QuestionResponse;
-        for (const field in updatedQuestion) {
-            if (updatedQuestion[field] !== question[field]) {
-                data[field] = updatedQuestion[field];
+    async createQuestion(
+        userId: string,
+        quizId: string,
+        questionData: QuestionDto,
+    ) {
+        try {
+            if (!quizId) {
+                throw new HttpException(
+                    'Quiz id is required',
+                    HttpStatus.BAD_REQUEST,
+                );
             }
-        }
-
-        if (Object.keys(data).length > 0) {
-            return this.prisma.questions.update({
-                where: { id: updatedQuestion.id },
-                data,
+            const existQuiz = await this.prisma.quiz_questions.findMany({
+                where: {
+                    quizId: quizId,
+                },
             });
+            if (!existQuiz) {
+                throw new HttpException(
+                    'Quiz not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+
+            const existCategory = await this.prisma.categories.findUnique({
+                where: {
+                    id: questionData.categoryId,
+                },
+            });
+
+            if (!existCategory) {
+                throw new HttpException(
+                    'Category not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+
+            const question = await this.prisma.questions.create({
+                data: {
+                    userId: userId,
+                    ...questionData,
+                },
+            });
+            await this.prisma.quiz_questions.create({
+                data: {
+                    quizId: quizId,
+                    questionId: question.id,
+                    sortOrder: 0,
+                },
+            });
+            return question;
+        } catch (err) {
+            throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
         }
-
-        return null;
     }
 
-    async updateQuestions(
-        questions: Partial<QuestionData>[],
-    ): Promise<(QuestionData | null)[]> {
-        return Promise.all(questions.map(this.updateIfChanged.bind(this)));
+    async updateQuestion(questionId: string, questionData: QuestionData) {
+        try {
+            const question = await this.prisma.questions.update({
+                where: {
+                    id: questionId,
+                },
+                data: questionData,
+            });
+            return question;
+        } catch (err) {
+            throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
+        }
     }
 
-    async createQuestions(questionsData: QuestionDto[], userId: string) {
-        const createQuestionsPromises = questionsData.map((questionData) => {
-            // return this.prisma.questions.create({
-            //     data: { ...questionData, userId },
-            // });
-            console.log(questionData);
-        });
-
-        // return await this.prisma.$transaction(createQuestionsPromises);
+    async deleteQuestion(questionId: string) {
+        try {
+            const question = await this.prisma.questions.delete({
+                where: {
+                    id: questionId,
+                },
+            });
+            await this.prisma.quiz_questions.deleteMany({
+                where: {
+                    questionId: questionId,
+                },
+            });
+            return question;
+        } catch (err) {
+            throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -31,7 +31,7 @@
 		dismissLoadingToast();
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 			goto('/register/loading');
 		} else {
 			dismissLoadingToast();

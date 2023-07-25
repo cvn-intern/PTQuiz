@@ -34,12 +34,14 @@ export class QuestionController {
     @ResponseMessage('Create Question successfully')
     @UseGuards(JwtAuthGuard)
     async createQuestion(
-        @Body() questionsData: QuestionDto[],
+        @Body() questionsData: QuestionDto,
         @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
     ) {
-        return await this.questionService.createQuestions(
-            questionsData,
+        return await this.questionService.createQuestion(
             userId,
+            quizId,
+            questionsData,
         );
     }
 }
