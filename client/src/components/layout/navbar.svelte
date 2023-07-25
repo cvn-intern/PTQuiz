@@ -5,13 +5,10 @@
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
 	import logo from '../../assets/logo.png';
-	import { navbarStore } from '../../libs/store/navbarStore';
-	import clsx from 'clsx';
 	import { t } from '$i18n/translations';
-	export let user: {
-		avatar: string;
-		displayName: string;
-	};
+	import type { LayoutServerData } from '../../routes/$types';
+	export let user: LayoutServerData['user'];
+
 	let isHidden: boolean = true;
 	const navs = [
 		{
@@ -26,7 +23,7 @@
 
 	const logout = async () => {
 		const response = await fetch('/api/auth/logout', {
-			method: 'POST',
+			method: 'POST'
 		});
 		if (response.status === 200) {
 			invalidateAll();
@@ -36,17 +33,10 @@
 	const toggleSidebar = () => {
 		isHidden = !isHidden;
 	};
-	$: isHiddenNavbar = false;
-	navbarStore.subscribe((value) => {
-		isHiddenNavbar = value.isFullScreen;
-	});
 </script>
 
 <nav
-	class={clsx('navbar bg-primary w-full flex justify-between px4 lg:px-16 py-4 items-center', {
-		hidden: isHiddenNavbar,
-		'sticky top-0 z-50': !isHiddenNavbar
-	})}
+	class="navbar bg-primary w-full flex justify-between px4 lg:px-16 py-4 items-center sticky top-0 z-50"
 >
 	{#if user}
 		<button on:click={toggleSidebar} class="md:hidden">
@@ -69,11 +59,6 @@
 	<SidebarModal hiddenModal={isHidden} />
 	<div class="flex items-center gap-24">
 		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
-			<!-- {#each navs as { title, href }}
-				<li>
-					<a {href} {title} class="hover:text-secondary">{title}</a>
-				</li>
-			{/each} -->
 			<li>
 				<a href="/" title={$t('common.home')} class="hover:text-secondary"
 					>{$t('common.home')}</a

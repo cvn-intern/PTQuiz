@@ -1,6 +1,5 @@
 <script>
 	import Icon from '@iconify/svelte';
-	import { navbarStore } from '../../libs/store/navbarStore';
 	import { t } from '$i18n/translations';
 
 	const contactIcons = [
@@ -10,13 +9,10 @@
 		'ri:instagram-fill',
 		'mdi:linkedin'
 	];
-	$: isHiddenFooter = false;
-	navbarStore.subscribe((value) => {
-		isHiddenFooter = value.isFullScreen;
-	});
+
 </script>
 
-<footer class="bg-primary flex flex-col flex-end {isHiddenFooter ? 'hidden' : ''}">
+<footer class="bg-primary flex flex-col flex-end">
 	<div class="flex flex-col items-center">
 		<div class="container flex flex-col gap-8 md:flex-row justify-between lg:px-24 pt-4">
 			<div class="location flex flex-col items-center gap-2">
