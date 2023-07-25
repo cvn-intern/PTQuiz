@@ -1,4 +1,4 @@
-import { AnswerType, OptionType } from "./questionInput.type";
+import { AnswerType, OptionType } from './questionInput.type';
 
 export type QuestionResponse = {
     id: string;

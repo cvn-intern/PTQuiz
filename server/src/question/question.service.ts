@@ -38,7 +38,7 @@ export class QuestionService {
                 userId: userId,
                 categoryId: categoryId,
                 title: title,
-                options:{
+                options: {
                     optionA: optionA,
                     optionB: optionB,
                     optionC: optionC,
