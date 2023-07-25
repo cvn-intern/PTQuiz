@@ -84,5 +84,10 @@
     "PNGorJPG": "PNG hoặc JPG",
     "typeYourQuestionHere": "Nhập câu hỏi của bạn ở đây",
     "trueAnswer": "Đúng",
-    "falseAnswer": "Sai"
+    "falseAnswer": "Sai",
+    "success": "Thành công!",
+    "loading": "Đang tải...",
+    "ifYouDidNotReceiveEmail": "Nếu bạn không nhận được email, nhấn",
+    "here": "vào đây",
+    "toResendIt": "để gửi lại"
 }

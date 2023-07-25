@@ -28,7 +28,7 @@
 
 		if (form?.isSuccess) {
 			goto('/register/loading');
-			toast.success('Success!');
+			toast.success($t('common.success'));
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message);

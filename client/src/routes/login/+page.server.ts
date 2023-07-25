@@ -1,8 +1,9 @@
 import { fail, type Actions } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
-import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
+import { AuthError, ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 import { LoginFormSchema } from '../../libs/schema/index';
+import { translateValidation } from '$helpers/translateValidation';
 
 let message: Message;
 
@@ -31,9 +32,9 @@ export const actions: Actions = {
 			} else {
 				message.isSuccess = false;
 				message.error.missing.default = true;
-				message.error.message = result;
-
-				if (result === MESSAGE.EMAIL_NOT_CONFIRMED) {
+				const i18nTranslate = translateValidation(result);
+				message.error.message = i18nTranslate;
+				if (result === AuthError.USER_NOT_ACTIVATED) {
 					message.error.missing.confirmEmail = true;
 					message.error.fill.email = data.get('email') as string;
 				}
