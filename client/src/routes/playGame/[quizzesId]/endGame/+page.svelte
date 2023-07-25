@@ -6,11 +6,12 @@
 	import Score from '../../../../components/endGame/score.svelte';
 	import { navbarStore } from '../../../../libs/store/navbarStore';
 	import type { ResultGameInterface } from '../../../../interface/endGame.interface';
+	import { t } from '$i18n/translations';
 	export let data;
 
 	const STATUS = {
-		PASS: 'Pass',
-		FAIL: 'Fail'
+		PASS: $t('common.pass'),
+		FAIL: $t('common.fail')
 	};
 	let { result } = data;
 	let currentResult: ResultGameInterface = result[0];
@@ -45,7 +46,7 @@
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
 				on:click={() => {
 					goto('/');
-				}}>Leave game</button
+				}}>{$t('common.leaveGame')}</button
 			>
 		</div>
 		<div class="w-full flex flex-col gap-6 items-center">
