@@ -2,7 +2,7 @@ import { fail, type Actions } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
-import { LoginFormSchema } from '../../libs/schema/auth';
+import { LoginFormSchema } from '../../libs/schema/index';
 
 let message: Message;
 

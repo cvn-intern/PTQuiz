@@ -47,7 +47,7 @@
 <div class="items-center">
 	<form method="POST" action="?/change_password" use:enhance>
 		<div class="relative">
-			<label for="oldPassword" class="mb-1">{$t("common.oldPassword")}</label>
+			<label for="oldPassword" class="mb-1">{$t('common.oldPassword')}</label>
 			{#if !form?.isSuccess && form?.error?.missing.oldPassword && form?.tabs.change_password}
 				<label for="oldPassword" class="mb-1 text-red-500"
 					><br />{form?.error.message}</label
@@ -59,7 +59,7 @@
 					id="oldPassword"
 					name="oldPassword"
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-					placeholder="Old password"
+					placeholder={$t('common.oldPassword')}
 					type="password"
 					bind:value={formChangePassword.oldPassword}
 					on:focus={() => (inputFocused = true)}
@@ -73,7 +73,7 @@
 					/>
 				{/if}
 			</div>
-			<label for="newPassword" class="mb-1">{$t("common.newPassword")}</label>
+			<label for="newPassword" class="mb-1">{$t('common.newPassword')}</label>
 			{#if !form?.isSuccess && form?.error?.missing.newPassword && form?.tabs.change_password}
 				<label for="newPassword" class="mb-1 text-red-500"
 					><br />{form?.error.message}</label
@@ -85,7 +85,7 @@
 					id="newPassword"
 					name="newPassword"
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-					placeholder="New password"
+					placeholder={$t('common.newPassword')}
 					type="password"
 					bind:value={formChangePassword.newPassword}
 					on:focus={() => (inputFocused = true)}
@@ -99,7 +99,7 @@
 					/>
 				{/if}
 			</div>
-			<label for="confirmPassword" class="mb-1">{$t("common.confirmNewPassword")}</label>
+			<label for="confirmPassword" class="mb-1">{$t('common.confirmNewPassword')}</label>
 			{#if !form?.isSuccess && form?.error?.missing.confirmPassword && form?.tabs.change_password}
 				<label for="confirmPassword" class="mb-1 text-red-500"
 					><br />{form?.error.message}</label
@@ -109,7 +109,7 @@
 				id="confirmPassword"
 				name="confirmPassword"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-				placeholder="Confirm new password"
+				placeholder={$t('common.confirmNewPassword')}
 				type="password"
 				bind:value={formChangePassword.confirmPassword}
 				on:focus={() => (inputFocused = true)}
@@ -122,13 +122,13 @@
 						aria-label="Cancel"
 						class="w-full text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 						on:click={handleCancel}
-						type="button">{$t("common.cancle")}</button
+						type="button">{$t('common.cancel')}</button
 					>
 					<button
 						aria-label="Save"
 						on:click={handleSubmit}
 						class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-						type="submit">{$t("common.save")}</button
+						type="submit">{$t('common.save')}</button
 					>
 				</div>
 			</div>

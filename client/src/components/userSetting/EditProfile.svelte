@@ -116,7 +116,7 @@
 					name="displayName"
 					bind:value={formEditProfile.displayName}
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-					placeholder="Display name"
+					placeholder={$t('common.displayName')}
 					on:focus={() => (inputFocused = true)}
 				/>
 				<div class="absolute right-3 top-3">
