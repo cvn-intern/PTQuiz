@@ -1,26 +1,8 @@
-import { z } from 'zod';
 import { fail, type Actions } from '@sveltejs/kit';
 import type Message from '../../../login/interface/message.interface.js';
 import { createDefaultMessage } from '../../../login/interface/message.interface.js';
-import { ResponseMessage } from '../../../../libs/message/responseMessage.enum.js';
-
+import { ResetPasswordSchema } from '../../../../libs/schema/index';
 let message: Message;
-
-const ResetPasswordSchema = z
-	.object({
-		password: z
-			.string()
-			.min(8, ResponseMessage.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-			.max(50, ResponseMessage.PASSWORD_TOO_LONG),
-		confirmPassword: z
-			.string()
-			.min(8, ResponseMessage.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-			.max(50, ResponseMessage.CONFIRM_PASSWORD_TOO_LONG)
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: ResponseMessage.CONFIRM_PASSWORD_MUST_MATCH_PASSWORD,
-		path: ['confirmPassword']
-	});
 
 export const actions: Actions = {
 	reset: async ({ params, request, fetch }) => {

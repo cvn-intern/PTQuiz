@@ -1,14 +1,9 @@
-import { z } from 'zod';
-import { fail, Actions } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 import type Message from '../../login/interface/message.interface.js';
 import { createDefaultMessage } from '../../login/interface/message.interface.js';
-import { ResponseMessage } from '../../../libs/message/responseMessage.enum.js';
+import { ForgotPasswordSchema } from '../../../libs/schema/index';
 
 let message: Message;
-
-const ResendSchema = z.object({
-	email: z.string().email()
-});
 
 export const actions: Actions = {
 	resend: async ({ fetch, request }) => {
@@ -18,7 +13,7 @@ export const actions: Actions = {
 		const email = data.get('email');
 
 		try {
-			const parsedData = ResendSchema.parse({ email });
+			const parsedData = ForgotPasswordSchema.parse({ email });
 
 			const response = await fetch('/api/auth/resend', {
 				method: 'POST',

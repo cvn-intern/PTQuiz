@@ -1,41 +1,8 @@
-import { z } from 'zod';
-import { fail, type Actions, json } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../../libs/message/responseMessage.enum';
-
-const ProfileFormSchema = z.object({
-	displayName: z
-		.string()
-		.min(3, MESSAGE.DISPLAY_NAME_MUST_BE_AT_LEAST_3_CHARACTERS)
-		.max(50, MESSAGE.DISPLAY_NAME_TOO_LONG),
-	avatar: z
-		.any()
-		.refine(
-			(file) => file.size <= +import.meta.env.VITE_MAX_FILE_SIZE,
-			MESSAGE.AVATAR_MUST_BE_LESS_THAN_5MB
-		)
-});
-
-const PasswordFormSchema = z
-	.object({
-		oldPassword: z
-			.string()
-			.min(8, MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-			.max(50, MESSAGE.PASSWORD_TOO_LONG),
-		newPassword: z
-			.string()
-			.min(8, MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-			.max(50, MESSAGE.PASSWORD_TOO_LONG),
-		confirmPassword: z
-			.string()
-			.min(8, MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-			.max(50, MESSAGE.PASSWORD_TOO_LONG)
-	})
-	.refine((data) => data.newPassword === data.confirmPassword, {
-		message: MESSAGE.CONFIRM_PASSWORD_MUST_MATCH_PASSWORD,
-		path: ['confirmPassword']
-	});
+import { ProfileFormSchema, PasswordFormSchema } from '../../../libs/schema/index';
 
 let message: Message;
 
