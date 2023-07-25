@@ -1,33 +1,13 @@
-import { z } from 'zod';
 import { fail, type Actions } from '@sveltejs/kit';
 import type Message from '../login/interface/message.interface';
 import { createDefaultMessage } from '../login/interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
-
-const RegistrationFormSchema = z
-	.object({
-		displayName: z
-			.string()
-			.min(3, MESSAGE.DISPLAY_NAME_MUST_BE_AT_LEAST_3_CHARACTERS)
-			.max(50, MESSAGE.DISPLAY_NAME_TOO_LONG),
-		email: z.string().email(MESSAGE.INVALID_EMAIL),
-		password: z
-			.string()
-			.min(8, MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-			.max(50, MESSAGE.PASSWORD_TOO_LONG),
-		confirmPassword: z
-			.string()
-			.min(8, MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-			.max(50, MESSAGE.PASSWORD_TOO_LONG)
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: MESSAGE.CONFIRM_PASSWORD_MUST_MATCH_PASSWORD,
-		path: ['confirmPassword']
-	});
+import { RegistrationFormSchema } from '../../libs/schema/index';
+import { translateValidation } from '$helpers/translateValidation';
 
 let message: Message;
 
-export const actions:Actions = {
+export const actions: Actions = {
 	register: async ({ fetch, request }) => {
 		const data = await request.formData();
 		message = createDefaultMessage();
@@ -54,8 +34,8 @@ export const actions:Actions = {
 			} else {
 				message.isSuccess = false;
 				message.error.missing.default = true;
-				message.error.message = result.message;
-
+				const i18nTranslate = translateValidation(result);
+				message.error.message = i18nTranslate;
 				if (result.message === MESSAGE.EMAIL_NOT_CONFIRMED) {
 					message.error.missing.confirmEmail = true;
 				}

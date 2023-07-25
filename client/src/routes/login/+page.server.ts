@@ -1,16 +1,9 @@
-import { z } from 'zod';
 import { fail, type Actions } from '@sveltejs/kit';
 import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
-import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
-
-const LoginFormSchema = z.object({
-	email: z.string().email(MESSAGE.INVALID_EMAIL),
-	password: z
-		.string()
-		.min(8, MESSAGE.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS)
-		.max(50, MESSAGE.PASSWORD_TOO_LONG)
-});
+import { AuthError, ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
+import { LoginFormSchema } from '../../libs/schema/index';
+import { translateValidation } from '$helpers/translateValidation';
 
 let message: Message;
 
@@ -24,8 +17,6 @@ export const actions: Actions = {
 				email: data.get('email'),
 				password: data.get('password')
 			});
-
-			console.log(validatedData);
 
 			const response = await fetch('/api/auth/login', {
 				method: 'POST',
@@ -41,9 +32,9 @@ export const actions: Actions = {
 			} else {
 				message.isSuccess = false;
 				message.error.missing.default = true;
-				message.error.message = result;
-
-				if (result === MESSAGE.EMAIL_NOT_CONFIRMED) {
+				const i18nTranslate = translateValidation(result);
+				message.error.message = i18nTranslate;
+				if (result === AuthError.USER_NOT_ACTIVATED) {
 					message.error.missing.confirmEmail = true;
 					message.error.fill.email = data.get('email') as string;
 				}

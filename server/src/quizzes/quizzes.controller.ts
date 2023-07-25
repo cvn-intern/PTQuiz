@@ -22,6 +22,17 @@ import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
 export class QuizzesController {
     constructor(private quizzesService: QuizzesService) {}
 
+    @Post('/') // POST /quizzes
+    @HttpCode(HttpStatus.CREATED)
+    @ResponseMessage('Create Quiz successfully')
+    @UseGuards(JwtAuthGuard)
+    async createQuiz(
+        @GetCurrentUser('id') userId: string,
+        @Body() quiz: QuizzesDto,
+    ) {
+        return await this.quizzesService.createQuiz(userId, quiz);
+    }
+
     @Get('/all-quizzes')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get Quizzes successfully')

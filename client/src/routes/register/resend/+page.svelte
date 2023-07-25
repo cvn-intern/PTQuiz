@@ -31,7 +31,7 @@
 		dismissLoadingToast();
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 			goto('/register/loading');
 		} else {
 			dismissLoadingToast();
@@ -70,7 +70,6 @@
 						id="email"
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
 					/>
 				</div>
 				<div class="pt-4">

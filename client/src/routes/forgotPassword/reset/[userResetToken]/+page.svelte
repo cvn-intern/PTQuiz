@@ -32,7 +32,7 @@
 		dismissLoadingToast();
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 			invalidateAll();
 			window.location.href = '/';
 		} else {
@@ -71,7 +71,6 @@
 						id="password"
 						placeholder={$t('common.newPassword')}
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
 					/>
 				</div>
 				<div class="py-4">
@@ -82,7 +81,6 @@
 						id="confirmPassword"
 						placeholder={$t('common.confirmPassword')}
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
 					/>
 				</div>
 				<div class="pt-4">

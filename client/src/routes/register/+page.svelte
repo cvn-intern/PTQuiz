@@ -10,6 +10,8 @@
 
 	let isProcessing: boolean = false;
 
+	$: console.log(form);
+
 	const handleSubmit = async (): Promise<void> => {
 		if (isProcessing) return;
 		isProcessing = true;
@@ -26,10 +28,10 @@
 
 		if (form?.isSuccess) {
 			goto('/register/loading');
-			toast.success('Success!');
+			toast.success($t('common.success'));
 		} else {
 			dismissLoadingToast();
-			toast.error(form?.error.message || 'Invalid credentials');
+			toast.error(form?.error.message);
 			isProcessing = false;
 		}
 	};
