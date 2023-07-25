@@ -31,7 +31,7 @@ const RegistrationFormSchema = z
 	});
 
 const ForgotPasswordSchema = z.object({
-	email: z.string().email(t.get('INVALID_EMAIL'))
+	email: z.string().email(t.get('validation.INVALID_EMAIL'))
 });
 
 const ResetPasswordSchema = z

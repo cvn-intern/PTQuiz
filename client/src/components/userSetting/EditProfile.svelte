@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import toast from 'svelte-french-toast';
+	import { t } from '$i18n/translations';
 
 	import { enhance } from '$app/forms';
 	import type User from '../../interface/user.interface';
@@ -93,7 +94,7 @@
 				placeholder={user.email}
 			/>
 
-			<label for="loginFrom" class="mb-1">Login from</label>
+			<label for="loginFrom" class="mb-1">{$t('common.loginFrom')}</label>
 			<input
 				aria-label="Login from"
 				id="loginFrom"
@@ -102,7 +103,7 @@
 				placeholder={user.loginFrom || 'Local Authentication'}
 			/>
 
-			<label for="displayName" class="mb-1">Display name</label>
+			<label for="displayName" class="mb-1">{$t('common.displayName')}</label>
 			{#if !form?.isSuccess && form?.tabs?.edit_profile && form?.error.missing.displayName}
 				<label for="displayName" class="mb-1 text-red-500"
 					><br />{form?.error.message}</label
@@ -130,13 +131,13 @@
 					aria-label="Cancel"
 					class="w-full text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 					on:click={handleCancel}
-					type="button">Cancel</button
+					type="button">{$t('common.cancle')}</button
 				>
 				<button
 					aria-label="Save"
 					on:click={handleSubmit}
 					class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-					type="submit">Save</button
+					type="submit">{$t('common.save')}</button
 				>
 			</div>
 		{/if}

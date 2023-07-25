@@ -23,7 +23,7 @@
     "history": "Lịch sử",
     "profile": "Hồ sơ",
     "loginToYourAccount": "Đăng nhập vào tài khoản của bạn",
-    "explore" : "Khám phá tiềm năng của bạn",
+    "explore": "Khám phá tiềm năng của bạn",
     "playGameIntro": "Kiểm tra kiến thức của bạn với trò chơi của chúng tôi",
     "createQuizIntro": "Tạo trò chơi của riêng bạn",
     "playGame": "Chơi trò chơi",
@@ -38,5 +38,12 @@
     "sendEmailVerification": "Gửi email xác minh",
     "createdAt": "Ngày tạo",
     "startBtn": "Bắt đầu",
-    "signOut": "Đăng xuất"
+    "signOut": "Đăng xuất",
+    "loginFrom": "Đăng nhập từ",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "changePassword": "Thay đổi mật khẩu",
+    "oldPassword": "Mật khẩu cũ",
+    "confirmNewPassword": "Xác nhận mật khẩu mới",
+    "save": "Lưu",
+    "cancel": "Hủy"
 }

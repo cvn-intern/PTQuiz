@@ -38,5 +38,12 @@
     "sendEmailVerification": "Send Email Verification",
     "createdAt": "Created at",
     "startBtn": "Start",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "loginFrom": "Login from",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "oldPassword": "Old Password",
+    "confirmNewPassword": "Confirm New Password",
+    "save": "Save",
+    "cancel": "Cancel"
 }
