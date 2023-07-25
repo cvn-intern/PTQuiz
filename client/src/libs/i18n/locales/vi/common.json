@@ -37,5 +37,6 @@
     "checkYourEmailToVerify": "Kiểm tra email của bạn để xác minh tài khoản",
     "sendEmailVerification": "Gửi email xác minh",
     "createdAt": "Ngày tạo",
-    "startBtn": "Bắt đầu"
+    "startBtn": "Bắt đầu",
+    "signOut": "Đăng xuất"
 }

@@ -37,5 +37,6 @@
     "checkYourEmailToVerify": "Check your email to verify your identity",
     "sendEmailVerification": "Send Email Verification",
     "createdAt": "Created at",
-    "startBtn": "Start"
+    "startBtn": "Start",
+    "signOut": "Sign Out"
 }
