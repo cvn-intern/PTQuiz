@@ -76,5 +76,11 @@
 	"hard": "Hard",
 	"medium": "Medium",
 	"easy": "Easy",
-	"mixed": "Mixed"
+	"mixed": "Mixed",
+	"typeYourAnswer": "Type your answer here",
+	"uploadImage": "Upload Image",
+	"PNGorJPG": "PNG or JPG",
+	"typeYourQuestionHere": "Type your question here",
+	"trueAnswer": "True",
+	"falseAnswer": "False"
 }

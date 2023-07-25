@@ -1,3 +1,8 @@
+<script>
+
+	import { t } from "$i18n/translations";
+
+</script>
 <div class="h-2/5 py-6 gap-3 w-full flex flex-row items-center">
 	<div class="flex items-center justify-center lg:w-1/4 md:w-1/2 w-1/3 h-full">
 		<label
@@ -26,13 +31,13 @@
 					class="2xl:mb-2 2xl:text-sm xl:mb-1 xl:text-sm lg:mb-[5px] lg:text-xl md:mb-2 md:text-xl mb-2 text-[10px] text-gray-500 dark:text-gray-400"
 				>
 					<span class="xl:font-semibold lg:font-semibold md:font-semibold font-semibold"
-						>Upload image</span
+						>{$t('common.uploadImage')}</span
 					>
 				</p>
 				<p
 					class="2xl:text-xs xl:text-xs lg:text-[10px] md:text-xl text-xs text-gray-500 dark:text-gray-400"
 				>
-					PNG or JPG
+				{$t('common.PNGorJPG')}
 				</p>
 			</div>
 			<input id="dropzone-file" type="file" class="hidden" />
@@ -40,7 +45,7 @@
 	</div>
 	<textarea
 		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-full md:text-xl w-3/4 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
-		placeholder="Type your question here"
+		placeholder="{$t('common.typeYourQuestionHere')}"
 		rows="5"
 	/>
 </div>

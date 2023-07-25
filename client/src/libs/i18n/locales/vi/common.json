@@ -76,5 +76,11 @@
 	"hard": "Khó",
 	"medium": "Trung bình",
 	"easy": "Dễ",
-	"mixed": "Hỗn hợp"
+	"mixed": "Hỗn hợp",
+	"typeYourAnswer": "Nhập câu trả lời của bạn ở đây",
+	"uploadImage": "Tải ảnh lên",
+	"PNGorJPG": "PNG hoặc JPG",
+	"typeYourQuestionHere": "Nhập câu hỏi của bạn ở đây",
+	"trueAnswer": "Đúng",
+	"falseAnswer": "Sai"
 }
