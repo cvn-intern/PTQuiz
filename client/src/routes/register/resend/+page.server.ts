@@ -24,14 +24,12 @@ export const actions: Actions = {
 			});
 
 			const result = await response.json();
+			message.isDone = true;
 
 			if (response.status === 200) {
-				message.isDone = true;
-				message.isSuccess = true;
 				message.success.message = result;
 				return message;
 			} else {
-				message.isDone = true;
 				message.isSuccess = false;
 				message.error.missing.default = true;
 				const i18nTranslate = translateValidation(result);

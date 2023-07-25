@@ -6,6 +6,28 @@ import { QuestionData } from './type/questionInput.type';
 @Injectable()
 export class QuestionService {
     constructor(private prisma: PrismaService) {}
+
+    async updateNumberQuestion(quizId: string) {
+        try {
+            const questions = await this.prisma.quiz_questions.findMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            const numberQuestion = questions.length;
+            await this.prisma.quizzes.update({
+                where: {
+                    id: quizId,
+                },
+                data: {
+                    numberQuestions: numberQuestion,
+                },
+            });
+        } catch (err) {
+            throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
+        }
+    }
+
     async getQuestion(questionId: string) {
         try {
             const question = await this.prisma.questions.findUnique({
@@ -101,39 +123,99 @@ export class QuestionService {
                     sortOrder: 0,
                 },
             });
+            await this.updateNumberQuestion(quizId);
             return question;
         } catch (err) {
             throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
         }
     }
 
-    async updateQuestion(questionId: string, questionData: QuestionData) {
+    async updateQuestion(
+        userId: string,
+        questionId: string,
+        questionData: QuestionDto,
+    ) {
         try {
-            const question = await this.prisma.questions.update({
+            console.log(questionData);
+            if (!questionId) {
+                throw new HttpException(
+                    'Question id is required',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            const existQuestion = await this.prisma.questions.findUnique({
                 where: {
                     id: questionId,
                 },
-                data: questionData,
             });
-            return question;
+            if (!existQuestion) {
+                throw new HttpException(
+                    'Question not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (existQuestion.userId !== userId) {
+                throw new HttpException(
+                    'You are not authorized to update this question',
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+            const existCategory = await this.prisma.categories.findUnique({
+                where: {
+                    id: questionData.categoryId,
+                },
+            });
+
+            console.log(existCategory);
+
+            if (!existCategory) {
+                throw new HttpException(
+                    'Category not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            return await this.prisma.questions.update({
+                where: {
+                    id: questionId,
+                },
+                data: {
+                    userId: userId,
+                    ...questionData,
+                },
+            });
         } catch (err) {
-            throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
+            console.log(err);
+            throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
         }
     }
 
-    async deleteQuestion(questionId: string) {
+    async deleteQuestion(userId: string, questionId: string, quizId: string) {
         try {
-            const question = await this.prisma.questions.delete({
+            const existQuestion = await this.prisma.questions.findUnique({
                 where: {
                     id: questionId,
                 },
             });
+            if (!existQuestion) {
+                throw new HttpException(
+                    'Question not found',
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (existQuestion.userId !== userId) {
+                throw new HttpException(
+                    'You are not authorized to delete this question',
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+
             await this.prisma.quiz_questions.deleteMany({
                 where: {
                     questionId: questionId,
+                    quizId: quizId,
                 },
             });
-            return question;
+            return await this.updateNumberQuestion(quizId);
         } catch (err) {
             throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
         }

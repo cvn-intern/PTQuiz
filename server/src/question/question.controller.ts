@@ -3,6 +3,7 @@ import {
     Controller,
     Get,
     Post,
+    Put,
     HttpCode,
     HttpStatus,
     UseGuards,
@@ -29,7 +30,7 @@ export class QuestionController {
         return await this.questionService.getQuestion(questionId);
     }
 
-    @Post('/')
+    @Post('/create')
     @HttpCode(HttpStatus.CREATED)
     @ResponseMessage('Create Question successfully')
     @UseGuards(JwtAuthGuard)
@@ -41,6 +42,22 @@ export class QuestionController {
         return await this.questionService.createQuestion(
             userId,
             quizId,
+            questionsData,
+        );
+    }
+
+    @Put('/update')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Update Question successfully')
+    @UseGuards(JwtAuthGuard)
+    async updateQuestion(
+        @Body() questionsData: QuestionDto,
+        @GetCurrentUser('id') userId: string,
+        @Query('questionId') questionId: string,
+    ) {
+        return await this.questionService.updateQuestion(
+            userId,
+            questionId,
             questionsData,
         );
     }
