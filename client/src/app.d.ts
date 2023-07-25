@@ -9,15 +9,15 @@ declare global {
 			accessToken: string | undefined;
 			lastPage: string;
 		}
-		interface PageData {
-			user: {
-				email: string;
-				displayName: string;
-				accessToken: string;
-				refreshToken: string;
-			};
-			title: string;
-		}
+		// interface PageData {
+		// 	user: {
+		// 		email: string;
+		// 		displayName: string;
+		// 		accessToken: string;
+		// 		refreshToken: string;
+		// 	};
+		// 	title: string;
+		// }
 	}
 }
 

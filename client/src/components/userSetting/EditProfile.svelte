@@ -11,8 +11,6 @@
 	export let formEditProfile: FormEditProfile;
 	export let form: any;
 
-	$: console.log(form);
-
 	let imageFile;
 	let inputFocused = false;
 	let imageUrl: string = user?.avatar;
