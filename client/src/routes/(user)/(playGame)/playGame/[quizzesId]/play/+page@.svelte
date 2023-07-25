@@ -14,7 +14,7 @@
 
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
-	function decryptData(cipherText:any) {
+	function decryptData(cipherText: any) {
 		const bytes = CryptoJS.AES.decrypt(cipherText, key);
 		const originalText = bytes.toString(CryptoJS.enc.Utf8);
 		return JSON.parse(originalText);
@@ -22,7 +22,6 @@
 
 	let quizzes: QuizzesType = data.result;
 	quizzes = decryptData(quizzes);
-	console.log(quizzes);
 	let quizzesId = $page.params.quizzesId;
 
 	let gameInfo: any;
