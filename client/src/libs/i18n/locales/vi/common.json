@@ -45,5 +45,6 @@
     "oldPassword": "Mật khẩu cũ",
     "confirmNewPassword": "Xác nhận mật khẩu mới",
     "save": "Lưu",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "localAuthen": "Xác thực bằng mật khẩu"
 }

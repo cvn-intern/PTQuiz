@@ -100,7 +100,7 @@
 				id="loginFrom"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				disabled
-				placeholder={user.loginFrom || 'Local Authentication'}
+				placeholder={user.loginFrom || $t('common.localAuthen')}
 			/>
 
 			<label for="displayName" class="mb-1">{$t('common.displayName')}</label>

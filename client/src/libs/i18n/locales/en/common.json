@@ -45,5 +45,6 @@
     "oldPassword": "Old Password",
     "confirmNewPassword": "Confirm New Password",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "localAuthen": "Local Authentication"
 }
