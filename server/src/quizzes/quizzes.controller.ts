@@ -69,4 +69,15 @@ export class QuizzesController {
     ) {
         return await this.quizzesService.getAllQuestionsOfQuiz(userId, quizId);
     }
+
+    @Post('/create')
+    @HttpCode(HttpStatus.CREATED)
+    @ResponseMessage('Create Quiz successfully')
+    @UseGuards(JwtAuthGuard)
+    async createQuiz(
+        @GetCurrentUser('id') userId: string,
+        @Body() quiz: QuizzesDto,
+    ) {
+        return await this.quizzesService.createQuiz(userId, quiz);
+    }
 }
