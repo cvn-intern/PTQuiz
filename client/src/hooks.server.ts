@@ -54,8 +54,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 						path: '/'
 					});
 					event.locals.accessToken = event.cookies.get('accessToken');
-					const user = await getProfile(event.locals.accessToken);
-					if (!user) {
+					event.locals.user = await getProfile(event.locals.accessToken);
+					if (!event.locals.user) {
 						event.locals.user = undefined;
 						event.locals.accessToken = undefined;
 						event.cookies.delete('accessToken', {
@@ -65,8 +65,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 							path: '/'
 						});
 						event.locals.lastPage = event.url.pathname;
-					} else {
-						event.locals.user = user;
 					}
 
 					return await resolve(event);

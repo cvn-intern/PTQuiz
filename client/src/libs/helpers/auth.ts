@@ -60,6 +60,7 @@ export const refreshToken = async (refreshToken: string | undefined) => {
 	if (!refreshToken) {
 		return undefined;
 	}
+
 	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
 		method: 'POST',
 		headers: {
@@ -73,5 +74,6 @@ export const refreshToken = async (refreshToken: string | undefined) => {
 	if (response.status === 201) {
 		return result;
 	}
+
 	return undefined;
 };
