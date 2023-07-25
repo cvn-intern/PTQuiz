@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class QuestionDto {
     @IsNotEmpty({ message: 'Categories can not be empty' })
@@ -13,7 +13,7 @@ export class QuestionDto {
     @IsNotEmpty({ message: 'Answer can not be empty' })
     answers: string[];
 
-    @IsNotEmpty({ message: 'Answer can not be empty' })
+    @IsOptional()
     image: string;
 
     @IsNotEmpty({ message: 'Type can not be empty' })

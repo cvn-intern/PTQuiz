@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuestionResponse } from './type/questionResponse.type';
+import { QuestionDto } from './dto/question.dto';
+import { QuestionData } from './type/questionInput.type';
 @Injectable()
 export class QuestionService {
     constructor(private prisma: PrismaService) {}
@@ -47,5 +49,54 @@ export class QuestionService {
         } catch (err) {
             throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private async updateIfChanged(updatedQuestion: Partial<QuestionResponse>) {
+        if (!updatedQuestion.id) {
+            return this.prisma.questions.create({
+                data: updatedQuestion as QuestionResponse,
+            });
+        }
+
+        const question = await this.prisma.questions.findUnique({
+            where: { id: updatedQuestion.id },
+        });
+
+        if (!question) {
+            throw new Error('Question not found');
+        }
+
+        let data: QuestionResponse;
+        for (const field in updatedQuestion) {
+            if (updatedQuestion[field] !== question[field]) {
+                data[field] = updatedQuestion[field];
+            }
+        }
+
+        if (Object.keys(data).length > 0) {
+            return this.prisma.questions.update({
+                where: { id: updatedQuestion.id },
+                data,
+            });
+        }
+
+        return null;
+    }
+
+    async updateQuestions(
+        questions: Partial<QuestionData>[],
+    ): Promise<(QuestionData | null)[]> {
+        return Promise.all(questions.map(this.updateIfChanged.bind(this)));
+    }
+
+    async createQuestions(questionsData: QuestionDto[], userId: string) {
+        const createQuestionsPromises = questionsData.map((questionData) => {
+            // return this.prisma.questions.create({
+            //     data: { ...questionData, userId },
+            // });
+            console.log(questionData);
+        });
+
+        // return await this.prisma.$transaction(createQuestionsPromises);
     }
 }
