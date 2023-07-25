@@ -269,7 +269,7 @@ export class QuizzesService {
         }
     }
 
-    async createQuiz(userId: string, quiz: any) {
+    async createQuiz(userId: string, quiz: QuizzesDto) {
         try {
             const newQuiz = await this.prisma.quizzes.create({
                 data: {

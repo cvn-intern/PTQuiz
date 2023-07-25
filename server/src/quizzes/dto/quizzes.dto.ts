@@ -12,7 +12,6 @@ export class QuizzesDto {
     })
     description: string;
 
-    @IsNotEmpty({ message: 'Image can not be empty' })
     image: string;
 
     @IsNotEmpty({ message: 'DurationMins can not be empty' })
@@ -48,6 +47,8 @@ export class QuizzesDto {
 
     @IsNotEmpty({ message: 'End date can not be empty' })
     endDate: Date;
+
+    passed: boolean;
 
     @IsNotEmpty({ message: 'IsActivated can not be empty' })
     @IsBoolean({ message: 'IsActivated must be a boolean' })
