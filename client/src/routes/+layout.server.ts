@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-export const load: LayoutServerLoad = async ({ cookies, request, url }) => {
+export const load: LayoutServerLoad = async ({ cookies, request, url, locals : {user} }) => {
 	if (
 		request.headers.has('accept-language') &&
 		!request.headers.get('user-agent')?.includes('Googlebot')
@@ -20,11 +20,13 @@ export const load: LayoutServerLoad = async ({ cookies, request, url }) => {
 		const initLocale = cookies.get('lang') || defaultLocale; // set default if no locale already set
 
 		return {
+            user,
 			lang: initLocale,
 			pathname: url.pathname
 		};
 	}
 	return {
+        user,
 		lang: null,
 		pathname: url.pathname
 	};
