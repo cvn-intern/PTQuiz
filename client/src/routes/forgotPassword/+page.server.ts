@@ -1,47 +1,49 @@
+import { z } from 'zod';
 import { fail, type Actions } from '@sveltejs/kit';
 import type Message from '../login/interface/message.interface.js';
 import { createDefaultMessage } from '../login/interface/message.interface.js';
 import { ResponseMessage } from '../../libs/message/responseMessage.enum.js';
+
 let message: Message;
+
+const ForgotPasswordSchema = z.object({
+	email: z.string().email()
+});
 
 export const actions: Actions = {
 	forgotPassword: async ({ fetch, request }) => {
 		message = createDefaultMessage();
 
 		const data = await request.formData();
-		if (!String(data.get('email')) || String(data.get('email'))?.trim().length === 0) {
-			message.isDone = true;
-			message.error.missing.email = true;
-			message.error.message = ResponseMessage.MISSING_EMAIL;
-			return fail(400, { ...message });
-		}
+		const email = data.get('email');
 
-		// use regex to validate email
-		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-		if (!emailRegex.test(data.get('email') as string)) {
-			message.isDone = true;
-			message.error.missing.email = true;
-			message.error.message = ResponseMessage.INVALID_EMAIL;
-			return fail(400, { ...message });
-		}
+		try {
+			const parsedData = ForgotPasswordSchema.parse({ email });
 
-		const response = await fetch('/api/auth/forgotPassword', {
-			method: 'POST',
-			body: JSON.stringify({
-				email: data.get('email')
-			})
-		});
-		const result = await response.json();
-		if (response.status === 200) {
+			const response = await fetch('/api/auth/forgotPassword', {
+				method: 'POST',
+				body: JSON.stringify({
+					email: parsedData.email
+				})
+			});
+
+			const result = await response.json();
+			if (response.status === 200) {
+				message.isDone = true;
+				message.isSuccess = true;
+				message.success.message = result;
+				return message;
+			} else {
+				message.isDone = true;
+				message.isSuccess = false;
+				message.error.missing.default = true;
+				message.error.message = result;
+				return fail(400, { ...message });
+			}
+		} catch (err: any) {
 			message.isDone = true;
-			message.isSuccess = true;
-			message.success.message = result;
-			return message;
-		} else {
-			message.isDone = true;
-			message.isSuccess = false;
-			message.error.missing.default = true;
-			message.error.message = result;
+			(message.error.missing as Record<string, boolean>)[`${err.errors[0].path}`] = true;
+			message.error.message = err.errors[0].message;
 			return fail(400, { ...message });
 		}
 	}
