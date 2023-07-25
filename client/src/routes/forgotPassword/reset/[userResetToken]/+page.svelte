@@ -32,7 +32,7 @@
 		dismissLoadingToast();
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 			invalidateAll();
 			window.location.href = '/';
 		} else {

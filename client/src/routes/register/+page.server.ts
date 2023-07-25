@@ -3,6 +3,7 @@ import type Message from '../login/interface/message.interface';
 import { createDefaultMessage } from '../login/interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 import { RegistrationFormSchema } from '../../libs/schema/index';
+import { translateValidation } from '$helpers/translateValidation';
 
 let message: Message;
 
@@ -33,8 +34,8 @@ export const actions: Actions = {
 			} else {
 				message.isSuccess = false;
 				message.error.missing.default = true;
-				message.error.message = result;
-
+				const i18nTranslate = translateValidation(result);
+				message.error.message = i18nTranslate;
 				if (result.message === MESSAGE.EMAIL_NOT_CONFIRMED) {
 					message.error.missing.confirmEmail = true;
 				}

@@ -3,7 +3,7 @@ import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { AuthError, ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 import { LoginFormSchema } from '../../libs/schema/index';
-import { translateValidation } from '../../libs/helpers/translateValidation';
+import { translateValidation } from '$helpers/translateValidation';
 
 let message: Message;
 

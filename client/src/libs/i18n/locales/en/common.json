@@ -86,5 +86,8 @@
     "trueAnswer": "True",
     "falseAnswer": "False",
     "success": "Success!",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "ifYouDidNotReceiveEmail": "If you didn't receive the email, click",
+    "here": "here",
+    "toResendIt": "to resend it"
 }

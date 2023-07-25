@@ -86,5 +86,8 @@
     "trueAnswer": "Đúng",
     "falseAnswer": "Sai",
     "success": "Thành công!",
-    "loading": "Đang tải..."
+    "loading": "Đang tải...",
+    "ifYouDidNotReceiveEmail": "Nếu bạn không nhận được email, nhấn",
+    "here": "vào đây",
+    "toResendIt": "để gửi lại"
 }
