@@ -12,6 +12,7 @@ export class QuizzesDto {
     })
     description: string;
 
+    @IsNotEmpty({ message: 'Image can not be empty' })
     image: string;
 
     @IsNotEmpty({ message: 'DurationMins can not be empty' })
