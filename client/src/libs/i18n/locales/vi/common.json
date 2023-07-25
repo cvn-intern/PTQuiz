@@ -63,5 +63,18 @@
 	"hard": "Khó",
 	"medium": "Trung bình",
 	"easy": "Dễ",
-	"mixed": "Hỗn hợp"
+	"mixed": "Hỗn hợp",
+    "loginToYourAccount": "Đăng nhập vào tài khoản của bạn",
+    "explore" : "Khám phá tiềm năng của bạn",
+    "playGameIntro": "Kiểm tra kiến thức của bạn với trò chơi của chúng tôi",
+    "createQuizIntro": "Tạo trò chơi của riêng bạn",
+    "send": "Gửi",
+    "checkYourEmail": "Kiểm tra email của bạn",
+    "ifYouDontSeeEmail": "Nếu bạn không thấy email? ",
+    "resend": "Gửi lại",
+    "resetPassword": "Đặt lại mật khẩu",
+    "checkYourEmailToVerify": "Kiểm tra email của bạn để xác minh tài khoản",
+    "sendEmailVerification": "Gửi email xác minh",
+    "createdAt": "Ngày tạo",
+    "startBtn": "Bắt đầu"
 }

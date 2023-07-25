@@ -10,7 +10,7 @@
 >
 	<div class="title flex flex-col justify-center py-4 lg:pb-20 gap-10">
 		<h1 class="text-5xl md:text-7xl font-bold font-title text-darkGreen">Penta Quiz</h1>
-		<h2 class="text-3xl font-semibold">{$t('common.exploringYourFullPotential')}</h2>
+		<h2 class="text-3xl font-semibold">{$t('common.explore')}</h2>
 	</div>
 	<div class="card flex flex-col md:flex-row gap-6 md:gap-20 md:justify-center">
 		<PlayCard
@@ -18,14 +18,14 @@
 			href={'/discovery'}
 			altText={'Play Game'}
 			title={$t('common.playGame')}
-			intro={$t('common.testYourKnowledgeWithOurQuiz')}
+			intro={$t('common.playGameIntro')}
 		/>
 		<PlayCard
 			src={CreateQuiz}
 			href={'/'}
 			altText={'Play Game'}
 			title={$t('common.createQuiz')}
-			intro={$t('common.createYourOwnQuiz')}
+			intro={$t('common.createQuizIntro')}
 		/>
 	</div>
 </div>

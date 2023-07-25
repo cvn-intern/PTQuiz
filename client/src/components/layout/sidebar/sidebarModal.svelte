@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	export let hiddenModal: boolean = true;
 	import { sineIn } from 'svelte/easing';
 	import { Drawer, CloseButton } from 'flowbite-svelte';
 	import SidebarItem from './sidebarItem.svelte';
+	import { t } from '$i18n/translations';
 	let transitionParams = {
 		x: -320,
 		duration: 200,
@@ -28,21 +28,25 @@
 	<div class="flex flex-col">
 		<div class="overflow-y-auto py-4 rounded dark:bg-gray-800">
 			<SidebarItem
-				name={'My Quizzes'}
+				name={$t('common.myQuizzes')}
 				icon={'tabler:home'}
 				navigateTo={'/dashboard/quizzes'}
 			/>
 			<SidebarItem
-				name={'History'}
+				name={$t('common.history')}
 				icon={'material-symbols:history'}
 				navigateTo={'/dashboard/history'}
 			/>
 			<SidebarItem
-				name={'Profile'}
+				name={$t('common.profile')}
 				icon={'mingcute:user-setting-fill'}
 				navigateTo={'/dashboard/profile'}
 			/>
-			<SidebarItem name={'Discovery'} icon={'mdi:world'} navigateTo={'/discovery'} />
+			<SidebarItem
+				name={$t('common.discovery')}
+				icon={'mdi:world'}
+				navigateTo={'/discovery'}
+			/>
 		</div>
 	</div>
 </Drawer>

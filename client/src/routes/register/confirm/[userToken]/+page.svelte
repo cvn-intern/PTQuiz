@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { Spinner } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
+	import { t } from '$i18n/translations';
 
 	let isSuccess = true;
 	let error: string;
@@ -24,7 +25,7 @@
 			window.location.href = '/';
 			invalidateAll();
 		} else {
-            isSuccess = false;
+			isSuccess = false;
 			error = res;
 		}
 	});
@@ -39,12 +40,13 @@
 			<p class="font-semibold">{error}</p>
 			<div class=" text-gray-400">
 				<p>
-					If you still didn't receive it? <button
+					{$t('common.ifYouDontSeeEmail')}
+					<button
 						class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 						on:click={() => {
 							goto('/register/resend');
 						}}
-						>Resend
+						>{$t('common.resend')}
 					</button>
 				</p>
 			</div>

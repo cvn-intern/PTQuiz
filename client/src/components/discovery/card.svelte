@@ -2,9 +2,7 @@
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import clsx from 'clsx';
-	import toast from 'svelte-french-toast';
 	import { t } from '$i18n/translations';
-
 	export let image = '';
 	export let nameOfQuiz = '';
 	export let author = '';
@@ -27,6 +25,18 @@
 	async function handleStart() {
 		goto(`/playGame/${id}`);
 	}
+	const levelI18n = (level: string) => {
+		switch (level) {
+			case 'Easy':
+				return $t('common.easy');
+			case 'Medium':
+				return $t('common.medium');
+			case 'Hard':
+				return $t('common.hard');
+			default:
+				return $t('common.mixed');
+		}
+	};
 </script>
 
 <div class="max-w-sm lg:w-80 bg-gray-50 shadow-lg rounded-xl p-6">
@@ -62,7 +72,7 @@
 						<p
 							class="flex items-center bg-green-400 text-white text-xs px-2 py-1 rounded-lg mt-1 whitespace-pre-wrap max-h-titleCard overflow-y-hidden"
 						>
-							{$t(`common.${category}`)}
+							{category}
 						</p>
 					</div>
 				</div>
@@ -82,7 +92,7 @@
 							'bg-purple-100 text-purple-400': stringLevel === 'Undefined'
 						})}
 					>
-						{stringLevel !== 'Undefined' ? $t(`common.${stringLevel}`) : 'Mixed'}
+						{stringLevel !== 'Undefined' ? levelI18n(stringLevel) : levelI18n('Mixed')}
 					</span>
 				</div>
 			</div>

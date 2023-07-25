@@ -25,7 +25,9 @@
 	];
 
 	const logout = async () => {
-		const response = await fetch('/api/auth/logout');
+		const response = await fetch('/api/auth/logout', {
+			method: 'POST',
+		});
 		if (response.status === 200) {
 			invalidateAll();
 			window.location.href = '/';

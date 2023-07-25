@@ -2,14 +2,13 @@
 	import Card from './card.svelte';
 	export let nameCategory = '';
 	export let cardList: any[] = [];
-	import { t } from '$i18n/translations';
 </script>
 
 <div class="px-4 md:py-8 md:px-12 lg:px-20">
 	<h1
 		class="text-2xl font-semibold font-body mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2"
 	>
-		{$t(`common.${nameCategory}`)}
+		{nameCategory}
 	</h1>
 
 	<div
