@@ -1,12 +1,9 @@
-import {
-    HttpException,
-    HttpStatus,
-    Injectable
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuestionService } from '../question/question.service';
 import { QuizzesError } from '../error/quizzesError.enum';
 import { QuestionResponse } from '../question/type/questionResponse.type';
+import { QuizzesDto } from './dto';
 @Injectable()
 export class QuizzesService {
     constructor(
@@ -265,6 +262,38 @@ export class QuizzesService {
                     return allQuestions;
                 }
             }
+        } catch (error) {
+            throw new HttpException(
+                QuizzesError.ERROR_QUIZ,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+    }
+
+    async createQuiz(userId: string, quiz: QuizzesDto) {
+        try {
+            const newQuiz = await this.prisma.quizzes.create({
+                data: {
+                    userId: userId,
+                    title: quiz.title,
+                    numberQuestions: 0,
+                    description: quiz.description,
+                    image: quiz.image,
+                    durationMins: quiz.durationMins,
+                    isRandom: quiz.isRandom,
+                    isRandomOption: quiz.isRandomOption,
+                    attempts: quiz.attempts,
+                    point: quiz.point,
+                    passingPoint: quiz.passingPoint,
+                    passed: quiz.passed || true,
+                    difficultyLevel: quiz.difficultyLevel,
+                    startDate: quiz.startDate,
+                    endDate: quiz.endDate,
+                    isActivated: quiz.isActivated,
+                    isShared: quiz.isShared,
+                },
+            });
+            return newQuiz;
         } catch (error) {
             throw new HttpException(
                 QuizzesError.ERROR_QUIZ,

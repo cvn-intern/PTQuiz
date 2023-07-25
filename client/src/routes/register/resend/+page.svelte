@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import { Toast } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
 	import type { LayoutData } from '../../$types.js';
+	import { t } from '$i18n/translations.js';
 	export let form;
 	export let data: LayoutData;
 
@@ -50,7 +50,9 @@
 <section class="flex flex-col justify-center items-center w-full">
 	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
-			<h1 class=" text-secondary text-[20px] font-bold">Send Email Verification</h1>
+			<h1 class=" text-secondary text-[20px] font-bold">
+				{$t('common.sendEmailVerification')}
+			</h1>
 			<form
 				method="POST"
 				class="w-full px-4 lg:px-0 mx-auto"
@@ -68,7 +70,6 @@
 						id="email"
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
-						required
 					/>
 				</div>
 				<div class="pt-4">
@@ -76,19 +77,20 @@
 						on:click={handleSubmit}
 						type="submit"
 						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
-						>Send</button
+						>{$t('common.send')}</button
 					>
 				</div>
 			</form>
 			<div>
 				<div class=" text-gray-400">
 					<p>
-						Already have an account? <button
+						{$t('common.alreadyHaveAnAccount')}
+						<button
 							class="text-secondary hover:underline hover:text-darkGreen cursor-pointer"
 							on:click={() => {
 								goto('/login');
 							}}
-							>Log In
+							>{$t('common.login')}
 						</button>
 					</p>
 				</div>

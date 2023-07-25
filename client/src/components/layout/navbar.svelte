@@ -7,7 +7,7 @@
 	import logo from '../../assets/logo.png';
 	import { navbarStore } from '../../libs/store/navbarStore';
 	import clsx from 'clsx';
-
+	import { t } from '$i18n/translations';
 	export let user: {
 		avatar: string;
 		displayName: string;
@@ -15,17 +15,19 @@
 	let isHidden: boolean = true;
 	const navs = [
 		{
-			title: 'Home',
+			title: $t('common.home'),
 			href: '/'
 		},
 		{
-			title: 'Discovery',
+			title: $t('common.discovery'),
 			href: '/discovery'
 		}
 	];
 
 	const logout = async () => {
-		const response = await fetch('/api/auth/logout');
+		const response = await fetch('/api/auth/logout', {
+			method: 'POST',
+		});
 		if (response.status === 200) {
 			invalidateAll();
 			window.location.href = '/';
@@ -67,11 +69,21 @@
 	<SidebarModal hiddenModal={isHidden} />
 	<div class="flex items-center gap-24">
 		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
-			{#each navs as { title, href }}
+			<!-- {#each navs as { title, href }}
 				<li>
 					<a {href} {title} class="hover:text-secondary">{title}</a>
 				</li>
-			{/each}
+			{/each} -->
+			<li>
+				<a href="/" title={$t('common.home')} class="hover:text-secondary"
+					>{$t('common.home')}</a
+				>
+			</li>
+			<li>
+				<a href="/discovery" title={$t('common.discovery')} class="hover:text-secondary">
+					{$t('common.discovery')}
+				</a>
+			</li>
 		</ul>
 		{#if user}
 			<div class="flex items-center cursor-pointer">
@@ -94,7 +106,7 @@
 					}}
 				>
 					<Icon icon="tabler:home" class={'text-2xl'} />
-					<h1 class="text-base">My Quizzes</h1>
+					<h1 class="text-base">{$t('common.myQuizzes')}</h1>
 				</DropdownItem>
 				<DropdownItem
 					class="flex gap-2 items-center"
@@ -103,7 +115,7 @@
 					}}
 				>
 					<Icon icon="material-symbols:history" class={'text-2xl'} />
-					<h1 class="text-base">History</h1>
+					<h1 class="text-base">{$t('common.history')}</h1>
 				</DropdownItem>
 				<DropdownItem
 					class="flex gap-2 items-center"
@@ -112,11 +124,11 @@
 					}}
 				>
 					<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
-					<h1 class="text-base">Profile</h1>
+					<h1 class="text-base">{$t('common.profile')}</h1>
 				</DropdownItem>
 				<DropdownItem slot="footer" class="flex gap-2 items-center" on:click={logout}>
 					<Icon icon="mdi:logout" class={'text-2xl'} />
-					<h1 class="text-base">Sign Out</h1>
+					<h1 class="text-base">{$t('common.signOut')}</h1>
 				</DropdownItem>
 			</Dropdown>
 		{:else}
@@ -127,7 +139,7 @@
 					goto('/login');
 				}}
 			>
-				LOGIN
+				{$t('common.login')}
 			</button>
 		{/if}
 	</div>

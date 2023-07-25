@@ -4,22 +4,31 @@
 	import { gameInfoStore } from '../../../../libs/store/gameInfoStore.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { Button, Progressbar } from 'flowbite-svelte';
+	import { Button, Progressbar, Modal } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
 	import FourAnswer from '../../../../components/playGame/fourAnswer.svelte';
 	import DisplayQuestion from '../../../../components/playGame/displayQuestion.svelte';
-	import { Modal } from 'flowbite-svelte';
+	import CryptoJS from 'crypto-js';
 	import { navbarStore } from '../../../../libs/store/navbarStore.js';
 	import { onDestroy, onMount } from 'svelte';
 	export let data;
 
-	const quizzes: QuizzesType = data.result;
+	const key = import.meta.env.VITE_CRYPTO_KEY;
+
+	function decryptData(cipherText) {
+		const bytes = CryptoJS.AES.decrypt(cipherText, key);
+		const originalText = bytes.toString(CryptoJS.enc.Utf8);
+		return JSON.parse(originalText);
+	}
+
+	let quizzes: QuizzesType = data.result;
+	quizzes = decryptData(quizzes);
+
 	let quizzesId = $page.params.quizzesId;
 
 	let gameInfo: any;
 	gameInfoStore.subscribe((val) => (gameInfo = val));
-	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
 	let original = 100;
 	let intervalValue = original / 20;
@@ -145,6 +154,7 @@
 		});
 	};
 	onMount(() => {
+		if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 		handleIsFullScreen(isFullScreen);
 	});
 	onDestroy(() => {
