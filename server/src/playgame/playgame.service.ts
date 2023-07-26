@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { AnswerDetail } from './dto/answer.dto';
+import { Answer, AnswerDetail } from './dto/answer.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuizzesService } from '../quizzes/quizzes.service';
 import { QuestionService } from '../question/question.service';
@@ -15,8 +15,6 @@ export class PlaygameService {
     constructor(
         private prisma: PrismaService,
         private quizzesService: QuizzesService,
-        private questionService: QuestionService,
-        private readonly cryptoService: CryptoService,
     ) {}
 
     isRightAnswer(answerOfUser: AnswerType, answerOfQuestion: AnswerType) {
@@ -27,8 +25,8 @@ export class PlaygameService {
             answerOfUser.answerD === answerOfQuestion.answerD
         );
     }
-    arrayToString(array) {
-        return array.join(', ');
+    objectToString(object: AnswerType) {
+        return Object.values(object).toString();
     }
     stringToArray(str) {
         return str.split(',').map((item) => item === 'true');
@@ -38,6 +36,38 @@ export class PlaygameService {
             return true;
         }
         return false;
+    }
+    getListQuestionOfQuiz(quizId: string) {
+        return this.prisma.quiz_questions.findMany({
+            where: {
+                quizId: quizId,
+            },
+            select: {
+                quiz: {
+                    select: {
+                        point: true,
+                        numberQuestions: true,
+                        passingPoint: true,
+                    },
+                },
+                question: {
+                    select: {
+                        title: true,
+                        optionA: true,
+                        optionB: true,
+                        optionC: true,
+                        optionD: true,
+                        answerA: true,
+                        answerB: true,
+                        answerC: true,
+                        answerD: true,
+                        written: true,
+                        type: true,
+                        image: true,
+                    },
+                },
+            },
+        });
     }
 
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
@@ -88,48 +118,20 @@ export class PlaygameService {
             const participant = await this.prisma.participants.findUnique({
                 where: {
                     id: participantId,
+                    isSingleMode: true,
                 },
                 select: {
                     quizId: true,
                 },
             });
-
             const quizIdOfParticipant = participant.quizId;
-            const listQuestionOfQuiz =
-                await this.prisma.quiz_questions.findMany({
-                    where: {
-                        quizId: quizIdOfParticipant,
-                    },
-                    select: {
-                        quiz: {
-                            select: {
-                                point: true,
-                                numberQuestions: true,
-                                passingPoint: true,
-                            },
-                        },
-                        question: {
-                            select: {
-                                title: true,
-                                optionA: true,
-                                optionB: true,
-                                optionC: true,
-                                optionD: true,
-                                answerA: true,
-                                answerB: true,
-                                answerC: true,
-                                answerD: true,
-                                written: true,
-                                type: true,
-                                image: true,
-                            },
-                        },
-                    },
-                });
+            const listQuestionOfQuiz = await this.getListQuestionOfQuiz(
+                quizIdOfParticipant,
+            );
             let totalPoint = 0;
             let totalCorrect = 0;
-            await Promise.all(
-                listQuestionOfQuiz.map(async (question, index) => {
+            const updateAllAnswer = listQuestionOfQuiz.map(
+                (question, index) => {
                     let score = 0;
                     if (this.isWrittenQuestion(question.question.type)) {
                         answerOfUser[index].writtenAnswer ===
@@ -158,36 +160,39 @@ export class PlaygameService {
                             : (score = 0);
                     }
                     totalPoint += score;
-                    const updateAnswerOfUser =
-                        await this.prisma.user_questions.create({
-                            data: {
-                                userId: userId,
-                                participantId: participantId,
-                                questionId: answerOfUser[index].questionId,
-                                question: question.question.title,
-                                image: question.question.image,
-                                optionA: question.question.optionA,
-                                optionB: question.question.optionB,
-                                optionC: question.question.optionC,
-                                optionD: question.question.optionD,
-                                answerA: question.question.answerA,
-                                answerB: question.question.answerB,
-                                answerC: question.question.answerC,
-                                answerD: question.question.answerD,
-                                written: question.question.written,
-                                givenAnswers: this.isWrittenQuestion(
-                                    question.question.type,
-                                )
-                                    ? answerOfUser[index].writtenAnswer
-                                    : this.arrayToString(
-                                          answerOfUser[index].givenAnswers,
-                                      ),
-                                score: score,
-                                timestamp: new Date(),
-                            },
-                        });
-                }),
+                    const updateAnswerOfUser = {
+                        userId: userId,
+                        participantId: participantId,
+                        questionId: answerOfUser[index].questionId,
+                        question: question.question.title,
+                        image: question.question.image,
+                        optionA: question.question.optionA,
+                        optionB: question.question.optionB,
+                        optionC: question.question.optionC,
+                        optionD: question.question.optionD,
+                        answerA: question.question.answerA,
+                        answerB: question.question.answerB,
+                        answerC: question.question.answerC,
+                        answerD: question.question.answerD,
+                        written: question.question.written,
+                        givenAnswers: this.isWrittenQuestion(
+                            question.question.type,
+                        )
+                            ? answerOfUser[index].writtenAnswer
+                            : this.objectToString(
+                                  answerOfUser[index].givenAnswers,
+                              ),
+                        score: score,
+                        timestamp: new Date(),
+                    };
+                    return updateAnswerOfUser;
+                },
             );
+
+            const updateAllAnswerOfUserToDb =
+                await this.prisma.user_questions.createMany({
+                    data: updateAllAnswer,
+                });
             const updateParticipan = await this.prisma.participants.update({
                 where: {
                     id: participantId,
