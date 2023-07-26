@@ -52,6 +52,7 @@ export class QuestionService {
                 written,
                 image,
                 type,
+                time,
                 createdAt,
                 updatedAt,
             } = question;
@@ -60,11 +61,22 @@ export class QuestionService {
                 userId: userId,
                 categoryId: categoryId,
                 title: title,
-                options: [optionA, optionB, optionC, optionD],
-                answers: [answerA, answerB, answerC, answerD],
+                options: {
+                    optionA: optionA,
+                    optionB: optionB,
+                    optionC: optionC,
+                    optionD: optionD,
+                },
+                answers: {
+                    answerA: answerA,
+                    answerB: answerB,
+                    answerC: answerC,
+                    answerD: answerD,
+                },
                 written: written,
                 image: image,
                 type: type,
+                time: time,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
             };

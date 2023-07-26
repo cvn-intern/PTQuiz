@@ -7,6 +7,8 @@ import { PlayGameError } from '../error/playGameError.enum';
 import { EndGameError } from '../error/endGameError.enum';
 import { EndGameType } from './dto/endGame.type';
 import { CryptoService } from '../crypto/crypto.service';
+import { Option, TypeQuestion } from 'src/question/type';
+import { AnswerType } from 'src/question/type/questionInput.type';
 
 @Injectable()
 export class PlaygameService {
@@ -17,12 +19,12 @@ export class PlaygameService {
         private readonly cryptoService: CryptoService,
     ) {}
 
-    isRightAnswer(answerOfUser, answerOfQuestion) {
+    isRightAnswer(answerOfUser: AnswerType, answerOfQuestion: AnswerType) {
         return (
-            answerOfUser.length === answerOfQuestion.length &&
-            answerOfUser.every(
-                (element, index) => element === answerOfQuestion[index],
-            )
+            answerOfUser.answerA === answerOfQuestion.answerA &&
+            answerOfUser.answerB === answerOfQuestion.answerB &&
+            answerOfUser.answerC === answerOfQuestion.answerC &&
+            answerOfUser.answerD === answerOfQuestion.answerD
         );
     }
     arrayToString(array) {
@@ -30,6 +32,12 @@ export class PlaygameService {
     }
     stringToArray(str) {
         return str.split(',').map((item) => item === 'true');
+    }
+    isWrittenQuestion(type: number) {
+        if (type === TypeQuestion.ESSAY) {
+            return true;
+        }
+        return false;
     }
 
     async getAllQuestionOfQuiz(userId: string, quizId: string) {
@@ -81,49 +89,73 @@ export class PlaygameService {
                 where: {
                     id: participantId,
                 },
-            });
-            const quizIdOfParticipant = participant.quizId;
-            const quiz = await this.prisma.quizzes.findUnique({
-                where: {
-                    id: quizIdOfParticipant,
-                },
                 select: {
-                    numberQuestions: true,
-                    point: true,
-                    passingPoint: true,
+                    quizId: true,
                 },
             });
+
+            const quizIdOfParticipant = participant.quizId;
+            const listQuestionOfQuiz =
+                await this.prisma.quiz_questions.findMany({
+                    where: {
+                        quizId: quizIdOfParticipant,
+                    },
+                    select: {
+                        quiz: {
+                            select: {
+                                point: true,
+                                numberQuestions: true,
+                                passingPoint: true,
+                            },
+                        },
+                        question: {
+                            select: {
+                                title: true,
+                                optionA: true,
+                                optionB: true,
+                                optionC: true,
+                                optionD: true,
+                                answerA: true,
+                                answerB: true,
+                                answerC: true,
+                                answerD: true,
+                                written: true,
+                                type: true,
+                                image: true,
+                            },
+                        },
+                    },
+                });
             let totalPoint = 0;
             let totalCorrect = 0;
             await Promise.all(
-                answerOfUser.map(async (answer) => {
+                listQuestionOfQuiz.map(async (question, index) => {
                     let score = 0;
-
-                    const question = await this.questionService.getQuestion(
-                        answer.questionId,
-                    );
-                    if (question.type === 0 || question.type === 1) {
-                        const arrayGiveAnswer = this.stringToArray(
-                            answer.givenAnswers,
+                    if (this.isWrittenQuestion(question.question.type)) {
+                        answerOfUser[index].writtenAnswer ===
+                        question.question.written
+                            ? ((score =
+                                  question.quiz.point /
+                                  question.quiz.numberQuestions),
+                              (totalCorrect += 1))
+                            : (score = 0);
+                    } else {
+                        const answerOfQuestion: AnswerType = {
+                            answerA: question.question.answerA,
+                            answerB: question.question.answerB,
+                            answerC: question.question.answerC,
+                            answerD: question.question.answerD,
+                        };
+                        const isRightAnswer = this.isRightAnswer(
+                            answerOfUser[index].givenAnswers,
+                            answerOfQuestion,
                         );
-                        const checkTrue = this.isRightAnswer(
-                            arrayGiveAnswer,
-                            question.answers,
-                        );
-                        if (checkTrue) {
-                            score = quiz.point / quiz.numberQuestions;
-                        } else {
-                            score = 0;
-                        }
-                    } else if (question.type === 2) {
-                        if (answer.givenAnswers === question.written) {
-                            score = quiz.point / quiz.numberQuestions;
-                        } else {
-                            score = 0;
-                        }
-                    }
-                    if (score !== 0) {
-                        totalCorrect += 1;
+                        isRightAnswer
+                            ? ((score =
+                                  question.quiz.point /
+                                  question.quiz.numberQuestions),
+                              (totalCorrect += 1))
+                            : (score = 0);
                     }
                     totalPoint += score;
                     const updateAnswerOfUser =
@@ -131,19 +163,25 @@ export class PlaygameService {
                             data: {
                                 userId: userId,
                                 participantId: participantId,
-                                questionId: answer.questionId,
-                                question: question.title,
-                                image: question.image,
-                                optionA: question.options[0],
-                                optionB: question.options[1],
-                                optionC: question.options[2],
-                                optionD: question.options[3],
-                                answerA: question.answers[0],
-                                answerB: question.answers[1],
-                                answerC: question.answers[2],
-                                answerD: question.answers[3],
-                                written: question.written,
-                                givenAnswers: answer.givenAnswers,
+                                questionId: answerOfUser[index].questionId,
+                                question: question.question.title,
+                                image: question.question.image,
+                                optionA: question.question.optionA,
+                                optionB: question.question.optionB,
+                                optionC: question.question.optionC,
+                                optionD: question.question.optionD,
+                                answerA: question.question.answerA,
+                                answerB: question.question.answerB,
+                                answerC: question.question.answerC,
+                                answerD: question.question.answerD,
+                                written: question.question.written,
+                                givenAnswers: this.isWrittenQuestion(
+                                    question.question.type,
+                                )
+                                    ? answerOfUser[index].writtenAnswer
+                                    : this.arrayToString(
+                                          answerOfUser[index].givenAnswers,
+                                      ),
                                 score: score,
                                 timestamp: new Date(),
                             },
