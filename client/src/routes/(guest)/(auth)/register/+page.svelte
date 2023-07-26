@@ -10,8 +10,6 @@
 
 	let isProcessing: boolean = false;
 
-	$: console.log(form);
-
 	const handleSubmit = async (): Promise<void> => {
 		if (isProcessing) return;
 		isProcessing = true;
