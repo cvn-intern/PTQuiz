@@ -5,10 +5,13 @@ import { InforQuizFormSchema } from '../../../../libs/schema/inforQuiz';
 export const actions = {
 	createQuiz: async ({ fetch, request }) => {
 		const form = await request.formData();
-		// console.log('form', form);
 		try {
 			// const validatedData = InforQuizFormSchema.parse({
-			// 	titleQuiz: form.get('titleQuiz')
+			// 	title: form.get('title'),
+			// 	passingPoint: form.get('passingPoint'),
+			// 	point: form.get('point'),
+			// 	decription: form.get('decription'),
+			// 	image: form.get('image')
 			// });
 			const response = await fetch('/api/quizzes/create', {
 				method: 'POST',

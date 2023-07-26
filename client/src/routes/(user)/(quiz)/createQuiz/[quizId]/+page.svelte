@@ -6,6 +6,7 @@
 	import SidebarCreateQuiz from '$components/createQuiz/sidebarCreateQuiz.svelte';
 	let typeOfQuestion = 1;
 	let cardListQuestion = ['1','2','3','4'];
+	
 </script>
 
 <div class="w-full text-slate-950 md:p-10 bg-white p-5">

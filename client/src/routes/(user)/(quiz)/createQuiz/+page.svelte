@@ -16,6 +16,6 @@
 		defaultOpenModal={true}
 		outsideclose={false}
 		classButton={'text-zinc-950 border bg-white hover:bg-gray-400 shadow-md'}
-		nameClassButton={'Contrinue create quiz'}
+		nameClassButton={'Continue create quiz'}
 	/>
 </div>
