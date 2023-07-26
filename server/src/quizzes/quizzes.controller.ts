@@ -22,7 +22,7 @@ import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
 export class QuizzesController {
     constructor(private quizzesService: QuizzesService) {}
 
-    @Post('/') // POST /quizzes
+    @Post('/create')
     @HttpCode(HttpStatus.CREATED)
     @ResponseMessage('Create Quiz successfully')
     @UseGuards(JwtAuthGuard)
@@ -31,6 +31,29 @@ export class QuizzesController {
         @Body() quiz: QuizzesDto,
     ) {
         return await this.quizzesService.createQuiz(userId, quiz);
+    }
+
+    @Put('/update')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Update Quiz successfully')
+    @UseGuards(JwtAuthGuard)
+    async updateQuiz(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+        @Body() quiz: QuizzesDto,
+    ) {
+        return await this.quizzesService.updateQuiz(userId, quizId, quiz);
+    }
+
+    @Delete('/delete')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Delete Quiz successfully')
+    @UseGuards(JwtAuthGuard)
+    async deleteQuiz(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+    ) {
+        return await this.quizzesService.deleteQuiz(userId, quizId);
     }
 
     @Get('/all-quizzes')
