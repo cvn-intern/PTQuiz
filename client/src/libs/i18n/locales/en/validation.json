@@ -33,5 +33,5 @@
     "INVALID_TOKEN": "Invalid token",
     "EXPIRED_TOKEN": "Expired token",
     "USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT": "Invalid credentials, you have {{attemptsLeft}} attempts left",
-    "ACCESS_TOKEN_EXPIRED": "Access token expired",
+    "ACCESS_TOKEN_EXPIRED": "Access token expired"
 }
