@@ -4,11 +4,13 @@ import { QuestionService } from '../question/question.service';
 import { QuizzesError } from '../error/quizzesError.enum';
 import { QuestionResponse } from '../question/type/questionResponse.type';
 import { QuizzesDto } from './dto';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 @Injectable()
 export class QuizzesService {
     constructor(
         private prisma: PrismaService,
         private questionService: QuestionService,
+        private cloudinary: CloudinaryService,
     ) {}
 
     findMostCategoryInQuiz(arrCategory) {
@@ -270,15 +272,34 @@ export class QuizzesService {
         }
     }
 
-    async createQuiz(userId: string, quiz: QuizzesDto) {
+    async createQuiz(
+        userId: string,
+        quiz: QuizzesDto,
+        image: Express.Multer.File,
+    ) {
         try {
+            let url;
+            if (image) {
+                if (image.size > +process.env.MAX_FILE_SIZE) {
+                    throw new HttpException(
+                        QuizzesError.FILE_TOO_LARGE,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                } else if (image.size > 0) {
+                    const image_upload = await this.cloudinary.uploadFile(
+                        image,
+                    );
+                    url = image_upload.url;
+                }
+            } else url = process.env.DEFAULT_THUMBNAIL;
+
             const newQuiz = await this.prisma.quizzes.create({
                 data: {
                     userId: userId,
                     title: quiz.title,
                     numberQuestions: 0,
                     description: quiz.description,
-                    image: quiz.image,
+                    image: url,
                     durationMins: quiz.durationMins,
                     isRandom: quiz.isRandom,
                     isRandomOption: quiz.isRandomOption,
@@ -299,8 +320,14 @@ export class QuizzesService {
         }
     }
 
-    async updateQuiz(userId: string, quizId: string, quiz: QuizzesDto) {
+    async updateQuiz(
+        userId: string,
+        quizId: string,
+        quiz: QuizzesDto,
+        image: Express.Multer.File,
+    ) {
         try {
+            let url;
             if (!quizId) {
                 throw new HttpException(
                     QuizzesError.NOT_FOUND_QUIZZES,
@@ -327,6 +354,20 @@ export class QuizzesService {
                 );
             }
 
+            if (image) {
+                if (image.size > +process.env.MAX_FILE_SIZE) {
+                    throw new HttpException(
+                        QuizzesError.FILE_TOO_LARGE,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                } else if (image.size > 0) {
+                    const image_upload = await this.cloudinary.uploadFile(
+                        image,
+                    );
+                    url = image_upload.url;
+                }
+            } else url = quizOfUser.image;
+
             return await this.prisma.quizzes.update({
                 where: {
                     id: quizId,
@@ -334,7 +375,7 @@ export class QuizzesService {
                 data: {
                     title: quiz.title,
                     description: quiz.description,
-                    image: quiz.image,
+                    image: url,
                     durationMins: quiz.durationMins,
                     isRandom: quiz.isRandom,
                     isRandomOption: quiz.isRandomOption,
