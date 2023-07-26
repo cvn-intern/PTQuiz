@@ -9,13 +9,14 @@
 	import type { ActionData } from './$types.js';
 	import { dismissLoadingToast, showLoadingToast } from '../../../../libs/toast/toast';
 	import { initializeFirebase, startSignIn } from '../../../../libs/services/firebaseConfig';
+	import { AppRoute } from '$constants/appRoute';
 
 	export let form: ActionData;
 	export let data;
 
 	onMount(async () => {
 		if (data.user) {
-			goto('/');
+			goto(AppRoute.HOME);
 		}
 		if (typeof window !== 'undefined') {
 			const firebase = window.firebase;
@@ -54,7 +55,7 @@
 			const response = await startSignIn(window.firebase, providerName);
 
 			if (response) {
-				goto('/');
+				goto(AppRoute.HOME);
 				toast.success($t('common.success'));
 			} else {
 				throw new Error('Invalid credentials');
@@ -82,7 +83,7 @@
 		dismissLoadingToast();
 
 		if (form?.isSuccess) {
-			goto('/');
+			goto(AppRoute.HOME);
 			toast.success(t.get('common.success'));
 		} else {
 			dismissLoadingToast();

@@ -4,6 +4,7 @@
 	import toast from 'svelte-french-toast';
 	import { enhance } from '$app/forms';
 	import { t } from '$i18n/translations';
+	import { AppRoute } from '$constants/appRoute';
 	export let data;
 
 	export let form;
@@ -33,7 +34,7 @@
 		if (form?.isSuccess) {
 			toast.success(t.get('common.success'));
 			invalidateAll();
-			window.location.href = '/';
+			window.location.href = AppRoute.HOME;
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message || 'Invalid token');
@@ -43,7 +44,7 @@
 	};
 	onMount(() => {
 		if (data.user) {
-			goto('/');
+			goto(AppRoute.HOME);
 		}
 	});
 </script>

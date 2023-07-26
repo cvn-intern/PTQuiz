@@ -5,6 +5,7 @@
 	import Score from '$components/endGame/score.svelte';
 	import Result from '$components/endGame/result.svelte';
 	import HistoryAttempt from '$components/endGame/historyAttempt.svelte';
+	import { AppRoute } from '$constants/appRoute';
 	export let data;
 
 	const STATUS = {
@@ -28,7 +29,7 @@
 			<button
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
 				on:click={() => {
-					goto('/');
+					goto(AppRoute.HOME);
 				}}>{$t('common.leaveGame')}</button
 			>
 		</div>

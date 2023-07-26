@@ -1,9 +1,8 @@
 export enum AppRoute {
-    // Page route
-    HOME = '/',
-    
+	// Page route
+	HOME = '/',
 
-    // API route
+	// API route
 	AUTH_LOGIN = '/auth/login',
 	AUTH_LOGOUT = '/auth/logout',
 	AUTH_REGISTER = '/auth/register',

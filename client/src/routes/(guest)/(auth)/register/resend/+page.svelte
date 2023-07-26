@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
 	import { t } from '$i18n/translations.js';
+	import { AppRoute } from '$constants/appRoute';
 	export let form;
 	export let data;
 
@@ -41,7 +42,7 @@
 	};
 	onMount(() => {
 		if (data.user) {
-			goto('/');
+			goto(AppRoute.HOME);
 		}
 	});
 </script>
