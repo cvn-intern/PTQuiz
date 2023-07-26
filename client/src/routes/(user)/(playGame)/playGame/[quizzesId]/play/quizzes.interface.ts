@@ -14,6 +14,7 @@ export interface Quiz {
 	createdAt: string;
 	updatedAt: string;
 	written: string | null;
+	time: number;
 }
 export interface QuizzesType {
 	quizzes: Quiz[];

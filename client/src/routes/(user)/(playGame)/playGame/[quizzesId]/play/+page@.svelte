@@ -28,7 +28,7 @@
 
 	let original = 100;
 	let zero = 0;
-	let timer_default = 5;
+	let timer_default = 20;
 
 	let intervalValue = original / timer_default;
 	let timer = tweened(original);
@@ -97,8 +97,6 @@
 				answerOfUser: answerOfUser
 			};
 
-			console.log(userAnswer);
-
 			showLoadingToast();
 			const response = await fetch('/api/play-game/submit', {
 				method: 'POST',
@@ -163,8 +161,6 @@
 		isCorrect: quizzes[questionPointer].answers[Object.keys(question.answers)[index]],
 		disabled: isAnswerChecked ? true : false
 	}));
-
-	$: console.log(fourOptions);
 </script>
 
 <div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2">
