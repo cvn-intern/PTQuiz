@@ -73,7 +73,7 @@
 		},
 		{
 			label: `${$t('common.shareYourQuiz')}`,
-			name: 'shareQuizzes',
+			name: 'shareQuiz',
 			type: 'switch',
 			required: false,
 			isDefault: true
@@ -120,7 +120,7 @@
 <Modal bind:open={formModal} size="md" class="w-full z-50" {outsideclose}>
 	<form
 		class="flex flex-col space-y-4 items-center"
-		action="?/createQuizz"
+		action="?/createQuiz"
 		method="post"
 		use:enhance={() => {
 			return async ({ update }) => {
@@ -147,7 +147,7 @@
 							JPEG, PNG, JPG (5MB).
 						</p>
 					{:else if type === 'switch'}
-						<Toggle checked={false} {name} {required} value="">
+						<Toggle checked={false} {name} {required} value={"true"}>
 							{isDefault
 								? `${$t('common.privateQuizzes')}`
 								: `${$t('common.publicQuizzes')}`}</Toggle

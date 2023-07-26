@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 	const formData = await request.formData();
-	console.log("formData", formData);
+	console.log('formData', formData);
 	const response = await fetch(`${import.meta.env.VITE_API_URL}/quizzes/create`, {
 		method: 'POST',
 		headers: {
@@ -13,6 +13,7 @@ export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 	});
 
 	const result = await response.json();
+	console.log('result', result);
 	if (result.statusCode !== 200) {
 		throw error(400, result.message);
 	}
