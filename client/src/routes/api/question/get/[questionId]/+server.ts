@@ -14,3 +14,4 @@ export const GET: RequestHandler = async ({ fetch, params }) => {
 	}
 	return json(result);
 };
+
