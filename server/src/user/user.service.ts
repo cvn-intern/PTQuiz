@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserError } from '../error';
 @Injectable()
 export class UserService {
     constructor(
@@ -25,7 +26,7 @@ export class UserService {
             if (avatar) {
                 if (avatar.size > +process.env.MAX_FILE_SIZE) {
                     throw new HttpException(
-                        'File size too large, max file size is 4MB',
+                        UserError.FILE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
                     );
                 } else if (avatar.size > 0) {
@@ -36,7 +37,7 @@ export class UserService {
 
             if (!body.displayName) {
                 throw new HttpException(
-                    "Display name can't be empty",
+                    UserError.DISPLAY_NAME_CANNOT_BE_EMPTY,
                     HttpStatus.BAD_REQUEST,
                 );
             }
