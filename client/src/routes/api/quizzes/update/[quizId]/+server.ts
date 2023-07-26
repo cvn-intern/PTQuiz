@@ -1,13 +1,13 @@
 import { error, json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from '../$types';
 import { VITE_API_URL } from '$env/static/private';
 import { HttpStatus } from '$constants/httpStatus';
 
-export const POST: RequestHandler = async ({ fetch, request }) => {
+export const PUT: RequestHandler = async ({ fetch, request, params }) => {
 	const formData = await request.formData();
 
-	const response = await fetch(`${VITE_API_URL}/user/edit-profile`, {
-		method: 'POST',
+	const response = await fetch(`${VITE_API_URL}/quizzes/update/?quizId=${params.quizId}`, {
+		method: 'PUT',
 		body: formData
 	});
 
