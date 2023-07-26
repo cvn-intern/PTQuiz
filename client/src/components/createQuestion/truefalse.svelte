@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
 	import Option from './option.svelte';
-	export let index: number ;
+	export let index: number;
 </script>
 
 <div
@@ -12,11 +12,13 @@
 		optionOfQuestion="bg-optionA"
 		isSingleChoice={true}
 		isTrueFalse={true}
+		{index}
 	/>
 	<Option
 		question={$t('common.trueAnswer')}
 		optionOfQuestion="bg-optionB"
 		isSingleChoice={true}
 		isTrueFalse={true}
+		{index}
 	/>
 </div>

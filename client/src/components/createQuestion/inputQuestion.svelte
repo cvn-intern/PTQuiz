@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
 	import { questionData } from '$stores/questionInfoStore';
-	export let index: number ;
+	export let index: number;
 	let title: string;
 	$: questionData.subscribe((data) => {
 		title = data[index].title;
@@ -10,7 +10,6 @@
 		data[index].title = title;
 		return data;
 	});
-
 </script>
 
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
