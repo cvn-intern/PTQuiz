@@ -1,7 +1,9 @@
 <script lang="ts">
 	export let attemptList: Attempt[];
-	import { t } from '$i18n/translations';
 	import type { Attempt } from '../../interface/endGame.interface';
+	import { t } from '$i18n/translations';
+
+	
 </script>
 
 <div class="w-full md:w-7/12">
@@ -9,9 +11,9 @@
 		<table class="w-full text-left text-gray-500 dark:text-gray-400">
 			<thead class="uppercase bg-darkGreen text-white">
 				<tr>
-					<th scope="col" class="px-6 py-3"> {$t('common.no')} No. </th>
+					<th scope="col" class="px-6 py-3"> {$t('common.no')}</th>
 					<th scope="col" class="px-6 py-3"> {$t('common.point')} </th>
-					<th scope="col" class="px-6 py-3"> {$t('common.stt')} </th>
+					<th scope="col" class="px-6 py-3"> {$t('common.status')} </th>
 				</tr>
 			</thead>
 			<tbody class="text-gray-900">
