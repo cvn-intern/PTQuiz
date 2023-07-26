@@ -10,6 +10,14 @@
 	import { gameInfoStore } from '$stores/gameInfoStore.js';
 	export let data;
 
+	let questionPointer = 0;
+	let fourOptions: any[];
+	let isAnswerChecked: boolean = false;
+	let selectedAnswerIndex: number;
+	let sharedToastId: string | number;
+	let isSubmitting = false;
+	let showModal = false;
+
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
 	function decryptData(cipherText: any) {
@@ -28,22 +36,14 @@
 
 	let original = 100;
 	let zero = 0;
-	let timer_default = 20;
+	let timer_default = quizzes[questionPointer].time || 20;
 
 	let intervalValue = original / timer_default;
 	let timer = tweened(original);
 
 	setInterval(() => {
-		if ($timer > 0) $timer -= intervalValue;
+		if ($timer > 0) $timer -= intervalValue / 10;
 	}, 100);
-
-	let questionPointer = 0;
-	let fourOptions: any[];
-	let isAnswerChecked: boolean = false;
-	let selectedAnswerIndex: number;
-	let sharedToastId: string | number;
-	let isSubmitting = false;
-	let showModal = false;
 
 	const givenAn: {
 		[key: string]: { answerA: boolean; answerB: boolean; answerC: boolean; answerD: boolean };
