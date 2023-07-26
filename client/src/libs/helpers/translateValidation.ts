@@ -30,8 +30,11 @@ export const translateValidation = (message: string) => {
 		return t.get('validation.INVALID_TOKEN');
 	} else if (message === JwtError.EXPIRED_TOKEN) {
 		return t.get('validation.EXPIRED_TOKEN');
+	} else if (message === JwtError.ACCESS_TOKEN_EXPIRED) {
+		return t.get('validation.ACCESS_TOKEN_EXPIRED');
 	} else if (message.includes('attempts left')) {
-		const attemptsLeft = message.split(' ')[4];
+		const positionOfAttemptsLeft = 4;
+		const attemptsLeft = message.split(' ')[positionOfAttemptsLeft];
 		return t.get('validation.USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT', { attemptsLeft });
 	}
 };

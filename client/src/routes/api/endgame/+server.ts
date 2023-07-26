@@ -1,4 +1,5 @@
 import { VITE_API_URL } from '$env/static/private';
+import { HttpStatus } from '$constants/httpStatus';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ fetch, request }) => {
@@ -10,13 +11,13 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 		}
 	});
 	const result = await response.json();
-	if (response.status === 200) {
+	if (response.status === HttpStatus.OK) {
 		return new Response(JSON.stringify(result.data), {
-			status: 200
+			status: HttpStatus.OK
 		});
 	} else {
 		return new Response(JSON.stringify(result.message), {
-			status: 400
+			status: HttpStatus.BAD_REQUEST
 		});
 	}
 };

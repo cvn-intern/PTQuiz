@@ -1,6 +1,8 @@
 import type { Handle, HandleFetch, HandleServerError } from '@sveltejs/kit';
 import { HEADER_NAMES } from '$constants/headers';
-import { checkValidToken, getProfile, refreshToken } from '$helpers/auth';
+import { checkValidToken, getProfile, refreshTokens } from '$helpers/auth';
+import { JwtError } from './libs/message/responseMessage.enum';
+import { HttpStatus } from '$constants/httpStatus';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	try {
@@ -13,12 +15,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return await resolve(event);
 		}
 
-		const isAccessTokenValid = await checkValidToken(event.locals.accessToken);
+		const accessToken = event.locals.accessToken;
+		const isAccessTokenValid = await checkValidToken(accessToken);
 		if (isAccessTokenValid.status === false) {
-			if (isAccessTokenValid.message === 'Token is expired') {
-				const isRefreshTokenValid = await checkValidToken(
-					event.cookies.get('refreshToken')
-				);
+			if (isAccessTokenValid.message === JwtError.ACCESS_TOKEN_EXPIRED) {
+				const refreshToken = event.cookies.get('refreshToken');
+				const isRefreshTokenValid = await checkValidToken(refreshToken);
 				if (isRefreshTokenValid.status === false) {
 					event.locals.user = undefined;
 					event.locals.accessToken = undefined;
@@ -33,7 +35,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 					return await resolve(event);
 				}
 
-				const response = await refreshToken(event.cookies.get('refreshToken'));
+				const response = await refreshTokens(refreshToken);
 				if (!response) {
 					event.locals.user = undefined;
 					event.locals.accessToken = undefined;
@@ -46,7 +48,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 					});
 
 					return await resolve(event);
-				} else if (response.message === 'Tokens refreshed successfully') {
+				} else if (response.statusCode === HttpStatus.CREATED) {
 					event.cookies.set('accessToken', response.data.accessToken, {
 						path: '/'
 					});

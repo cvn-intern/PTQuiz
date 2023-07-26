@@ -36,6 +36,8 @@ export enum AuthError {
 }
 
 export enum JwtError {
-    INVALID_TOKEN = 'Invalid token',
-    EXPIRED_TOKEN = 'Token expired',
+	INVALID_TOKEN = 'Invalid token',
+	EXPIRED_TOKEN = 'Token expired',
+	ACCESS_TOKEN_EXPIRED = 'Access token expired',
+	TOKEN_EXPIRED_ERROR = 'TokenExpiredError'
 }
