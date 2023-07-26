@@ -78,5 +78,11 @@
     "easy": "Easy",
     "mixed": "Mixed",
     "loginFrom": "Login from",
-    "localAuthen": "Local Authentication"
+    "localAuthen": "Local Authentication",
+    "typeYourAnswer": "Type your answer",
+    "uploadImage": "Upload Image",
+    "PNGorJPG": "PNG or JPG",
+    "typeYourQuestionHere": "Type your question here",
+    "falseAnswer": "False",
+    "trueAnswer": "True"
 }
