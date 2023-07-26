@@ -298,4 +298,99 @@ export class QuizzesService {
             throw new HttpException(error, HttpStatus.BAD_REQUEST);
         }
     }
+
+    async updateQuiz(userId: string, quizId: string, quiz: QuizzesDto) {
+        try {
+            if (!quizId) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const quizOfUser = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+
+            if (!quizOfUser) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
+            if (quizOfUser.userId !== userId) {
+                throw new HttpException(
+                    QuizzesError.NOT_PERMISSION,
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+
+            return await this.prisma.quizzes.update({
+                where: {
+                    id: quizId,
+                },
+                data: {
+                    title: quiz.title,
+                    description: quiz.description,
+                    image: quiz.image,
+                    durationMins: quiz.durationMins,
+                    isRandom: quiz.isRandom,
+                    isRandomOption: quiz.isRandomOption,
+                    attempts: quiz.attempts,
+                    point: quiz.point,
+                    passingPoint: quiz.passingPoint,
+                    passed: quiz.passed,
+                    difficultyLevel: quiz.difficultyLevel,
+                    startDate: quiz.startDate,
+                    endDate: quiz.endDate,
+                    isActivated: quiz.isActivated,
+                    isShared: quiz.isShared,
+                },
+            });
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async deleteQuiz(userId: string, quizId: string) {
+        try {
+            if (!quizId) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const quizOfUser = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+            if (!quizOfUser) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            if (quizOfUser.userId !== userId) {
+                throw new HttpException(
+                    QuizzesError.NOT_PERMISSION,
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+            await this.prisma.quiz_questions.deleteMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            return await this.prisma.quizzes.delete({
+                where: {
+                    id: quizId,
+                },
+            });
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
