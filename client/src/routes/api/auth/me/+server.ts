@@ -1,13 +1,10 @@
-import { invalidateAll } from '$app/navigation';
 import type { RequestHandler } from './$types';
-
-export const GET: RequestHandler = async ({ fetch, cookies }) => {
-	const accessToken = cookies.get('accessToken');
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+import { VITE_API_URL } from '$env/static/private';
+export const GET: RequestHandler = async ({ fetch }) => {
+	const response = await fetch(`${VITE_API_URL}/auth/profile`, {
 		method: 'GET',
 		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${accessToken}`
+			'Content-Type': 'application/json'
 		}
 	});
 	const result = await response.json();

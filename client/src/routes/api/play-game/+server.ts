@@ -1,15 +1,14 @@
-import type { RequestHandler } from '../$types';
+import { VITE_API_URL } from '$env/static/private';
+import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
-	const accessToken = cookies.get('accessToken');
+export const POST: RequestHandler = async ({ fetch, request }) => {
 	const data = await request.json();
 	const response = await fetch(
-		`${import.meta.env.VITE_API_URL}/play-game/play?quizId=${data.quizzesId}`,
+		`${VITE_API_URL}/play-game/play?quizId=${data.quizzesId}`,
 		{
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`
+				'Content-Type': 'application/json'
 			}
 		}
 	);

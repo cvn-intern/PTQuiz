@@ -1,9 +1,9 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { VITE_API_URL } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ fetch, cookies }) => {
 	const token = cookies.get('refreshToken');
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+	const response = await fetch(`${VITE_API_URL}/auth/refresh`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

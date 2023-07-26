@@ -1,8 +1,9 @@
+import { VITE_API_URL } from '$env/static/private';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ cookies, fetch, request }) => {
 	const data = await request.json();
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/confirm`, {
+	const response = await fetch(`${VITE_API_URL}/auth/confirm`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
