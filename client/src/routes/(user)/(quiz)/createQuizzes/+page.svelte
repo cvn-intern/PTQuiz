@@ -1,38 +1,30 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
-	import ModalInforQuizzes from '../../../../components/createQuizzes/modalInforQuizzes.svelte';
 	import ChangeTypeQuestion from '../../../../components/createQuizzes/changeTypeQuestion.svelte';
-	import CardQuestion from '$components/createQuizzes/cardQuestion.svelte';
-	import Icon from '@iconify/svelte';
 	import CreateQuestion from '$components/createQuestion/createQuestion.svelte';
-
+	import SidebarCreateQuizzes from '$components/createQuizzes/sidebarCreateQuizzes.svelte';
+	import MobileSidebar from '$components/createQuizzes/mobileSidebar.svelte';
+	let typeOfQuestion = 1;
 </script>
 
-<div class="w-full text-slate-950 md:p-10 bg-white">
+<div class="w-full text-slate-950 md:p-10 bg-white p-5">
 	<div class="md:flex gap-6 justify-between">
-		<div class="md:w-1/6 flex flex-col gap-10 items-center w-full">
-			<ModalInforQuizzes />
-			<div class="md:max-h-boxCardQuestion md:overflow-y-scroll w-full flex flex-col gap-4">
-				<CardQuestion />
-			</div>
-			<hr class="bg-gray-950" />
-			<Button class="bg-secondary text-white hover:bg-darkGreen">
-				<Icon icon={'gridicons:add-outline'} class="text-xl mr-3" />
-				Add Question
-			</Button>
+		<SidebarCreateQuizzes classSidaBar="md:w-1/6 md:flex flex-col gap-10 items-center hidden" />
+		<div class="md:hidden block">
+			<MobileSidebar />
 		</div>
 		<div class="md:w-5/6 w-full">
 			<div class="flex justify-between gap-4">
 				<div>
-					<ChangeTypeQuestion/>
+					<ChangeTypeQuestion bind:defaultType={typeOfQuestion} />
 				</div>
 				<div class="flex gap-2">
 					<Button class="bg-red-500">Exit</Button>
 					<Button class="bg-green-600">Save</Button>
 				</div>
 			</div>
-			<div class="w-full h-full mt-3">
-				<CreateQuestion />
+			<div class="w-full h-full md:my-3 my-5">
+				<CreateQuestion typeOfQuestion={typeOfQuestion} />
 			</div>
 		</div>
 	</div>
