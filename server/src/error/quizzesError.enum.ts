@@ -7,4 +7,5 @@ export enum QuizzesError {
     QUIZ_NOT_SHARED = 'Quizzes is not shared',
     ERROR_QUIZ = 'Quiz error',
     NOT_PERMISSION = 'You do not have permission to do this action',
+    FILE_TOO_LARGE = 'File too large',
 }
