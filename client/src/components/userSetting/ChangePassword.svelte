@@ -44,7 +44,7 @@
 	};
 </script>
 
-<div class="items-center">
+<div class="">
 	<form method="POST" action="?/change_password" use:enhance>
 		<div class="relative">
 			<label for="oldPassword" class="mb-1">{$t('common.oldPassword')}</label>

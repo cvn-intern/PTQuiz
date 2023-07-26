@@ -3,12 +3,14 @@ import {
     Controller,
     Get,
     Post,
+    Put,
     HttpCode,
     HttpStatus,
     UseGuards,
     UseInterceptors,
     Query,
     Body,
+    Delete,
 } from '@nestjs/common';
 
 import { ResponseMessage } from '../decorators/responseMessage.decorator';
@@ -29,7 +31,7 @@ export class QuestionController {
         return await this.questionService.getQuestion(questionId);
     }
 
-    @Post('/')
+    @Post('/create')
     @HttpCode(HttpStatus.CREATED)
     @ResponseMessage('Create Question successfully')
     @UseGuards(JwtAuthGuard)
@@ -42,6 +44,38 @@ export class QuestionController {
             userId,
             quizId,
             questionsData,
+        );
+    }
+
+    @Put('/update')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Update Question successfully')
+    @UseGuards(JwtAuthGuard)
+    async updateQuestion(
+        @Body() questionsData: QuestionDto,
+        @GetCurrentUser('id') userId: string,
+        @Query('questionId') questionId: string,
+    ) {
+        return await this.questionService.updateQuestion(
+            userId,
+            questionId,
+            questionsData,
+        );
+    }
+
+    @Delete('/delete')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Delete Question successfully')
+    @UseGuards(JwtAuthGuard)
+    async deleteQuestion(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+        @Query('questionId') questionId: string,
+    ) {
+        return await this.questionService.deleteQuestion(
+            userId,
+            quizId,
+            questionId,
         );
     }
 }

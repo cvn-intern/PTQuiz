@@ -52,7 +52,7 @@
 	};
 </script>
 
-<div class="flex flex-col items-center">
+<div class="flex flex-col">
 	<form
 		use:enhance={() => {
 			return async ({ update }) => {
@@ -62,9 +62,8 @@
 		action="?/edit_profile"
 		method="post"
 		enctype="multipart/form-data"
-		class="items-center flex flex-col gap-5"
 	>
-		<div class="relative">
+		<div class="relative flex justify-center">
 			<img src={imageUrl} alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer" />
 			<input
 				type="file"
