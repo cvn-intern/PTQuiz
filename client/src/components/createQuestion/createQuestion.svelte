@@ -7,8 +7,8 @@
 	import MultiChoice from './multiChoice.svelte';
 </script>
 
-<div class="flex flex-row h-[800px] w-full">
-	<div class="h-full lg:w-3/4 flex flex-col lg:p-6 w-full p-6">
+<div class="flex flex-col w-full h-full p-6 bg-primary rounded-lg">
+	<div class="h-full flex flex-col w-full ">
 		<InputQuestion />
 		<SingleChoice />
 	</div>

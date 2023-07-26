@@ -3,6 +3,7 @@
 	import { Button, Modal, Label, Input, Fileupload, Toggle, Select } from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
 	import type { FieldForm, InputForm } from './interface/createQuizzes.interface';
+	import Icon from '@iconify/svelte';
 
 	let formModal = false;
 	let formData: FieldForm = {
@@ -85,11 +86,14 @@
 	];
 </script>
 
-<Button on:click={() => (formModal = true)} class="w-40 h-10 text-zinc-950"
-	>Information Quizzes</Button
+<Button
+	on:click={() => (formModal = true)}
+	class="w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"
+>
+	<Icon icon={'carbon:information'} class={'mr-3'} /> Information Quizzes</Button
 >
 
-<Modal bind:open={formModal} size="md" autoclose={false} class="w-full" outsideclose>
+<Modal bind:open={formModal} size="md" autoclose={false} class="w-full z-50" outsideclose>
 	<form
 		class="flex flex-col space-y-4 items-center"
 		action="?/createQuizz"
@@ -141,7 +145,6 @@
 						</Select>
 					{:else}
 						<Input
-							
 							id={name}
 							{type}
 							placeholder={label}
