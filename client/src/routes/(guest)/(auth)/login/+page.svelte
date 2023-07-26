@@ -8,7 +8,7 @@
 	import { t } from '$i18n/translations';
 	import type { ActionData } from './$types.js';
 	import { dismissLoadingToast, showLoadingToast } from '../../../../libs/toast/toast';
-	import { startSignIn } from '../../../../libs/services/firebaseConfig';
+	import { initializeFirebase, startSignIn } from '../../../../libs/services/firebaseConfig';
 
 	export let form: ActionData;
 	export let data;

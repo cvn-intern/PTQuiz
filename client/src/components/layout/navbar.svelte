@@ -6,21 +6,10 @@
 	import { goto } from '$app/navigation';
 	import logo from '../../assets/logo.png';
 	import { t } from '$i18n/translations';
-	import type { LayoutServerData } from '../../routes/$types';
-	export let user: LayoutServerData['user'];
+	import type { LayoutData } from '../../routes/$types';
+	export let user: LayoutData;
 
 	let isHidden: boolean = true;
-	const navs = [
-		{
-			title: $t('common.home'),
-			href: '/'
-		},
-		{
-			title: $t('common.discovery'),
-			href: '/discovery'
-		}
-	];
-
 	const logout = async () => {
 		const response = await fetch('/api/auth/logout', {
 			method: 'POST'

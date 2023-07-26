@@ -2,7 +2,8 @@
 	import '../../app.css';
 	import Navbar from '$components/layout/navbar.svelte';
 	import Footer from '$components/layout/footer.svelte';
-	export let data;
+	import type { LayoutData } from './$types';
+	export let data:LayoutData ;
 </script>
 
 <Navbar user={data.user} />
