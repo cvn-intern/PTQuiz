@@ -2,15 +2,16 @@
 	import { t } from '$i18n/translations';
 	import { Button, Modal, Label, Input, Fileupload, Toggle, Select } from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
-	import type { FieldForm, InputForm } from './interface/createQuizzes.interface';
+	import type { FieldForm, InputForm } from './interface/createQuiz.interface';
+	import Icon from '@iconify/svelte';
 
-	let formModal = false;
+	let formModal = true;
 	let formData: FieldForm = {
-		titleQuizzes: '',
+		titleQuiz: '',
 		category: '',
 		customizeTimeQuestion: '',
 		level: '',
-		shareQuizzes: false,
+		shareQuiz: false,
 		startDate: '',
 		thumbnail: '',
 		endDate: ''
@@ -23,8 +24,8 @@
 
 	const inputFormList: InputForm[] = [
 		{
-			label: `${$t('common.titleQuizzes')}`,
-			name: 'titleQuizzes',
+			label: `${$t('common.titleQuiz')}`,
+			name: 'titleQuiz',
 			type: 'text',
 			required: true
 		},
@@ -58,7 +59,7 @@
 			selectOptionsList: ['Easy', 'Medium', 'Hard']
 		},
 		{
-			label: `${$t('common.shareYourQuizzes')}`,
+			label: `${$t('common.shareYourQuiz')}`,
 			name: 'shareQuizzes',
 			type: 'switch',
 			required: false,
@@ -85,11 +86,14 @@
 	];
 </script>
 
-<Button on:click={() => (formModal = true)} class="w-40 h-10 text-zinc-950"
-	>Information Quizzes</Button
+<Button
+	on:click={() => (formModal = true)}
+	class="w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"
+>
+	<Icon icon={'carbon:information'} class={'mr-3'} /> Information Quiz</Button
 >
 
-<Modal bind:open={formModal} size="md" autoclose={false} class="w-full" outsideclose>
+<Modal bind:open={formModal} size="md" autoclose={false} class="w-full z-50" outsideclose>
 	<form
 		class="flex flex-col space-y-4 items-center"
 		action="?/createQuizz"
@@ -141,7 +145,6 @@
 						</Select>
 					{:else}
 						<Input
-							
 							id={name}
 							{type}
 							placeholder={label}

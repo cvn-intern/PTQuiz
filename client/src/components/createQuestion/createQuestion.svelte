@@ -5,11 +5,21 @@
 	import Truefalse from './truefalse.svelte';
 	import EssayChoice from './essayChoice.svelte';
 	import MultiChoice from './multiChoice.svelte';
+
+	export let typeOfQuestion = 0;
 </script>
 
-<div class="flex flex-row h-[800px] w-full">
-	<div class="h-full lg:w-3/4 flex flex-col lg:p-6 w-full p-6">
+<div class="flex flex-col w-full h-full p-6 bg-primary rounded-lg">
+	<div class="h-full flex flex-col w-full ">
 		<InputQuestion />
+		{#if typeOfQuestion===0}
+		<MultiChoice />
+		{:else if typeOfQuestion===1}
 		<SingleChoice />
+		{:else if typeOfQuestion===2}
+		<EssayChoice />
+		{:else if typeOfQuestion===3}
+		<Truefalse />
+		{/if}
 	</div>
 </div>

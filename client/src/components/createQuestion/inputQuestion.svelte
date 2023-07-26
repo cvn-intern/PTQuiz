@@ -3,7 +3,7 @@
 	import { t } from "$i18n/translations";
 
 </script>
-<div class="h-2/5 py-6 gap-3 w-full flex flex-row items-center">
+<div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
 	<div class="flex items-center justify-center lg:w-1/4 md:w-1/2 w-1/3 h-full">
 		<label
 			for="dropzone-file"
