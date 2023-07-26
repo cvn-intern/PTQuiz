@@ -32,5 +32,6 @@
     "USER_LOGIN_INACTIVE_ACCOUNT": "Your account is not active, please confirm your email",
     "INVALID_TOKEN": "Invalid token",
     "EXPIRED_TOKEN": "Expired token",
-    "USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT": "Invalid credentials, you have {{attemptsLeft}} attempts left"
+    "USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT": "Invalid credentials, you have {{attemptsLeft}} attempts left",
+    "ACCESS_TOKEN_EXPIRED": "Access token expired",
 }

@@ -6,6 +6,7 @@
 	import Icon from '@iconify/svelte';
 	import { t } from '$i18n/translations';
 	import { translateValidation } from '$helpers/translateValidation';
+	import { AppRoute } from '$constants/appRoute';
 
 	let isSuccess = true;
 	let error: string;
@@ -23,12 +24,12 @@
 
 		if (response.status === 200) {
 			isSuccess = true;
-			window.location.href = '/';
+			window.location.href = AppRoute.HOME;
 			invalidateAll();
 		} else {
 			isSuccess = false;
-            const i18nTranslate = translateValidation(res);
-            error = i18nTranslate;
+			const i18nTranslate = translateValidation(res);
+			error = i18nTranslate;
 		}
 	});
 </script>

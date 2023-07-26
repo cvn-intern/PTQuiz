@@ -1,23 +1,21 @@
-import { invalidateAll } from '$app/navigation';
 import type { RequestHandler } from './$types';
-
-export const GET: RequestHandler = async ({ fetch, cookies }) => {
-	const accessToken = cookies.get('accessToken');
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+import { VITE_API_URL } from '$env/static/private';
+import { HttpStatus } from '$constants/httpStatus';
+export const GET: RequestHandler = async ({ fetch }) => {
+	const response = await fetch(`${VITE_API_URL}/auth/profile`, {
 		method: 'GET',
 		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${accessToken}`
+			'Content-Type': 'application/json'
 		}
 	});
 	const result = await response.json();
-	if (response.status === 200) {
+	if (response.status === HttpStatus.OK) {
 		return new Response(JSON.stringify(result.data), {
-			status: 200
+			status: HttpStatus.OK
 		});
 	} else {
 		return new Response(JSON.stringify(result.message), {
-			status: 401
+			status: HttpStatus.UNAUTHORIZED
 		});
 	}
 };

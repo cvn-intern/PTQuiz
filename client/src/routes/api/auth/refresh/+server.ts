@@ -1,9 +1,10 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { VITE_API_URL } from '$env/static/private';
+import { HttpStatus } from '$constants/httpStatus';
 
 export const POST: RequestHandler = async ({ fetch, cookies }) => {
 	const token = cookies.get('refreshToken');
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+	const response = await fetch(`${VITE_API_URL}/auth/refresh`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -13,7 +14,7 @@ export const POST: RequestHandler = async ({ fetch, cookies }) => {
 		})
 	});
 	const result = await response.json();
-	if (response.status !== 200) {
+	if (response.status === HttpStatus.CREATED) {
 		cookies.set('accessToken', result.data.accessToken, {
 			path: '/'
 		});
@@ -21,7 +22,7 @@ export const POST: RequestHandler = async ({ fetch, cookies }) => {
 			path: '/'
 		});
 		return new Response(JSON.stringify({ message: 'Refresh token success' }), {
-			status: 200
+			status: HttpStatus.CREATED
 		});
 	}
 	return new Response(JSON.stringify({ message: 'Refresh token failed' }), {

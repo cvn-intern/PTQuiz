@@ -1,32 +1,24 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { VITE_API_URL } from '$env/static/private';
+import { HttpStatus } from '$constants/httpStatus';
 
-export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
+export const POST: RequestHandler = async ({ fetch, request }) => {
 	const data = await request.json();
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/room/open`, {
+	const response = await fetch(`${VITE_API_URL}/room/close`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			email: data.email,
-			password: data.password
+			quizId: data.quizId,
+			roomId: data.roomId
 		})
 	});
 	const result = await response.json();
-	if (response.status === 200) {
-		cookies.set('accessToken', result.data.accessToken, {
-			path: '/'
-		});
-		cookies.set('refreshToken', result.data.refreshToken, {
-			path: '/'
-		});
-		return new Response(JSON.stringify(result.data.user), {
-			status: 200
-		});
+	if (response.status === HttpStatus.OK) {
+		return json(result);
 	} else {
-		return new Response(JSON.stringify(result.message), {
-			status: 400
-		});
+		throw error(HttpStatus.BAD_REQUEST, result.message);
 	}
 };
