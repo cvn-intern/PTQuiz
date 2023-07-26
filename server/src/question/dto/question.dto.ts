@@ -9,47 +9,47 @@ export class QuestionDto {
 
     @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
     @IsNotEmpty({ message: 'Options A can not be empty' })
-    optionA: string;
+    optionA = '';
 
     @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
     @IsNotEmpty({ message: 'Options B can not be empty' })
-    optionB: string;
+    optionB = '';
 
     @ValidateIf((o) => o.type === 0 || o.type === 1)
     @IsNotEmpty({ message: 'Options C can not be empty' })
-    optionC: string;
+    optionC = '';
 
     @ValidateIf((o) => o.type === 0 || o.type === 1)
     @IsNotEmpty({ message: 'Options D can not be empty' })
-    optionD: string;
+    optionD = '';
 
     @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
     @IsNotEmpty({ message: 'Answer A can not be empty' })
-    answerA: boolean;
+    answerA = false;
 
     @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
     @IsNotEmpty({ message: 'Answer B can not be empty' })
-    answerB: boolean;
+    answerB = false;
 
     @ValidateIf((o) => o.type === 0 || o.type === 1)
     @IsNotEmpty({ message: 'Answer C can not be empty' })
-    answerC: boolean;
+    answerC = false;
 
     @ValidateIf((o) => o.type === 0 || o.type === 1)
     @IsNotEmpty({ message: 'Answer D can not be empty' })
-    answerD: boolean;
+    answerD = false;
 
     @ValidateIf((o) => o.type === 2)
     @IsNotEmpty({ message: 'Written can not be empty' })
-    written: string;
+    written = '';
 
     @IsOptional()
-    image: string;
+    image = '';
 
     @IsNotEmpty({ message: 'Type can not be empty' })
     type: number;
 
     @IsOptional()
     @IsNumber()
-    time: number;
+    time = 20;
 }

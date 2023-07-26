@@ -2,7 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuestionResponse } from './type/questionResponse.type';
 import { QuestionDto } from './dto/question.dto';
-import { QuestionData } from './type/questionInput.type';
+import { QuestionError } from '../error/index';
+
 @Injectable()
 export class QuestionService {
     constructor(private prisma: PrismaService) {}
@@ -81,7 +82,7 @@ export class QuestionService {
         try {
             if (!quizId) {
                 throw new HttpException(
-                    'Quiz id is required',
+                    QuestionError.QUIZ_ID_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -90,9 +91,9 @@ export class QuestionService {
                     quizId: quizId,
                 },
             });
-            if (!existQuiz) {
+            if (existQuiz.length == 0) {
                 throw new HttpException(
-                    'Quiz not found',
+                    QuestionError.QUIZ_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -105,7 +106,7 @@ export class QuestionService {
 
             if (!existCategory) {
                 throw new HttpException(
-                    'Category not found',
+                    QuestionError.CATEGORY_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -136,10 +137,9 @@ export class QuestionService {
         questionData: QuestionDto,
     ) {
         try {
-            console.log(questionData);
             if (!questionId) {
                 throw new HttpException(
-                    'Question id is required',
+                    QuestionError.QUESTION_ID_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -150,13 +150,13 @@ export class QuestionService {
             });
             if (!existQuestion) {
                 throw new HttpException(
-                    'Question not found',
+                    QuestionError.QUESTION_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (existQuestion.userId !== userId) {
                 throw new HttpException(
-                    'You are not authorized to update this question',
+                    QuestionError.NOT_AUTHORIZED,
                     HttpStatus.UNAUTHORIZED,
                 );
             }
@@ -166,11 +166,9 @@ export class QuestionService {
                 },
             });
 
-            console.log(existCategory);
-
             if (!existCategory) {
                 throw new HttpException(
-                    'Category not found',
+                    QuestionError.CATEGORY_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
@@ -184,13 +182,24 @@ export class QuestionService {
                 },
             });
         } catch (err) {
-            console.log(err);
             throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
         }
     }
 
-    async deleteQuestion(userId: string, questionId: string, quizId: string) {
+    async deleteQuestion(userId: string, quizId: string, questionId: string) {
         try {
+            if (!questionId) {
+                throw new HttpException(
+                    QuestionError.QUESTION_ID_NOT_FOUND,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+            if (!quizId) {
+                throw new HttpException(
+                    QuestionError.QUIZ_ID_NOT_FOUND,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
             const existQuestion = await this.prisma.questions.findUnique({
                 where: {
                     id: questionId,
@@ -198,13 +207,13 @@ export class QuestionService {
             });
             if (!existQuestion) {
                 throw new HttpException(
-                    'Question not found',
+                    QuestionError.QUESTION_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
             if (existQuestion.userId !== userId) {
                 throw new HttpException(
-                    'You are not authorized to delete this question',
+                    QuestionError.NOT_AUTHORIZED,
                     HttpStatus.UNAUTHORIZED,
                 );
             }
@@ -217,7 +226,8 @@ export class QuestionService {
             });
             return await this.updateNumberQuestion(quizId);
         } catch (err) {
-            throw new HttpException('Error question', HttpStatus.BAD_REQUEST);
+            console.log(err);
+            throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
         }
     }
 }
