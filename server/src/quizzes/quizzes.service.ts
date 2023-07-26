@@ -290,9 +290,8 @@ export class QuizzesService {
                         image,
                     );
                     url = image_upload.url;
-                }
+                } else url = process.env.DEFAULT_THUMBNAIL;
             } else url = process.env.DEFAULT_THUMBNAIL;
-
             const newQuiz = await this.prisma.quizzes.create({
                 data: {
                     userId: userId,

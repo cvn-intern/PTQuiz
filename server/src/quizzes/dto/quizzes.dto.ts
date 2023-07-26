@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsNumber, Length } from 'class-validator';
+import {
+    IsBoolean,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    Length,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class QuizzesDto {
@@ -12,27 +18,32 @@ export class QuizzesDto {
     @Length(10, 100, {
         message: 'Description must be between 10 and 100 characters',
     })
-    description: string;
+    @IsOptional()
+    description = '';
 
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'DurationMins can not be empty' })
     @IsNumber({}, { message: 'DurationMins must be a number' })
-    durationMins: number;
+    @IsOptional()
+    durationMins = -1;
 
     @Transform(({ value }) => value === 'true')
     @IsNotEmpty({ message: 'IsRandom can not empty' })
     @IsBoolean({ message: 'IsRandom must be a boolean' })
-    isRandom: boolean;
+    @IsOptional()
+    isRandom = false;
 
     @Transform(({ value }) => value === 'true')
     @IsNotEmpty({ message: 'IsRandomOption can not empty' })
     @IsBoolean({ message: 'IsRandomOption must be a boolean' })
-    isRandomOption: boolean;
+    @IsOptional()
+    isRandomOption = false;
 
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'Attempts cannot be empty' })
     @IsNumber({}, { message: 'Attempts must be a number' })
-    attempts: number;
+    @IsOptional()
+    attempts = -1;
 
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'Point can not be empty' })
@@ -47,26 +58,32 @@ export class QuizzesDto {
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'Difficulty can not be empty' })
     @IsNumber({}, { message: 'Difficulty must be a number' })
-    difficultyLevel: number;
+    @IsOptional()
+    difficultyLevel = 1;
 
-    @Transform(({ value }) => new Date(value))
+    @Transform(({ value }) => new Date())
+    @IsOptional()
     @IsNotEmpty({ message: 'Start date can not be empty' })
-    startDate: Date;
+    startDate = new Date();
 
-    @Transform(({ value }) => new Date(value))
+    @Transform(({ value }) => new Date())
+    @IsOptional()
     @IsNotEmpty({ message: 'End date can not be empty' })
-    endDate: Date;
+    endDate = new Date();
 
     @Transform(({ value }) => value === 'true')
-    passed: boolean;
+    @IsOptional()
+    passed = false;
 
     @Transform(({ value }) => value === 'true')
+    @IsOptional()
     @IsNotEmpty({ message: 'IsActivated can not be empty' })
     @IsBoolean({ message: 'IsActivated must be a boolean' })
-    isActivated: boolean;
+    isActivated = true;
 
     @Transform(({ value }) => value === 'true')
+    @IsOptional()
     @IsNotEmpty({ message: 'IsShared can not be empty' })
     @IsBoolean({ message: 'IsShared must be a boolean' })
-    isShared: boolean;
+    isShared = false;
 }
