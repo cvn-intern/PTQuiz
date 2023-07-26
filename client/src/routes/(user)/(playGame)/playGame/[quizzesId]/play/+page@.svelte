@@ -9,11 +9,16 @@
 	import FourAnswer from '$components/playGame/fourAnswer.svelte';
 	import { gameInfoStore } from '$stores/gameInfoStore.js';
 	import { t } from '$i18n/translations.js';
+	import { TypeQuestion } from '../../../../../../libs/constants/typeQuestion.js';
+	import MultipleChoice from '../../../../../../components/playGame/multipleChoiceAnswer.svelte';
+	import MultipleChoiceAnswer from '../../../../../../components/playGame/multipleChoiceAnswer.svelte';
 	export let data;
 
 	let questionPointer = 0;
 	let fourOptions: any[];
 	let isAnswerChecked: boolean = false;
+	let isMultipleChecked: boolean = false;
+	let multipleChoiceAnswer: boolean[] = [false, false, false, false];
 	let selectedAnswerIndex: number;
 	let sharedToastId: string | number;
 	let isSubmitting = false;
@@ -37,7 +42,7 @@
 
 	let original = 100;
 	let zero = 0;
-	let timer_default = quizzes[questionPointer].time || 20;
+	let timer_default = quizzes[questionPointer].time || 2;
 
 	let intervalValue = original / timer_default;
 	let timer = tweened(original);
@@ -77,12 +82,36 @@
 		}
 	}
 
+	function pickMultipleAnswer(multipleChoiceAnswer: boolean[]) {
+		const question = quizzes[questionPointer];
+		const answerKey = Object.keys(question.answers).find(
+			(key) => question.answers[key] === true
+		);
+		if (answerKey) {
+			givenAn[questionPointer] = {
+				answerA: multipleChoiceAnswer[0],
+				answerB: multipleChoiceAnswer[1],
+				answerC: multipleChoiceAnswer[2],
+				answerD: multipleChoiceAnswer[3]
+			};
+			console.log(givenAn[questionPointer]);
+			answerOfUser[questionPointer] = {
+				questionId: quizzes[questionPointer].id,
+				givenAnswers: givenAn[questionPointer]
+			};
+			console.log(answerOfUser);
+			isMultipleChecked = false;
+			isAnswerChecked = true;
+			// if isAnswerChecked is not set to true, console.log will not be sync
+		}
+	}
+
 	const showLoadingToast = (): void => {
 		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
 	};
 
 	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
+		toast.dismiss(sharedToastId.toString());
 	};
 
 	async function submitQuiz() {
@@ -127,13 +156,22 @@
 
 	$: {
 		if ($timer <= 0 && !isAnswerChecked) {
-			isAnswerChecked = true;
-			pickAnswer(-1);
-			selectedAnswerIndex = -1;
-			showModal = true;
-			setTimeout(() => {
-				showModal = false;
-			}, 3000);
+			if (isMultipleChecked) {
+				pickMultipleAnswer(multipleChoiceAnswer);
+				isMultipleChecked = false;
+				showModal = true;
+				setTimeout(() => {
+					showModal = false;
+				}, 3000);
+			} else {
+				isAnswerChecked = true;
+				pickAnswer(-1);
+				selectedAnswerIndex = -1;
+				showModal = true;
+				setTimeout(() => {
+					showModal = false;
+				}, 3000);
+			}
 		}
 	}
 
@@ -156,15 +194,17 @@
 
 	const question = quizzes[questionPointer];
 
-	$: fourOptions = Object.keys(question.options).map((optionKey, index) => ({
-		id: optionKey,
-		contents: quizzes[questionPointer].options[optionKey],
-		isCorrect: quizzes[questionPointer].answers[Object.keys(question.answers)[index]],
-		disabled: isAnswerChecked ? true : false
-	}));
+	$: {
+		fourOptions = Object.keys(question.options).map((optionKey, index) => ({
+			id: optionKey,
+			contents: quizzes[questionPointer].options[optionKey],
+			isCorrect: quizzes[questionPointer].answers[Object.keys(question.answers)[index]],
+			disabled: isAnswerChecked ? true : false
+		}));
+	}
 </script>
 
-<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2">
+<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
 	<div class="pt-4">
 		<Progressbar progress={$timer.toString()} color="gray" size="h-4" />
 	</div>
@@ -178,20 +218,49 @@
 			</div>
 		</div>
 		<div class="answer h-1/2">
-			<div
-				class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
-			>
-				{#each fourOptions as opt, index}
-					<FourAnswer
-						option={opt}
-						{index}
-						{isAnswerChecked}
-						{selectedAnswerIndex}
-						{pickAnswer}
+			{#if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+				<div
+					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+				>
+					{#each fourOptions as opt, index}
+						<FourAnswer
+							option={opt}
+							{index}
+							{isAnswerChecked}
+							{selectedAnswerIndex}
+							{pickAnswer}
+							{showModal}
+						/>
+					{/each}
+				</div>
+			{:else if quizzes[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
+				<div class="h-full">
+					<MultipleChoiceAnswer
+						bind:multipleChoiceAnswer
+						bind:isMultipleChecked
+						bind:isAnswerChecked
+						{fourOptions}
 						{showModal}
 					/>
-				{/each}
-			</div>
+				</div>
+			{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
+				<div
+					class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
+				>
+					{#each fourOptions as opt, index}
+						{#if opt.contents !== null}
+							<FourAnswer
+								option={opt}
+								{index}
+								{isAnswerChecked}
+								{selectedAnswerIndex}
+								{pickAnswer}
+								{showModal}
+							/>
+						{/if}
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
