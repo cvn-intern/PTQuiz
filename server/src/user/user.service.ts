@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserError } from '../error';
+import { AuthError } from '../error/authError.enum';
 @Injectable()
 export class UserService {
     constructor(
@@ -21,7 +22,10 @@ export class UserService {
                 },
             });
             if (!user) {
-                throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+                throw new HttpException(
+                    AuthError.USER_NOT_FOUND,
+                    HttpStatus.NOT_FOUND,
+                );
             }
             if (avatar) {
                 if (avatar.size > +process.env.MAX_FILE_SIZE) {
