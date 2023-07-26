@@ -229,21 +229,22 @@ export class QuizzesService {
                     userId: question.question.userId,
                     categoryId: question.question.categoryId,
                     title: question.question.title,
-                    options: [
-                        question.question.optionA,
-                        question.question.optionB,
-                        question.question.optionC,
-                        question.question.optionD,
-                    ],
-                    answers: [
-                        question.question.answerA,
-                        question.question.answerB,
-                        question.question.answerC,
-                        question.question.answerD,
-                    ],
+                    options: {
+                        optionA: question.question.optionA,
+                        optionB: question.question.optionB,
+                        optionC: question.question.optionC,
+                        optionD: question.question.optionD,
+                    },
+                    answers: {
+                        answerA: question.question.answerA,
+                        answerB: question.question.answerB,
+                        answerC: question.question.answerC,
+                        answerD: question.question.answerD,
+                    },
                     written: question.question.written,
                     image: question.question.image,
                     type: question.question.type,
+                    time: question.question.time,
                     createdAt: question.question.createdAt,
                     updatedAt: question.question.updatedAt,
                 };
@@ -294,10 +295,102 @@ export class QuizzesService {
             });
             return newQuiz;
         } catch (error) {
-            throw new HttpException(
-                QuizzesError.ERROR_QUIZ,
-                HttpStatus.BAD_REQUEST,
-            );
+            throw new HttpException(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async updateQuiz(userId: string, quizId: string, quiz: QuizzesDto) {
+        try {
+            if (!quizId) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const quizOfUser = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+
+            if (!quizOfUser) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
+            if (quizOfUser.userId !== userId) {
+                throw new HttpException(
+                    QuizzesError.NOT_PERMISSION,
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+
+            return await this.prisma.quizzes.update({
+                where: {
+                    id: quizId,
+                },
+                data: {
+                    title: quiz.title,
+                    description: quiz.description,
+                    image: quiz.image,
+                    durationMins: quiz.durationMins,
+                    isRandom: quiz.isRandom,
+                    isRandomOption: quiz.isRandomOption,
+                    attempts: quiz.attempts,
+                    point: quiz.point,
+                    passingPoint: quiz.passingPoint,
+                    passed: quiz.passed,
+                    difficultyLevel: quiz.difficultyLevel,
+                    startDate: quiz.startDate,
+                    endDate: quiz.endDate,
+                    isActivated: quiz.isActivated,
+                    isShared: quiz.isShared,
+                },
+            });
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async deleteQuiz(userId: string, quizId: string) {
+        try {
+            if (!quizId) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const quizOfUser = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+            if (!quizOfUser) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            if (quizOfUser.userId !== userId) {
+                throw new HttpException(
+                    QuizzesError.NOT_PERMISSION,
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+            await this.prisma.quiz_questions.deleteMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            return await this.prisma.quizzes.delete({
+                where: {
+                    id: quizId,
+                },
+            });
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
     }
 }

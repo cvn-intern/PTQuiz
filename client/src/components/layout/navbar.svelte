@@ -7,6 +7,7 @@
 	import logo from '../../assets/logo.png';
 	import { t } from '$i18n/translations';
 	import type { LayoutData } from '../../routes/$types';
+	import { AppRoute } from '../../libs/constants/appRoute';
 	export let user: LayoutData;
 
 	let isHidden: boolean = true;
@@ -16,7 +17,7 @@
 		});
 		if (response.status === 200) {
 			invalidateAll();
-			window.location.href = '/';
+			window.location.href = AppRoute.HOME;
 		}
 	};
 	const toggleSidebar = () => {

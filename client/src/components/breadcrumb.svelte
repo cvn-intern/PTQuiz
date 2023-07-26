@@ -1,9 +1,10 @@
 <script>
+	import { AppRoute } from '$constants/appRoute';
 	import Icon from '@iconify/svelte';
 	const levels = [
 		{
 			name: 'Home',
-			url: '/',
+			url: AppRoute.HOME,
 			icon: 'material-symbols:home-outline'
 		},
 		{

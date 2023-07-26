@@ -41,18 +41,18 @@
 		}
 
 		dismissLoadingToast();
+		isProcessing = false;
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message);
-			isProcessing = false;
 		}
 	};
 </script>
 
-<div class="flex flex-col items-center">
+<div class="flex flex-col">
 	<form
 		use:enhance={() => {
 			return async ({ update }) => {
@@ -62,9 +62,8 @@
 		action="?/edit_profile"
 		method="post"
 		enctype="multipart/form-data"
-		class="items-center flex flex-col gap-5"
 	>
-		<div class="relative">
+		<div class="relative flex justify-center">
 			<img src={imageUrl} alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer" />
 			<input
 				type="file"
@@ -126,19 +125,21 @@
 		</div>
 
 		{#if inputFocused}
-			<div class="flex justify-end space-x-2">
-				<button
-					aria-label="Cancel"
-					class="w-full text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-					on:click={handleCancel}
-					type="button">{$t('common.cancel')}</button
-				>
-				<button
-					aria-label="Save"
-					on:click={handleSubmit}
-					class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-					type="submit">{$t('common.save')}</button
-				>
+			<div class="items-center flex flex-col">
+				<div class="flex gap-3">
+					<button
+						aria-label="Cancel"
+						class="w-full text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+						on:click={handleCancel}
+						type="button">{$t('common.cancel')}</button
+					>
+					<button
+						aria-label="Save"
+						on:click={handleSubmit}
+						class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+						type="submit">{$t('common.save')}</button
+					>
+				</div>
 			</div>
 		{/if}
 	</form>

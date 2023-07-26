@@ -35,7 +35,7 @@
 		dismissLoadingToast();
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message);
@@ -44,7 +44,7 @@
 	};
 </script>
 
-<div class="items-center">
+<div class="">
 	<form method="POST" action="?/change_password" use:enhance>
 		<div class="relative">
 			<label for="oldPassword" class="mb-1">{$t('common.oldPassword')}</label>

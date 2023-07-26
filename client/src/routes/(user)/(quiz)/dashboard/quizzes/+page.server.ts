@@ -1,4 +1,4 @@
-import img1 from '../../../assets/testimg.png';
+import img1 from '$assets/testimg.png';
 import type { IQuiz, IQuizAPI } from './quiz.type';
 
 export async function load({ fetch }) {

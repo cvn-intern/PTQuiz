@@ -4,13 +4,14 @@
 	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
 	import { t } from '$i18n/translations.js';
+	import { AppRoute } from '$constants/appRoute';
 	export let form;
 	export let data;
 
 	let sharedToastId: string | number;
 	let isProcessing: boolean = false;
 	const showLoadingToast = (): void => {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
 	};
 	const dismissLoadingToast = (): void => {
 		toast.dismiss(sharedToastId);
@@ -41,7 +42,7 @@
 	};
 	onMount(() => {
 		if (data.user) {
-			goto('/');
+			goto(AppRoute.HOME);
 		}
 	});
 </script>

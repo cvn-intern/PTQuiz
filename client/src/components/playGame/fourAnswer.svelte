@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import { Modal } from 'flowbite-svelte';
 
 	export let option: {
 		id: string;
-		color: string;
 		contents: string;
 		isCorrect: boolean;
 		disabled: boolean;
@@ -12,12 +12,25 @@
 	export let index: number;
 	export let isAnswerChecked: boolean;
 	export let selectedAnswerIndex: number;
-	export let pickAnswer: (id: string, index: number) => void;
+	export let pickAnswer: (index: number) => void;
+
+	export let showModal = true;
+
+	function handleAnswerSelection() {
+		if (isAnswerChecked || option.disabled) return;
+
+		showModal = true;
+		pickAnswer(index);
+
+		setTimeout(() => {
+			showModal = false;
+		}, 3000);
+	}
 </script>
 
 <button
-	on:click={() => pickAnswer(option.id, index)}
-	class={`rounded-2xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl min-h-full ${
+	on:click={handleAnswerSelection}
+	class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl ${
 		isAnswerChecked
 			? option.isCorrect
 				? 'bg-green-500'
@@ -32,4 +45,50 @@
 		<Icon icon={`twemoji:letter-${option.id.toLowerCase()}`} class={`md:text-4xl text-2xl`} />
 	</div>
 	<p class="text-sm md:text-xl font-semibold text-left">{option.contents}</p>
+
+	{#if showModal}
+		<Modal bind:open={showModal} autoclose placement="top-center">
+			<div class="">
+				{#if option.isCorrect && selectedAnswerIndex != -1}
+					<svg
+						aria-hidden="true"
+						class="mx-auto mb-4 w-14 h-14 text-green-500"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M5 13l4 4L19 7"
+						/>
+					</svg>
+					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+						Correct Answer!
+					</h3>
+				{:else}
+					<svg
+						aria-hidden="true"
+						class="mx-auto mb-4 w-14 h-14 text-red-500"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M6 18L18 6M6 6l12 12"
+						/>
+					</svg>
+					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+						Wrong Answer! Try Better Next Time.
+					</h3>
+				{/if}
+			</div>
+		</Modal>
+	{/if}
 </button>

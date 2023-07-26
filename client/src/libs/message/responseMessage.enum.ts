@@ -36,6 +36,13 @@ export enum AuthError {
 }
 
 export enum JwtError {
-    INVALID_TOKEN = 'Invalid token',
-    EXPIRED_TOKEN = 'Token expired',
+	INVALID_TOKEN = 'Invalid token',
+	EXPIRED_TOKEN = 'Token expired',
+	ACCESS_TOKEN_EXPIRED = 'Access token expired',
+	TOKEN_EXPIRED_ERROR = 'TokenExpiredError'
+}
+
+export enum UserError {
+	FILE_TOO_LARGE = 'File size too large, max file size is 5MB',
+	DISPLAY_NAME_CANNOT_BE_EMPTY = "Display name can't be empty"
 }

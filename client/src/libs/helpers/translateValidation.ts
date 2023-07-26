@@ -1,5 +1,5 @@
 import { t } from '$i18n/translations';
-import { AuthError, JwtError } from '../message/responseMessage.enum';
+import { AuthError, JwtError, UserError } from '../message/responseMessage.enum';
 
 export const translateValidation = (message: string) => {
 	if (message === AuthError.USER_NOT_ACTIVATED) {
@@ -30,8 +30,15 @@ export const translateValidation = (message: string) => {
 		return t.get('validation.INVALID_TOKEN');
 	} else if (message === JwtError.EXPIRED_TOKEN) {
 		return t.get('validation.EXPIRED_TOKEN');
+	} else if (message === JwtError.ACCESS_TOKEN_EXPIRED) {
+		return t.get('validation.ACCESS_TOKEN_EXPIRED');
 	} else if (message.includes('attempts left')) {
-		const attemptsLeft = message.split(' ')[4];
+		const positionOfAttemptsLeft = 4;
+		const attemptsLeft = message.split(' ')[positionOfAttemptsLeft];
 		return t.get('validation.USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT', { attemptsLeft });
+	} else if (message === UserError.DISPLAY_NAME_CANNOT_BE_EMPTY) {
+		return t.get('validation.MISSING_DISPLAY_NAME');
+	} else if (message === UserError.FILE_TOO_LARGE) {
+		return t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB');
 	}
 };
