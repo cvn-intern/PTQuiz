@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { Modal } from 'flowbite-svelte';
-	import { onMount } from 'svelte';
 
 	export let fourOptions: any[];
 	export let multipleChoiceAnswer: boolean[];
@@ -18,7 +17,6 @@
 	function handleShowMultipleModal(fourOptions: any[], userAnswer: any[]) {
 		let isCorrect = true;
 		fourOptions.forEach((option, index) => {
-			console.log(option.isCorrect, userAnswer[index]);
 			if (option.isCorrect !== userAnswer[index]) {
 				isCorrect = false;
 			}

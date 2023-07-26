@@ -6,23 +6,26 @@
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import CryptoJS from 'crypto-js';
-	import FourAnswer from '$components/playGame/fourAnswer.svelte';
+	import SingleChoiceAnswer from '$components/playGame/singleChoiceAnswer.svelte';
 	import { gameInfoStore } from '$stores/gameInfoStore.js';
 	import { t } from '$i18n/translations.js';
-	import { TypeQuestion } from '../../../../../../libs/constants/typeQuestion.js';
-	import MultipleChoice from '../../../../../../components/playGame/multipleChoiceAnswer.svelte';
-	import MultipleChoiceAnswer from '../../../../../../components/playGame/multipleChoiceAnswer.svelte';
+	import { TypeQuestion } from '$constants/typeQuestion.js';
+	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
+	import TextAnswer from '$components/playGame/textAnswer.svelte';
 	export let data;
 
 	let questionPointer = 0;
 	let fourOptions: any[];
 	let isAnswerChecked: boolean = false;
 	let isMultipleChecked: boolean = false;
+	let isEssayChecked: boolean = false;
 	let multipleChoiceAnswer: boolean[] = [false, false, false, false];
 	let selectedAnswerIndex: number;
 	let sharedToastId: string | number;
 	let isSubmitting = false;
 	let showModal = false;
+	let stringTimer: string;
+	let finalAnswer: string;
 
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
@@ -40,24 +43,39 @@
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	let original = 100;
+	let original = 120;
 	let zero = 0;
-	let timer_default = quizzes[questionPointer].time || 2;
 
-	let intervalValue = original / timer_default;
 	let timer = tweened(original);
 
 	setInterval(() => {
-		if ($timer > 0) $timer -= intervalValue / 10;
+		if ($timer > 0) $timer--;
 	}, 100);
+
+	$: stringTimer = (($timer * 100) / original).toString();
 
 	const givenAn: {
 		[key: string]: { answerA: boolean; answerB: boolean; answerC: boolean; answerD: boolean };
 	} = {};
 
-	const answerOfUser: {
-		[key: string]: { questionId: string; givenAnswers: any };
+	let answerOfUser: {
+		[key: string]: { questionId: string; givenAnswers: any; writtenAnswer: string };
 	} = {};
+
+	function pickEssay(finalAnswer: string) {
+		isAnswerChecked = true;
+		givenAn[questionPointer] = {
+			answerA: false,
+			answerB: false,
+			answerC: false,
+			answerD: false
+		};
+		answerOfUser[questionPointer] = {
+			questionId: quizzes[questionPointer].id,
+			givenAnswers: givenAn[questionPointer],
+			writtenAnswer: finalAnswer
+		};
+	}
 
 	function pickAnswer(index: number) {
 		isAnswerChecked = true;
@@ -77,7 +95,8 @@
 			};
 			answerOfUser[questionPointer] = {
 				questionId: quizzes[questionPointer].id,
-				givenAnswers: givenAn[questionPointer]
+				givenAnswers: givenAn[questionPointer],
+				writtenAnswer: ''
 			};
 		}
 	}
@@ -94,15 +113,13 @@
 				answerC: multipleChoiceAnswer[2],
 				answerD: multipleChoiceAnswer[3]
 			};
-			console.log(givenAn[questionPointer]);
 			answerOfUser[questionPointer] = {
 				questionId: quizzes[questionPointer].id,
-				givenAnswers: givenAn[questionPointer]
+				givenAnswers: givenAn[questionPointer],
+				writtenAnswer: ''
 			};
-			console.log(answerOfUser);
 			isMultipleChecked = false;
 			isAnswerChecked = true;
-			// if isAnswerChecked is not set to true, console.log will not be sync
 		}
 	}
 
@@ -162,7 +179,14 @@
 				showModal = true;
 				setTimeout(() => {
 					showModal = false;
-				}, 3000);
+				}, 2000);
+			} else if (isEssayChecked) {
+				pickEssay(finalAnswer);
+				isEssayChecked = false;
+				showModal = true;
+				setTimeout(() => {
+					showModal = false;
+				}, 2000);
 			} else {
 				isAnswerChecked = true;
 				pickAnswer(-1);
@@ -170,7 +194,7 @@
 				showModal = true;
 				setTimeout(() => {
 					showModal = false;
-				}, 3000);
+				}, 2000);
 			}
 		}
 	}
@@ -183,11 +207,11 @@
 					questionPointer++;
 					timer = tweened(original);
 					isAnswerChecked = false;
-				}, 3000);
+				}, 2000);
 			} else {
 				setTimeout(() => {
 					submitQuiz();
-				}, 3000);
+				}, 2000);
 			}
 		}
 	}
@@ -206,7 +230,7 @@
 
 <div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
 	<div class="pt-4">
-		<Progressbar progress={$timer.toString()} color="gray" size="h-4" />
+		<Progressbar progress={stringTimer} size="h-4" color="gray" />
 	</div>
 
 	<div class=" h-full p-2 rounded-lg">
@@ -223,7 +247,7 @@
 					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
 				>
 					{#each fourOptions as opt, index}
-						<FourAnswer
+						<SingleChoiceAnswer
 							option={opt}
 							{index}
 							{isAnswerChecked}
@@ -249,7 +273,7 @@
 				>
 					{#each fourOptions as opt, index}
 						{#if opt.contents !== null}
-							<FourAnswer
+							<SingleChoiceAnswer
 								option={opt}
 								{index}
 								{isAnswerChecked}
@@ -260,6 +284,14 @@
 						{/if}
 					{/each}
 				</div>
+			{:else if quizzes[questionPointer].type === TypeQuestion.ESSAY}
+				<TextAnswer
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isEssayChecked
+					{showModal}
+				/>
 			{/if}
 		</div>
 	</div>

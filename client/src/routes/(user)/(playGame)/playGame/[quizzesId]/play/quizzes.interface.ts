@@ -7,10 +7,10 @@ export interface Quiz {
 	image: string | null;
 	options: {
 		[key: string]: string;
-	}
+	};
 	answers: {
 		[key: string]: boolean;
-	}
+	};
 	createdAt: string;
 	updatedAt: string;
 	written: string | null;
@@ -30,4 +30,5 @@ export interface UserAnswer {
 export interface answerOfUser {
 	questionId: string;
 	givenAnswers: string;
+	writtenAnswer: string;
 }
