@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 import { t } from '$i18n/translations';
+import { VITE_MAX_FILE_SIZE } from '$env/static/private';
 
 const ProfileFormSchema = z.object({
 	displayName: z
@@ -10,7 +11,7 @@ const ProfileFormSchema = z.object({
 	avatar: z
 		.any()
 		.refine(
-			(file) => file.size <= +import.meta.env.VITE_MAX_FILE_SIZE,
+			(file) => file.size <= +VITE_MAX_FILE_SIZE,
 			t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB')
 		)
 });

@@ -11,7 +11,7 @@
 	let sharedToastId: string | number;
 	let isProcessing: boolean = false;
 	const showLoadingToast = (): void => {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
 	};
 	const dismissLoadingToast = (): void => {
 		toast.dismiss(sharedToastId);
@@ -31,7 +31,7 @@
 		dismissLoadingToast();
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 			goto('/forgotPassword/loading');
 		} else {
 			dismissLoadingToast();

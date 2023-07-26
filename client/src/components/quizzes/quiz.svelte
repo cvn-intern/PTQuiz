@@ -27,7 +27,7 @@
 	};
 
 	async function handleStart() {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
 		const response = await fetch(`/api/room/open`, {
 			method: 'POST',
 			headers: {
@@ -40,7 +40,7 @@
 		const result = await response.json();
 		if (response.status === 200) {
 			dismissLoadingToast();
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 			goto(`/room/${result.data.PIN}`);
 		} else {
 			dismissLoadingToast();

@@ -3,6 +3,7 @@ import type Message from './interface/message.interface';
 import { createDefaultMessage } from './interface/message.interface';
 import { ResponseMessage as MESSAGE } from '../../../../../libs/message/responseMessage.enum';
 import { PasswordFormSchema, ProfileFormSchema } from '../../../../../libs/schema';
+import { translateValidation } from '$helpers/translateValidation';
 
 let message: Message;
 
@@ -26,7 +27,8 @@ export const actions: Actions = {
 			const result = await response.json();
 			message.isSuccess = result.statusCode === 200;
 			message.success.message = result.message;
-			message.error.message = result.message;
+			const i18nTranslate = translateValidation(result.message);
+			message.error.message = i18nTranslate;
 		} catch (err: any) {
 			message.isSuccess = false;
 			(message.error.missing as Record<string, boolean>)[`${err.errors[0].path}`] = true;
@@ -64,7 +66,8 @@ export const actions: Actions = {
 			const result = await response.json();
 			message.isSuccess = result.statusCode === 200;
 			message.success.message = result.message;
-			message.error.message = result.message;
+			const i18nTranslate = translateValidation(result.message);
+			message.error.message = i18nTranslate;
 		} catch (err: any) {
 			message.isSuccess = false;
 			(message.error.missing as Record<string, boolean>)[`${err.errors[0].path}`] = true;
