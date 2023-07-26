@@ -44,7 +44,7 @@
 		isProcessing = false;
 
 		if (form?.isSuccess) {
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message);

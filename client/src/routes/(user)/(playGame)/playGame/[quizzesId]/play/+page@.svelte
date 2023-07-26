@@ -8,6 +8,7 @@
 	import CryptoJS from 'crypto-js';
 	import FourAnswer from '$components/playGame/fourAnswer.svelte';
 	import { gameInfoStore } from '$stores/gameInfoStore.js';
+	import { t } from '$i18n/translations.js';
 	export let data;
 
 	const key = import.meta.env.VITE_CRYPTO_KEY;
@@ -55,7 +56,7 @@
 	}
 
 	const showLoadingToast = (): void => {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
 	};
 
 	const dismissLoadingToast = (): void => {
@@ -92,7 +93,7 @@
 			const result = await response.json();
 
 			if (response.status === 200) {
-				toast.success('Success!');
+				toast.success(t.get('common.success'));
 				goto(`/playGame/${quizzesId}/endGame`);
 			} else {
 				toast.error(result || 'Invalid submit');

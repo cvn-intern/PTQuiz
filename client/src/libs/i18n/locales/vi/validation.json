@@ -13,7 +13,7 @@
 	"DISPLAY_NAME_TOO_LONG": "Tên hiển thị quá dài",
 	"EMAIL_TOO_LONG": "Email quá dài",
 	"EMAIL_NOT_CONFIRMED": "Tài khoản của bạn chưa được kích hoạt, vui lòng xác nhận email của bạn",
-	"AVATAR_MUST_BE_LESS_THAN_5MB": "Ảnh đại diện phải nhỏ hơn 4MB",
+	"AVATAR_MUST_BE_LESS_THAN_5MB": "Ảnh đại diện phải nhỏ hơn 5MB",
 	"OLD_PASSWORD_IS_REQUIRED": "Cần có mật khẩu cũ",
 	"NEW_PASSWORD_IS_REQUIRED": "Cần có mật khẩu mới",
 	"NEW_PASSWORD_TOO_LONG": "Mật khẩu mới quá dài",

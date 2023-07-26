@@ -1,5 +1,5 @@
 import { t } from '$i18n/translations';
-import { AuthError, JwtError } from '../message/responseMessage.enum';
+import { AuthError, JwtError, UserError } from '../message/responseMessage.enum';
 
 export const translateValidation = (message: string) => {
 	if (message === AuthError.USER_NOT_ACTIVATED) {
@@ -36,5 +36,9 @@ export const translateValidation = (message: string) => {
 		const positionOfAttemptsLeft = 4;
 		const attemptsLeft = message.split(' ')[positionOfAttemptsLeft];
 		return t.get('validation.USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT', { attemptsLeft });
+	} else if (message === UserError.DISPLAY_NAME_CANNOT_BE_EMPTY) {
+		return t.get('validation.MISSING_DISPLAY_NAME');
+	} else if (message === UserError.FILE_TOO_LARGE) {
+		return t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB');
 	}
 };
