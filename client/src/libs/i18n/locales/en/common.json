@@ -108,5 +108,7 @@
 	"fail": "Fail",
 	"geography": "Geography",
 	"publicQuizzes": "Public",
-	"privateQuizzes": "Private"
+	"privateQuizzes": "Private",
+	"passingPoint": "Passing Point",
+	"description": "Description"
 }

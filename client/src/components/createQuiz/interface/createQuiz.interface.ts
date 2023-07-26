@@ -17,6 +17,6 @@ export interface FieldForm {
 	thumbnail: string;
 	startDate?: string;
 	endDate?: string;
+	passingPoint?: string;
+	description?: string;
 }
-
-

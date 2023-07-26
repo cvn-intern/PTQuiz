@@ -1,6 +1,15 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
-	import { Button, Modal, Label, Input, Fileupload, Toggle, Select } from 'flowbite-svelte';
+	import {
+		Button,
+		Modal,
+		Label,
+		Input,
+		Fileupload,
+		Toggle,
+		Select,
+		Textarea
+	} from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
 	import type { FieldForm, InputForm } from './interface/createQuiz.interface';
 	import Icon from '@iconify/svelte';
@@ -16,7 +25,9 @@
 		shareQuiz: false,
 		startDate: '',
 		thumbnail: '',
-		endDate: ''
+		endDate: '',
+		passingPoint: '',
+		description: ''
 	};
 
 	export const snapshot = {
@@ -84,6 +95,18 @@
 			name: 'endDate',
 			type: 'date',
 			required: false
+		},
+		{
+			label: `${$t('common.passingPoint')}`,
+			name: 'passingPoint',
+			type: 'number',
+			required: false
+		},
+		{
+			label: `${$t('common.description')}`,
+			name: 'description',
+			type: 'textarea',
+			required: false
 		}
 	];
 	export let outsideclose = true;
@@ -116,12 +139,7 @@
 						{label} <span class="text-red-600">{required ? '*' : ''}</span>
 					</Label>
 					{#if type === 'file'}
-						<Fileupload
-							{name}
-							bind:value={formData.thumbnail}
-							accept=".jpg, .jpeg, .png"
-							si
-						/>
+						<Fileupload {name} accept=".jpg, .jpeg, .png" />
 						<p
 							class="mt-1 text-sm text-gray-500 dark:text-gray-300"
 							id="file_input_help"
@@ -129,8 +147,8 @@
 							JPEG, PNG, JPG (5MB).
 						</p>
 					{:else if type === 'switch'}
-						<Toggle checked={false} {name} {required}
-							>{isDefault
+						<Toggle checked={false} {name} {required} value="">
+							{isDefault
 								? `${$t('common.privateQuizzes')}`
 								: `${$t('common.publicQuizzes')}`}</Toggle
 						>
@@ -149,6 +167,14 @@
 								{/each}
 							{/if}
 						</Select>
+					{:else if type === 'textarea'}
+						<Textarea
+							id={name}
+							{type}
+							placeholder={label}
+							{name}
+							class="bg-gray-50 border border-graydish text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+						/>
 					{:else}
 						<Input
 							id={name}

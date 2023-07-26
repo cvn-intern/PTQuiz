@@ -1,21 +1,21 @@
-import { InforQuizFormSchema } from "../../../../libs/schema/inforQuiz";
+import { InforQuizFormSchema } from '../../../../libs/schema/inforQuiz';
 
 export const actions = {
 	createQuizz: async ({ fetch, request }) => {
 		const data = await request.formData();
 		try {
-			const validatedData = InforQuizFormSchema.parse({
-				titleQuiz: data.get('titleQuiz'),
-				thumbnail: data.get('thumbnail')
-			});
-            console.log(validatedData);
-			// const response = await fetch('/api/create-quiz/create', {
-			// 	method: 'POST',
-			// 	headers: { type: 'multipart/form-data' },
-			// 	body: data
+			// const validatedData = InforQuizFormSchema.parse({
+			// 	titleQuiz: data.get('titleQuiz'),
+			// 	thumbnail: data.get('thumbnail'),
+			// 	decription: data.get('decription'),
+			// 	passingPoint: data.get('passingPoint')
 			// });
-			// const result = await response.json();
-			// console.log(result);
+			const response = await fetch('/api/create-quizzes', {
+				method: 'POST',
+				body: data
+			});
+			const result = await response.json();
+
 		} catch (error: any) {
 			console.log(error);
 		}

@@ -108,5 +108,7 @@
 	"fail": "Chưa đạt",
 	"geography": "Địa lý",
 	"publicQuizzes": "Công khai",
-	"privateQuizzes": "Riêng tư"
+	"privateQuizzes": "Riêng tư",
+	"passingPoint": "Điểm đạt",
+	"description": "Mô tả"
 }
