@@ -3,8 +3,8 @@
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
 	import { t } from '$i18n/translations';
-	import { dismissLoadingToast, showLoadingToast } from '../../libs/toast/toast.js';
-	import type Message from '../login/interface/message.interface.js';
+	import type Message from '../login/interface/message.interface';
+	import { dismissLoadingToast, showLoadingToast } from '../../../../libs/toast/toast';
 
 	export let form: Message;
 
