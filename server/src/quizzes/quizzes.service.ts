@@ -295,7 +295,6 @@ export class QuizzesService {
             });
             return newQuiz;
         } catch (error) {
-            console.log(error);
             throw new HttpException(error, HttpStatus.BAD_REQUEST);
         }
     }
