@@ -9,10 +9,10 @@ export interface InputForm {
 }
 
 export interface FieldForm {
-	titleQuizzes: string;
+	titleQuiz: string;
 	category: string;
 	level: string;
-	shareQuizzes: boolean;
+	shareQuiz: boolean;
 	customizeTimeQuestion?: string;
 	thumbnail: string;
 	startDate?: string;

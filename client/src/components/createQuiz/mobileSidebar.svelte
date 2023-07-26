@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Drawer, CloseButton, Button } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import SidebarCreateQuizzes from './sidebarCreateQuizzes.svelte';
 	import Icon from '@iconify/svelte';
+	import SidebarCreateQuiz from './sidebarCreateQuiz.svelte';
 	let hidden1 = true;
 	let transitionParams = {
 		x: -320,
@@ -38,5 +38,5 @@
 		</h5>
 		<CloseButton on:click={() => (hidden1 = true)} class="mb-4 dark:text-white" />
 	</div>
-	<SidebarCreateQuizzes classSidaBar={'flex flex-col gap-10 items-center'} />
+	<SidebarCreateQuiz classSidaBar={'flex flex-col gap-10 items-center'} />
 </Drawer>

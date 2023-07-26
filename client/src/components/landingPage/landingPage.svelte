@@ -22,7 +22,7 @@
 		/>
 		<PlayCard
 			src={CreateQuiz}
-			href={'/'}
+			href={'/createQuiz'}
 			altText={'Play Game'}
 			title={$t('common.createQuiz')}
 			intro={$t('common.createQuizIntro')}
