@@ -3,20 +3,22 @@ export interface InputForm {
 	name: string;
 	type: string;
 	required: boolean;
-	selectOptionsList?: string[];
+	selectOptionsList?: selectOptionne[];
 	valueSwitchDefault?: string;
 	isDefault?: boolean;
 }
 
 export interface FieldForm {
-	titleQuiz: string;
-	category: string;
-	level: string;
-	shareQuiz: boolean;
-	customizeTimeQuestion?: string;
-	thumbnail: string;
+	title: string;
+	difficultyLevel: string;
+	image?: any;
 	startDate?: string;
 	endDate?: string;
+	passingPoint?: string;
+	description?: string;
 }
 
-
+export interface selectOptionne {
+	value: string | number;
+	name: string;
+}

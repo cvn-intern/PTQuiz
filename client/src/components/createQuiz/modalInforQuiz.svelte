@@ -1,20 +1,54 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
-	import { Button, Modal, Label, Input, Fileupload, Toggle, Select } from 'flowbite-svelte';
+	import { Button, Modal, Label, Input, Fileupload, Select, Textarea } from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
-	import type { FieldForm, InputForm } from './interface/createQuiz.interface';
+	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
+	import { showLoadingToast, dismissLoadingToast } from '$libs/toast/toast';
+	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
+	export let classButton: string;
+	export let defaultOpenModal: boolean;
+	export let form: any;
 
-	let formModal = true;
+	let isProcessing: boolean = false;
+
+	const handleSubmit = async (): Promise<void> => {
+		if (isProcessing) return;
+		isProcessing = true;
+		form = null;
+
+		showLoadingToast();
+
+		while (!form?.isDone) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+
+		dismissLoadingToast();
+		isProcessing = false;
+
+		if (form?.isSuccess) {
+			toast.success(t.get('common.success'));
+		} else {
+			dismissLoadingToast();
+			toast.error(form?.error.message);
+		}
+	};
+
+	let selectedLevel: string;
+	let levelList: selectOptionne[] = [
+		{ value: 0, name: 'Easy' },
+		{ value: 1, name: 'Medium' },
+		{ value: 2, name: 'Hard' }
+	];
+
+	let formModal = defaultOpenModal;
 	let formData: FieldForm = {
-		titleQuiz: '',
-		category: '',
-		customizeTimeQuestion: '',
-		level: '',
-		shareQuiz: false,
+		title: '',
+		difficultyLevel: '',
 		startDate: '',
-		thumbnail: '',
-		endDate: ''
+		endDate: '',
+		passingPoint: '',
+		description: ''
 	};
 
 	export const snapshot = {
@@ -24,46 +58,16 @@
 
 	const inputFormList: InputForm[] = [
 		{
-			label: `${$t('common.titleQuiz')}`,
-			name: 'titleQuiz',
+			label: `${$t('common.title')} *`,
+			name: 'title',
 			type: 'text',
-			required: true
+			required: false
 		},
 		{
-			label: `${$t('common.category')}`,
-			name: 'category',
+			label: `${$t('common.level')} *`,
+			name: 'difficultyLevel',
 			type: 'select',
-			required: true,
-			selectOptionsList: [
-				'Math',
-				'English',
-				'Science',
-				'History',
-				'Geography',
-				'Literature',
-				'Other'
-			]
-		},
-		{
-			label: `${$t('common.customizeTimeQuestion')}`,
-			name: 'customizeTimeQuestion',
-			type: 'select',
-			required: false,
-			selectOptionsList: ['Default', 'Customize']
-		},
-		{
-			label: `${$t('common.level')}`,
-			name: 'level',
-			type: 'select',
-			required: false,
-			selectOptionsList: ['Easy', 'Medium', 'Hard']
-		},
-		{
-			label: `${$t('common.shareYourQuiz')}`,
-			name: 'shareQuizzes',
-			type: 'switch',
-			required: false,
-			isDefault: true
+			selectOptionsList: levelList
 		},
 		{
 			label: `${$t('common.startDate')}`,
@@ -72,8 +76,8 @@
 			required: false
 		},
 		{
-			label: `${$t('common.thumbnail')}`,
-			name: 'thumbnail',
+			label: `${$t('common.file')}`,
+			name: 'image',
 			type: 'file',
 			required: false
 		},
@@ -82,21 +86,38 @@
 			name: 'endDate',
 			type: 'date',
 			required: false
+		},
+		{
+			label: `${$t('common.point')} *`,
+			name: 'point',
+			type: 'number',
+			required: false
+		},
+		{
+			label: `${$t('common.passingPoint')} *`,
+			name: 'passingPoint',
+			type: 'number',
+			required: false
+		},
+		{
+			label: `${$t('common.description')}`,
+			name: 'description',
+			type: 'textarea',
+			required: false
 		}
 	];
+	export let outsideclose = true;
+	export let nameClassButton: string;
 </script>
 
-<Button
-	on:click={() => (formModal = true)}
-	class="w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"
->
-	<Icon icon={'carbon:information'} class={'mr-3'} /> Information Quiz</Button
+<Button on:click={() => (formModal = true)} class={classButton}>
+	<Icon icon={'carbon:information'} class={'mr-3'} /> {nameClassButton}</Button
 >
 
-<Modal bind:open={formModal} size="md" autoclose={false} class="w-full z-50" outsideclose>
+<Modal bind:open={formModal} size="md" class="w-full z-50" {outsideclose} autoclose={false}>
 	<form
 		class="flex flex-col space-y-4 items-center"
-		action="?/createQuizz"
+		action="?/createQuiz"
 		method="post"
 		use:enhance={() => {
 			return async ({ update }) => {
@@ -109,40 +130,36 @@
 			{$t('common.informationQuizzes')}
 		</h3>
 		<div class="grid grid-cols-2 gap-4">
-			{#each inputFormList as { label, name, type, required, selectOptionsList, isDefault }}
+			{#each inputFormList as { label, name, type, required, selectOptionsList }}
 				<div>
 					<Label class="space-y-2 block text-sm font-medium text-gray-900 dark:text-w">
 						{label} <span class="text-red-600">{required ? '*' : ''}</span>
 					</Label>
 					{#if type === 'file'}
-						<Fileupload {name} bind:value={formData.thumbnail} />
+						<input type="file" name="image" />
 						<p
 							class="mt-1 text-sm text-gray-500 dark:text-gray-300"
 							id="file_input_help"
 						>
-							SVG, PNG, JPG or GIF (MAX. 800x400px).
+							JPEG, PNG, JPG (5MB).
 						</p>
-					{:else if type === 'switch'}
-						<Toggle checked={false} {name} {required}
-							>{isDefault
-								? `${$t('common.privateQuizzes')}`
-								: `${$t('common.publicQuizzes')}`}</Toggle
-						>
 					{:else if type === 'select'}
 						<Select
+							items={selectOptionsList}
+							bind:value={selectedLevel}
 							{required}
 							id={name}
 							{name}
 							class="bg-gray-50 border border-graydish text-gray-700 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
-						>
-							{#if selectOptionsList?.length === 0}
-								<option>None</option>
-							{:else if selectOptionsList !== undefined}
-								{#each selectOptionsList as option}
-									<option>{option}</option>
-								{/each}
-							{/if}
-						</Select>
+						/>
+					{:else if type === 'textarea'}
+						<Textarea
+							id={name}
+							{type}
+							placeholder={label}
+							{name}
+							class="bg-gray-50 border border-graydish text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+						/>
 					{:else}
 						<Input
 							id={name}
@@ -159,6 +176,7 @@
 
 		<Button
 			type="submit"
+			on:click={handleSubmit}
 			class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 			>{$t('common.save')}</Button
 		>

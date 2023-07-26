@@ -15,10 +15,6 @@ export class QuizzesDto {
     title: string;
 
     @IsOptional()
-    @IsNotEmpty({ message: 'Description can not be empty' })
-    @Length(10, 100, {
-        message: 'Description must be between 10 and 100 characters',
-    })
     description = '';
 
     @IsOptional()
@@ -62,12 +58,12 @@ export class QuizzesDto {
     difficultyLevel = 1;
 
     @IsOptional()
-    @Transform(({ value }) => new Date(value))
+    @Transform(({ value }) => new Date())
     @IsNotEmpty({ message: 'Start date can not be empty' })
     startDate = new Date();
 
     @IsOptional()
-    @Transform(({ value }) => new Date(value))
+    @Transform(({ value }) => new Date())
     @IsNotEmpty({ message: 'End date can not be empty' })
     endDate = new Date();
 
@@ -77,12 +73,14 @@ export class QuizzesDto {
 
     @IsOptional()
     @Transform(({ value }) => value === 'true')
+    @IsOptional()
     @IsNotEmpty({ message: 'IsActivated can not be empty' })
     @IsBoolean({ message: 'IsActivated must be a boolean' })
     isActivated = true;
 
     @IsOptional()
     @Transform(({ value }) => value === 'true')
+    @IsOptional()
     @IsNotEmpty({ message: 'IsShared can not be empty' })
     @IsBoolean({ message: 'IsShared must be a boolean' })
     isShared = false;
