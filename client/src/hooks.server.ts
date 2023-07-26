@@ -124,7 +124,7 @@ export const handleError: HandleServerError = async ({ error }) => {
 	const err: any = error;
 
 	return {
-		code: err?.status || 500,
+		code: err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
 		message: err?.body?.message || 'Internal Server Error'
 	};
 };
