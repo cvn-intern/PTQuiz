@@ -8,7 +8,11 @@
 </script>
 
 <div class={classSidaBar}>
-	<ModalInforQuizzes />
+	<ModalInforQuizzes
+		defaultOpenModal={false}
+		classButton={'"w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"'}
+		nameClassButton={'Information Quiz'}
+	/>
 	<div
 		class="md:max-h-boxCardQuestion max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4"
 	>

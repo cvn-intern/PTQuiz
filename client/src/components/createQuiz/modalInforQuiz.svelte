@@ -4,8 +4,10 @@
 	import { enhance } from '$app/forms';
 	import type { FieldForm, InputForm } from './interface/createQuiz.interface';
 	import Icon from '@iconify/svelte';
+	export let classButton: string;
+	export let defaultOpenModal: boolean;
 
-	let formModal = true;
+	let formModal = defaultOpenModal;
 	let formData: FieldForm = {
 		titleQuiz: '',
 		category: '',
@@ -84,16 +86,15 @@
 			required: false
 		}
 	];
+	export let outsideclose = true;
+	export let nameClassButton: string;
 </script>
 
-<Button
-	on:click={() => (formModal = true)}
-	class="w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"
->
-	<Icon icon={'carbon:information'} class={'mr-3'} /> Information Quiz</Button
+<Button on:click={() => (formModal = true)} class={classButton}>
+	<Icon icon={'carbon:information'} class={'mr-3'} /> {nameClassButton}</Button
 >
 
-<Modal bind:open={formModal} size="md" autoclose={false} class="w-full z-50" outsideclose>
+<Modal bind:open={formModal} size="md" class="w-full z-50" {outsideclose}>
 	<form
 		class="flex flex-col space-y-4 items-center"
 		action="?/createQuizz"
@@ -115,12 +116,17 @@
 						{label} <span class="text-red-600">{required ? '*' : ''}</span>
 					</Label>
 					{#if type === 'file'}
-						<Fileupload {name} bind:value={formData.thumbnail} />
+						<Fileupload
+							{name}
+							bind:value={formData.thumbnail}
+							accept=".jpg, .jpeg, .png"
+							si
+						/>
 						<p
 							class="mt-1 text-sm text-gray-500 dark:text-gray-300"
 							id="file_input_help"
 						>
-							SVG, PNG, JPG or GIF (MAX. 800x400px).
+							JPEG, PNG, JPG (5MB).
 						</p>
 					{:else if type === 'switch'}
 						<Toggle checked={false} {name} {required}

@@ -9,10 +9,16 @@
 		duration: 200,
 		easing: sineIn
 	};
+	export let cardListQuestion: string[];
 </script>
 
 <div class="text-start my-3">
-	<Button on:click={() => (hidden1 = false)} class={'text-black border '}>
+	<Button
+		on:click={() => {
+			hidden1 = false;
+		}}
+		class={'text-black border '}
+	>
 		<Icon icon={'ep:list'} class="text-xl mr-2 text-cyan-500" />
 		Show questions
 	</Button>
@@ -38,5 +44,5 @@
 		</h5>
 		<CloseButton on:click={() => (hidden1 = true)} class="mb-4 dark:text-white" />
 	</div>
-	<SidebarCreateQuiz classSidaBar={'flex flex-col gap-10 items-center'} />
+	<SidebarCreateQuiz {cardListQuestion} classSidaBar={'flex flex-col gap-10 items-center'} />
 </Drawer>
