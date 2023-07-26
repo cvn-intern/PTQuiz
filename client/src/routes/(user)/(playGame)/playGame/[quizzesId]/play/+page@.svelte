@@ -11,6 +11,14 @@
 	import { t } from '$i18n/translations.js';
 	export let data;
 
+	let questionPointer = 0;
+	let fourOptions: any[];
+	let isAnswerChecked: boolean = false;
+	let selectedAnswerIndex: number;
+	let sharedToastId: string | number;
+	let isSubmitting = false;
+	let showModal = false;
+
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
 	function decryptData(cipherText: any) {
@@ -29,30 +37,44 @@
 
 	let original = 100;
 	let zero = 0;
-	let timer_default = 20;
+	let timer_default = quizzes[questionPointer].time || 20;
 
 	let intervalValue = original / timer_default;
 	let timer = tweened(original);
 
 	setInterval(() => {
-		if ($timer > 0) $timer -= intervalValue;
+		if ($timer > 0) $timer -= intervalValue / 10;
 	}, 100);
 
-	let questionPointer = 0;
-	let fourOptions: any[];
-	let isAnswerChecked: boolean = false;
-	let selectedAnswerIndex: any = null;
-	let sharedToastId: string | number;
-	let isSubmitting = false;
-	let showModal = false;
+	const givenAn: {
+		[key: string]: { answerA: boolean; answerB: boolean; answerC: boolean; answerD: boolean };
+	} = {};
 
-	let givenAn: boolean[][] = new Array(quizzes.length).fill([]);
-	givenAn = givenAn.map(() => new Array(4).fill(false));
+	const answerOfUser: {
+		[key: string]: { questionId: string; givenAnswers: any };
+	} = {};
 
-	function pickAnswer(id: string, index: number) {
+	function pickAnswer(index: number) {
 		isAnswerChecked = true;
 		selectedAnswerIndex = index;
-		givenAn[questionPointer][fourOptions.findIndex((opt) => opt.id === id)] = true;
+
+		const question = quizzes[questionPointer];
+		const answerKey = Object.keys(question.answers).find(
+			(key) => question.answers[key] === true
+		);
+
+		if (answerKey) {
+			givenAn[questionPointer] = {
+				answerA: selectedAnswerIndex === 0 ? true : false,
+				answerB: selectedAnswerIndex === 1 ? true : false,
+				answerC: selectedAnswerIndex === 2 ? true : false,
+				answerD: selectedAnswerIndex === 3 ? true : false
+			};
+			answerOfUser[questionPointer] = {
+				questionId: quizzes[questionPointer].id,
+				givenAnswers: givenAn[questionPointer]
+			};
+		}
 	}
 
 	const showLoadingToast = (): void => {
@@ -70,11 +92,6 @@
 			isAnswerChecked = true;
 			timer = tweened(zero);
 			isSubmitting = true;
-
-			const answerOfUser = givenAn.map((givenAnswers, index) => ({
-				questionId: quizzes[index].id,
-				givenAnswers: givenAnswers.join(',')
-			}));
 
 			const userAnswer: UserAnswer = {
 				participantId: gameInfo.id,
@@ -111,6 +128,8 @@
 	$: {
 		if ($timer <= 0 && !isAnswerChecked) {
 			isAnswerChecked = true;
+			pickAnswer(-1);
+			selectedAnswerIndex = -1;
 			showModal = true;
 			setTimeout(() => {
 				showModal = false;
@@ -135,10 +154,12 @@
 		}
 	}
 
-	$: fourOptions = quizzes[questionPointer]?.options.map((option, index) => ({
-		id: String.fromCharCode(65 + index),
-		contents: option,
-		isCorrect: quizzes[questionPointer].answers[index],
+	const question = quizzes[questionPointer];
+
+	$: fourOptions = Object.keys(question.options).map((optionKey, index) => ({
+		id: optionKey,
+		contents: quizzes[questionPointer].options[optionKey],
+		isCorrect: quizzes[questionPointer].answers[Object.keys(question.answers)[index]],
 		disabled: isAnswerChecked ? true : false
 	}));
 </script>

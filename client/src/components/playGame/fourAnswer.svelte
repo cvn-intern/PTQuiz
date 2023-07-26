@@ -12,7 +12,7 @@
 	export let index: number;
 	export let isAnswerChecked: boolean;
 	export let selectedAnswerIndex: number;
-	export let pickAnswer: (id: string, index: number) => void;
+	export let pickAnswer: (index: number) => void;
 
 	export let showModal = true;
 
@@ -20,7 +20,7 @@
 		if (isAnswerChecked || option.disabled) return;
 
 		showModal = true;
-		pickAnswer(option.id, index);
+		pickAnswer(index);
 
 		setTimeout(() => {
 			showModal = false;
@@ -49,7 +49,7 @@
 	{#if showModal}
 		<Modal bind:open={showModal} autoclose placement="top-center">
 			<div class="">
-				{#if option.isCorrect}
+				{#if option.isCorrect && selectedAnswerIndex != -1}
 					<svg
 						aria-hidden="true"
 						class="mx-auto mb-4 w-14 h-14 text-green-500"

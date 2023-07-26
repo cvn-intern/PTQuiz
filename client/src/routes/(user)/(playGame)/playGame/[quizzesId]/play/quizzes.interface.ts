@@ -5,11 +5,16 @@ export interface Quiz {
 	title: string;
 	type: number;
 	image: string | null;
-	options: (string | null)[];
-	answers: (string | null)[];
+	options: {
+		[key: string]: string;
+	}
+	answers: {
+		[key: string]: boolean;
+	}
 	createdAt: string;
 	updatedAt: string;
 	written: string | null;
+	time: number;
 }
 export interface QuizzesType {
 	quizzes: Quiz[];
@@ -19,7 +24,7 @@ export interface QuizzesType {
 
 export interface UserAnswer {
 	participantId: string;
-	answerOfUser: answerOfUser[];
+	answerOfUser: { [key: string]: answerOfUser };
 }
 
 export interface answerOfUser {
