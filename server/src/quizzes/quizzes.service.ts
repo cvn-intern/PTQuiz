@@ -229,21 +229,22 @@ export class QuizzesService {
                     userId: question.question.userId,
                     categoryId: question.question.categoryId,
                     title: question.question.title,
-                    options: [
-                        question.question.optionA,
-                        question.question.optionB,
-                        question.question.optionC,
-                        question.question.optionD,
-                    ],
-                    answers: [
-                        question.question.answerA,
-                        question.question.answerB,
-                        question.question.answerC,
-                        question.question.answerD,
-                    ],
+                    options: {
+                        optionA: question.question.optionA,
+                        optionB: question.question.optionB,
+                        optionC: question.question.optionC,
+                        optionD: question.question.optionD,
+                    },
+                    answers: {
+                        answerA: question.question.answerA,
+                        answerB: question.question.answerB,
+                        answerC: question.question.answerC,
+                        answerD: question.question.answerD,
+                    },
                     written: question.question.written,
                     image: question.question.image,
                     type: question.question.type,
+                    time: question.question.time,
                     createdAt: question.question.createdAt,
                     updatedAt: question.question.updatedAt,
                 };
@@ -294,10 +295,7 @@ export class QuizzesService {
             });
             return newQuiz;
         } catch (error) {
-            throw new HttpException(
-                QuizzesError.ERROR_QUIZ,
-                HttpStatus.BAD_REQUEST,
-            );
+            throw new HttpException(error, HttpStatus.BAD_REQUEST);
         }
     }
 }
