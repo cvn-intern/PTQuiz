@@ -131,7 +131,7 @@
 					aria-label="Cancel"
 					class="w-full text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 					on:click={handleCancel}
-					type="button">{$t('common.cancle')}</button
+					type="button">{$t('common.cancel')}</button
 				>
 				<button
 					aria-label="Save"

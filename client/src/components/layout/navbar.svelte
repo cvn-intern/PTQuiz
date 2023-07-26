@@ -66,7 +66,7 @@
 						aria-label="profile"
 						class="flex items-center gap-2 text-xl overflow-hidden whitespace-nowrap max-w-[250px] hover:text-secondary"
 					>
-						<img src={user.avatar} alt="user avatar" class="rounded-full w-12" />
+						<img src={user.avatar} alt="user avatar" class="rounded-full w-12 h-12" />
 						{user.displayName}
 					</button>
 				</Chevron>
