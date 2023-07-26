@@ -37,8 +37,8 @@ export const translateValidation = (message: string) => {
 		const attemptsLeft = message.split(' ')[positionOfAttemptsLeft];
 		return t.get('validation.USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT', { attemptsLeft });
 	} else if (message === UserError.DISPLAY_NAME_CANNOT_BE_EMPTY) {
-		return t.get('validation.DISPLAY_NAME_EMPTY');
-	} else if (message === UserError.FILE_TOO_LARGE) {
 		return t.get('validation.MISSING_DISPLAY_NAME');
+	} else if (message === UserError.FILE_TOO_LARGE) {
+		return t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB');
 	}
 };
