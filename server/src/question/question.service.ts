@@ -212,18 +212,24 @@ export class QuestionService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            const existQuestion = await this.prisma.questions.findUnique({
+            const existQuestion = await this.prisma.quiz_questions.findMany({
                 where: {
-                    id: questionId,
+                    questionId: questionId,
+                    quizId: quizId,
                 },
             });
-            if (!existQuestion) {
+            if (!existQuestion || existQuestion.length == 0) {
                 throw new HttpException(
                     QuestionError.QUESTION_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            if (existQuestion.userId !== userId) {
+            const userQuestion = await this.prisma.questions.findUnique({
+                where: {
+                    id: questionId,
+                },
+            });
+            if (userQuestion.userId !== userId) {
                 throw new HttpException(
                     QuestionError.NOT_AUTHORIZED,
                     HttpStatus.UNAUTHORIZED,
@@ -238,7 +244,6 @@ export class QuestionService {
             });
             return await this.updateNumberQuestion(quizId);
         } catch (err) {
-            console.log(err);
             throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
         }
     }
