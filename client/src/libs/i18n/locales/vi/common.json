@@ -102,13 +102,13 @@
 	"literature": "Văn học",
 	"other": "Khác",
 	"physical": "Vật lý",
-	"informationQuizzes": "Thông tin bộ câu hỏi",
-	"changeInformationQuizzes": "Thay đổi thông tin bộ câu hỏi",
+	"informationQuiz": "Thông tin bộ câu hỏi",
+	"changeinformationQuiz": "Thay đổi thông tin bộ câu hỏi",
 	"pass": "Đã đạt",
 	"fail": "Chưa đạt",
 	"geography": "Địa lý",
-	"publicQuizzes": "Công khai",
-	"privateQuizzes": "Riêng tư",
+	"publicQuiz": "Công khai",
+	"privateQuiz": "Riêng tư",
 	"passingPoint": "Điểm đạt",
 	"description": "Mô tả"
 }

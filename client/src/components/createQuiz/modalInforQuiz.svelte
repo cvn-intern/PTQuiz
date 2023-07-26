@@ -1,21 +1,38 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
-	import { Button, Modal, Label, Input, Fileupload, Select, Textarea } from 'flowbite-svelte';
+	import { Button, Modal, Label, Input, Select, Textarea } from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
 	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
+	import { showLoadingToast, dismissLoadingToast } from '$libs/toast/toast';
+	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
 	export let classButton: string;
 	export let defaultOpenModal: boolean;
-	// let selectedCategory: string;
-	// let categoryList: selectOptionne[] = [
-	// 	{ value: 'clk6mopdw0005j3ngsixir2g2', name: 'Math' },
-	// 	{ value: 'clkjsqieu0000k6m5sqfi4gj5', name: 'English' },
-	// 	{ value: 'clk6mp0ik0006j3ngfaep8pb8', name: 'Science' },
-	// 	{ value: 'clkjsrewf0001k6m5bpxteo0t', name: 'History' },
-	// 	{ value: 'clkjsrewg0002k6m565jmkvvw', name: 'Geography' },
-	// 	{ value: 'clkjsrewg0003k6m5tpo9b8nx', name: 'Literature' },
-	// 	{ value: 'clkjsrewg0004k6m5dt89zll5', name: 'Other' }
-	// ];
+	export let form: any;
+
+	let isProcessing: boolean = false;
+
+	const handleSubmit = async (): Promise<void> => {
+		if (isProcessing) return;
+		isProcessing = true;
+		form = null;
+
+		showLoadingToast();
+
+		while (!form?.isDone) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+
+		dismissLoadingToast();
+		isProcessing = false;
+
+		if (form?.isSuccess) {
+			toast.success(t.get('common.success'));
+		} else {
+			dismissLoadingToast();
+			toast.error(form?.error.message);
+		}
+	};
 
 	let selectedLevel: string;
 	let levelList: selectOptionne[] = [
@@ -50,8 +67,8 @@
 			label: `${$t('common.level')}`,
 			name: 'difficultyLevel',
 			type: 'select',
-			required: true,
-			selectOptionsList: levelList
+			selectOptionsList: levelList,
+			required: true
 		},
 		{
 			label: `${$t('common.startDate')}`,
@@ -60,10 +77,10 @@
 			required: false
 		},
 		{
-			label: `${$t('common.file')}`,
-			name: 'image',
-			type: 'file',
-			required: false
+			label: `${$t('common.passingPoint')}`,
+			name: 'passingPoint',
+			type: 'number',
+			required: true
 		},
 		{
 			label: `${$t('common.endDate')}`,
@@ -78,10 +95,10 @@
 			required: true
 		},
 		{
-			label: `${$t('common.passingPoint')}`,
-			name: 'passingPoint',
-			type: 'number',
-			required: true
+			label: `${$t('common.file')}`,
+			name: 'image',
+			type: 'file',
+			required: false
 		},
 		{
 			label: `${$t('common.description')}`,
@@ -111,7 +128,7 @@
 		enctype="multipart/form-data"
 	>
 		<h3 class="text-xl font-medium text-gray-900 dark:text-white">
-			{$t('common.informationQuizzes')}
+			{$t('common.informationQuiz')}
 		</h3>
 		<div class="grid grid-cols-2 gap-4">
 			{#each inputFormList as { label, name, type, required, selectOptionsList }}
@@ -160,6 +177,7 @@
 
 		<Button
 			type="submit"
+			on:click={handleSubmit}
 			class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 			>{$t('common.save')}</Button
 		>

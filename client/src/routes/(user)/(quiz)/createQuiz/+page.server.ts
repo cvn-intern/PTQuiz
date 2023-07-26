@@ -1,9 +1,13 @@
-import { goto } from '$app/navigation';
 import { fail } from '@sveltejs/kit';
-import { InforQuizFormSchema } from '../../../../libs/schema/inforQuiz';
+import type Message from './interface/message.interface';
+import { createDefaultMessage } from './interface/message.interface';
+import { InforQuizFormSchema } from '$libs/schema/inforQuiz';
+
+let message: Message;
 
 export const actions = {
 	createQuiz: async ({ fetch, request }) => {
+		message = createDefaultMessage();
 		const form = await request.formData();
 		try {
 			// const validatedData = InforQuizFormSchema.parse({
@@ -19,12 +23,16 @@ export const actions = {
 				body: form
 			});
 			const result = await response.json();
-
-			if (result.statusCode !== 201) {
-				return fail(result.message);
-			}
+			message.isDone = true;
+			message.isSuccess = result.statusCode == 201;
+			message.success.message = result.message;
+			message.error.message = result.message;
+			return message;
 		} catch (error: any) {
-			console.log(error);
+			message.isDone = true;
+			message.isSuccess = false;
+			message.error.message = error.message;
+			return message;
 		}
 	}
 };

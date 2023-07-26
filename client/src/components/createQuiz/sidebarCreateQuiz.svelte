@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
 	import CardQuestion from './cardQuestion.svelte';
-	import ModalInforQuizzes from './modalInforQuiz.svelte';
 	import Icon from '@iconify/svelte';
+	import ModalInforQuiz from './modalInforQuiz.svelte';
 	export let classSidaBar: any;
 	export let cardListQuestion: string[];
 </script>
 
 <div class={classSidaBar}>
-	<ModalInforQuizzes
+	<ModalInforQuiz
 		defaultOpenModal={false}
 		classButton={'"w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"'}
 		nameClassButton={'Information Quiz'}
