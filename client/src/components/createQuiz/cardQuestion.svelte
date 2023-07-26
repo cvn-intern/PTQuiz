@@ -2,6 +2,13 @@
 	import { Card,Button } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	export let questionStt: number;
+	export let index: number;
+	import {indexNow} from '$stores/indexNowStore';
+	function editIndex(){
+		indexNow.set({
+			index: index
+		});
+	}
 </script>
 
 <Card padding="none">
@@ -11,7 +18,7 @@
 			<Button class="border"
 				><Icon icon={'iconamoon:trash-light'} class={'text-red-500 text-xl'} /></Button
 			>
-			<Button color="light" class="dark:text-white"
+			<Button color="light" class="dark:text-white" on:click={editIndex}
 				><Icon icon={'uil:edit'} class={'text-yellow-300 text-xl'} /></Button
 			>
 		</div>

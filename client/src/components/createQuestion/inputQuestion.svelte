@@ -1,8 +1,18 @@
-<script>
-
-	import { t } from "$i18n/translations";
+<script lang="ts">
+	import { t } from '$i18n/translations';
+	import { questionData } from '$stores/questionInfoStore';
+	export let index: number ;
+	let title: string;
+	$: questionData.subscribe((data) => {
+		title = data[index].title;
+	});
+	$: questionData.update((data) => {
+		data[index].title = title;
+		return data;
+	});
 
 </script>
+
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
 	<div class="flex items-center justify-center lg:w-1/4 md:w-1/2 w-1/3 h-full">
 		<label
@@ -37,7 +47,7 @@
 				<p
 					class="2xl:text-xs xl:text-xs lg:text-[10px] md:text-xl text-xs text-gray-500 dark:text-gray-400"
 				>
-				{$t('common.PNGorJPG')}
+					{$t('common.PNGorJPG')}
 				</p>
 			</div>
 			<input id="dropzone-file" type="file" class="hidden" />
@@ -45,7 +55,8 @@
 	</div>
 	<textarea
 		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-full md:text-xl w-3/4 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
-		placeholder="{$t('common.typeYourQuestionHere')}"
+		placeholder={$t('common.typeYourQuestionHere')}
 		rows="5"
+		bind:value={title}
 	/>
 </div>

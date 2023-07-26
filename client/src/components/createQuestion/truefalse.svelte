@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
 	import { t } from '$i18n/translations';
 	import Option from './option.svelte';
+	export let index: number ;
 </script>
 
 <div

@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
 	import { t } from "$i18n/translations";
 
 	export let question = '';
 	export let optionOfQuestion = '';
 	export let isSingleChoice = false;
 	export let isTrueFalse = false;
+	export let content: string;
 </script>
 
 <div class="{optionOfQuestion} rounded-xl flex flex-row items-center">
@@ -29,5 +30,6 @@
 		class="2xl:p-5 2xl:ml-5 xl:p-3 xl:ml-2 lg:p-3 lg:ml-2 md:p-4 md:ml-1 p-2 cursor-pointer {isSingleChoice
 			? ''
 			: 'rounded-lg shadow-lg'}"
+		value={content}
 	/>
 </div>
