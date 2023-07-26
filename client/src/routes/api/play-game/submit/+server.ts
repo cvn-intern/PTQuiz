@@ -8,7 +8,6 @@ export const POST: RequestHandler = async ({ fetch, cookies, request }) => {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `Bearer ${accessToken}`
 		},
 		body: JSON.stringify(data)
 	});
