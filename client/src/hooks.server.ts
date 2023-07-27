@@ -25,12 +25,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 					event.locals.user = undefined;
 					event.locals.accessToken = undefined;
 					event.locals.lastPage = event.url.pathname;
-					event.cookies.delete('accessToken', {
-						path: '/'
-					});
-					event.cookies.delete('refreshToken', {
-						path: '/'
-					});
+					// event.cookies.delete('accessToken', {
+					// 	path: '/'
+					// });
+					// event.cookies.delete('refreshToken', {
+					// 	path: '/'
+					// });
 
 					return await resolve(event);
 				}
@@ -40,12 +40,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 					event.locals.user = undefined;
 					event.locals.accessToken = undefined;
 					event.locals.lastPage = event.url.pathname;
-					event.cookies.delete('accessToken', {
-						path: '/'
-					});
-					event.cookies.delete('refreshToken', {
-						path: '/'
-					});
+					// event.cookies.delete('accessToken', {
+					// 	path: '/'
+					// });
+					// event.cookies.delete('refreshToken', {
+					// 	path: '/'
+					// });
 
 					return await resolve(event);
 				} else if (response.statusCode === HttpStatus.CREATED) {
@@ -60,12 +60,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 					if (!event.locals.user) {
 						event.locals.user = undefined;
 						event.locals.accessToken = undefined;
-						event.cookies.delete('accessToken', {
-							path: '/'
-						});
-						event.cookies.delete('refreshToken', {
-							path: '/'
-						});
+						// event.cookies.delete('accessToken', {
+						// 	path: '/'
+						// });
+						// event.cookies.delete('refreshToken', {
+						// 	path: '/'
+						// });
 						event.locals.lastPage = event.url.pathname;
 					}
 
@@ -74,12 +74,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 			} else {
 				event.locals.user = undefined;
 				event.locals.accessToken = undefined;
-				event.cookies.delete('accessToken', {
-					path: '/'
-				});
-				event.cookies.delete('refreshToken', {
-					path: '/'
-				});
+				// event.cookies.delete('accessToken', {
+				// 	path: '/'
+				// });
+				// event.cookies.delete('refreshToken', {
+				// 	path: '/'
+				// });
 
 				return await resolve(event);
 			}
@@ -93,12 +93,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 		if (!event.locals.user) {
 			event.locals.user = undefined;
 			event.locals.accessToken = undefined;
-			event.cookies.delete('accessToken', {
-				path: '/'
-			});
-			event.cookies.delete('refreshToken', {
-				path: '/'
-			});
+			// event.cookies.delete('accessToken', {
+			// 	path: '/'
+			// });
+			// event.cookies.delete('refreshToken', {
+			// 	path: '/'
+			// });
 			event.locals.lastPage = event.url.pathname;
 		}
 
