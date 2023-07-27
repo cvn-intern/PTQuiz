@@ -6,6 +6,7 @@
 	export let classSidaBar: any;
 	import { questionData } from '$stores/questionInfoStore';
 	import { indexNow } from '$stores/indexNowStore';
+	import { t } from '$i18n/translations';
 	let isQuestionSave = true;
 	function addQuestion() {
 		questionData.subscribe((data) => {
@@ -66,7 +67,7 @@
 		bind:result
 		defaultOpenModal={false}
 		classButton={'"w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"'}
-		nameClassButton={'Update Quiz'}
+		nameClassButton={$t('common.updateQuiz')}
 		{form}
 	/>
 	<div
@@ -79,6 +80,6 @@
 	<hr class="bg-gray-950" />
 	<Button class="bg-secondary text-white hover:bg-darkGreen" on:click={addQuestion}>
 		<Icon icon={'gridicons:add-outline'} class="text-xl mr-3" />
-		Add Question
+		{$t('common.addQuestion')}
 	</Button>
 </div>

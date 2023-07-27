@@ -12,13 +12,13 @@
 		class="bg-red-500 shadow-md"
 		on:click={() => {
 			goto('/');
-		}}>Back Home</Button
+		}}>{$t('common.backHome')}</Button
 	>
 	<ModalInforQuiz
 		bind:form
 		defaultOpenModal={defautlOpenModal}
 		outsideclose={false}
 		classButton={'text-zinc-950 border bg-white hover:bg-gray-400 shadow-md'}
-		nameClassButton={'Continue create quiz'}
+		nameClassButton={$t('common.createQuiz')}
 	/>
 </div>
