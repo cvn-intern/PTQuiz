@@ -65,7 +65,9 @@
 			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">{title}</h1>
 			<p class="text-sm text-zinc-400 md:w-full md:block hidden">{description}</p>
 		</div>
-		<div class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2">
+		<div
+			class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2"
+		>
 			<p class="text-sm text-zinc-400">
 				{$t('common.createdAt')}: <span class="text-zinc-400"> {formattedDateTime}</span>
 			</p>

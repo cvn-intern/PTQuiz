@@ -63,7 +63,6 @@
 		dataSave = data;
 	});
 	function checkInput() {
-		console.log(index);
 		if (dataSave[index].type === 0 || dataSave[index].type === 1) {
 			if (
 				dataSave[index].title === '' ||
