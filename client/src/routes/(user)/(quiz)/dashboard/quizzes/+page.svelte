@@ -15,7 +15,7 @@
 	{:else}
 		<div class="flex items-center h-full">
 			<button
-				aria-label="Edit"
+				aria-label="CreateQuiz"
 				on:click={handleCreateQuiz}
 				class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none w-1/6"
 				>{$t('common.createQuizIntro')}</button
