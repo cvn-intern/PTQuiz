@@ -8,6 +8,7 @@
 	import { t, locale, locales } from '$i18n/translations';
 	import type { LayoutData } from '../../routes/$types';
 	import { AppRoute } from '../../libs/constants/appRoute';
+	import { onMount } from 'svelte';
 	export let user: LayoutData;
 
 	const handleChange = async (currentTarget: any) => {
@@ -34,6 +35,16 @@
 	const toggleSidebar = () => {
 		isHidden = !isHidden;
 	};
+	let discoveryClicked = false;
+	onMount(() => {
+		discoveryClicked = false;
+	});
+	function handleClickExitButton() {
+		if (!discoveryClicked) {
+			goto('/discovery');
+			discoveryClicked = true;
+		}
+	}
 </script>
 
 <nav
@@ -57,12 +68,23 @@
 				>
 			</li>
 			<li>
-				<a href="/discovery" title={$t('common.discovery')} class="hover:text-secondary">
+				<button
+					on:click={() => {
+						if (!discoveryClicked) {
+							goto('/discovery');
+							discoveryClicked = true;
+						}
+					}}
+					title={$t('common.discovery')}
+					class={`hover:text-secondary ${
+						discoveryClicked ? 'pointer-events-none opacity-50' : ''
+					}`}
+				>
 					{$t('common.discovery')}
-				</a>
+				</button>
 			</li>
 		</ul>
-		<div class = "flex gap-2">
+		<div class="flex gap-2">
 			{#if user}
 				<div class="flex items-center cursor-pointer">
 					<button
@@ -120,7 +142,7 @@
 			{/if}
 			<select name="locale" bind:value={$locale} on:change={handleChange} class="rounded-xl">
 				{#each $locales as value}
-					<option {value}>{$t(`lang.${value}`)}</option>
+					<option {value}>{value} </option>
 				{/each}
 			</select>
 		</div>
