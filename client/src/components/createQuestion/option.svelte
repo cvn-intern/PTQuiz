@@ -7,7 +7,8 @@
 	export let index: number;
 	export let isTrueFalse = false;
 	let content: string;
-	let answerValue = false;
+	export let answerValue = false;
+
 	$: questionData.subscribe((data) => {
 		if (question === 'A') content = data[index].options.optionA;
 		if (question === 'B') content = data[index].options.optionB;
@@ -22,35 +23,37 @@
 		return data;
 	});
 
-	$: questionData.update((data) => {
-		if (data[index] !== 1) {
-			data[index].answers = {
-				answerA: false,
-				answerB: false,
-				answerC: false,
-				answerD: false
-			};
-		}
-		return data;
-	});
-
 	function handleRadioChange(event) {
 		answerValue = event.target.checked;
-		const updatedQuestionData = questionData.update((data) => {
-			data[index].answers = {
-				answerA: false,
-				answerB: false,
-				answerC: false,
-				answerD: false
-			};
-			if (question === 'A') data[index].answers.answerA = true;
-			else if (question === 'B') data[index].answers.answerB = true;
-			else if (question === 'C') data[index].answers.answerC = true;
-			else if (question === 'D') data[index].answers.answerD = true;
-
-			return data;
-		});
+		if (!isTrueFalse) {
+			const updatedQuestionData = questionData.update((data) => {
+				data[index].answers = {
+					answerA: false,
+					answerB: false,
+					answerC: false,
+					answerD: false
+				};
+				if (question === 'A') data[index].answers.answerA = true;
+				else if (question === 'B') data[index].answers.answerB = true;
+				else if (question === 'C') data[index].answers.answerC = true;
+				else if (question === 'D') data[index].answers.answerD = true;
+				return data;
+			});
+		} else {
+			const updatedQuestionData = questionData.update((data) => {
+				data[index].answers = {
+					answerA: false,
+					answerB: false,
+					answerC: false,
+					answerD: false
+				};
+				if (question === $t('common.falseAnswer')) data[index].answers.answerA = true;
+				else if (question === $t('common.trueAnswer')) data[index].answers.answerB = true;
+				return data;
+			});
+		}
 	}
+
 	function handleCheckBoxChange(event) {
 		answerValue = event.target.checked;
 		const updatedQuestionData = questionData.update((data) => {

@@ -11,7 +11,15 @@
 		if (defaultType === 3) return 'True/False';
 	})();
 	$: questionData.update((data) => {
-		data[index].type = defaultType;
+		if (defaultType != data[index].type) {
+			data[index].type = defaultType;
+			data[index].answers = {
+				answerA: false,
+				answerB: false,
+				answerC: false,
+				answerD: false
+			};
+		}
 		return data;
 	});
 </script>

@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
+	import { questionData, type AnswerType } from '$stores/questionInfoStore';
 	import Option from './option.svelte';
 	export let index: number;
+	let test: AnswerType;
+	$: questionData.subscribe((data) => {
+		test = data[index].answers;
+	});
 </script>
 
 <div
@@ -13,6 +18,7 @@
 		isSingleChoice={true}
 		isTrueFalse={true}
 		{index}
+		answerValue={test.answerA}
 	/>
 	<Option
 		question={$t('common.trueAnswer')}
@@ -20,5 +26,6 @@
 		isSingleChoice={true}
 		isTrueFalse={true}
 		{index}
+		answerValue={test.answerB}
 	/>
 </div>
