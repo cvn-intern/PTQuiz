@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 
 export type QuestionData = {
+    id: string;
     categoryId: string;
     title: string;
     options: OptionType;

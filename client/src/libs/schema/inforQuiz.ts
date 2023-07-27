@@ -9,11 +9,11 @@ export const InforQuizFormSchema = z.object({
 	passingPoint: z
 		.string()
 		.min(0, t.get('validation.PASSING_POINT_MUST_BE_AT_LEAST_1'))
-		.max(100, t.get('validation.PASSING_POINT_MUST_BE_AT_MOST_100')),
+		.max(3, t.get('validation.PASSING_POINT_MUST_BE_AT_MOST_100')),
 	point: z
 		.string()
 		.min(0, t.get('validation.POINT_MUST_BE_AT_LEAST_1'))
-		.max(100, t.get('validation.POINT_MUST_BE_AT_MOST_100')),
+		.max(3, t.get('validation.POINT_MUST_BE_AT_MOST_100')),
 	image: z
 		.any()
 		.refine(

@@ -9,7 +9,12 @@
 	export let form: Message;
 
 	let isProcessing: boolean = false;
-
+	let isSubmitting = false;
+	$: {
+		if (form?.isDone) {
+			isSubmitting = false;
+		}
+	}
 	const handleSubmit = async (): Promise<void> => {
 		if (isProcessing) return;
 		isProcessing = true;
@@ -43,6 +48,9 @@
 				method="POST"
 				class="w-full px-4 lg:px-0 mx-auto"
 				action="?/register"
+				on:submit={() => {
+					isSubmitting = true;
+				}}
 				use:enhance={() => {
 					return async ({ update }) => {
 						await update({ reset: false });
@@ -114,9 +122,11 @@
 					<button
 						type="submit"
 						on:click={handleSubmit}
+						disabled={isSubmitting}
 						id="submit"
-						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
-						>{$t('common.signUp')}</button
+						class={`uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white ${
+							isSubmitting ? 'opacity-50 cursor-wait' : ''
+						}`}>{$t('common.signUp')}</button
 					>
 				</div>
 			</form>

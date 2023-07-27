@@ -14,6 +14,12 @@
 	export let form: ActionData;
 	export let data;
 
+	let isSubmitting = false;
+	$: {
+		if (form?.isDone) {
+			isSubmitting = false;
+		}
+	}
 	onMount(async () => {
 		if (data.user) {
 			goto(AppRoute.HOME);
@@ -102,6 +108,9 @@
 				method="POST"
 				class="w-full px-4 lg:px-0 mx-auto"
 				action="?/login"
+				on:submit={() => {
+					isSubmitting = true;
+				}}
 				use:enhance={() => {
 					return async ({ update }) => {
 						await update({ reset: false });
@@ -157,9 +166,11 @@
 				<div class="pt-4">
 					<button
 						type="submit"
+						disabled={isSubmitting}
 						on:click={handleSubmit}
-						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none"
-						>{$t('common.login')}</button
+						class={`uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none ${
+							isSubmitting ? 'opacity-50 cursor-wait' : ''
+						}`}>{$t('common.login')}</button
 					>
 				</div>
 			</form>

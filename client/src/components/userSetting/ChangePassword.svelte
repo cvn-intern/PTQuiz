@@ -9,7 +9,12 @@
 	export let formChangePassword: FormChangePassword;
 
 	let inputFocused = false;
-
+	let isSubmitting = false;
+	$: {
+		if (form?.isDone) {
+			isSubmitting = false;
+		}
+	}
 	function handleCancel() {
 		formChangePassword = {
 			oldPassword: '',
@@ -45,7 +50,14 @@
 </script>
 
 <div class="">
-	<form method="POST" action="?/change_password" use:enhance>
+	<form
+		method="POST"
+		action="?/change_password"
+		on:submit={() => {
+			isSubmitting = true;
+		}}
+		use:enhance
+	>
 		<div class="relative">
 			<label for="oldPassword" class="mb-1">{$t('common.oldPassword')}</label>
 			{#if !form?.isSuccess && form?.error?.missing.oldPassword && form?.tabs.change_password}
@@ -125,9 +137,12 @@
 						type="button">{$t('common.cancel')}</button
 					>
 					<button
+						disabled={isSubmitting}
 						aria-label="Save"
 						on:click={handleSubmit}
-						class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+						class={`w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
+							isSubmitting ? 'opacity-50 cursor-wait' : ''
+						}`}
 						type="submit">{$t('common.save')}</button
 					>
 				</div>

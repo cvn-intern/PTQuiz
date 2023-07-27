@@ -9,6 +9,7 @@ export const PUT: RequestHandler = async ({ fetch, request, params }) => {
 		`${VITE_API_URL}/question/update?questionId=${params.questionId}`,
 		{
 			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(data)
 		}
 	);

@@ -60,17 +60,17 @@
 
 	const inputFormList: InputForm[] = [
 		{
-			label: `${$t('common.title')}`,
+			label: `${$t('common.title')} *`,
 			name: 'title',
 			type: 'text',
-			required: true
+			required: false
 		},
 		{
-			label: `${$t('common.level')}`,
+			label: `${$t('common.level')} *`,
 			name: 'difficultyLevel',
 			type: 'select',
 			selectOptionsList: levelList,
-			required: true
+			required: false
 		},
 		{
 			label: `${$t('common.startDate')}`,
@@ -79,10 +79,10 @@
 			required: false
 		},
 		{
-			label: `${$t('common.passingPoint')}`,
+			label: `${$t('common.passingPoint')} *`,
 			name: 'passingPoint',
 			type: 'number',
-			required: true
+			required: false
 		},
 		{
 			label: `${$t('common.endDate')}`,
@@ -91,10 +91,10 @@
 			required: false
 		},
 		{
-			label: `${$t('common.totalPoints')}`,
+			label: `${$t('common.totalPoints')} *`,
 			name: 'point',
 			type: 'number',
-			required: true
+			required: false
 		},
 		{
 			label: `${$t('common.file')}`,
@@ -157,6 +157,7 @@
 						/>
 					{:else if type === 'textarea'}
 						<textarea
+							maxlength="100"
 							id={name}
 							{type}
 							placeholder={label}

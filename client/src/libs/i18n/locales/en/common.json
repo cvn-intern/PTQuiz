@@ -114,5 +114,6 @@
 	"totalPoints": "Total Points",
 	"update": "Update",
 	"haveNotImplement": "Sorry we haven't implemented this page yet",
-	"backDashboard" : "Back to dashboard"
+	"backDashboard" : "Back to dashboard",
+	"editBtn": "Edit"
 }

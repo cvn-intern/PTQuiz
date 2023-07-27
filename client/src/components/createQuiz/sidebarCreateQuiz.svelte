@@ -5,8 +5,33 @@
 	import ModalInforQuizUpdate from './modalInforQuizUpdate.svelte';
 	export let classSidaBar: any;
 	import { questionData } from '$stores/questionInfoStore';
+	import { indexNow } from '$stores/indexNowStore';
+	let isQuestionSave = true;
 	function addQuestion() {
+		questionData.subscribe((data) => {
+			data.forEach((element) => {
+				if (element.id === '') {
+					isQuestionSave = false;
+					return;
+				} else {
+					isQuestionSave = true;
+				}
+			});
+		});
+		if (!isQuestionSave) {
+			alert('Please save question before add new question');
+			return;
+		}
+		indexNow.update((data) => {
+			let questionCount;
+			questionData.subscribe((data) => {
+				questionCount = data.length;
+			});
+			data.index = questionCount;
+			return data;
+		});
 		const newQuestion = {
+			id: '',
 			categoryId: '',
 			title: '',
 			options: {
