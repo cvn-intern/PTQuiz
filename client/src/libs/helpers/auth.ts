@@ -1,5 +1,4 @@
-import { VITE_API_URL, VITE_JWT_SECRET } from '$env/static/private';
-import * as jwt from 'jsonwebtoken';
+import { VITE_API_URL } from '$env/static/private';
 import { JwtError } from '../message/responseMessage.enum';
 export const checkValidToken = async (token: string | undefined) => {
 	if (!token) {
