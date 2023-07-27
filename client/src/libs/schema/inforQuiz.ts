@@ -16,13 +16,9 @@ export const InforQuizFormSchema = z.object({
 		.max(3, t.get('validation.POINT_MUST_BE_AT_MOST_100')),
 	image: z
 		.any()
+		.optional()
 		.refine(
-			(file) => file.size <= +import.meta.env.VITE_MAX_FILE_SIZE,
+			(file) => file.size <= parseInt(process.env.VITE_MAX_FILE_SIZE as string),
 			t.get('validation.THUMBNAIL_MUST_BE_LESS_THAN_5MB')
 		)
-		.optional()
-	// decription: z
-	// 	.string()
-	// 	.min(10, t.get('validation.DESCRIPTION_MUST_BE_AT_LEAST_10_CHARACTERS'))
-	// 	.max(200, t.get('validation.DESCRIPTION_TOO_LONG'))
 });
