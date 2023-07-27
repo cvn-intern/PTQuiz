@@ -8,33 +8,32 @@ export const checkValidToken = async (token: string | undefined) => {
 			message: JwtError.INVALID_TOKEN
 		};
 	}
-	console.log(VITE_JWT_SECRET);
-	try {
-		const decoded = jwt.verify(token, VITE_JWT_SECRET as string);
-		console.log(decoded);
-		if (!decoded) {
-			return {
-				status: false,
-				message: JwtError.INVALID_TOKEN
-			};
-		}
+	const response = await fetch(`${VITE_API_URL}/auth/check-valid`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			token
+		})
+	});
 
-		return {
-			status: true,
-			message: 'Token is valid'
-		};
-	} catch (err: any) {
-		console.log(err);
-		if (err.name === JwtError.TOKEN_EXPIRED_ERROR) {
+	const { data } = await response.json();
+	if (data.status === false) {
+		if (data.message === JwtError.ACCESS_TOKEN_EXPIRED) {
 			return {
 				status: false,
 				message: JwtError.ACCESS_TOKEN_EXPIRED
 			};
 		}
-
 		return {
 			status: false,
-			message: JwtError.INVALID_TOKEN
+			message: data.message
+		};
+	} else {
+		return {
+			status: true,
+			message: data.message
 		};
 	}
 };
