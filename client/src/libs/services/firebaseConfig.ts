@@ -54,7 +54,6 @@ async function sendUserToServer(user: any, providerId: string) {
 			window.location.href = AppRoute.HOME;
 		}
 	} catch (error) {
-		console.error(error);
 		return false;
 	}
 }

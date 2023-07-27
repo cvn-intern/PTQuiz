@@ -49,7 +49,8 @@ export default {
 				titleCard: '3.5rem'
 			},
 			maxHeight: {
-				titleCard: '3.75rem'
+				titleCard: '3.75rem',
+				boxCardQuestion: '27rem',
 			},
 			maxWidth: {
 				tagName: '33%'

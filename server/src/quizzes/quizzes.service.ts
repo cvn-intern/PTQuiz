@@ -4,11 +4,14 @@ import { QuestionService } from '../question/question.service';
 import { QuizzesError } from '../error/quizzesError.enum';
 import { QuestionResponse } from '../question/type/questionResponse.type';
 import { QuizzesDto } from './dto';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { Role } from '../auth/types';
 @Injectable()
 export class QuizzesService {
     constructor(
         private prisma: PrismaService,
         private questionService: QuestionService,
+        private cloudinary: CloudinaryService,
     ) {}
 
     findMostCategoryInQuiz(arrCategory) {
@@ -64,13 +67,13 @@ export class QuizzesService {
         }
     }
 
-    async getDiscovery(userId: string) {
+    async getDiscovery() {
         try {
             const quizzes = await this.prisma.quizzes.findMany({
                 where: {
                     isShared: true,
-                    NOT: {
-                        userId: userId,
+                    user: {
+                        role: Role.Admin,
                     },
                 },
                 select: {
@@ -95,10 +98,10 @@ export class QuizzesService {
                     categories: this.findMostCategoryInQuiz(categories),
                 };
             });
-            let discovery = [];
+            const discovery = [];
             for (let index = 0; index < quizzesOfdiscovery.length; index++) {
                 if (quizzesOfdiscovery[index].categories !== '') {
-                    let category = await this.prisma.categories.findUnique({
+                    const category = await this.prisma.categories.findUnique({
                         where: {
                             id: quizzesOfdiscovery[index].categories,
                         },
@@ -106,7 +109,7 @@ export class QuizzesService {
                             name: true,
                         },
                     });
-                    let indexOfCategory = this.findIndexOfCategory(
+                    const indexOfCategory = this.findIndexOfCategory(
                         discovery,
                         category.name,
                     );
@@ -150,9 +153,12 @@ export class QuizzesService {
                     title: true,
                     description: true,
                     image: true,
-                    isShared: true,
                     numberQuestions: true,
                     startDate: true,
+                    endDate: true,
+                    point: true,
+                    passingPoint: true,
+                    difficultyLevel: true,
                 },
             });
         } catch (err) {
@@ -192,10 +198,10 @@ export class QuizzesService {
         }
     }
 
-    async filterCategory(userId: string, categoryName: string) {
+    async filterCategory(categoryName: string) {
         try {
-            const categories = await this.getDiscovery(userId);
-            let resultFilter = categories.filter(
+            const categories = await this.getDiscovery();
+            const resultFilter = categories.filter(
                 (category) => category.category === categoryName,
             );
             if (resultFilter.length !== 0) return resultFilter[0].quizzes;
@@ -270,15 +276,33 @@ export class QuizzesService {
         }
     }
 
-    async createQuiz(userId: string, quiz: QuizzesDto) {
+    async createQuiz(
+        userId: string,
+        quiz: QuizzesDto,
+        image: Express.Multer.File,
+    ) {
         try {
+            let url;
+            if (image) {
+                if (image.size > +process.env.MAX_FILE_SIZE) {
+                    throw new HttpException(
+                        QuizzesError.FILE_TOO_LARGE,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                } else if (image.size > 0) {
+                    const image_upload = await this.cloudinary.uploadFile(
+                        image,
+                    );
+                    url = image_upload.url;
+                } else url = process.env.DEFAULT_THUMBNAIL;
+            } else url = process.env.DEFAULT_THUMBNAIL;
             const newQuiz = await this.prisma.quizzes.create({
                 data: {
                     userId: userId,
                     title: quiz.title,
                     numberQuestions: 0,
                     description: quiz.description,
-                    image: quiz.image,
+                    image: url,
                     durationMins: quiz.durationMins,
                     isRandom: quiz.isRandom,
                     isRandomOption: quiz.isRandomOption,
@@ -296,6 +320,121 @@ export class QuizzesService {
             return newQuiz;
         } catch (error) {
             throw new HttpException(error, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async updateQuiz(
+        userId: string,
+        quizId: string,
+        quiz: QuizzesDto,
+        image: Express.Multer.File,
+    ) {
+        try {
+            let url;
+            if (!quizId) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const quizOfUser = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+
+            if (!quizOfUser) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
+            if (quizOfUser.userId !== userId) {
+                throw new HttpException(
+                    QuizzesError.NOT_PERMISSION,
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+
+            if (image) {
+                if (image.size > +process.env.MAX_FILE_SIZE) {
+                    throw new HttpException(
+                        QuizzesError.FILE_TOO_LARGE,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                } else if (image.size > 0) {
+                    const image_upload = await this.cloudinary.uploadFile(
+                        image,
+                    );
+                    url = image_upload.url;
+                }
+            } else url = quizOfUser.image;
+
+            return await this.prisma.quizzes.update({
+                where: {
+                    id: quizId,
+                },
+                data: {
+                    title: quiz.title,
+                    description: quiz.description,
+                    image: url,
+                    durationMins: quiz.durationMins,
+                    isRandom: quiz.isRandom,
+                    isRandomOption: quiz.isRandomOption,
+                    attempts: quiz.attempts,
+                    point: quiz.point,
+                    passingPoint: quiz.passingPoint,
+                    passed: quiz.passed,
+                    difficultyLevel: quiz.difficultyLevel,
+                    startDate: quiz.startDate,
+                    endDate: quiz.endDate,
+                    isActivated: quiz.isActivated,
+                    isShared: quiz.isShared,
+                },
+            });
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async deleteQuiz(userId: string, quizId: string) {
+        try {
+            if (!quizId) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const quizOfUser = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+            if (!quizOfUser) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            if (quizOfUser.userId !== userId) {
+                throw new HttpException(
+                    QuizzesError.NOT_PERMISSION,
+                    HttpStatus.UNAUTHORIZED,
+                );
+            }
+            await this.prisma.quiz_questions.deleteMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            return await this.prisma.quizzes.delete({
+                where: {
+                    id: quizId,
+                },
+            });
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
     }
 }

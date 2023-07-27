@@ -33,5 +33,14 @@
 	"INVALID_TOKEN": "Token không hợp lệ",
 	"EXPIRED_TOKEN": "Token đã hết hạn",
 	"USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT": "Email hoặc mật khẩu không đúng, bạn còn {{attemptsLeft}} lần thử",
-	"ACCESS_TOKEN_EXPIRED": "Access token hết hạn"
+	"ACCESS_TOKEN_EXPIRED": "Access token hết hạn",
+	"TITLE_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS": "Tiêu đề quiz phải có ít nhất 10 ký tự",
+	"TITLE_QUIZ_TOO_LONG": "Tiêu đề quiz quá dài",
+	"DESCRIPTION_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS": "Mô tả quiz phải có ít nhất 10 ký tự",
+	"DESCRIPTION_QUIZ_TOO_LONG": "Mô tả quiz quá dài",
+	"PASSING_POINT_MUST_BE_AT_LEAST_1": "Điểm đạt môn phải ít nhất là 1",
+	"PASSING_POINT_MUST_BE_AT_MOST_100": "Điểm nhiều nhất là 100",
+	"POINT_MUST_BE_AT_LEAST_1": "Điểm ít nhất là 1",
+	"POINT_MUST_BE_AT_MOST_100 ": "Điểm nhiều nhất là 100",
+	"IMAGE_MUST_BE_LESS_THAN_5MB": "Ảnh phải nhỏ hơn 5MB"
 }
