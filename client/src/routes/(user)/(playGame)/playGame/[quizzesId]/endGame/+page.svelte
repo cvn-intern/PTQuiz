@@ -29,7 +29,7 @@
 			<button
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
 				on:click={() => {
-					goto(AppRoute.HOME);
+					goto('/discovery');
 				}}>{$t('common.leaveGame')}</button
 			>
 		</div>

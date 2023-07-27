@@ -7,7 +7,12 @@
 	import { AppRoute } from '$constants/appRoute';
 	export let form;
 	export let data;
-
+	let isSubmitting = false;
+	$: {
+		if (form?.isDone) {
+			isSubmitting = false;
+		}
+	}
 	let sharedToastId: string | number;
 	let isProcessing: boolean = false;
 	const showLoadingToast = (): void => {
@@ -55,6 +60,9 @@
 			</h1>
 			<form
 				method="POST"
+				on:submit={() => {
+					isSubmitting = true;
+				}}
 				class="w-full px-4 lg:px-0 mx-auto"
 				use:enhance={() => {
 					return async ({ update }) => {
@@ -76,8 +84,10 @@
 					<button
 						on:click={handleSubmit}
 						type="submit"
-						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
-						>{$t('common.send')}</button
+						disabled={isSubmitting}
+						class={`uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white ${
+							isSubmitting ? 'opacity-50 cursor-wait' : ''
+						}`}>{$t('common.send')}</button
 					>
 				</div>
 			</form>
