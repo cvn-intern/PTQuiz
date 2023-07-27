@@ -110,5 +110,6 @@
 	"publicQuiz": "Công khai",
 	"privateQuiz": "Riêng tư",
 	"passingPoint": "Điểm đạt",
-	"description": "Mô tả"
+	"description": "Mô tả",
+	"totalPoints": "Tổng điểm"
 }

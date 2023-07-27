@@ -15,7 +15,7 @@
 		}}>Back Home</Button
 	>
 	<ModalInforQuiz
-		{form}
+		bind:form
 		defaultOpenModal={defautlOpenModal}
 		outsideclose={false}
 		classButton={'text-zinc-950 border bg-white hover:bg-gray-400 shadow-md'}

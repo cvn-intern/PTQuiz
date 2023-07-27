@@ -6,6 +6,7 @@
 	import { showLoadingToast, dismissLoadingToast } from '$libs/toast/toast';
 	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
+	import { goto } from '$app/navigation';
 	export let classButton: string;
 	export let defaultOpenModal: boolean;
 	export let form: any;
@@ -28,6 +29,8 @@
 
 		if (form?.isSuccess) {
 			toast.success(t.get('common.success'));
+			goto(`/createQuiz/${form?.success?.id}`)
+			console.log(form?.data?.id);
 		} else {
 			dismissLoadingToast();
 			toast.error(form?.error.message);
@@ -89,7 +92,7 @@
 			required: false
 		},
 		{
-			label: `${$t('common.point')}`,
+			label: `${$t('common.totalPoints')}`,
 			name: 'point',
 			type: 'number',
 			required: true
@@ -109,6 +112,7 @@
 	];
 	export let outsideclose = true;
 	export let nameClassButton: string;
+	
 </script>
 
 <Button on:click={() => (formModal = true)} class={classButton}>
@@ -154,7 +158,7 @@
 							class="bg-gray-50 border border-graydish text-gray-700 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
 						/>
 					{:else if type === 'textarea'}
-						<Textarea
+						<textarea
 							id={name}
 							{type}
 							placeholder={label}
@@ -162,7 +166,7 @@
 							class="bg-gray-50 border border-graydish text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 						/>
 					{:else}
-						<Input
+						<input
 							id={name}
 							{type}
 							placeholder={label}

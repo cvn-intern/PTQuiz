@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { t } from '$i18n/translations';
 
 export const InforQuizFormSchema = z.object({
-	titleQuiz: z
+	title: z
 		.string()
 		.min(10, t.get('validation.TITLE_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS'))
 		.max(50, t.get('validation.TITLE_QUIZ_TOO_LONG')),
@@ -14,11 +14,6 @@ export const InforQuizFormSchema = z.object({
 		.string()
 		.min(0, t.get('validation.POINT_MUST_BE_AT_LEAST_1'))
 		.max(100, t.get('validation.POINT_MUST_BE_AT_MOST_100')),
-	decription: z
-		.string()
-		.min(10, t.get('validation.DESCRIPTION_MUST_BE_AT_LEAST_10_CHARACTERS'))
-		.max(200, t.get('validation.DESCRIPTION_TOO_LONG'))
-		.optional(),
 	image: z
 		.any()
 		.refine(
@@ -26,4 +21,8 @@ export const InforQuizFormSchema = z.object({
 			t.get('validation.THUMBNAIL_MUST_BE_LESS_THAN_5MB')
 		)
 		.optional()
+	// decription: z
+	// 	.string()
+	// 	.min(10, t.get('validation.DESCRIPTION_MUST_BE_AT_LEAST_10_CHARACTERS'))
+	// 	.max(200, t.get('validation.DESCRIPTION_TOO_LONG'))
 });
