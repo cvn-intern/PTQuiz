@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import logo from '$assets/logo.png';
 	import clsx from 'clsx';
 	import { t } from '$i18n/translations';
 	import { gameInfoStore } from '$stores/gameInfoStore';
+	import { onDestroy } from 'svelte';
 	export let data;
 
 	let gameInfo = data.gameInfo;

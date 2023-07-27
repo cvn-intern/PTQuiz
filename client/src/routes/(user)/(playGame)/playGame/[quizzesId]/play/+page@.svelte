@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tweened } from 'svelte/motion';
 	import type { QuizzesType, UserAnswer } from './quizzes.interface.js';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
@@ -43,7 +43,6 @@
 
 	let gameInfo: any;
 	gameInfoStore.subscribe((val) => (gameInfo = val));
-
 
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
