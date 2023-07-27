@@ -13,7 +13,7 @@
 </script>
 
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
-	<div class="flex items-center justify-center lg:w-1/4 md:w-1/2 w-1/3 h-full">
+	<!-- <div class="flex items-center justify-center lg:w-1/4 md:w-1/2 w-1/3 h-full">
 		<label
 			for="dropzone-file"
 			class="2xl:w-full 2xl:h-full xl:w-full xl:h-full lg:w-full lg:h-full md:w-full md:h-full w-full h-full flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -51,11 +51,12 @@
 			</div>
 			<input id="dropzone-file" type="file" class="hidden" />
 		</label>
-	</div>
+	</div> -->
 	<textarea
 		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-full md:text-xl w-3/4 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
 		placeholder={$t('common.typeYourQuestionHere')}
 		rows="5"
 		bind:value={title}
+		maxlength="100"
 	/>
 </div>

@@ -112,5 +112,6 @@
 	"passingPoint": "Passing Point",
 	"description": "Description",
 	"totalPoints": "Total Points",
-	"update": "Update"
+	"update": "Update",
+	"editBtn": "Edit"
 }
