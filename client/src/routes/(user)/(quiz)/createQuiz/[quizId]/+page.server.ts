@@ -1,13 +1,15 @@
 import type { PageServerLoad } from '../$types';
 export const load: PageServerLoad = async ({ fetch, params }) => {
-	const { quizId } = params;
-	const response = await fetch(`/api/quizzes/update/${quizId}`, {
-		method: 'PUT'
+	console.log('123');
+	console.log(params);
+	const response = await fetch(`/api/quizzes/get/${params.quizId}`, {
+		method: 'GET'
 	});
 
 	const result = await response.json();
+
 	return {
-		title: 'Update Quiz',
+		title: 'Get infor Quiz',
 		result
 	};
 };
