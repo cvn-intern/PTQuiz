@@ -9,8 +9,9 @@ const ProfileFormSchema = z.object({
 		.max(20, t.get('validation.DISPLAY_NAME_TOO_LONG')),
 	avatar: z
 		.any()
+		.optional()
 		.refine(
-			(file) => file.size <= +import.meta.env.VITE_MAX_FILE_SIZE,
+			(file) => file.size <= parseInt(process.env.VITE_MAX_FILE_SIZE as string),
 			t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB')
 		)
 });
@@ -34,7 +35,5 @@ const PasswordFormSchema = z
 		message: t.get('validation.CONFIRM_PASSWORD_MUST_MATCH_PASSWORD'),
 		path: ['confirmPassword']
 	});
-
-
 
 export { ProfileFormSchema, PasswordFormSchema };
