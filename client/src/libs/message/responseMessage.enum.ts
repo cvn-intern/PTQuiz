@@ -46,3 +46,21 @@ export enum UserError {
 	FILE_TOO_LARGE = 'File size too large, max file size is 5MB',
 	DISPLAY_NAME_CANNOT_BE_EMPTY = "Display name can't be empty"
 }
+
+export enum QuizError {
+	QUIZ_NOT_FOUND = 'Quiz not found',
+	QUIZ_NOT_OWNED = 'You are not the owner of this quiz',
+	QUIZ_SUCCESSFULLY_CREATED = 'Quiz successfully created',
+	QUIZ_SUCCESSFULLY_UPDATED = 'Quiz successfully updated',
+	QUIZ_SUCCESSFULLY_DELETED = 'Quiz successfully deleted'
+}
+
+export enum QuestionError {
+	QUESTION_NOT_FOUND = 'Question not found',
+	QUESTION_NOT_OWNED = 'You are not the owner of this question',
+	QUESTION_SUCCESSFULLY_CREATED = 'Question successfully created',
+	QUESTION_SUCCESSFULLY_UPDATED = 'Question successfully updated',
+	QUESTION_SUCCESSFULLY_DELETED = 'Question successfully deleted',
+	QUESTION_MISSING_ANSWER = 'Question must have at least one answer',
+	QUESTION_MISSING_CORRECT_ANSWER = 'Question must have at least one correct answer'
+}

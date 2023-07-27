@@ -13,6 +13,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { t } from '$i18n/translations';
 	let length;
 	length = questionData.subscribe((data) => {
 		length = data;
@@ -165,8 +166,8 @@
 					<ChangeTypeQuestion bind:defaultType={typeOfQuestion} {index} />
 				</div>
 				<div class="flex gap-2">
-					<Button class="bg-red-500" on:click={exit}>Exit</Button>
-					<Button class="bg-green-600" on:click={handleSave}>Save</Button>
+					<Button class="bg-red-500" on:click={exit}>{$t('common.exit')}</Button>
+					<Button class="bg-green-600" on:click={handleSave}>{$t('common.save')}</Button>
 				</div>
 			</div>
 			<div class="w-full h-full md:my-3 my-5">
