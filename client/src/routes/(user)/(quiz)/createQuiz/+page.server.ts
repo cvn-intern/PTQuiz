@@ -31,7 +31,7 @@ export const actions = {
 		} catch (error: any) {
 			message.isDone = true;
 			message.isSuccess = false;
-			message.error.message = error.message;
+			message.error.message = error.errors[0].message;
 			return message;
 		}
 	}

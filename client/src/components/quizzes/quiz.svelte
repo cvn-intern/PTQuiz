@@ -47,6 +47,10 @@
 			toast.error(result.message);
 		}
 	}
+
+	function handleEdit() {
+		goto(`/createQuiz/${id}`);
+	}
 </script>
 
 <section
@@ -66,6 +70,12 @@
 				{$t('common.createdAt')}: <span class="text-zinc-400"> {formattedDateTime}</span>
 			</p>
 			<div class="flex flex-row gap-4">
+				<button
+					aria-label="Edit"
+					on:click={handleEdit}
+					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
+					>{$t('common.editBtn')}</button
+				>
 				<button
 					aria-label="Start"
 					on:click={handleStart}

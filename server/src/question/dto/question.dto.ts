@@ -1,17 +1,17 @@
 import { IsNotEmpty, IsNumber, IsOptional, ValidateIf } from 'class-validator';
 
 export class QuestionDto {
-    @IsNotEmpty({ message: 'Categories can not be empty' })
-    categoryId: string;
+    @IsOptional()
+    categoryId = "clk6mopdw0005j3ngsixir2g2";
 
     @IsNotEmpty({ message: 'Title can not be empty' })
     title: string;
 
-    @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
+    @ValidateIf((o) => o.type === 0 || o.type === 1)
     @IsNotEmpty({ message: 'Options A can not be empty' })
     optionA = '';
 
-    @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
+    @ValidateIf((o) => o.type === 0 || o.type === 1)
     @IsNotEmpty({ message: 'Options B can not be empty' })
     optionB = '';
 

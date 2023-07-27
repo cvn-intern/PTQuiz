@@ -112,5 +112,6 @@
 	"passingPoint": "Điểm đạt",
 	"description": "Mô tả",
 	"totalPoints": "Tổng điểm",
-	"update": "Cập nhật"
+	"update": "Cập nhật",
+	"editBtn": "Chỉnh sửa"
 }

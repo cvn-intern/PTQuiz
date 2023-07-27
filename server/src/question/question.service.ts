@@ -98,12 +98,12 @@ export class QuestionService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
-            const existQuiz = await this.prisma.quiz_questions.findMany({
+            const existQuiz = await this.prisma.quizzes.findUnique({
                 where: {
-                    quizId: quizId,
+                    id: quizId,
                 },
             });
-            if (existQuiz.length == 0) {
+            if (!existQuiz) {
                 throw new HttpException(
                     QuestionError.QUIZ_NOT_FOUND,
                     HttpStatus.BAD_REQUEST,
