@@ -16,6 +16,7 @@ export interface FieldForm {
 	endDate?: string;
 	passingPoint?: string;
 	description?: string;
+	value?: string;
 }
 
 export interface selectOptionne {

@@ -5,8 +5,9 @@
 	import MobileSidebar from '$components/createQuiz/mobileSidebar.svelte';
 	import SidebarCreateQuiz from '$components/createQuiz/sidebarCreateQuiz.svelte';
 	let typeOfQuestion = 1;
-	let cardListQuestion = ['1','2','3','4'];
-	
+	let cardListQuestion = ['1', '2', '3', '4'];
+	export let data: any;
+	export let form:any
 </script>
 
 <div class="w-full text-slate-950 md:p-10 bg-white p-5">
@@ -14,9 +15,11 @@
 		<SidebarCreateQuiz
 			{cardListQuestion}
 			classSidaBar="md:w-1/6 md:flex flex-col gap-10 items-center hidden"
+			bind:result={data.result.data}
+			{form}
 		/>
 		<div class="md:hidden block">
-			<MobileSidebar {cardListQuestion} />
+			<MobileSidebar {cardListQuestion} bind:result={data.result.data} {form}/>
 		</div>
 		<div class="md:w-5/6 w-full">
 			<div class="flex justify-between gap-4">

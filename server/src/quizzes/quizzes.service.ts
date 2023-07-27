@@ -152,9 +152,12 @@ export class QuizzesService {
                     title: true,
                     description: true,
                     image: true,
-                    isShared: true,
                     numberQuestions: true,
                     startDate: true,
+                    endDate: true,
+                    point: true,
+                    passingPoint: true,
+                    difficultyLevel: true,
                 },
             });
         } catch (err) {

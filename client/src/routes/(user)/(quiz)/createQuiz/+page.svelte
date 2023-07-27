@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import ModalInforQuiz from '$components/createQuiz/modalInforQuiz.svelte';
 	import { Button } from 'flowbite-svelte';
 	import { t } from '$i18n/translations';
+	import ModalInforQuiz from '$components/createQuiz/modalInforQuiz.svelte';
 	let defautlOpenModal = true;
 	export let form;
 </script>

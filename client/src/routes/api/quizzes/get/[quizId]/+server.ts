@@ -9,8 +9,6 @@ export const GET: RequestHandler = async ({ fetch, request, params }) => {
 	});
 
 	const result = await response.json();
-	console.log('result', result);
-
 	if (result.statusCode !== HttpStatus.OK) {
 		throw error(HttpStatus.BAD_REQUEST, result.message);
 	}

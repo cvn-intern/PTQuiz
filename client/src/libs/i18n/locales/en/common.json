@@ -111,5 +111,6 @@
 	"privateQuiz": "Private",
 	"passingPoint": "Passing Point",
 	"description": "Description",
-	"totalPoints": "Total Points"
+	"totalPoints": "Total Points",
+	"update": "Update"
 }

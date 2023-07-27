@@ -10,6 +10,7 @@
 		easing: sineIn
 	};
 	export let cardListQuestion: string[];
+	export let result: any;
 </script>
 
 <div class="text-start my-3">
@@ -44,5 +45,5 @@
 		</h5>
 		<CloseButton on:click={() => (hidden1 = true)} class="mb-4 dark:text-white" />
 	</div>
-	<SidebarCreateQuiz {cardListQuestion} classSidaBar={'flex flex-col gap-10 items-center'} />
+	<SidebarCreateQuiz {cardListQuestion} classSidaBar={'flex flex-col gap-10 items-center'} bind:result={result} />
 </Drawer>

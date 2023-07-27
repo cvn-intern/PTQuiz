@@ -2,16 +2,20 @@
 	import { Button } from 'flowbite-svelte';
 	import CardQuestion from './cardQuestion.svelte';
 	import Icon from '@iconify/svelte';
-	import ModalInforQuiz from './modalInforQuiz.svelte';
+	import ModalInforQuizUpdate from './modalInforQuizUpdate.svelte';
 	export let classSidaBar: any;
 	export let cardListQuestion: string[];
+	export let result: any;
+	export let form: any;
 </script>
 
 <div class={classSidaBar}>
-	<ModalInforQuiz
+	<ModalInforQuizUpdate
+		bind:result={result}
 		defaultOpenModal={false}
 		classButton={'"w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"'}
-		nameClassButton={'Information Quiz'}
+		nameClassButton={'Update Quiz'}
+		{form}
 	/>
 	<div
 		class="md:max-h-boxCardQuestion max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4"

@@ -88,7 +88,7 @@ export class QuizzesController {
     @UseGuards(JwtAuthGuard)
     async getinfo(
         @GetCurrentUser('id') userId: string,
-        @Query('quizzesId') quizzesId: string,
+        @Query('quizId') quizzesId: string,
     ) {
         return await this.quizzesService.getInfoQuizzOfUser(userId, quizzesId);
     }
