@@ -10,6 +10,12 @@
 	export let form;
 	let sharedToastId: string | number;
 	let isProcessing: boolean = false;
+	let isSubmitting = false;
+	$: {
+		if (form?.isDone) {
+			isSubmitting = false;
+		}
+	}
 	const showLoadingToast = (): void => {
 		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
 	};
@@ -55,6 +61,9 @@
 			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.resetPassword')}</h1>
 			<form
 				method="POST"
+				on:submit={() => {
+					isSubmitting = true;
+				}}
 				class="w-full px-4 lg:px-0 mx-auto"
 				use:enhance={() => {
 					return async ({ update }) => {
@@ -88,8 +97,10 @@
 						on:click={handleSubmit}
 						aria-label="Reset Password"
 						type="submit"
-						class="uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white"
-						>{$t('common.resetPassword')}</button
+						disabled={isSubmitting}
+						class={`uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white ${
+							isSubmitting ? 'opacity-50 cursor-wait' : ''
+						}`}>{$t('common.resetPassword')}</button
 					>
 				</div>
 			</form>
