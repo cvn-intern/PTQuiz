@@ -8,9 +8,10 @@ export const checkValidToken = async (token: string | undefined) => {
 			message: JwtError.INVALID_TOKEN
 		};
 	}
-
+	console.log(VITE_JWT_SECRET);
 	try {
 		const decoded = jwt.verify(token, VITE_JWT_SECRET as string);
+		console.log(decoded);
 		if (!decoded) {
 			return {
 				status: false,
@@ -23,6 +24,7 @@ export const checkValidToken = async (token: string | undefined) => {
 			message: 'Token is valid'
 		};
 	} catch (err: any) {
+		console.log(err);
 		if (err.name === JwtError.TOKEN_EXPIRED_ERROR) {
 			return {
 				status: false,
