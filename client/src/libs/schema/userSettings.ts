@@ -11,7 +11,7 @@ const ProfileFormSchema = z.object({
 		.any()
 		.optional()
 		.refine(
-			(file) => file.size <= parseInt(process.env.VITE_MAX_FILE_SIZE as string),
+			(file) => file.size <= 5 * 1024 * 1024,
 			t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB')
 		)
 });
