@@ -1,10 +1,11 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import { Modal } from 'flowbite-svelte';
 	export let answer: any;
 	export let showModal: boolean;
 	export let isAnswerChecked: boolean;
 	export let finalAnswer: string;
-	export let isEssayChecked: boolean;
+	export let isGuessWordsChecked: boolean;
 
 	function scrambleString(str: string) {
 		let chars = str.split('');
@@ -16,22 +17,34 @@
 		return chars.join('');
 	}
 
+	function getRandomCharacter() {
+		const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		const randomIndex = Math.floor(Math.random() * characters.length);
+		return characters[randomIndex];
+	}
+
 	type CharacterObject = {
 		char: string;
 		id: number;
 	};
+
 	let answerSplit: string[];
 	let newAnswer: string;
 	let scrambledAnswer: string;
 	let scrambledAnswerSplit: CharacterObject[];
+	let width: number;
 
 	$: {
 		answerSplit = answer.split('');
-		newAnswer = answer + 'sadash';
+		newAnswer = answer;
+		for (let i = 0; i < 5; i++) {
+			newAnswer += getRandomCharacter();
+		}
 		scrambledAnswer = scrambleString(newAnswer);
 		scrambledAnswerSplit = scrambledAnswer
 			.split('')
 			.map((char: string, id: number) => ({ char, id }));
+		width = 56 * answerSplit.length + 8 * (answerSplit.length - 1) + 36;
 	}
 
 	let chooseAnswer: CharacterObject[] = [];
@@ -66,77 +79,52 @@
 	}
 	$: {
 		if (!isAnswerChecked) {
-			isEssayChecked = true;
+			isGuessWordsChecked = true;
 			chooseAnswer = [];
 		}
 	}
 </script>
 
 <div class="flex flex-col h-full">
-	<div class="flex h-1/2 justify-center items-center gap-4">
-		<div class="flex gap-4">
+	<div class="flex flex-col h-1/2 items-center gap-4">
+		<div
+			class={`flex flex-start h-20 gap-2 p-4 border border-black rounded-lg items-center bg-background `}
+			style="width:{width}px"
+		>
 			{#each chooseAnswer as input, index}
 				<button
-					class="p-3 w-16 h-20 flex justify-center items-center border-black rounded-lg border bg-slate-400"
-					on:click={() => removeChooseAnswer(input, index)}
+					class=" w-14 h-16 flex justify-center items-center rounded-lg border shadow-lg bg-secondary"
+					on:click={() => {
+						removeChooseAnswer(input, index);
+					}}
 				>
-					<p class="text-7xl">{input.char}</p>
+					<p class="text-4xl">{input.char}</p>
 				</button>
 			{/each}
 		</div>
 	</div>
-	<div class="flex h-1/2 justify-center items-center gap-4">
-		{#each scrambledAnswerSplit as input, index}
-			<button
-				class="p-3 w-22 h-22 border-black rounded-lg border bg-slate-400"
-				on:click={() => addToChooseAnswer(input, index)}
-			>
-				<p class="text-7xl">{input.char}</p>
-			</button>
-		{/each}
+	<div class="flex h-1/2 items-center justify-center">
+		<div class="flex flex-wrap justify-center gap-2">
+			{#each scrambledAnswerSplit as input, index}
+				<button
+					class="p-3 w-14 h-16 rounded-lg border shadow-lg bg-secondary"
+					on:click={() => {
+						addToChooseAnswer(input, index);
+					}}
+				>
+					<p class="text-4xl">{input.char}</p>
+				</button>
+			{/each}
+		</div>
 	</div>
 </div>
 {#if showModal}
 	<Modal bind:open={showModal} autoclose placement="top-center">
-		<div class="">
+		<div class="flex justify-center items-center">
 			{#if checkAnswer(finalAnswer, answer)}
-				<svg
-					aria-hidden="true"
-					class="mx-auto mb-4 w-14 h-14 text-green-500"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M5 13l4 4L19 7"
-					/>
-				</svg>
-				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					Correct Answer!
-				</h3>
+				<Icon icon="flat-color-icons:ok" class="text-9xl" />
 			{:else}
-				<svg
-					aria-hidden="true"
-					class="mx-auto mb-4 w-14 h-14 text-red-500"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M6 18L18 6M6 6l12 12"
-					/>
-				</svg>
-				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					Wrong Answer! Try Better Next Time.
-				</h3>
+				<Icon icon="teenyicons:x-circle-solid" class="text-9xl text-red-500" />
 			{/if}
 		</div>
 	</Modal>
