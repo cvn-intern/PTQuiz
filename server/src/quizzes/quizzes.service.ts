@@ -5,6 +5,7 @@ import { QuizzesError } from '../error/quizzesError.enum';
 import { QuestionResponse } from '../question/type/questionResponse.type';
 import { QuizzesDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { Role } from '../auth/types';
 @Injectable()
 export class QuizzesService {
     constructor(
@@ -66,13 +67,13 @@ export class QuizzesService {
         }
     }
 
-    async getDiscovery(userId: string) {
+    async getDiscovery() {
         try {
             const quizzes = await this.prisma.quizzes.findMany({
                 where: {
                     isShared: true,
-                    NOT: {
-                        userId: userId,
+                    user: {
+                        role: Role.Admin,
                     },
                 },
                 select: {
@@ -97,10 +98,10 @@ export class QuizzesService {
                     categories: this.findMostCategoryInQuiz(categories),
                 };
             });
-            let discovery = [];
+            const discovery = [];
             for (let index = 0; index < quizzesOfdiscovery.length; index++) {
                 if (quizzesOfdiscovery[index].categories !== '') {
-                    let category = await this.prisma.categories.findUnique({
+                    const category = await this.prisma.categories.findUnique({
                         where: {
                             id: quizzesOfdiscovery[index].categories,
                         },
@@ -108,7 +109,7 @@ export class QuizzesService {
                             name: true,
                         },
                     });
-                    let indexOfCategory = this.findIndexOfCategory(
+                    const indexOfCategory = this.findIndexOfCategory(
                         discovery,
                         category.name,
                     );
@@ -197,10 +198,10 @@ export class QuizzesService {
         }
     }
 
-    async filterCategory(userId: string, categoryName: string) {
+    async filterCategory(categoryName: string) {
         try {
-            const categories = await this.getDiscovery(userId);
-            let resultFilter = categories.filter(
+            const categories = await this.getDiscovery();
+            const resultFilter = categories.filter(
                 (category) => category.category === categoryName,
             );
             if (resultFilter.length !== 0) return resultFilter[0].quizzes;

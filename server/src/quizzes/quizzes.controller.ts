@@ -78,9 +78,8 @@ export class QuizzesController {
     @Get('/discovery')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get discovery successfully')
-    @UseGuards(JwtAuthGuard)
-    async getdiscovery(@GetCurrentUser('id') userId: string) {
-        return await this.quizzesService.getDiscovery(userId);
+    async getdiscovery() {
+        return await this.quizzesService.getDiscovery();
     }
     @Get('/info')
     @HttpCode(HttpStatus.OK)
@@ -96,12 +95,8 @@ export class QuizzesController {
     @Get('/filter')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Filter successfully')
-    @UseGuards(JwtAuthGuard)
-    async filterCategory(
-        @GetCurrentUser('id') userId: string,
-        @Query('category') categoryName: string,
-    ) {
-        return await this.quizzesService.filterCategory(userId, categoryName);
+    async filterCategory(@Query('category') categoryName: string) {
+        return await this.quizzesService.filterCategory(categoryName);
     }
 
     @Get('/all-questions')
