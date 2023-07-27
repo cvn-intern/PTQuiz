@@ -15,7 +15,7 @@
 <section class="w-full h-full py-10">
 	<div class="w-11/12 h-fit flex flex-col gap-4 mx-auto">
 		<button
-			aria-label="Edit"
+			aria-label="CreateQuiz"
 			on:click={handleCreateQuiz}
 			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none w-1/6"
 			>{$t('common.createQuizIntro')}</button
