@@ -10,7 +10,7 @@
 	export let classButton: string;
 	export let defaultOpenModal: boolean;
 	export let form: any;
-
+	export let result: any;
 	let isProcessing: boolean = false;
 
 	const handleSubmit = async (): Promise<void> => {
@@ -63,50 +63,58 @@
 			label: `${$t('common.title')}`,
 			name: 'title',
 			type: 'text',
-			required: true
+			required: true,
+			value: result.title
 		},
 		{
 			label: `${$t('common.level')}`,
 			name: 'difficultyLevel',
 			type: 'select',
 			selectOptionsList: levelList,
-			required: true
+			required: true,
+			value: result.difficultyLevel
 		},
 		{
 			label: `${$t('common.startDate')}`,
 			name: 'startDate',
 			type: 'date',
-			required: false
+			required: false,
+			value: result.startDate
 		},
 		{
 			label: `${$t('common.passingPoint')}`,
 			name: 'passingPoint',
 			type: 'number',
-			required: true
+			required: true,
+			value: result.passingPoint
 		},
 		{
 			label: `${$t('common.endDate')}`,
 			name: 'endDate',
 			type: 'date',
-			required: false
+			required: false,
+			value: result.endDate
 		},
 		{
 			label: `${$t('common.totalPoints')}`,
 			name: 'point',
 			type: 'number',
-			required: true
+			required: true,
+			value: result.point
 		},
 		{
 			label: `${$t('common.file')}`,
 			name: 'image',
 			type: 'file',
-			required: false
+			required: false,
+			value: result.image
 		},
 		{
 			label: `${$t('common.description')}`,
 			name: 'description',
 			type: 'textarea',
-			required: false
+			required: false,
+			value: result.description
 		}
 	];
 	export let outsideclose = true;
@@ -120,7 +128,7 @@
 <Modal bind:open={formModal} size="md" class="w-full z-50" {outsideclose} autoclose={false}>
 	<form
 		class="flex flex-col space-y-4 items-center"
-		action="?/createQuiz"
+		action="?/updateQuiz"
 		method="post"
 		use:enhance={() => {
 			return async ({ update }) => {
@@ -133,7 +141,7 @@
 			{$t('common.informationQuiz')}
 		</h3>
 		<div class="grid grid-cols-2 gap-4">
-			{#each inputFormList as { label, name, type, required, selectOptionsList }}
+			{#each inputFormList as { label, name, type, required, selectOptionsList, value }}
 				<div>
 					<Label class="space-y-2 block text-sm font-medium text-gray-900 dark:text-w">
 						{label} <span class="text-red-600">{required ? '*' : ''}</span>
@@ -149,7 +157,7 @@
 					{:else if type === 'select'}
 						<Select
 							items={selectOptionsList}
-							bind:value={selectedLevel}
+							bind:value
 							{required}
 							id={name}
 							{name}
@@ -158,18 +166,20 @@
 					{:else if type === 'textarea'}
 						<textarea
 							id={name}
-							{type}
+							type="textarea"
 							placeholder={label}
 							{name}
+							bind:value
 							class="bg-gray-50 border border-graydish text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 						/>
 					{:else}
 						<input
 							id={name}
-							{type}
+							type="text"
 							placeholder={label}
 							{name}
 							{required}
+							bind:value
 							class="bg-gray-50 border border-graydish text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 						/>
 					{/if}
@@ -181,7 +191,7 @@
 			type="submit"
 			on:click={handleSubmit}
 			class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-			>{$t('common.save')}</Button
+			>{$t('common.update')}</Button
 		>
 	</form>
 </Modal>
