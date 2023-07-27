@@ -12,7 +12,6 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 	});
 
 	const result = await response.json();
-	console.log("542",result);
 
 	if (result.statusCode !== HttpStatus.CREATED) {
 		throw error(HttpStatus.BAD_REQUEST, result.error);

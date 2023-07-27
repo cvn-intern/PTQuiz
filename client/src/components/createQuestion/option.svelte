@@ -37,7 +37,6 @@
 				else if (question === 'B') data[index].answers.answerB = true;
 				else if (question === 'C') data[index].answers.answerC = true;
 				else if (question === 'D') data[index].answers.answerD = true;
-				console.log(data);
 				return data;
 			});
 		} else {
@@ -62,7 +61,6 @@
 			else if (question === 'B') data[index].answers.answerB = !data[index].answers.answerB;
 			else if (question === 'C') data[index].answers.answerC = !data[index].answers.answerC;
 			else if (question === 'D') data[index].answers.answerD = !data[index].answers.answerD;
-			console.log(data);
 			return data;
 		});
 	}

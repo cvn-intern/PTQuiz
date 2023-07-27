@@ -22,7 +22,6 @@ export const actions = {
 				body: form
 			});
 			const result = await response.json();
-			console.log(result);
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
 			message.success.message = result.message;

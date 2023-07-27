@@ -21,5 +21,4 @@
 		classButton={'text-zinc-950 border bg-white hover:bg-gray-400 shadow-md'}
 		nameClassButton={'Continue create quiz'}
 	/>
-
 </div>

@@ -9,7 +9,7 @@
 		duration: 200,
 		easing: sineIn
 	};
-	export let form : any;
+	export let form: any;
 	export let result: any;
 </script>
 
@@ -45,5 +45,5 @@
 		</h5>
 		<CloseButton on:click={() => (hidden1 = true)} class="mb-4 dark:text-white" />
 	</div>
-	<SidebarCreateQuiz {form} classSidaBar={'flex flex-col gap-10 items-center'} bind:result={result} />
+	<SidebarCreateQuiz {form} classSidaBar={'flex flex-col gap-10 items-center'} bind:result />
 </Drawer>

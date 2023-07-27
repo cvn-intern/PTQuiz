@@ -6,7 +6,7 @@
 	import SidebarCreateQuiz from '$components/createQuiz/sidebarCreateQuiz.svelte';
 	let typeOfQuestion = 1;
 	export let data: any;
-	export let form:any
+	export let form: any;
 	import { questionData } from '$stores/questionInfoStore';
 	import { indexNow } from '$stores/indexNowStore';
 	let length;
@@ -56,7 +56,7 @@
 			{form}
 		/>
 		<div class="md:hidden block">
-			<MobileSidebar  bind:result={data.result.data} {form}/>
+			<MobileSidebar bind:result={data.result.data} {form} />
 		</div>
 		<div class="md:w-5/6 w-full">
 			<div class="flex justify-between gap-4">
