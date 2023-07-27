@@ -12,13 +12,14 @@
 	import { TypeQuestion } from '$constants/typeQuestion.js';
 	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
 	import TextAnswer from '$components/playGame/textAnswer.svelte';
+	import { onDestroy } from 'svelte';
 	export let data;
 
 	let questionPointer = 0;
 	let fourOptions: any[];
 	let isAnswerChecked: boolean = false;
 	let isMultipleChecked: boolean = false;
-	let isEssayChecked: boolean = false;
+	let isGuessWordsChecked: boolean = false;
 	let multipleChoiceAnswer: boolean[] = [false, false, false, false];
 	let selectedAnswerIndex: number;
 	let sharedToastId: string | number;
@@ -42,9 +43,11 @@
 
 	let gameInfo: any;
 	gameInfoStore.subscribe((val) => (gameInfo = val));
+
+
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	let original = 600;
+	let original = 5;
 	let zero = 0;
 
 	let timer = tweened(original);
@@ -63,7 +66,7 @@
 		[key: string]: { questionId: string; givenAnswers: any; writtenAnswer: string };
 	} = {};
 
-	function pickEssay(finalAnswer: string) {
+	function pickGuessWords(finalAnswer: string) {
 		isAnswerChecked = true;
 		givenAn[questionPointer] = {
 			answerA: false,
@@ -181,9 +184,9 @@
 				setTimeout(() => {
 					showModal = false;
 				}, 2000);
-			} else if (isEssayChecked) {
-				pickEssay(finalAnswer);
-				isEssayChecked = false;
+			} else if (isGuessWordsChecked) {
+				pickGuessWords(finalAnswer);
+				isGuessWordsChecked = false;
 				showModal = true;
 				setTimeout(() => {
 					showModal = false;
@@ -193,7 +196,6 @@
 				pickAnswer(-1);
 				selectedAnswerIndex = -1;
 				showModal = true;
-				isTrueFalse = false;
 				setTimeout(() => {
 					showModal = false;
 				}, 2000);
@@ -232,6 +234,8 @@
 	$: {
 		if (quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE) {
 			isTrueFalse = true;
+		} else {
+			isTrueFalse = false;
 		}
 	}
 </script>
@@ -242,9 +246,57 @@
 	</div>
 
 	<div class=" h-full p-2 rounded-lg">
-		<div class="question h-1/2">
+		<div class="question h-1/2 relative">
+			<div class="absolute right-0">
+				{#if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+					<div
+						class="grid grid-cols-2 grid-rows-2 gap-2 bg-white p-2 rounded-xl items-center"
+					>
+						<div class="w-20 h-14 rounded-lg bg-green-500" />
+						<div class="w-20 h-14 rounded-lg bg-red-500" />
+						<div class="w-20 h-14 rounded-lg bg-red-500" />
+						<div class="w-20 h-14 rounded-lg bg-red-500" />
+					</div>
+				{:else if quizzes[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
+					<div
+						class="grid grid-cols-2 grid-rows-2 gap-2 bg-white p-2 rounded-xl items-center"
+					>
+						<div class="w-20 h-14 rounded-lg bg-green-500" />
+						<div class="w-20 h-14 rounded-lg bg-green-500" />
+						<div class="w-20 h-14 rounded-lg bg-green-500" />
+						<div class="w-20 h-14 rounded-lg bg-red-500" />
+					</div>
+				{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
+					<div
+						class="grid grid-cols-2 grid-rows-1 gap-2 bg-white p-2 rounded-xl items-center"
+					>
+						<div class="w-20 h-14 rounded-lg bg-green-500" />
+						<div class="w-20 h-14 rounded-lg bg-red-500" />
+					</div>
+				{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
+					<div class="flex p-4 gap-2 bg-white rounded-xl items-center">
+						<div
+							class=" w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl"
+						>
+							A
+						</div>
+						<div
+							class=" w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl"
+						>
+							B
+						</div>
+						<div
+							class=" w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl"
+						>
+							C
+						</div>
+					</div>
+				{/if}
+			</div>
 			<div class="flex justify-center items-center h-full px-4">
-				<p class="p-2 text-3xl md:text-5xl lg:text-7xl text-black text-center">
+				<p
+					class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center"
+				>
 					{quizzes[questionPointer].title}
 				</p>
 			</div>
@@ -274,7 +326,6 @@
 						bind:isAnswerChecked
 						{fourOptions}
 						{showModal}
-						{isTrueFalse}
 					/>
 				</div>
 			{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
@@ -295,12 +346,12 @@
 						{/if}
 					{/each}
 				</div>
-			{:else if quizzes[questionPointer].type === TypeQuestion.ESSAY}
+			{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
 				<TextAnswer
 					bind:isAnswerChecked
 					bind:answer={quizzes[questionPointer].written}
 					bind:finalAnswer
-					bind:isEssayChecked
+					bind:isGuessWordsChecked
 					{showModal}
 				/>
 			{/if}

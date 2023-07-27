@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import { Modal } from 'flowbite-svelte';
 
 	export let option: {
@@ -44,52 +45,18 @@
 	disabled={option.disabled}
 >
 	{#if !isTrueFalse}
-		<p class="text-lg md:text-2xl font-semibold text-left">{option.contents}</p>
+		<p class="text-xl md:text-3xl  text-left">{option.contents}</p>
 	{:else}
-		<p class="text-7xl font-semibold flex justify-center">{option.contents}</p>
+		<p class="text-5xl  flex justify-center">{option.contents}</p>
 	{/if}
 
 	{#if showModal}
-		<Modal bind:open={showModal} autoclose placement="top-center">
-			<div class="">
+		<Modal bind:open={showModal} autoclose outsideclose placement="top-center">
+			<div class="flex justify-center items-center">
 				{#if option.isCorrect && selectedAnswerIndex != -1}
-					<svg
-						aria-hidden="true"
-						class="mx-auto mb-4 w-14 h-14 text-green-500"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M5 13l4 4L19 7"
-						/>
-					</svg>
-					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-						Correct Answer!
-					</h3>
+					<Icon icon="flat-color-icons:ok" class="text-9xl" />
 				{:else}
-					<svg
-						aria-hidden="true"
-						class="mx-auto mb-4 w-14 h-14 text-red-500"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M6 18L18 6M6 6l12 12"
-						/>
-					</svg>
-					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-						Wrong Answer! Try Better Next Time.
-					</h3>
+					<Icon icon="teenyicons:x-circle-solid" class="text-9xl text-red-500 " />
 				{/if}
 			</div>
 		</Modal>

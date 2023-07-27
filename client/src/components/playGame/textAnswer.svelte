@@ -1,10 +1,11 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import { Modal } from 'flowbite-svelte';
 	export let answer: any;
 	export let showModal: boolean;
 	export let isAnswerChecked: boolean;
 	export let finalAnswer: string;
-	export let isEssayChecked: boolean;
+	export let isGuessWordsChecked: boolean;
 
 	function scrambleString(str: string) {
 		let chars = str.split('');
@@ -32,7 +33,6 @@
 	let scrambledAnswer: string;
 	let scrambledAnswerSplit: CharacterObject[];
 	let width: number;
-	let first: boolean = true;
 
 	$: {
 		answerSplit = answer.split('');
@@ -79,8 +79,7 @@
 	}
 	$: {
 		if (!isAnswerChecked) {
-			isEssayChecked = true;
-			first = true;
+			isGuessWordsChecked = true;
 			chooseAnswer = [];
 		}
 	}
@@ -89,9 +88,7 @@
 <div class="flex flex-col h-full">
 	<div class="flex flex-col h-1/2 items-center gap-4">
 		<div
-			class={`flex flex-start flex-wrap gap-2 p-4 border border-black rounded-lg items-center bg-background ${
-				first ? ' h-16' : ''
-			}`}
+			class={`flex flex-start h-20 gap-2 p-4 border border-black rounded-lg items-center bg-background `}
 			style="width:{width}px"
 		>
 			{#each chooseAnswer as input, index}
@@ -112,9 +109,6 @@
 				<button
 					class="p-3 w-14 h-16 rounded-lg border shadow-lg bg-secondary"
 					on:click={() => {
-						if (first) {
-							first = false;
-						}
 						addToChooseAnswer(input, index);
 					}}
 				>
@@ -126,45 +120,11 @@
 </div>
 {#if showModal}
 	<Modal bind:open={showModal} autoclose placement="top-center">
-		<div class="">
+		<div class="flex justify-center items-center">
 			{#if checkAnswer(finalAnswer, answer)}
-				<svg
-					aria-hidden="true"
-					class="mx-auto mb-4 w-14 h-14 text-green-500"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M5 13l4 4L19 7"
-					/>
-				</svg>
-				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					Correct Answer!
-				</h3>
+				<Icon icon="flat-color-icons:ok" class="text-9xl" />
 			{:else}
-				<svg
-					aria-hidden="true"
-					class="mx-auto mb-4 w-14 h-14 text-red-500"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M6 18L18 6M6 6l12 12"
-					/>
-				</svg>
-				<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-					Wrong Answer! Try Better Next Time.
-				</h3>
+				<Icon icon="teenyicons:x-circle-solid" class="text-9xl text-red-500" />
 			{/if}
 		</div>
 	</Modal>
