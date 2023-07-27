@@ -7,8 +7,8 @@ import { PlayGameError } from '../error/playGameError.enum';
 import { EndGameError } from '../error/endGameError.enum';
 import { EndGameType } from './dto/endGame.type';
 import { CryptoService } from '../crypto/crypto.service';
-import { Option, TypeQuestion } from 'src/question/type';
 import { AnswerType } from 'src/question/type/questionInput.type';
+import { TypeQuestion } from '../question/type';
 
 @Injectable()
 export class PlaygameService {
