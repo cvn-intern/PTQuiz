@@ -9,6 +9,9 @@
 		duration: 200,
 		easing: sineIn
 	};
+	import logo from '$assets/logo.png';
+	import type { LayoutData } from '../../../routes/$types';
+	export let user: LayoutData;
 </script>
 
 <Drawer
@@ -20,33 +23,41 @@
 	position="fixed"
 >
 	<div class="flex justify-end">
-		<CloseButton on:click={() => (hiddenModal = true)} class="mb-4 dark:text-white" />
+		<CloseButton on:click={() => (hiddenModal = true)} class=" dark:text-white" />
 	</div>
 	<a class="flex justify-center py-2" href="/">
-		<h1 class="font-title text-2xl font-bold text-darkGreen">PentaQuiz</h1>
+		<img src={logo} alt="logo" class="w-32" />
 	</a>
 	<div class="flex flex-col">
 		<div class="overflow-y-auto py-4 rounded dark:bg-gray-800">
-			<SidebarItem
-				name={$t('common.myQuizzes')}
-				icon={'tabler:home'}
-				navigateTo={'/dashboard/quizzes'}
-			/>
-			<SidebarItem
-				name={$t('common.history')}
-				icon={'material-symbols:history'}
-				navigateTo={'/dashboard/history'}
-			/>
-			<SidebarItem
-				name={$t('common.profile')}
-				icon={'mingcute:user-setting-fill'}
-				navigateTo={'/dashboard/profile'}
-			/>
-			<SidebarItem
-				name={$t('common.discovery')}
-				icon={'mdi:world'}
-				navigateTo={'/discovery'}
-			/>
+			{#if user}
+				<SidebarItem
+					name={$t('common.myQuizzes')}
+					icon={'tabler:home'}
+					navigateTo={'/dashboard/quizzes'}
+				/>
+				<SidebarItem
+					name={$t('common.history')}
+					icon={'material-symbols:history'}
+					navigateTo={'/dashboard/history'}
+				/>
+				<SidebarItem
+					name={$t('common.profile')}
+					icon={'mingcute:user-setting-fill'}
+					navigateTo={'/dashboard/profile'}
+				/>
+				<SidebarItem
+					name={$t('common.discovery')}
+					icon={'mdi:world'}
+					navigateTo={'/discovery'}
+				/>
+			{:else}
+				<SidebarItem
+					name={$t('common.discovery')}
+					icon={'mdi:world'}
+					navigateTo={'/discovery'}
+				/>
+			{/if}
 		</div>
 	</div>
 </Drawer>

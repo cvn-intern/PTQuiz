@@ -13,8 +13,8 @@
 </script>
 
 <footer class="bg-primary flex flex-col flex-end">
-	<div class="flex flex-col items-center">
-		<div class="container flex flex-col gap-8 md:flex-row justify-between lg:px-24 pt-4">
+	<div class="flex flex-col md:items-center">
+		<div class="container flex flex-col items-start px-4 gap-8 md:flex-row md:justify-between lg:px-24 pt-4">
 			<div class="location flex flex-col items-center gap-2">
 				<h1 class="text-xl font-bold" aria-label="">{$t('common.ourLocation')}</h1>
 				<div class="flex flex-col gap-2">
