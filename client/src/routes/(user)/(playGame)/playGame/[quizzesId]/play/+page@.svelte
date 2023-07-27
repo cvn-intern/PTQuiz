@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tweened } from 'svelte/motion';
 	import type { QuizzesType, UserAnswer } from './quizzes.interface.js';
-	import { afterNavigate, goto } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
@@ -12,7 +12,6 @@
 	import { TypeQuestion } from '$constants/typeQuestion.js';
 	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
 	import TextAnswer from '$components/playGame/textAnswer.svelte';
-	import { onDestroy } from 'svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -46,13 +45,15 @@
 
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	let original = 5;
+	let original = quizzes[questionPointer].time;
 	let zero = 0;
 
 	let timer = tweened(original);
 
 	setInterval(() => {
-		if ($timer > 0) $timer--;
+		if ($timer > 0) {
+			$timer--;
+		}
 	}, 1000);
 
 	$: stringTimer = (($timer * 100) / original).toString();
@@ -243,7 +244,6 @@
 	<div class="pt-4">
 		<Progressbar progress={stringTimer} size="h-4" color="gray" />
 	</div>
-
 	<div class=" h-full p-2 rounded-lg">
 		<div class="question h-1/2 relative">
 			<div class="absolute right-0">
@@ -251,26 +251,26 @@
 					<div
 						class="grid grid-cols-2 grid-rows-2 gap-2 bg-white p-2 rounded-xl items-center"
 					>
-						<div class="w-20 h-14 rounded-lg bg-green-500" />
-						<div class="w-20 h-14 rounded-lg bg-red-500" />
-						<div class="w-20 h-14 rounded-lg bg-red-500" />
-						<div class="w-20 h-14 rounded-lg bg-red-500" />
+						<div class="w-12 h-10 rounded-lg bg-green-500" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
 					</div>
 				{:else if quizzes[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
 					<div
 						class="grid grid-cols-2 grid-rows-2 gap-2 bg-white p-2 rounded-xl items-center"
 					>
-						<div class="w-20 h-14 rounded-lg bg-green-500" />
-						<div class="w-20 h-14 rounded-lg bg-green-500" />
-						<div class="w-20 h-14 rounded-lg bg-green-500" />
-						<div class="w-20 h-14 rounded-lg bg-red-500" />
+						<div class="w-12 h-10 rounded-lg bg-green-500" />
+						<div class="w-12 h-10 rounded-lg bg-green-500" />
+						<div class="w-12 h-10 rounded-lg bg-green-500" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
 					</div>
 				{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
 					<div
 						class="grid grid-cols-2 grid-rows-1 gap-2 bg-white p-2 rounded-xl items-center"
 					>
-						<div class="w-20 h-14 rounded-lg bg-green-500" />
-						<div class="w-20 h-14 rounded-lg bg-red-500" />
+						<div class="w-12 h-10 rounded-lg bg-green-500" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
 					</div>
 				{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
 					<div class="flex p-4 gap-2 bg-white rounded-xl items-center">

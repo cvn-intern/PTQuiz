@@ -46,7 +46,8 @@ export default {
 			width: {
 				desktop: '20rem',
 				ipad: '17rem',
-				mobile: '12rem'
+				mobile: '12rem',
+				panel: '446px'
 			},
 			minHeight: {
 				titleCard: '3.5rem'
