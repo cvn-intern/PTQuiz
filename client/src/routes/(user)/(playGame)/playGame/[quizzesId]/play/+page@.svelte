@@ -44,7 +44,6 @@
 	let gameInfo: any;
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 
-
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
 	let original = 5;

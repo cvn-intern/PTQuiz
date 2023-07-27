@@ -20,6 +20,9 @@ export default {
 				optionC: '#6c8ffc',
 				optionD: '#febf71',
 				redLight: '#FF6B6B',
+				orangeLogo: '#f76800',
+				yellowLogo: '#ffb411',
+				blueLogo: '#00d6ca',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -50,24 +53,24 @@ export default {
 			},
 			maxHeight: {
 				titleCard: '3.75rem',
-				boxCardQuestion: '27rem',
+				boxCardQuestion: '27rem'
 			},
 			maxWidth: {
 				tagName: '33%'
 			},
-            keyframes: {
-                wiggle: {
-                    '0%, 100%': { transform: 'rotate(-2deg)' },
-                    '50%': { transform: 'rotate(2deg)' },
-                }
-            },
-            animation: {
-                wiggle: 'wiggle 1s ease infinite',
-            },
-			scale : {
+			keyframes: {
+				wiggle: {
+					'0%, 100%': { transform: 'rotate(-2deg)' },
+					'50%': { transform: 'rotate(2deg)' }
+				}
+			},
+			animation: {
+				wiggle: 'wiggle 1s ease infinite'
+			},
+			scale: {
 				102: '1.02'
 			}
-		},
+		}
 	},
 	plugins: [require('flowbite/plugin')],
 	darkMode: 'class'

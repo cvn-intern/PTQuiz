@@ -112,5 +112,7 @@
 	"passingPoint": "Passing Point",
 	"description": "Description",
 	"totalPoints": "Total Points",
-	"update": "Update"
+	"update": "Update",
+	"haveNotImplement": "Sorry we haven't implemented this page yet",
+	"backDashboard" : "Back to dashboard"
 }

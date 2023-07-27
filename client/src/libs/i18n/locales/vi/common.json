@@ -112,5 +112,7 @@
 	"passingPoint": "Điểm đạt",
 	"description": "Mô tả",
 	"totalPoints": "Tổng điểm",
-	"update": "Cập nhật"
+	"update": "Cập nhật",
+	"haveNotImplement": "Chúng tôi chưa thực hiện chức năng này",
+	"backDashboard": "Quay về trang dashboard"
 }
