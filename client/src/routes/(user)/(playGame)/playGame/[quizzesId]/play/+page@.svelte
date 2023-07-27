@@ -26,6 +26,7 @@
 	let showModal = false;
 	let stringTimer: string;
 	let finalAnswer: string;
+	let isTrueFalse: boolean = false;
 
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
@@ -43,14 +44,14 @@
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	let original = 120;
+	let original = 600;
 	let zero = 0;
 
 	let timer = tweened(original);
 
 	setInterval(() => {
 		if ($timer > 0) $timer--;
-	}, 100);
+	}, 1000);
 
 	$: stringTimer = (($timer * 100) / original).toString();
 
@@ -192,6 +193,7 @@
 				pickAnswer(-1);
 				selectedAnswerIndex = -1;
 				showModal = true;
+				isTrueFalse = false;
 				setTimeout(() => {
 					showModal = false;
 				}, 2000);
@@ -226,6 +228,12 @@
 			disabled: isAnswerChecked ? true : false
 		}));
 	}
+
+	$: {
+		if (quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE) {
+			isTrueFalse = true;
+		}
+	}
 </script>
 
 <div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
@@ -254,6 +262,7 @@
 							{selectedAnswerIndex}
 							{pickAnswer}
 							{showModal}
+							{isTrueFalse}
 						/>
 					{/each}
 				</div>
@@ -265,6 +274,7 @@
 						bind:isAnswerChecked
 						{fourOptions}
 						{showModal}
+						{isTrueFalse}
 					/>
 				</div>
 			{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
@@ -280,6 +290,7 @@
 								{selectedAnswerIndex}
 								{pickAnswer}
 								{showModal}
+								{isTrueFalse}
 							/>
 						{/if}
 					{/each}

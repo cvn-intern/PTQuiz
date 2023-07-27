@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import { Modal } from 'flowbite-svelte';
 
 	export let option: {
@@ -13,6 +12,7 @@
 	export let isAnswerChecked: boolean;
 	export let selectedAnswerIndex: number;
 	export let pickAnswer: (index: number) => void;
+	export let isTrueFalse: boolean;
 
 	export let showModal = true;
 
@@ -24,13 +24,15 @@
 
 		setTimeout(() => {
 			showModal = false;
-		}, 3000);
+		}, 2000);
 	}
 </script>
 
 <button
 	on:click={handleAnswerSelection}
-	class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl ${
+	class={`rounded-xl flex p-2 md:p-4 gap-2 ${
+		isTrueFalse ? 'justify-center' : ''
+	} items-center text-gray-900 shadow-xl ${
 		isAnswerChecked
 			? option.isCorrect
 				? 'bg-green-500'
@@ -41,10 +43,11 @@
 	}`}
 	disabled={option.disabled}
 >
-	<div class="rounded-full">
-		<Icon icon={`twemoji:letter-${option.id.toLowerCase()}`} class={`md:text-4xl text-2xl`} />
-	</div>
-	<p class="text-sm md:text-xl font-semibold text-left">{option.contents}</p>
+	{#if !isTrueFalse}
+		<p class="text-lg md:text-2xl font-semibold text-left">{option.contents}</p>
+	{:else}
+		<p class="text-7xl font-semibold flex justify-center">{option.contents}</p>
+	{/if}
 
 	{#if showModal}
 		<Modal bind:open={showModal} autoclose placement="top-center">
