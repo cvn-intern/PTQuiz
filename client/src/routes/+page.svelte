@@ -1,14 +1,13 @@
 <script lang="ts">
-	import LandingPage from '../components/landingPage/landingPage.svelte';
-	import type { PageData } from './$types';
-
-	export let data: PageData;
+	import LandingPage from '$components/landingPage/landingPage.svelte';
+	import Footer from '$components/layout/footer.svelte';
+	import Navbar from '$components/layout/navbar.svelte';
+	import type { LayoutData } from './$types';
+	export let data: LayoutData;
 </script>
 
-<LandingPage />
-
-<style lang="postcss">
-	:global(html) {
-		background-color: theme(colors.gray.100);
-	}
-</style>
+<Navbar user={data.user} />
+<main class="flex flex-1 bg-background">
+	<LandingPage />
+</main>
+<Footer />

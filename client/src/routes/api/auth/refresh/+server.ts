@@ -1,26 +1,31 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { VITE_API_URL } from '$env/static/private';
+import { HttpStatus } from '$constants/httpStatus';
 
 export const POST: RequestHandler = async ({ fetch, cookies }) => {
-	const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+	const token = cookies.get('refreshToken');
+	const response = await fetch(`${VITE_API_URL}/auth/refresh`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			refreshToken:
-				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBob25nLm5nbzEyM0BoY211dC5lZHUudm4iLCJpZCI6ImNsanI3emFhNTAwMDFzYm51dHkxcWpjZ3MiLCJyb2xlIjoidXNlciIsImRpc3BsYXlOYW1lIjoiTmdvIEdpYSBQaG9uZyIsImF2YXRhciI6Imh0dHBzOi8vY2RuLmRpc2NvcmRhcHAuY29tL2F0dGFjaG1lbnRzLzExMjYzMjEzNzUzMzA2OTcyNzgvMTEyNjMzNzg3NzI0MDk3MTMwNC9raXNzcG5nLW5pbmphLWNvbXB1dGVyLWljb25zLWF2YXRhci1zYW11cmFpLWFuZ2xlLTViNDc5MGY2YzM5ODkxLnBuZyIsInN0YXR1cyI6MSwiaWF0IjoxNjg5MTQ1MDUxLCJleHAiOjE2ODkyMzE0NTF9.syubCm6Ly2ER4tU15sSF7HruxkuSSMPp6TDTbKWE3-c'
+			refreshToken: token
 		})
 	});
 	const result = await response.json();
-	if (result.error) {
-		// throw error(500, result.error.response)
+	if (response.status === HttpStatus.CREATED) {
+		cookies.set('accessToken', result.data.accessToken, {
+			path: '/'
+		});
+		cookies.set('refreshToken', result.data.refreshToken, {
+			path: '/'
+		});
+		return new Response(JSON.stringify({ message: 'Refresh token success' }), {
+			status: HttpStatus.CREATED
+		});
 	}
-	cookies.set('accessToken', result.data.accessToken, {
-		path: '/'
+	return new Response(JSON.stringify({ message: 'Refresh token failed' }), {
+		status: 400
 	});
-	cookies.set('refreshToken', result.data.refreshToken, {
-		path: '/'
-	});
-	return json(result);
 };

@@ -1,13 +1,35 @@
+import { loadTranslations } from '$i18n/translations';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutData } from './$types';
+import { goto } from '$app/navigation';
+export const load: LayoutData = async ({ data, url }) => {
+	const authPaths = ['/login', '/register', '/forgotPassword'];
+	const protectedPaths = ['/dashboard', '/playGame', '/room', '/createQuiz'];
 
-export const load: LayoutData = async ({ url, data }) => {
-	if (data.user && url.pathname.startsWith('/register')) {
-		throw redirect(303, '/');
+	function isAuthPath(pathname: string) {
+		for (const path of authPaths) {
+			if (pathname.startsWith(path)) {
+				return true;
+			}
+		}
+		return false;
 	}
-	if (!data && url.pathname !== '/login') {
-		throw redirect(307, '/login');
+
+	function isProtectedPath(pathname: string) {
+		for (const path of protectedPaths) {
+			if (pathname.startsWith(path)) {
+				return true;
+			}
+		}
+		return false;
 	}
-	
-	return { user: data.user };
+
+	const { lang, pathname, user } = data;
+	await loadTranslations(lang, pathname);
+	if (!user) {
+		if (isProtectedPath(pathname)) {
+			throw redirect(307, '/login');
+		}
+	}
+	return { user };
 };

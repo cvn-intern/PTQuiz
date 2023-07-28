@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import toast, { Toaster } from 'svelte-french-toast';
+	import { t } from '../../libs/i18n/translations';
 
 	export let title: string;
 	export let author: string;
@@ -26,7 +27,7 @@
 	};
 
 	async function handleStart() {
-		sharedToastId = toast.loading('Loading...', { duration: 20000 });
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
 		const response = await fetch(`/api/room/open`, {
 			method: 'POST',
 			headers: {
@@ -39,12 +40,16 @@
 		const result = await response.json();
 		if (response.status === 200) {
 			dismissLoadingToast();
-			toast.success('Success!');
+			toast.success(t.get('common.success'));
 			goto(`/room/${result.data.PIN}`);
 		} else {
 			dismissLoadingToast();
 			toast.error(result.message);
 		}
+	}
+
+	function handleEdit() {
+		goto(`/createQuiz/${id}`);
 	}
 </script>
 
@@ -60,16 +65,24 @@
 			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">{title}</h1>
 			<p class="text-sm text-zinc-400 md:w-full md:block hidden">{description}</p>
 		</div>
-		<div class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2">
+		<div
+			class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2"
+		>
 			<p class="text-sm text-zinc-400">
-				Created at: <span class="text-zinc-400"> {formattedDateTime}</span>
+				{$t('common.createdAt')}: <span class="text-zinc-400"> {formattedDateTime}</span>
 			</p>
 			<div class="flex flex-row gap-4">
+				<button
+					aria-label="Edit"
+					on:click={handleEdit}
+					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
+					>{$t('common.editBtn')}</button
+				>
 				<button
 					aria-label="Start"
 					on:click={handleStart}
 					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-					>Start</button
+					>{$t('common.startBtn')}</button
 				>
 			</div>
 		</div>

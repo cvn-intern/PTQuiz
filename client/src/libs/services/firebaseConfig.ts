@@ -1,5 +1,5 @@
 import 'firebase/auth';
-import type { Spinner } from 'flowbite-svelte';
+import { AppRoute } from '../constants/appRoute';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -51,10 +51,9 @@ async function sendUserToServer(user: any, providerId: string) {
 			})
 		});
 		if (response.status === 200) {
-			window.location.href = '/';
+			window.location.href = AppRoute.HOME;
 		}
 	} catch (error) {
-		console.error(error);
 		return false;
 	}
 }

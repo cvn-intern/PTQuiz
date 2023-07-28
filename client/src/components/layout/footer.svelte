@@ -1,8 +1,6 @@
 <script>
 	import Icon from '@iconify/svelte';
-	import { navbarStore } from '../../libs/store/navbarStore';
-
-	const aboutUs = ['About us', 'Help', 'FAQS'];
+	import { t } from '$i18n/translations';
 
 	const contactIcons = [
 		'ic:baseline-facebook',
@@ -11,23 +9,20 @@
 		'ri:instagram-fill',
 		'mdi:linkedin'
 	];
-	$: isHiddenFooter = false;
-	navbarStore.subscribe((value) => {
-		isHiddenFooter = value.isFullScreen;
-	});
+
 </script>
 
-<footer class="bg-primary flex flex-col flex-end {isHiddenFooter ? 'hidden' : ''}">
-	<div class="flex flex-col items-center">
-		<div class="container flex flex-col gap-8 md:flex-row justify-between lg:px-24 pt-4">
+<footer class="bg-primary flex flex-col flex-end">
+	<div class="flex flex-col md:items-center">
+		<div class="container flex flex-col items-start px-4 gap-8 md:flex-row md:justify-between lg:px-24 pt-4">
 			<div class="location flex flex-col items-center gap-2">
-				<h1 class="text-xl font-bold" aria-label="">Our Location</h1>
+				<h1 class="text-xl font-bold" aria-label="">{$t('common.ourLocation')}</h1>
 				<div class="flex flex-col gap-2">
 					<span class="flex gap-2 items-center cursor-pointer">
 						<Icon icon="bxs:map" class="text-2xl" />
 						<div class="flex flex-col">
-							<p>106 Nguyen Van Troi, Phu Nhuan</p>
-							<p>District, Ho Chi Minh City</p>
+							<p>{$t('common.address')}</p>
+							<p>{$t('common.city')}</p>
 						</div>
 					</span>
 					<span class="flex gap-2 items-center cursor-pointer">
@@ -41,15 +36,15 @@
 				</div>
 			</div>
 			<div class="about flex flex-col items-center gap-2">
-				<h1 class="text-xl font-bold">About Us</h1>
+				<h1 class="text-xl font-bold">{$t('common.aboutUs')}</h1>
 				<ul class="flex flex-col gap-2">
-					{#each aboutUs as item}
-						<li class="cursor-pointer" aria-label={item}>{item}</li>
-					{/each}
+					<li class="cursor-pointer" aria-label="About us">{$t('common.aboutUs')}</li>
+					<li class="cursor-pointer" aria-label="Help">{$t('common.help')}</li>
+					<li class="cursor-pointer" aria-label="FAQS">{$t('common.faq')}</li>
 				</ul>
 			</div>
 			<div class="contact flex flex-col items-center gap-2">
-				<h1 class="text-xl font-bold">Contact Us</h1>
+				<h1 class="text-xl font-bold">{$t('common.contactUs')}</h1>
 				<div class="flex gap-2 cursor-pointer">
 					{#each contactIcons as icon}
 						<Icon {icon} class="text-2xl" />
@@ -58,7 +53,7 @@
 			</div>
 		</div>
 		<div class="copyright flex justify-center text-black font-semibold">
-			Copyrights by DarkHorse 2023
+			{$t('common.copyRights')}
 		</div>
 	</div>
 </footer>
