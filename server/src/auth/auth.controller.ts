@@ -124,4 +124,11 @@ export class AuthController {
     async confirm(@Body() dto: TokenDto) {
         return this.authService.confirmEmail(dto);
     }
+
+    @Post('/check-valid')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Check valid successfully')
+    async checkValid(@Body() dto: TokenDto) {
+        return this.authService.checkValidToken(dto);
+    }
 }

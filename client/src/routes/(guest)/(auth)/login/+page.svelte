@@ -101,7 +101,7 @@
 </script>
 
 <section class="flex text-white justify-center w-full">
-	<div class="w-[446px] rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
+	<div class=" w-panel rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
 			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.loginToYourAccount')}</h1>
 			<form

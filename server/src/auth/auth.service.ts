@@ -810,6 +810,34 @@ export class AuthService {
             },
         });
     }
+
+    async checkValidToken(dto: TokenDto) {
+        const { token } = dto;
+        try {
+            const decoded = await this.verifyToken(token);
+            if (!decoded) {
+                return {
+                    status: false,
+                    message: JwtError.INVALID_TOKEN,
+                };
+            }
+            return {
+                status: true,
+                message: 'Token is valid',
+            };
+        } catch (err) {
+            if (err.name === JwtError.TOKEN_EXPIRED_ERROR) {
+                return {
+                    status: false,
+                    message: JwtError.ACCESS_TOKEN_EXPIRED,
+                };
+            }
+            return {
+                status: false,
+                message: JwtError.INVALID_TOKEN,
+            };
+        }
+    }
 }
 
 export const exceptionHandler = (error: Error) => {

@@ -42,5 +42,6 @@
 	"PASSING_POINT_MUST_BE_AT_MOST_100": "Passing point must be at least 100",
 	"POINT_MUST_BE_AT_LEAST_1": "Point must be at least 1",
 	"POINT_MUST_BE_AT_MOST_100": "Point must be at least 100",
-	"IMAGE_MUST_BE_LESS_THAN_5MB": "Image must be less than 5MB"
+	"IMAGE_MUST_BE_LESS_THAN_5MB": "Image must be less than 5MB",
+	"THUMBNAIL_MUST_BE_LESS_THAN_5MB": "Thumbnail must be less than 5MB"
 }

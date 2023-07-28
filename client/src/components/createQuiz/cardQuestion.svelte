@@ -6,6 +6,7 @@
 	import { indexNow } from '$stores/indexNowStore';
 	import { questionData } from '$stores/questionInfoStore';
 	import { page } from '$app/stores';
+	import { t } from '$i18n/translations';
 	let effect = '';
 	function editIndex() {
 		indexNow.set({
@@ -65,7 +66,7 @@
 <Card padding="none">
 	<div class="flex flex-col items-center py-4 {effect}">
 		<h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-			Question {questionStt}
+			{$t('common.question')} {questionStt}
 		</h5>
 		<div class="flex mt-2 space-x-3 lg:mt-3">
 			<!-- <Button class="border" on:click={deleteQuestion}

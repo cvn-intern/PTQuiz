@@ -27,6 +27,7 @@ export const actions: Actions = {
 			message.isDone = true;
 
 			if (response.status === 200) {
+				message.isSuccess = true;
 				message.success.message = result;
 				return message;
 			} else {

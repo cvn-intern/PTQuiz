@@ -40,5 +40,5 @@ export const translateValidation = (message: string) => {
 		return t.get('validation.MISSING_DISPLAY_NAME');
 	} else if (message === UserError.FILE_TOO_LARGE) {
 		return t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB');
-	}
+	} 
 };

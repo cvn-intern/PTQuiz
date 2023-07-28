@@ -42,5 +42,6 @@
 	"PASSING_POINT_MUST_BE_AT_MOST_100": "Điểm nhiều nhất là 100",
 	"POINT_MUST_BE_AT_LEAST_1": "Điểm ít nhất là 1",
 	"POINT_MUST_BE_AT_MOST_100 ": "Điểm nhiều nhất là 100",
-	"IMAGE_MUST_BE_LESS_THAN_5MB": "Ảnh phải nhỏ hơn 5MB"
+	"IMAGE_MUST_BE_LESS_THAN_5MB": "Ảnh phải nhỏ hơn 5MB",
+	"THUMBNAIL_MUST_BE_LESS_THAN_5MB": "Ảnh bìa phải nhỏ hơn 5MB"
 }
