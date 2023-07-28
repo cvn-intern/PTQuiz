@@ -132,7 +132,7 @@
 		<h3 class="text-xl font-medium text-gray-900 dark:text-white">
 			{$t('common.informationQuiz')}
 		</h3>
-		<div class="grid grid-cols-2 gap-4">
+		<div class="grid md:grid-cols-2 gap-4 grid-cols-1">
 			{#each inputFormList as { label, name, type, required, selectOptionsList }}
 				<div>
 					<Label class="space-y-2 block text-sm font-medium text-gray-900 dark:text-w">
