@@ -53,7 +53,7 @@
 </script>
 
 <section class="flex flex-col items-center w-full">
-	<div class="w-[446px] bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
+	<div class=" md:w-panel bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
 			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.forgotPassword')}</h1>
 			<form

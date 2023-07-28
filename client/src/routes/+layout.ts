@@ -28,7 +28,7 @@ export const load: LayoutData = async ({ data, url }) => {
 	await loadTranslations(lang, pathname);
 	if (!user) {
 		if (isProtectedPath(pathname)) {
-			throw redirect(304, '/login');
+			throw redirect(307, '/login');
 		}
 	}
 	return { user };

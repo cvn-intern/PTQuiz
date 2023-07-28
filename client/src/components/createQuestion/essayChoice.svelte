@@ -17,6 +17,7 @@
 		<input
 			bind:value={essay}
 			type="text"
+			maxlength="6"
 			placeholder={$t('common.typeYourAnswer')}
 			class=" 2xl:text-3xl xl:text-2xl lg:text-xl md:h-full md:w-2/3 md:text-4xl sm:placeholder:text-xl placeholder:text-xs h-full w-3/4 text-xl placeholder-slate-200 text-center resize-none bg-optionB border-none border-transparent focus:border-transparent focus:ring-0"
 		/>

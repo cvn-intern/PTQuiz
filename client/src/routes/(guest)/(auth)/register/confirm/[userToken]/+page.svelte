@@ -37,7 +37,7 @@
 {#if !isSuccess}
 	<div class=" flex flex-col justify-center items-center w-full">
 		<div
-			class="w-[446px] border border-gray-200 shadow-xl flex flex-col items-center my-6 p-12 gap-12 rounded-xl bg-white"
+			class="md:w-panel border border-gray-200 shadow-xl flex flex-col items-center my-6 p-12 gap-12 rounded-xl bg-white"
 		>
 			<Icon icon="oi:circle-x" class="text-9xl text-red-500" />
 			<p class="font-semibold">{error}</p>

@@ -114,6 +114,15 @@
 	"totalPoints": "Total Points",
 	"update": "Update",
 	"haveNotImplement": "Sorry we haven't implemented this page yet",
-	"backDashboard" : "Back to dashboard",
-	"editBtn": "Edit"
+	"backDashboard": "Back to dashboard",
+	"editBtn": "Edit",
+	"backHome": "Back to home",
+	"updateQuiz": "Update Quiz",
+	"addQuestion": "Add Question",
+	"multiChoice": "Multi Choice",
+	"trueFalse": "True False",
+	"singleChoice": "Single Choice",
+	"crossCharacter": "Cross Character",
+	"question": "Question",
+	"noQuizzesFound": "No quizzes found"
 }

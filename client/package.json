@@ -21,7 +21,6 @@
 		"@sveltejs/adapter-vercel": "^3.0.2",
 		"@sveltejs/kit": "^1.20.4",
 		"@types/crypto-js": "^4.1.1",
-		"@types/jsonwebtoken": "^9.0.2",
 		"@types/siema": "^1.4.8",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
@@ -54,14 +53,12 @@
 		"firebaseui": "^6.0.2",
 		"flowbite": "^1.7.0",
 		"flowbite-svelte": "^0.39.2",
-		"jsonwebtoken": "^9.0.1",
 		"socket.io-client": "^4.7.1",
 		"svelte-forms-lib": "^2.0.1",
 		"svelte-french-toast": "^1.1.0",
 		"svelte-toasts": "^1.1.2",
 		"sveltekit-i18n": "^2.4.2",
 		"tailwind-merge": "^1.13.2",
-		"yup": "^1.2.0",
 		"zod": "^3.21.4"
 	}
 }

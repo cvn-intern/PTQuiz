@@ -115,5 +115,14 @@
 	"update": "Cập nhật",
 	"haveNotImplement": "Chúng tôi chưa thực hiện chức năng này",
 	"backDashboard": "Quay về trang dashboard",
-	"editBtn": "Chỉnh sửa"
+	"editBtn": "Chỉnh sửa",
+	"backHome": "Quay về trang chủ",
+	"updateQuiz": "Cập nhật bộ câu hỏi",
+	"addQuestion": "Thêm câu hỏi",
+	"multiChoice": "Nhiều lựa chọn",
+	"trueFalse": "Đúng/Sai",
+	"singleChoice": "Một lựa chọn",
+	"crossCharacter": "Tự luận",
+	"question": "Câu hỏi",
+	"noQuizzesFound": "Không tìm thấy bộ câu hỏi nào"
 }

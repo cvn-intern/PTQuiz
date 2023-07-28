@@ -2,6 +2,9 @@ import { z } from 'zod';
 import { ResponseMessage as MESSAGE } from '../../libs/message/responseMessage.enum';
 import { t } from '$i18n/translations';
 
+const MAX_FILE_SIZE = 500000;
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
 const ProfileFormSchema = z.object({
 	displayName: z
 		.string()
@@ -9,9 +12,10 @@ const ProfileFormSchema = z.object({
 		.max(20, t.get('validation.DISPLAY_NAME_TOO_LONG')),
 	avatar: z
 		.any()
+		.refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
 		.refine(
-			(file) => file.size <= +import.meta.env.VITE_MAX_FILE_SIZE,
-			t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB')
+			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+			'Only .jpg, .jpeg, .png and .webp formats are supported.'
 		)
 });
 
@@ -34,7 +38,5 @@ const PasswordFormSchema = z
 		message: t.get('validation.CONFIRM_PASSWORD_MUST_MATCH_PASSWORD'),
 		path: ['confirmPassword']
 	});
-
-
 
 export { ProfileFormSchema, PasswordFormSchema };
