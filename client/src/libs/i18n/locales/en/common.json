@@ -123,5 +123,6 @@
 	"trueFalse": "True False",
 	"singleChoice": "Single Choice",
 	"crossCharacter": "Cross Character",
-	"question": "Question"
+	"question": "Question",
+	"noQuizzesFound": "No quizzes found"
 }

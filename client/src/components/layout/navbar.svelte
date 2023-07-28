@@ -48,7 +48,7 @@
 </script>
 
 <nav
-	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0 z-50"
+	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0 z-40"
 >
 	<button on:click={toggleSidebar} class="md:hidden">
 		<Icon icon="material-symbols:list" class="text-5xl" />

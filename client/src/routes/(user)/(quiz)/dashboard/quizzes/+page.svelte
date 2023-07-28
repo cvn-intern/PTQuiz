@@ -13,19 +13,19 @@
 	{#if quizzes.length !== 0}
 		<Quizzes {quizzes} />
 	{:else}
-		<div class="flex items-center h-full">
+		<div class="flex h-full flex-col gap-4 p-6">
 			<button
 				aria-label="CreateQuiz"
 				on:click={handleCreateQuiz}
-				class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none w-1/6"
+				class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none md:w-1/6 w-3/6"
 				>{$t('common.createQuizIntro')}</button
 			>
 			<div
-				class="container flex flex-col md:flex-row sm:flex-row items-center justify-center p-5 text-gray-700"
+				class="container flex flex-col md:flex-row sm:flex-row text-gray-700"
 			>
-				<div class="w-full lg:w-1/2 md:w-1/3 sm:w-1/3 mx-8">
-					<p class="text-2xl md:text-3xl sm:text-2xl font-light leading-normal mb-8">
-						No quizzes found
+				<div class="w-full lg:w-1/2 md:w-1/3 sm:w-1/3">
+					<p class="text-2xl md:text-3xl sm:text-2xl font-light leading-normal">
+						{$t('common.noQuizzesFound')}
 					</p>
 				</div>
 			</div>

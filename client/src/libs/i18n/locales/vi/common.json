@@ -123,5 +123,6 @@
 	"trueFalse": "Đúng/Sai",
 	"singleChoice": "Một lựa chọn",
 	"crossCharacter": "Tự luận",
-	"question": "Câu hỏi"
+	"question": "Câu hỏi",
+	"noQuizzesFound": "Không tìm thấy bộ câu hỏi nào"
 }
