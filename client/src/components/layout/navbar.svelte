@@ -35,11 +35,6 @@
 	const toggleSidebar = () => {
 		isHidden = !isHidden;
 	};
-	let discoveryClicked = false;
-	onMount(() => {
-		discoveryClicked = false;
-	});
-
 	let isDropdownOpen = false;
 
 	function toggleDropdown() {
@@ -75,15 +70,10 @@
 			<li>
 				<button
 					on:click={() => {
-						if (!discoveryClicked) {
-							goto('/discovery');
-							discoveryClicked = true;
-						}
+						goto('/discovery');
 					}}
 					title={$t('common.discovery')}
-					class={`hover:text-secondary ${
-						discoveryClicked ? 'pointer-events-none opacity-50' : ''
-					}`}
+					class="hover:text-secondary"
 				>
 					{$t('common.discovery')}
 				</button>
