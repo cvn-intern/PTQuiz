@@ -39,11 +39,16 @@
 	onMount(() => {
 		discoveryClicked = false;
 	});
-	function handleClickExitButton() {
-		if (!discoveryClicked) {
-			goto('/discovery');
-			discoveryClicked = true;
-		}
+
+	let isDropdownOpen = false;
+
+	function toggleDropdown() {
+		isDropdownOpen = !isDropdownOpen;
+	}
+
+	function handleOptionClick(value: any) {
+		$locale = value;
+		handleChange({ target: { value } });
 	}
 </script>
 
@@ -84,7 +89,7 @@
 				</button>
 			</li>
 		</ul>
-		<div class="flex gap-2">
+		<div class="flex gap-2 items-center">
 			{#if user}
 				<div class="flex items-center cursor-pointer">
 					<button
@@ -96,7 +101,7 @@
 					</button>
 					<Icon icon="gridicons:dropdown" class="text-2xl" />
 				</div>
-				<Dropdown data-placement="right-end">
+				<Dropdown>
 					<DropdownItem
 						class="flex gap-2 items-center"
 						on:click={() => {
@@ -140,11 +145,38 @@
 					{$t('common.login')}
 				</button>
 			{/if}
-			<select name="locale" bind:value={$locale} on:change={handleChange} class="rounded-xl">
-				{#each $locales as value}
-					<option {value}>{value} </option>
-				{/each}
-			</select>
+			<div class="relative">
+				<button
+					class=" p-2 rounded-md focus:outline-none bg-primary"
+					on:click={toggleDropdown}
+				>
+					{#if $locale === 'en'}
+						<Icon icon="twemoji-flag-for-flag-united-kingdom" class="text-3xl" />
+					{:else}
+						<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
+					{/if}
+				</button>
+
+				{#if isDropdownOpen}
+					<div class="absolute mt-2 w-full rounded-md shadow-lg">
+						{#each $locales as value}
+							<button
+								class="cursor-pointer p-2 hover:bg-gray-200"
+								on:click={() => handleOptionClick(value)}
+							>
+								{#if value === 'en'}
+									<Icon
+										icon="twemoji-flag-for-flag-united-kingdom"
+										class="text-3xl"
+									/>
+								{:else}
+									<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
+								{/if}
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</div>
 		</div>
 	</div>
 </nav>
