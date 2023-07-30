@@ -46,7 +46,8 @@
 
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	let original = quizzes[questionPointer].time;
+	// let original = quizzes[questionPointer].time;
+	let original = 600;
 	let zero = 0;
 
 	let timer = tweened(original);
@@ -241,7 +242,7 @@
 	}
 </script>
 
-<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
+<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4 overflow-y-scroll">
 	<div class="pt-4">
 		<Progressbar progress={stringTimer} size="h-4" color="gray" />
 	</div>

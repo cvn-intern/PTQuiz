@@ -7,6 +7,11 @@
 	export let finalAnswer: string;
 	export let isGuessWordsChecked: boolean;
 
+	type CharacterObject = {
+		char: string;
+		id: number;
+	};
+
 	function scrambleString(str: string) {
 		let chars = str.split('');
 
@@ -23,16 +28,10 @@
 		return characters[randomIndex];
 	}
 
-	type CharacterObject = {
-		char: string;
-		id: number;
-	};
-
 	let answerSplit: string[];
 	let newAnswer: string;
 	let scrambledAnswer: string;
 	let scrambledAnswerSplit: CharacterObject[];
-	let width: number;
 
 	$: {
 		answerSplit = answer.split('');
@@ -44,14 +43,15 @@
 		scrambledAnswerSplit = scrambledAnswer
 			.split('')
 			.map((char: string, id: number) => ({ char, id }));
-		width = 56 * answerSplit.length + 8 * (answerSplit.length - 1) + 36;
 	}
 
 	let chooseAnswer: CharacterObject[] = [];
+	let displayAnswer: CharacterObject[];
 
 	function addToChooseAnswer(input: CharacterObject, index: number) {
 		if (chooseAnswer.length < answerSplit.length) {
 			chooseAnswer = [...chooseAnswer, input];
+
 			scrambledAnswerSplit = [
 				...scrambledAnswerSplit.slice(0, index),
 				...scrambledAnswerSplit.slice(index + 1)
@@ -59,12 +59,18 @@
 		}
 	}
 	function removeChooseAnswer(input: CharacterObject, index: number) {
-		chooseAnswer = [...chooseAnswer.slice(0, index), ...chooseAnswer.slice(index + 1)];
-		scrambledAnswerSplit = [
-			...scrambledAnswerSplit.slice(0, input.id),
-			input,
-			...scrambledAnswerSplit.slice(input.id)
-		];
+		if (chooseAnswer[index]) {
+			chooseAnswer = [...chooseAnswer.slice(0, index), ...chooseAnswer.slice(index + 1)];
+
+			const insertionIndex = scrambledAnswerSplit.findIndex(
+				(charObj) => charObj.id > input.id
+			);
+			scrambledAnswerSplit = [
+				...scrambledAnswerSplit.slice(0, insertionIndex),
+				input,
+				...scrambledAnswerSplit.slice(insertionIndex)
+			];
+		}
 	}
 
 	function checkAnswer(finalAnswer: string, answer: string) {
@@ -74,6 +80,14 @@
 			return false;
 		}
 	}
+
+	$: {
+		displayAnswer = answerSplit.map((char: string, id: number) => ({
+			char: chooseAnswer[id] ? chooseAnswer[id].char : '',
+			id: chooseAnswer[id] ? chooseAnswer[id].id : -1
+		}));
+	}
+
 	$: {
 		finalAnswer = chooseAnswer.map((obj) => obj.char).join('');
 	}
@@ -85,15 +99,12 @@
 	}
 </script>
 
-<div class="flex flex-col h-full">
-	<div class="flex flex-col h-1/2 items-center gap-4">
-		<div
-			class={`flex flex-start h-20 gap-2 p-4 border border-black rounded-lg items-center bg-background `}
-			style="width:{width}px"
-		>
-			{#each chooseAnswer as input, index}
+<div class="flex flex-col h-full gap-8">
+	<div class="flex flex-col h-1/2 items-center">
+		<div class="flex flex-wrap justify-center gap-2 bg-white p-2 md:p-4 rounded-xl">
+			{#each displayAnswer as input, index}
 				<button
-					class=" w-14 h-16 flex justify-center items-center rounded-lg border shadow-lg bg-secondary"
+					class=" w-14 h-16 flex justify-center items-center border-b-2 border-black "
 					on:click={() => {
 						removeChooseAnswer(input, index);
 					}}
@@ -103,7 +114,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="flex h-1/2 items-center justify-center">
+	<div class="flex flex-col h-1/2 items-center">
 		<div class="flex flex-wrap justify-center gap-2">
 			{#each scrambledAnswerSplit as input, index}
 				<button
