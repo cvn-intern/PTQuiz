@@ -3,6 +3,7 @@
 	import CardQuestion from './cardQuestion.svelte';
 	import Icon from '@iconify/svelte';
 	import ModalInforQuizUpdate from './modalInforQuizUpdate.svelte';
+	import { dismissLoadingToast, showLoadingToast, showToast } from '$libs/toast/toast';
 	export let classSidaBar: any;
 	import { questionData } from '$stores/questionInfoStore';
 	import { indexNow } from '$stores/indexNowStore';
@@ -20,7 +21,7 @@
 			});
 		});
 		if (!isQuestionSave) {
-			alert('Please save question before add new question');
+			showToast('error', $t('validation.SAVE_ALL_BEFORE_ADD_QUESTION'));
 			return;
 		}
 		indexNow.update((data) => {

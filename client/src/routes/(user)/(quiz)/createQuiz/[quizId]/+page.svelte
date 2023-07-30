@@ -4,6 +4,7 @@
 	import CreateQuestion from '$components/createQuestion/createQuestion.svelte';
 	import MobileSidebar from '$components/createQuiz/mobileSidebar.svelte';
 	import SidebarCreateQuiz from '$components/createQuiz/sidebarCreateQuiz.svelte';
+	import { dismissLoadingToast, showLoadingToast, showToast } from '$libs/toast/toast';
 	let typeOfQuestion = 1;
 	export let data: any;
 	export let form: any;
@@ -14,7 +15,11 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { t } from '$i18n/translations';
+	import Toast from '$components/toast.svelte';
 	let length;
+
+	let isSubmitting: boolean = false;
+
 	length = questionData.subscribe((data) => {
 		length = data;
 	});
@@ -59,6 +64,8 @@
 			typeOfQuestion = data[index].type;
 		}
 	});
+
+	$: isSubmitting;
 	let dataSave: any;
 	questionData.subscribe((data) => {
 		dataSave = data;
@@ -99,8 +106,12 @@
 	}
 
 	async function handleSave() {
+		showLoadingToast();
+		isSubmitting = true;
 		if (!checkInput()) {
-			alert('Please fill in all the fields');
+			dismissLoadingToast();
+			showToast('error', t.get('validation.FILL_ALL_FIELDS'));
+			isSubmitting = false;
 			return;
 		}
 		let url, method;
@@ -134,8 +145,12 @@
 			})
 		});
 
+		isSubmitting = false;
+		dismissLoadingToast();
 		const res = await response.json();
-		alert(res.message);
+		if (response.status === 200) showToast('success', t.get('common.success'));
+		else showToast('error', res.message);
+
 		dataSave[index].id = res.data.id;
 	}
 	onMount(() => {
@@ -150,6 +165,7 @@
 	}
 </script>
 
+<Toast {form} />
 <div class="w-full text-slate-950 md:p-10 bg-white p-5">
 	<div class="md:flex gap-6 justify-between">
 		<SidebarCreateQuiz
@@ -167,7 +183,9 @@
 				</div>
 				<div class="flex gap-2">
 					<Button class="bg-red-500" on:click={exit}>{$t('common.exit')}</Button>
-					<Button class="bg-green-600" on:click={handleSave}>{$t('common.save')}</Button>
+					<Button class="bg-green-600" disabled={isSubmitting} on:click={handleSave}
+						>{$t('common.save')}</Button
+					>
 				</div>
 			</div>
 			<div class="w-full h-full md:my-3 my-5">

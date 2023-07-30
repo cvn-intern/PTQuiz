@@ -31,36 +31,13 @@
 		imageUrl = URL.createObjectURL(imageFile);
 		inputFocused = true;
 	};
-
-	let isProcessing: boolean = false;
-
-	const handleSubmit = async (): Promise<void> => {
-		if (isProcessing) return;
-		isProcessing = true;
-		form = null;
-
-		showLoadingToast();
-
-		while (!form?.isDone) {
-			await new Promise((resolve) => setTimeout(resolve, 100));
-		}
-
-		dismissLoadingToast();
-		isProcessing = false;
-
-		if (form?.isSuccess) {
-			toast.success(t.get('common.success'));
-		} else {
-			dismissLoadingToast();
-			toast.error(form?.error.message);
-		}
-	};
 </script>
 
 <div class="flex flex-col">
 	<form
 		on:submit={() => {
 			isSubmitting = true;
+			showLoadingToast();
 		}}
 		use:enhance={() => {
 			return async ({ update }) => {
@@ -121,6 +98,7 @@
 					aria-label="Display name"
 					id="displayName"
 					name="displayName"
+					required
 					bind:value={formEditProfile.displayName}
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 					placeholder={$t('common.displayName')}
@@ -144,7 +122,6 @@
 					<button
 						aria-label="Save"
 						disabled={isSubmitting}
-						on:click={handleSubmit}
 						class={`w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
 							isSubmitting ? 'opacity-50 cursor-wait' : ''
 						}`}

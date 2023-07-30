@@ -2,9 +2,8 @@
 	import Icon from '@iconify/svelte';
 	import { enhance } from '$app/forms';
 	import { t } from '$i18n/translations';
-	import toast from 'svelte-french-toast';
 	import type { FormChangePassword } from './interface/form.interface';
-	import { dismissLoadingToast, showLoadingToast } from '../../libs/toast/toast';
+	import { showLoadingToast } from '../../libs/toast/toast';
 	export let form: any;
 	export let formChangePassword: FormChangePassword;
 
@@ -23,30 +22,6 @@
 		};
 		inputFocused = false;
 	}
-
-	let isProcessing: boolean = false;
-
-	const handleSubmit = async (): Promise<void> => {
-		if (isProcessing) return;
-		isProcessing = true;
-		form = null;
-
-		showLoadingToast();
-
-		while (!form?.isDone) {
-			await new Promise((resolve) => setTimeout(resolve, 100));
-		}
-
-		dismissLoadingToast();
-
-		if (form?.isSuccess) {
-			toast.success(t.get('common.success'));
-		} else {
-			dismissLoadingToast();
-			toast.error(form?.error.message);
-			isProcessing = false;
-		}
-	};
 </script>
 
 <div class="">
@@ -55,6 +30,7 @@
 		action="?/change_password"
 		on:submit={() => {
 			isSubmitting = true;
+			showLoadingToast();
 		}}
 		use:enhance
 	>
@@ -73,6 +49,7 @@
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 					placeholder={$t('common.oldPassword')}
 					type="password"
+					required
 					bind:value={formChangePassword.oldPassword}
 					on:focus={() => (inputFocused = true)}
 				/>
@@ -99,6 +76,7 @@
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 					placeholder={$t('common.newPassword')}
 					type="password"
+					required
 					bind:value={formChangePassword.newPassword}
 					on:focus={() => (inputFocused = true)}
 				/>
@@ -122,6 +100,7 @@
 				name="confirmPassword"
 				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 				placeholder={$t('common.confirmNewPassword')}
+				required
 				type="password"
 				bind:value={formChangePassword.confirmPassword}
 				on:focus={() => (inputFocused = true)}
@@ -139,7 +118,6 @@
 					<button
 						disabled={isSubmitting}
 						aria-label="Save"
-						on:click={handleSubmit}
 						class={`w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
 							isSubmitting ? 'opacity-50 cursor-wait' : ''
 						}`}
