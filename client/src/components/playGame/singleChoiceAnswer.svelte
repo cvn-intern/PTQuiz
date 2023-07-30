@@ -45,9 +45,9 @@
 	disabled={option.disabled}
 >
 	{#if !isTrueFalse}
-		<p class="text-xl md:text-3xl  text-left">{option.contents}</p>
+		<p class="text-xl md:text-3xl text-left">{option.contents}</p>
 	{:else}
-		<p class="text-5xl  flex justify-center">{option.contents}</p>
+		<p class="text-5xl flex justify-center">{option.contents}</p>
 	{/if}
 
 	{#if showModal}

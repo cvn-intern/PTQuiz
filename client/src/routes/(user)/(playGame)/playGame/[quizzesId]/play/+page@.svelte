@@ -12,6 +12,7 @@
 	import { TypeQuestion } from '$constants/typeQuestion.js';
 	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
 	import TextAnswer from '$components/playGame/textAnswer.svelte';
+	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -244,61 +245,12 @@
 	<div class="pt-4">
 		<Progressbar progress={stringTimer} size="h-4" color="gray" />
 	</div>
-	<div class=" h-full p-2 rounded-lg">
-		<div class="question h-1/2 relative">
-			<div class="absolute right-0">
-				{#if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
-					<div
-						class="grid grid-cols-2 grid-rows-2 gap-2 bg-white p-2 rounded-xl items-center"
-					>
-						<div class="w-12 h-10 rounded-lg bg-green-500" />
-						<div class="w-12 h-10 rounded-lg bg-red-500" />
-						<div class="w-12 h-10 rounded-lg bg-red-500" />
-						<div class="w-12 h-10 rounded-lg bg-red-500" />
-					</div>
-				{:else if quizzes[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
-					<div
-						class="grid grid-cols-2 grid-rows-2 gap-2 bg-white p-2 rounded-xl items-center"
-					>
-						<div class="w-12 h-10 rounded-lg bg-green-500" />
-						<div class="w-12 h-10 rounded-lg bg-green-500" />
-						<div class="w-12 h-10 rounded-lg bg-green-500" />
-						<div class="w-12 h-10 rounded-lg bg-red-500" />
-					</div>
-				{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
-					<div
-						class="grid grid-cols-2 grid-rows-1 gap-2 bg-white p-2 rounded-xl items-center"
-					>
-						<div class="w-12 h-10 rounded-lg bg-green-500" />
-						<div class="w-12 h-10 rounded-lg bg-red-500" />
-					</div>
-				{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
-					<div class="flex p-4 gap-2 bg-white rounded-xl items-center">
-						<div
-							class=" w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl"
-						>
-							A
-						</div>
-						<div
-							class=" w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl"
-						>
-							B
-						</div>
-						<div
-							class=" w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl"
-						>
-							C
-						</div>
-					</div>
-				{/if}
-			</div>
-			<div class="flex justify-center items-center h-full px-4">
-				<p
-					class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center"
-				>
-					{quizzes[questionPointer].title}
-				</p>
-			</div>
+	<div class="h-full p-2 gap-2">
+		<div class="question h-1/2">
+			<QuestionDisplay
+				quizzesType={quizzes[questionPointer].type}
+				quizzesTitle={quizzes[questionPointer].title}
+			/>
 		</div>
 		<div class="answer h-1/2">
 			{#if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
@@ -331,7 +283,7 @@
 				<div
 					class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
 				>
-					{#each fourOptions as opt, index}
+					{#each fourOptions.slice(0, 2) as opt, index}
 						{#if opt.contents !== null}
 							<SingleChoiceAnswer
 								option={opt}
