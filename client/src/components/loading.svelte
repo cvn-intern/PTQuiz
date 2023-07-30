@@ -20,7 +20,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.3);
 		z-index: 9999;
 	}
 	.loading-container {
@@ -30,9 +30,9 @@
 		transform: translate(-50%, -50%);
 	}
 	.dot-spinner {
-		--uib-size: 2.8rem;
+		--uib-size: 6.8rem;
 		--uib-speed: 0.9s;
-		--uib-color: #183153;
+		--uib-color: #1e3f20;
 		position: relative;
 		display: flex;
 		align-items: center;
