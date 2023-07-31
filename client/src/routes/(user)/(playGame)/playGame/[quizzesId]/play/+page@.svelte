@@ -252,13 +252,14 @@
 	<div class="pt-4">
 		<Progressbar progress={stringTimer} size="h-4" color="gray" />
 	</div>
-	<div class="h-full p-2 gap-2">
+	<div class="h-full p-2 flex flex-col gap-4">
 		<div class="question h-1/2">
 			<QuestionDisplay
 				quizzesType={quizzes[questionPointer].type}
 				quizzesTitle={quizzes[questionPointer].title}
 				quizzesNumber={quizzes.length}
 				quizzesPointer={questionPointer}
+				quizzesImage={quizzes[questionPointer].image}
 			/>
 		</div>
 		<div class="answer h-1/2">
