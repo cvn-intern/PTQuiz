@@ -102,7 +102,12 @@
 					{label} <span class="text-red-600">{required ? '*' : ''}</span>
 				</Label>
 				{#if type === 'file'}
-					<input type="file" name="image" accept="image/*" class="text-base" bind:value={result[name]} />
+					<input
+						type="file"
+						name="image"
+						accept="image/*"
+						class="text-base"
+					/>
 					{#if getMessageError('image') !== ''}
 						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
 							{getMessageError('image')}
@@ -131,10 +136,18 @@
 					<textarea
 						maxlength="100"
 						id={name}
-						{type}
 						placeholder={label}
 						{name}
-						bind:value={result[name]}
+						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+					/>
+				{:else if type === 'number'}
+					<input
+						minlength="10"
+						maxlength="50"
+						id={name}
+						type="number"
+						placeholder={label}
+						{name}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
 				{:else}
@@ -142,11 +155,10 @@
 						minlength="10"
 						maxlength="50"
 						id={name}
-						{type}
+						type="text"
 						placeholder={label}
 						{name}
 						{required}
-						bind:value={result[name]}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
 					<p class="mt-1 text-base text-red-500 dark:text-gray-300">
