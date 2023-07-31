@@ -39,13 +39,14 @@
 	"DESCRIPTION_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS": "Description quiz must be at least 10 characters",
 	"DESCRIPTION_QUIZ_TOO_LONG": "Description quiz too long",
 	"PASSING_POINT_MUST_BE_AT_LEAST_1": "Passing point must be at least 1",
-	"PASSING_POINT_MUST_BE_AT_MOST_100": "Passing point must be at most 100",
+	"PASSING_POINT_MUST_BE_AT_MOST_50": "Passing point must be at most 50",
 	"POINT_MUST_BE_AT_LEAST_1": "Point must be at least 1",
-	"POINT_MUST_BE_AT_MOST_100": "Point must be at least 100",
+	"POINT_MUST_BE_AT_MOST_50": "Point must be at least 50",
 	"IMAGE_MUST_BE_LESS_THAN_5MB": "Image must be less than 5MB",
-	"THUMBNAIL_MUST_BE_LESS_THAN_5MB": "Thumbnail must be less than 5MB",
+	"THUMBNAIL_MUST_BE_LESS_THAN_1MB": "Thumbnail must be less than 1MB",
 	"PASSING_POINT_MUST_BE_A_NUMBER": "Passing point must be a number",
 	"POINT_MUST_BE_A_NUMBER": "Point must be a number",
 	"FILL_ALL_FIELDS": "Please fill all fields",
-	"SAVE_ALL_BEFORE_ADD_QUESTION": "Please save all questions before add new question"
+	"SAVE_ALL_BEFORE_ADD_QUESTION": "Please save all questions before add new question",
+	"POINT_MUST_BE_GREATER_THAN_PASSING_POINT": "Point must be greater than passing point"
 }

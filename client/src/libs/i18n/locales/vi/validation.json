@@ -39,13 +39,14 @@
 	"DESCRIPTION_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS": "Mô tả quiz phải có ít nhất 10 ký tự",
 	"DESCRIPTION_QUIZ_TOO_LONG": "Mô tả quiz quá dài",
 	"PASSING_POINT_MUST_BE_AT_LEAST_1": "Điểm đạt môn phải ít nhất là 1",
-	"PASSING_POINT_MUST_BE_AT_MOST_100": "Điểm nhiều nhất là 100",
+	"PASSING_POINT_MUST_BE_AT_MOST_100": "Điểm nhiều nhất là 50 ký tự",
 	"POINT_MUST_BE_AT_LEAST_1": "Điểm ít nhất là 1",
-	"POINT_MUST_BE_AT_MOST_100 ": "Điểm nhiều nhất là 100",
+	"POINT_MUST_BE_AT_MOST_100 ": "Điểm nhiều nhất là 50 ký tự",
 	"IMAGE_MUST_BE_LESS_THAN_5MB": "Ảnh phải nhỏ hơn 5MB",
-	"THUMBNAIL_MUST_BE_LESS_THAN_5MB": "Ảnh bìa phải nhỏ hơn 5MB",
+	"THUMBNAIL_MUST_BE_LESS_THAN_1MB": "Ảnh bìa phải nhỏ hơn 1MB",
 	"PASSING_POINT_MUST_BE_A_NUMBER": "Điểm đạt môn phải là số",
 	"POINT_MUST_BE_A_NUMBER": "Điểm phải là số",
 	"FILL_ALL_FIELDS": "Vui lòng điền đầy đủ thông tin",
-	"SAVE_ALL_BEFORE_ADD_QUESTION": "Vui lòng lưu tất cả thông tin trước khi thêm câu hỏi"
+	"SAVE_ALL_BEFORE_ADD_QUESTION": "Vui lòng lưu tất cả thông tin trước khi thêm câu hỏi",
+	"POINT_MUST_BE_GREATER_THAN_PASSING_POINT": "Tổng điểm phải lớn hơn điểm đạt"
 }

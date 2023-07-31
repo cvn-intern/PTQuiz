@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { t } from '$i18n/translations';
 
-const MAX_FILE_SIZE = 5000000;
+const MAX_FILE_SIZE = 1000000;
 
 export const InforQuizFormSchema = z
 	.object({
@@ -12,14 +12,15 @@ export const InforQuizFormSchema = z
 		passingPoint: z
 			.number(t.get('validation.PASSING_POINT_MUST_BE_A_NUMBER'))
 			.min(0, t.get('validation.PASSING_POINT_MUST_BE_AT_LEAST_1'))
-			.max(100, t.get('validation.PASSING_POINT_MUST_BE_AT_MOST_100')),
+			.max(50, t.get('validation.PASSING_POINT_MUST_BE_AT_MOST_50')),
 		point: z
 			.number(t.get('validation.POINT_MUST_BE_A_NUMBER'))
 			.min(0, t.get('validation.POINT_MUST_BE_AT_LEAST_1'))
-			.max(100, t.get('validation.POINT_MUST_BE_AT_MOST_100')),
-		image: z.any().refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+			.max(50, t.get('validation.POINT_MUST_BE_AT_MOST_50')),
+		image: z.any().refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 1MB.`),
+		
 	})
-	.refine((data) => data.point <= data.passingPoint, {
+	.refine((data) => data.point >= data.passingPoint, {
 		message: t.get('validation.POINT_MUST_BE_GREATER_THAN_PASSING_POINT'),
 		path: ['point']
 	});
