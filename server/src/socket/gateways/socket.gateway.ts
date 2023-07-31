@@ -12,7 +12,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { JoinLeaveRoomDto } from '../dto';
+import { JoinLeaveRoomDto, RoomPINDto } from '../dto';
+import { QuestionPointerDto } from '../dto/questionPointer.dto';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -103,6 +104,76 @@ export class SocketGateway
                 avatar,
                 message,
                 reaction,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+    @SubscribeMessage('is-host')
+    async handleIsHost(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: JoinLeaveRoomDto,
+    ) {
+        try {
+            const { roomPIN, userId } = data;
+            const isHost = await this.socketService.checkRoomHost(
+                roomPIN,
+                userId,
+            );
+            client.emit('is-host', {
+                isHost,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage('start')
+    async handleStartQuiz(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: RoomPINDto,
+    ) {
+        try {
+            const { roomPIN } = data;
+            this.server.to(roomPIN).emit('started', {
+                isStarted: true,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage('get-quiz-questions')
+    async handleGetQuestions(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: RoomPINDto,
+    ) {
+        try {
+            const { roomPIN } = data;
+            const questions = await this.socketService.getQuestions(roomPIN);
+            this.server.to(roomPIN).emit('quiz-questions', questions);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage('change-question-pointer')
+    async handleGetQuestion(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: QuestionPointerDto,
+    ) {
+        try {
+            const { roomPIN, questionPointer } = data;
+            this.server.to(roomPIN).emit('question-pointer', {
+                questionPointer,
             });
         } catch (error) {
             throw new WsException({

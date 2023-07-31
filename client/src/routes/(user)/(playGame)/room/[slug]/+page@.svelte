@@ -4,10 +4,12 @@
 	import { page } from '$app/stores';
 	import { Spinner } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
+	import QuestionDisplay from '../../../../../components/playGame/questionDisplay.svelte';
+	import type { Quiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
 
 	export let data;
 
-	type Participant = { id: string; displayName: string; avatar: string };
+	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 	type Message = {
 		participant: Participant;
 		content: string;
@@ -16,19 +18,26 @@
 		left: number;
 		style: string;
 	};
+	let questionPointer: number = 0;
 	let isLoading: boolean = true;
 	let errorMessage: string = '';
 	let participants: Participant[] = [];
 	let messages: Message[] = [];
 	let messageContent: string = '';
+	let questions: Quiz[] = [];
 	let reactions = ['😄', '😍', '🤣', '😊', '🙌'];
 	let selectedReaction: string | null = null;
 	let url = $page.url.href;
+	let isHost: boolean = false;
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 
 	onMount(() => {
 		setTimeout(() => {
 			socket.emit('join-room', {
+				roomPIN: $page.params.slug,
+				userId: data.user.id
+			});
+			socket.emit('is-host', {
 				roomPIN: $page.params.slug,
 				userId: data.user.id
 			});
@@ -43,7 +52,12 @@
 		});
 		socket.on('room-messages', (data) => {
 			const newMessage = {
-				participant: { id: data.userId, displayName: data.userId, avatar: data.avatar },
+				participant: {
+					id: data.userId,
+					displayName: data.userId,
+					avatar: data.avatar,
+					isHost: data.isHost
+				},
 				content: data.message,
 				reaction: data.reaction,
 				id: Date.now(),
@@ -54,8 +68,16 @@
 			};
 			messages = [...messages, newMessage];
 		});
+		socket.on('is-host', (data) => {
+			isHost = data.isHost;
+		});
+		socket.on('quiz-questions', (data) => {
+			questions = data;
+		});
+		socket.on('question-pointer', (data) => {
+			questionPointer = data.questionPointer;
+		});
 	});
-
 	onDestroy(() => {
 		socket.emit('leave-room', {
 			roomPIN: $page.params.slug,
@@ -63,7 +85,18 @@
 		});
 	});
 
-	function startGame() {}
+	function startGame() {
+		socket.emit('get-quiz-questions', {
+			roomPIN: $page.params.slug
+		});
+	}
+	const nextQuestion = () => {
+		socket.emit('change-question-pointer', {
+			questionPointer: questionPointer + 1,
+			roomPIN: $page.params.slug
+		});
+	};
+
 	async function sendMessage() {
 		socket.emit('send-message', {
 			roomPIN: $page.params.slug,
@@ -91,28 +124,41 @@
 	>
 		{#if errorMessage}
 			<h1>{errorMessage}</h1>
+		{:else if questions.length > 0}
+			{#if isHost}
+				<button
+					class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+					on:click={nextQuestion}>Next</button
+				>
+			{/if}
+			<QuestionDisplay
+				quizzesType={questions[questionPointer].type}
+				quizzesTitle={questions[questionPointer].title}
+			/>
 		{:else}
 			<div class="flex flex-col justify-between w-full h-full gap-4">
 				<div class="flex flex-col w-full justify-center items-center gap-4">
-					<div class="flex flex-row justify-between w-full items-center">
-						<div class="flex gap-4 items-center">
+					{#if isHost}
+						<div class="flex flex-row justify-between w-full items-center">
+							<div class="flex gap-4 items-center">
+								<button
+									class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+									on:click={handleCopy}>Click here to copy link</button
+								>
+								<img
+									class="hidden md:block"
+									width="120px"
+									src={qrCode}
+									alt=""
+									title=""
+								/>
+							</div>
 							<button
 								class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-								on:click={handleCopy}>Click here to copy link</button
+								on:click={startGame}>Start</button
 							>
-							<img
-								class="hidden md:block"
-								width="120px"
-								src={qrCode}
-								alt=""
-								title=""
-							/>
 						</div>
-						<button
-							class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-							on:click={startGame}>Start</button
-						>
-					</div>
+					{/if}
 					<div class="flex flex-col gap-4 justify-center items-center">
 						<div class="text-4xl">Waiting for players...</div>
 						<div class="text-2xl">Participants: {participants.length}</div>

@@ -4,4 +4,5 @@ export enum SocketError {
     SOCKET_ROOM_NOT_FOUND = 'Room does not exist',
     SOCKET_USER_NOT_FOUND = 'User does not exist',
     SOCKET_USER_NOT_JOINED = 'User has not joined this room',
+    SOCKET_QUIZ_NOT_FOUND = 'Quiz does not exist',
 }

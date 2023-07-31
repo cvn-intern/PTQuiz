@@ -37,6 +37,10 @@ export class SocketService {
         if (isJoined) {
             throw new Error(SocketError.SOCKET_USER_ALREADY_CONNECTED);
         }
+        let isHost = false;
+        if (room.userId === userId) {
+            isHost = true;
+        }
         const participants = await this.prisma.participants.create({
             data: {
                 userId: user.id,
@@ -50,6 +54,7 @@ export class SocketService {
                 socketId: socketId,
                 roomId: room.id,
                 participantId: participants.id,
+                isHost,
             },
         });
         return {
@@ -183,5 +188,69 @@ export class SocketService {
                 isFinished: true,
             },
         });
+    }
+
+    async getQuestions(roomPIN: string) {
+        const { quizId } = await this.prisma.rooms.findFirst({
+            where: {
+                PIN: roomPIN,
+            },
+        });
+        const quiz = await this.prisma.quizzes.findUnique({
+            where: {
+                id: quizId,
+            },
+        });
+        if (!quiz) {
+            throw new Error(SocketError.SOCKET_QUIZ_NOT_FOUND);
+        }
+        const questions = await this.prisma.quiz_questions.findMany({
+            where: {
+                quizId: quizId,
+            },
+            select: {
+                question: true,
+            },
+        });
+        const allQuestions = questions.map((question) => {
+            const questionResponse = {
+                id: question.question.id,
+                categoryId: question.question.categoryId,
+                title: question.question.title,
+                options: {
+                    optionA: question.question.optionA,
+                    optionB: question.question.optionB,
+                    optionC: question.question.optionC,
+                    optionD: question.question.optionD,
+                },
+                answers: {
+                    answerA: question.question.answerA,
+                    answerB: question.question.answerB,
+                    answerC: question.question.answerC,
+                    answerD: question.question.answerD,
+                },
+                written: question.question.written,
+                image: question.question.image,
+                type: question.question.type,
+                time: question.question.time,
+                createdAt: question.question.createdAt,
+                updatedAt: question.question.updatedAt,
+            };
+            return questionResponse;
+        });
+        return allQuestions;
+    }
+
+    async checkRoomHost(roomPIN: string, userId: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        if (room.userId === userId) {
+            return true;
+        }
+        return false;
     }
 }
