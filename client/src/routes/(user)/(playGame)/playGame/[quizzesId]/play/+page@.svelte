@@ -46,13 +46,7 @@
 
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	$: {
-		console.log(gameInfo.questions);
-		console.log(quizzes);
-	}
-
 	let original = quizzes[questionPointer].time;
-	// let original = 600;
 	let zero = 0;
 
 	let timer = tweened(original);
