@@ -36,29 +36,36 @@ export class QuizzesService {
         return discovery.findIndex((item) => item.category === category);
     }
 
-    async getAllQuizzesOfUser(userId: string) {
+    async getAllQuizzesOfUser(userId: string, page: number) {
         try {
-            const quizzesOfUser = await this.prisma.quizzes.findMany({
-                where: {
-                    userId: userId,
-                },
-                select: {
-                    user: {
-                        select: {
-                            displayName: true,
+            page = page || 1;
+            const pageSize = 5;
+            const [quizzesOfUser, totalQuizzes] =
+                await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            userId: userId,
                         },
-                    },
-                    createdAt: true,
-                    title: true,
-                    description: true,
-                    image: true,
-                    numberQuestions: true,
-                    durationMins: true,
-                    difficultyLevel: true,
-                    id: true,
-                },
-            });
-            return quizzesOfUser;
+                        select: {
+                            createdAt: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                            id: true,
+                        },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            userId: userId,
+                        },
+                    }),
+                ]);
+            return { quizzesOfUser, totalQuizzes };
         } catch (err) {
             throw new HttpException(
                 QuizzesError.FAILED_GET_ALL_QUIZZES,

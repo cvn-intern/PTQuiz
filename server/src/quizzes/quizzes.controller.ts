@@ -71,8 +71,11 @@ export class QuizzesController {
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get Quizzes successfully')
     @UseGuards(JwtAuthGuard)
-    async getQuizzes(@GetCurrentUser('id') userId: string) {
-        return await this.quizzesService.getAllQuizzesOfUser(userId);
+    async getQuizzes(
+        @GetCurrentUser('id') userId: string,
+        @Query() page: number,
+    ) {
+        return await this.quizzesService.getAllQuizzesOfUser(userId, page);
     }
 
     @Get('/discovery')

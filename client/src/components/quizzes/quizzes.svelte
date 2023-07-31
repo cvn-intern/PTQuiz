@@ -5,10 +5,18 @@
 	import { goto } from '$app/navigation';
 	import type { IQuiz } from '../../routes/(user)/(quiz)/dashboard/quizzes/quiz.type';
 
-	export let quizzes: IQuiz[] = [];
+	export let quizzes: IQuiz[];
+	export let totalQuizzes: number;
 
 	function handleCreateQuiz() {
 		goto('/createQuiz');
+	}
+
+	// update quizzes reactive variable
+	$: {
+		quizzes = quizzes;
+		totalQuizzes = totalQuizzes;
+		console.log(quizzes);
 	}
 </script>
 
@@ -23,7 +31,6 @@
 		{#each quizzes as quiz}
 			<Quiz
 				title={quiz.title}
-				author={quiz.username}
 				description={quiz.description}
 				numberOfQuestions={quiz.numberOfQuestions}
 				image={quiz.image}
@@ -31,5 +38,8 @@
 				id={quiz.id}
 			/>
 		{/each}
+		<div class="">
+			<Pagination {quizzes} {totalQuizzes} />
+		</div>
 	</div>
 </section>
