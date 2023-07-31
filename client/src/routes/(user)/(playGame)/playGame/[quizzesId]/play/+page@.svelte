@@ -46,9 +46,7 @@
 
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
-	let original = quizzes[questionPointer].time;
-	let zero = 0;
-
+	let original = quizzes[0].time;
 	let timer = tweened(original);
 
 	setInterval(() => {
@@ -58,6 +56,15 @@
 	}, 1000);
 
 	$: stringTimer = (($timer * 100) / original).toString();
+
+	function zeroTimer() {
+		timer = tweened(0);
+	}
+
+	function fullTimer() {
+		original = quizzes[questionPointer].time;
+		timer = tweened(original);
+	}
 
 	const givenAn: {
 		[key: string]: { answerA: boolean; answerB: boolean; answerC: boolean; answerD: boolean };
@@ -141,7 +148,7 @@
 
 		try {
 			isAnswerChecked = true;
-			timer = tweened(zero);
+			zeroTimer();
 			isSubmitting = true;
 
 			const userAnswer: UserAnswer = {
@@ -206,11 +213,11 @@
 
 	$: {
 		if (isAnswerChecked === true) {
-			timer = tweened(zero);
+			zeroTimer();
 			if (questionPointer < quizzes.length - 1) {
 				setTimeout(() => {
 					questionPointer++;
-					timer = tweened(original);
+					fullTimer();
 					isAnswerChecked = false;
 				}, 2000);
 			} else {
