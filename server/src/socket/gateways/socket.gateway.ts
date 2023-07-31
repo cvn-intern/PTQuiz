@@ -187,6 +187,15 @@ export class SocketGateway
         @ConnectedSocket() client: Socket,
         @MessageBody() data: AnswerDto,
     ) {
-        const result = await this.socketService.pickAnswer(client.id, data);
+        try {
+            const result = await this.socketService.pickAnswer(client.id, data);
+            client.emit('answer-result', {
+                ...result,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
     }
 }

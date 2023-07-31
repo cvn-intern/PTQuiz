@@ -171,6 +171,11 @@ export class SocketService {
                 id: foundUser.id,
             },
         });
+        await this.prisma.user_questions.deleteMany({
+            where: {
+                participantId: foundUser.participantId,
+            },
+        });
         await this.prisma.participants.delete({
             where: {
                 id: foundUser.participantId,
@@ -281,6 +286,8 @@ export class SocketService {
         return false;
     }
     async pickAnswer(socketId: string, answer: AnswerDto) {
+        let isCorrect = false;
+        let score = 0;
         const foundUser = await this.prisma.room_participants.findFirst({
             where: {
                 socketId: socketId,
@@ -337,14 +344,13 @@ export class SocketService {
             throw new Error(SocketError.SOCKET_QUESTION_NOT_FOUND);
         }
         if (this.isWrittenQuestion(foundQuestion.question.type)) {
-            const score =
-                foundUser.participant.quiz.point /
-                foundUser.participant.quiz.numberQuestions;
-            let isRight = false;
             if (
                 answer.answer.writtenAnswer === foundQuestion.question.written
             ) {
-                isRight = true;
+                score +=
+                    foundUser.participant.quiz.point /
+                    foundUser.participant.quiz.numberQuestions;
+                isCorrect = true;
                 await this.prisma.participants.update({
                     where: {
                         id: foundUser.participantId,
@@ -371,7 +377,7 @@ export class SocketService {
                     answerD: foundQuestion.question.answerD,
                     written: foundQuestion.question.written,
                     givenAnswers: answer.answer.writtenAnswer,
-                    score: isRight ? score : 0,
+                    score: isCorrect ? score : 0,
                     timestamp: new Date(),
                 },
             });
@@ -388,11 +394,13 @@ export class SocketService {
                 answerC: answer.answer.givenAnswers.answerC,
                 answerD: answer.answer.givenAnswers.answerD,
             };
-            const isRight = this.isRightAnswer(answerOfUser, answerOfQuestion);
-            const score =
-                foundUser.participant.quiz.point /
-                foundUser.participant.quiz.numberQuestions;
-            if (isRight) {
+            console.log(answerOfQuestion, answerOfUser);
+            isCorrect = this.isRightAnswer(answerOfUser, answerOfQuestion);
+            console.log(isCorrect);
+            if (isCorrect) {
+                score +=
+                    foundUser.participant.quiz.point /
+                    foundUser.participant.quiz.numberQuestions;
                 await this.prisma.participants.update({
                     where: {
                         id: foundUser.participantId,
@@ -421,10 +429,20 @@ export class SocketService {
                     givenAnswers: this.objectToString(
                         answer.answer.givenAnswers,
                     ),
-                    score: isRight ? score : 0,
+                    score: isCorrect ? score : 0,
                     timestamp: new Date(),
                 },
             });
         }
+        return {
+            isCorrect,
+            score,
+            answer: [
+                foundQuestion.question.answerA,
+                foundQuestion.question.answerB,
+                foundQuestion.question.answerC,
+                foundQuestion.question.answerD,
+            ],
+        };
     }
 }

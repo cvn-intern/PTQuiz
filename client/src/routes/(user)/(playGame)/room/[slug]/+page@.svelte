@@ -23,6 +23,7 @@
 	};
 	let questionPointer: number = 0;
 	let isLoading: boolean = true;
+	let showModal: boolean = false;
 	let errorMessage: string = '';
 	let participants: Participant[] = [];
 	let messages: Message[] = [];
@@ -32,6 +33,7 @@
 	let selectedReaction: string | null = null;
 	let url = $page.url.href;
 	let isHost: boolean = false;
+	let isPicked = false;
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 
 	let original = 20;
@@ -89,11 +91,13 @@
 		});
 		socket.on('quiz-questions', (data) => {
 			questions = data;
+			isPicked = false;
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
 		socket.on('question-pointer', (data) => {
 			questionPointer = data.questionPointer;
+			isPicked = false;
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
@@ -139,7 +143,7 @@
 	</div>
 {:else}
 	<div
-		class="w-full flex flex-col flex-grow items-center justify-center min-h-full text-black px-4 lg:px-16 py-4 gap-4"
+		class="bg-greenLight w-full flex flex-col flex-grow items-center justify-center min-h-full text-black px-4 lg:px-16 py-4 gap-4"
 	>
 		{#if errorMessage}
 			<h1>{errorMessage}</h1>
@@ -163,7 +167,10 @@
 						class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
 					>
 						<SingleChoiceSocket
+                            bind:timer
 							question={questions[questionPointer]}
+							bind:isPicked
+							{showModal}
 							{socket}
 							user={data.user}
 							{isHost}
