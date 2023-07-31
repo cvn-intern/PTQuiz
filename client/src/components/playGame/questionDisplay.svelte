@@ -10,7 +10,7 @@
 </script>
 
 <div class="flex flex-col md:flex-row h-full w-full md:justify-center">
-	{#if { quizzesImage }}
+	{#if quizzesImage}
 		<div class="h-1/2 w-full order-2 md:h-full md:w-2/3 md:order-1">
 			<img src={quizzesImage} alt="quizzesImage" class="h-full w-full rounded-xl shadow-xl" />
 		</div>
