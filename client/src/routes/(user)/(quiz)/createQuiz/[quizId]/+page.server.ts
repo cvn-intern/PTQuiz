@@ -29,7 +29,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 			written: question.written,
 			image: question.image,
 			type: question.type,
-			index: 1
+			index: 1,
+			time: question.time
 		};
 		return result;
 	});
