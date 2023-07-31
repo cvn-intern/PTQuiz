@@ -124,5 +124,12 @@
 	"singleChoice": "Single Choice",
 	"crossCharacter": "Cross Character",
 	"question": "Question",
-	"noQuizzesFound": "No quizzes found"
+	"noQuizzesFound": "No quizzes found",
+	"math":"Math",
+	"science":"Science",
+	"english":"English",
+	"literature":"Literature",
+	"geography":"Geography",
+	"history":"History",
+	"other":"Other"
 }

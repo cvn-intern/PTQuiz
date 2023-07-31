@@ -51,7 +51,8 @@
 			written: '',
 			image: '',
 			type: 1,
-			index: 1
+			index: 1,
+			time: 20
 		};
 		questionData.update((data) => [...data, newQuestion]);
 	}

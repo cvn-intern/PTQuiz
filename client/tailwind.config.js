@@ -47,7 +47,9 @@ export default {
 				desktop: '20rem',
 				ipad: '17rem',
 				mobile: '12rem',
-				panel: '446px'
+				panel: '446px',
+				userInfo: '260px',
+				dropDown: '220px'
 			},
 			minHeight: {
 				titleCard: '3.5rem'
@@ -57,7 +59,8 @@ export default {
 				boxCardQuestion: '27rem'
 			},
 			maxWidth: {
-				tagName: '33%'
+				tagName: '33%',
+				dropDown: '200px'
 			},
 			keyframes: {
 				wiggle: {

@@ -79,19 +79,19 @@
 				</button>
 			</li>
 		</ul>
-		<div class="flex gap-2 items-center">
+		<div class="flex gap-2 items-center w-userInfo justify-end">
 			{#if user}
-				<div class="flex items-center cursor-pointer">
-					<button
+				<button class="flex items-center cursor-pointer">
+					<div
 						aria-label="profile"
-						class="flex items-center gap-2 text-xl overflow-hidden whitespace-nowrap max-w-[250px] hover:text-secondary"
+						class="flex items-center gap-2 hover:text-secondary max-w-dropDown"
 					>
-						<img src={user.avatar} alt="user avatar" class="rounded-full w-12 h-12" />
-						{user.displayName}
-					</button>
-					<Icon icon="gridicons:dropdown" class="text-2xl" />
-				</div>
-				<Dropdown>
+						<img src={user.avatar} alt="user avatar" class="rounded-full w-10 h-10" />
+						<p class="text-xl truncate">{user.displayName}</p>
+					</div>
+					<Icon icon="mingcute:down-line" class="text-2xl" />
+				</button>
+				<Dropdown class="w-dropDown">
 					<DropdownItem
 						class="flex gap-2 items-center"
 						on:click={() => {
