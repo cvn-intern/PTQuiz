@@ -4,13 +4,11 @@ import { VITE_API_URL } from '$env/static/private';
 import { HttpStatus } from '$constants/httpStatus';
 
 export const POST: RequestHandler = async ({ fetch, request, params }) => {
-	const data = await request.json();
+	const formData = await request.formData();
+
 	const response = await fetch(`${VITE_API_URL}/question/create?quizId=${params.quizId}`, {
 		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(data)
+		body: formData
 	});
 
 	const result = await response.json();

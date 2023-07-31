@@ -48,7 +48,6 @@ export const actions = {
 	updateQuiz: async ({ fetch, request, params }) => {
 		message = createDefaultMessage();
 		const form = await request.formData();
-
 		try {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),

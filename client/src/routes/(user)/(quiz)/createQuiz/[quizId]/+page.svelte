@@ -157,35 +157,42 @@
 			method = 'PUT';
 		}
 
+		const formData = new FormData();
+		formData.append('title', dataSave[index].title);
+		formData.append('type', dataSave[index].type);
+		formData.append('optionA', dataSave[index].options.optionA);
+		formData.append('optionB', dataSave[index].options.optionB);
+		formData.append('optionC', dataSave[index].options.optionC);
+		formData.append('optionD', dataSave[index].options.optionD);
+		formData.append('answerA', dataSave[index].answers.answerA);
+		formData.append('answerB', dataSave[index].answers.answerB);
+		formData.append('answerC', dataSave[index].answers.answerC);
+		formData.append('answerD', dataSave[index].answers.answerD);
+		formData.append('written', dataSave[index].written);
+		formData.append('time', dataSave[index].time);
+
+		if (dataSave[index].image !== '') {
+			await fetch(dataSave[index].image)
+				.then((res) => res.blob())
+				.then((blob) => {
+					const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+					formData.append('image', file);
+				});
+		} else {
+			formData.append('image', '');
+		}
+
 		const response = await fetch(url, {
 			method: method,
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				categoryId: dataSave[index].categoryId,
-				title: dataSave[index].title,
-				optionA: dataSave[index].options.optionA,
-				optionB: dataSave[index].options.optionB,
-				optionC: dataSave[index].options.optionC,
-				optionD: dataSave[index].options.optionD,
-				answerA: dataSave[index].answers.answerA,
-				answerB: dataSave[index].answers.answerB,
-				answerC: dataSave[index].answers.answerC,
-				answerD: dataSave[index].answers.answerD,
-				written: dataSave[index].written,
-				type: dataSave[index].type,
-				time: dataSave[index].time
-			})
+			body: formData
 		});
-
 		isSubmitting = false;
 		dismissLoadingToast();
 		const res = await response.json();
-		if (response.status === 200) showToast('success', t.get('common.success'));
-		else showToast('error', res.message);
-
-		dataSave[index].id = res.data.id;
+		if (response.status === 200) {
+			showToast('success', t.get('common.success'));
+			dataSave[index].id = res.data.id;
+		} else showToast('error', res.message);
 	}
 	onMount(() => {
 		if (data.questions.length > 0) {

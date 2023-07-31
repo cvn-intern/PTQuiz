@@ -83,5 +83,5 @@ export class QuizzesDto {
     @IsOptional()
     @IsNotEmpty({ message: 'IsShared can not be empty' })
     @IsBoolean({ message: 'IsShared must be a boolean' })
-    isShared = false;
+    isShared = true;
 }
