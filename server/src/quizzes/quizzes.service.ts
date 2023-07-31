@@ -283,8 +283,15 @@ export class QuizzesService {
     ) {
         try {
             let url;
+            if (!quiz) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
             if (image) {
-                if (image.size > +process.env.MAX_FILE_SIZE) {
+                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuizzesError.FILE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
