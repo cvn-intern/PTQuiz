@@ -43,5 +43,9 @@
 	"POINT_MUST_BE_AT_LEAST_1": "Điểm ít nhất là 1",
 	"POINT_MUST_BE_AT_MOST_100 ": "Điểm nhiều nhất là 100",
 	"IMAGE_MUST_BE_LESS_THAN_5MB": "Ảnh phải nhỏ hơn 5MB",
-	"THUMBNAIL_MUST_BE_LESS_THAN_5MB": "Ảnh bìa phải nhỏ hơn 5MB"
+	"THUMBNAIL_MUST_BE_LESS_THAN_5MB": "Ảnh bìa phải nhỏ hơn 5MB",
+	"PASSING_POINT_MUST_BE_A_NUMBER": "Điểm đạt môn phải là số",
+	"POINT_MUST_BE_A_NUMBER": "Điểm phải là số",
+	"FILL_ALL_FIELDS": "Vui lòng điền đầy đủ thông tin",
+	"SAVE_ALL_BEFORE_ADD_QUESTION": "Vui lòng lưu tất cả thông tin trước khi thêm câu hỏi"
 }

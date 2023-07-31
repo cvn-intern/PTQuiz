@@ -4,10 +4,14 @@
 	export let index: number;
 	let title: string;
 	$: questionData.subscribe((data) => {
-		title = data[index].title;
+		if (index >= 0 && index < data.length) {
+			title = data[index].title;
+		}
 	});
 	$: questionData.update((data) => {
-		data[index].title = title;
+		if (index >= 0 && index < data.length) {
+			data[index].title = title;
+		}
 		return data;
 	});
 </script>
