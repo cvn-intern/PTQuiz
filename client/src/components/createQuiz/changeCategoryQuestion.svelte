@@ -4,6 +4,7 @@
 	import { questionData } from '$stores/questionInfoStore';
 	import { t } from '$i18n/translations';
 	import { Category } from './interface/category.enum';
+	import { date } from 'zod';
 	export let index: number;
 	export let defaultCategory = 0;
 	$: categoryOfQuestion = (() => {

@@ -93,6 +93,7 @@
 			indexNow.set({
 				index: 0
 			});
+			index = 0;
 			typeOfQuestion = data[index].type;
 		}
 	});
@@ -158,6 +159,7 @@
 		}
 
 		const formData = new FormData();
+		formData.append('categoryId', dataSave[index].categoryId);
 		formData.append('title', dataSave[index].title);
 		formData.append('type', dataSave[index].type);
 		formData.append('optionA', dataSave[index].options.optionA);
