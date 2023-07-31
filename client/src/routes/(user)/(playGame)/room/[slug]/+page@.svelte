@@ -2,10 +2,12 @@
 	import { onDestroy, onMount } from 'svelte';
 	import socket from '../../../../../libs/socket/socket';
 	import { page } from '$app/stores';
-	import { Spinner } from 'flowbite-svelte';
+	import { Progressbar, Spinner } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import QuestionDisplay from '../../../../../components/playGame/questionDisplay.svelte';
 	import type { Quiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
+	import { TypeQuestion } from '../../../../../libs/constants/typeQuestion';
+	import { tweened } from 'svelte/motion';
 
 	export let data;
 
@@ -30,6 +32,20 @@
 	let url = $page.url.href;
 	let isHost: boolean = false;
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
+
+	let original = 20;
+	let stringTimer: string;
+	let timer = tweened(original);
+
+	setInterval(() => {
+		if ($timer > 0) {
+			$timer--;
+		}
+	}, 1000);
+
+	$: {
+		stringTimer = (($timer * 100) / original).toString();
+	}
 
 	onMount(() => {
 		setTimeout(() => {
@@ -73,9 +89,13 @@
 		});
 		socket.on('quiz-questions', (data) => {
 			questions = data;
-		});
+			original = questions[questionPointer].time;
+			timer = tweened(original);
+ 		});
 		socket.on('question-pointer', (data) => {
 			questionPointer = data.questionPointer;
+			original = questions[questionPointer].time;
+			timer = tweened(original);
 		});
 	});
 	onDestroy(() => {
@@ -84,7 +104,6 @@
 			userId: data.user.id
 		});
 	});
-
 	function startGame() {
 		socket.emit('get-quiz-questions', {
 			roomPIN: $page.params.slug
@@ -131,10 +150,34 @@
 					on:click={nextQuestion}>Next</button
 				>
 			{/if}
-			<QuestionDisplay
-				quizzesType={questions[questionPointer].type}
-				quizzesTitle={questions[questionPointer].title}
-			/>
+			<div>
+				<div class="pt-4">
+					<Progressbar progress={stringTimer} size="h-4" color="gray" />
+				</div>
+				<QuestionDisplay
+					quizzesType={questions[questionPointer].type}
+					quizzesTitle={questions[questionPointer].title}
+				/>
+				{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+					<div
+						class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+					>
+						{#each Object.keys(questions[questionPointer].options) as optionKey}
+							<button
+								disabled={isHost ? false : true}
+								class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+								on:click={() => {
+									socket.emit('pick-answer', {
+										roomPIN: $page.params.slug,
+										userId: data.user.id,
+										answer: optionKey
+									});
+								}}>{questions[questionPointer].options[optionKey]}</button
+							>
+						{/each}
+					</div>
+				{/if}
+			</div>
 		{:else}
 			<div class="flex flex-col justify-between w-full h-full gap-4">
 				<div class="flex flex-col w-full justify-center items-center gap-4">
