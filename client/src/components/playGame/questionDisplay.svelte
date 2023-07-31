@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { TypeQuestion } from '$constants/typeQuestion';
+	import { t } from '$i18n/translations';
 
 	export let quizzesType: number;
 	export let quizzesTitle: string;
@@ -17,7 +18,7 @@
 				<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
 			</div>
 			<div class=" md:hidden rounded-xl text-white shadow-xl p-2 bg-green-500">
-				Single Choice Question
+				{$t('common.singleChoice')}
 			</div>
 		{:else if quizzesType === TypeQuestion.MULTIPLE_CHOICE}
 			<div
@@ -29,7 +30,7 @@
 				<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
 			</div>
 			<div class=" md:hidden rounded-xl text-white shadow-xl p-2 bg-green-500">
-				Multiple Choice Question
+				{$t('common.multipleChoice')}
 			</div>
 		{:else if quizzesType === TypeQuestion.TRUE_FALSE}
 			<div
@@ -39,7 +40,7 @@
 				<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
 			</div>
 			<div class=" md:hidden rounded-xl text-white shadow-xl p-2 bg-green-500">
-				True False Question
+				{$t('common.trueFalse')}
 			</div>
 		{:else if quizzesType === TypeQuestion.GUESS_WORDS}
 			<div class="md:flex hidden p-4 gap-2 bg-white rounded-xl items-center">
@@ -60,7 +61,7 @@
 				</div>
 
 				<div class=" md:hidden rounded-xl text-white shadow-xl p-2 bg-green-500">
-					Guess Words
+					{$t('common.guessWords')}
 				</div>
 			</div>
 		{/if}
