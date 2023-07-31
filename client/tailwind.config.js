@@ -63,10 +63,39 @@ export default {
 				wiggle: {
 					'0%, 100%': { transform: 'rotate(-2deg)' },
 					'50%': { transform: 'rotate(2deg)' }
+				},
+				changeColorGreen: {
+					'0%': { transform: 'scale(1)', backgroundColor: '#D8D9DA' },
+					'50%': { transform: 'scale(1.1)', backgroundColor: '#0e9f6e' },
+					'100%': { transform: 'scale(1)', backgroundColor: '#D8D9DA' }
+				},
+				changeColorRed: {
+					'0%': { backgroundColor: '#D8D9DA' },
+					'50%': { backgroundColor: '#f05252' },
+					'100%': { backgroundColor: '#D8D9DA' }
+				},
+				sequenceA: {
+					'0%, 75%': { opacity: '1' },
+					'100%': { opacity: '0' }
+				},
+				sequenceB: {
+					'0%, 25%': { opacity: '0' },
+					'25%, 75%': { opacity: '1' },
+					'100%': { opacity: '0' }
+				},
+				sequenceC: {
+					'0%, 50%': { opacity: '0' },
+					'50%, 75%': { opacity: '1' },
+					'100%': { opacity: '0' }
 				}
 			},
 			animation: {
-				wiggle: 'wiggle 1s ease infinite'
+				wiggle: 'wiggle 1s ease infinite',
+				changeColorGreen: 'changeColorGreen 3s ease infinite',
+				changeColorRed: 'changeColorRed 3s ease infinite',
+				sequenceA: 'sequenceA 4s ease infinite ',
+				sequenceB: 'sequenceB 4s ease infinite',
+				sequenceC: 'sequenceC 4s ease infinite'
 			},
 			scale: {
 				102: '1.02'

@@ -52,7 +52,7 @@
 		<div class="md:text-9xl text-6xl font-bold text-white">
 			<h1 class="ease-in-out transition-all duration-100">{textReady}</h1>
 		</div>
-		<div>
+		<div class = "flex flex-col md:flex-row justify-center gap-4">
 			<button
 				class={clsx(
 					' text-white font-bold text-xl  justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-orangeLogo rounded-2xl hover:translate-y-px ',
