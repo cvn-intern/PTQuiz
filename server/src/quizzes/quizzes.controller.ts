@@ -73,7 +73,7 @@ export class QuizzesController {
     @UseGuards(JwtAuthGuard)
     async getQuizzes(
         @GetCurrentUser('id') userId: string,
-        @Query() page: number,
+        @Query('page') page: number,
     ) {
         return await this.quizzesService.getAllQuizzesOfUser(userId, page);
     }

@@ -1,5 +1,7 @@
 <script lang="ts">
-	import type { IQuiz } from '../routes/(user)/(quiz)/dashboard/quizzes/quiz.type';
+	import type { IQuiz } from '../routes/(user)/(quiz)/dashboard/quizzes/[page]/quiz.type';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import { quizStore } from '$libs/stores/quizStore';
 
 	export let totalQuizzes: number;
 	export let quizzes: IQuiz[];
@@ -7,19 +9,35 @@
 	let currentPage = 1;
 	const numberOfPages = Math.ceil(totalQuizzes / quizzesPerPage);
 
+	async function fetchQuizzes(page: number) {
+		const response = await fetch(`/api/quizzes/${page}`);
+		const data = await response.json();
+		quizzes = data.quizzesOfUser;
+		totalQuizzes = data.totalQuizzes;
+		quizStore.set({
+			quizzes: data.quizzesOfUser,
+			totalQuizzes: data.totalQuizzes
+		});
+	}
+
 	function handlePageChange(page: number) {
 		currentPage = page;
+		fetchQuizzes(currentPage);
 	}
+
+	onMount(() => {
+		fetchQuizzes(currentPage);
+	});
 
 	function handleNextPage() {
 		if (currentPage < numberOfPages) {
-			currentPage++;
+			handlePageChange(currentPage + 1);
 		}
 	}
 
 	function handlePreviousPage() {
 		if (currentPage > 1) {
-			currentPage--;
+			handlePageChange(currentPage - 1);
 		}
 	}
 </script>

@@ -3,20 +3,13 @@
 	import Quiz from './quiz.svelte';
 	import { t } from '../../libs/i18n/translations';
 	import { goto } from '$app/navigation';
-	import type { IQuiz } from '../../routes/(user)/(quiz)/dashboard/quizzes/quiz.type';
+	import type { IQuiz } from '../../routes/(user)/(quiz)/dashboard/quizzes/[page]/quiz.type';
 
 	export let quizzes: IQuiz[];
 	export let totalQuizzes: number;
 
 	function handleCreateQuiz() {
 		goto('/createQuiz');
-	}
-
-	// update quizzes reactive variable
-	$: {
-		quizzes = quizzes;
-		totalQuizzes = totalQuizzes;
-		console.log(quizzes);
 	}
 </script>
 
