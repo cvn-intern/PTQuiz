@@ -51,7 +51,7 @@
 		</button>
 	{/each}
 	{#if showModal}
-		<Modal bind:open={showModal} autoclose placement="top-center">
+		<Modal bind:open={showModal} autoclose>
 			<div class="flex justify-center items-center py-4">
 				{#if handleShowMultipleModal(fourOptions, multipleChoiceAnswer)}
 					<Icon icon="flat-color-icons:ok" class="text-9xl" />

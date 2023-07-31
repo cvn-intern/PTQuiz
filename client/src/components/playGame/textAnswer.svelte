@@ -130,7 +130,7 @@
 	</div>
 </div>
 {#if showModal}
-	<Modal bind:open={showModal} autoclose placement="top-center">
+	<Modal bind:open={showModal} autoclose >
 		<div class="flex justify-center items-center">
 			{#if checkAnswer(finalAnswer, answer)}
 				<Icon icon="flat-color-icons:ok" class="text-9xl" />

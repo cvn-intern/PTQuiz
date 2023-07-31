@@ -51,7 +51,7 @@
 	{/if}
 
 	{#if showModal}
-		<Modal bind:open={showModal} autoclose outsideclose placement="top-center">
+		<Modal bind:open={showModal} autoclose outsideclose>
 			<div class="flex justify-center items-center">
 				{#if option.isCorrect && selectedAnswerIndex != -1}
 					<Icon icon="flat-color-icons:ok" class="text-9xl" />
