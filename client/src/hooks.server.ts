@@ -3,9 +3,16 @@ import { HEADER_NAMES } from '$constants/headers';
 import { checkValidToken, getProfile, refreshTokens } from '$helpers/auth';
 import { JwtError } from './libs/message/responseMessage.enum';
 import { HttpStatus } from '$constants/httpStatus';
-
+import * as cookie from 'cookie';
+import { locale } from '$i18n/translations';
 export const handle: Handle = async ({ event, resolve }) => {
 	try {
+		const cookies = cookie.parse(event.request.headers.get('cookie') || '');
+		if (cookies.lang) {
+			locale.set(cookies.language);
+		} else {
+			locale.set('en');
+		}
 		event.locals.accessToken = event.cookies.get('accessToken');
 		if (!event.locals.accessToken) {
 			event.locals.user = undefined;

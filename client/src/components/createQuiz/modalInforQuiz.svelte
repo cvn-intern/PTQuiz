@@ -4,37 +4,16 @@
 	import { enhance } from '$app/forms';
 	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
 	import { showLoadingToast, dismissLoadingToast } from '$libs/toast/toast';
-	import toast from 'svelte-french-toast';
 	import Icon from '@iconify/svelte';
 	import { goto } from '$app/navigation';
 	export let classButton: string;
 	export let defaultOpenModal: boolean;
 	export let form: any;
 
-	let isProcessing: boolean = false;
+	let isSubmitting: boolean = false;
 
-	const handleSubmit = async (): Promise<void> => {
-		if (isProcessing) return;
-		isProcessing = true;
-		form = null;
-
-		showLoadingToast();
-
-		while (!form?.isDone) {
-			await new Promise((resolve) => setTimeout(resolve, 100));
-		}
-
-		dismissLoadingToast();
-		isProcessing = false;
-
-		if (form?.isSuccess) {
-			toast.success(t.get('common.success'));
-			goto(`/createQuiz/${form?.success?.id}`);
-		} else {
-			dismissLoadingToast();
-			toast.error(form?.error.message);
-		}
-	};
+	$: if (form?.isDone) isSubmitting = false;
+	$: if (form?.isSuccess) goto(`/createQuiz/${form?.success?.id}`);
 
 	let selectedLevel: string;
 	let levelList: selectOptionne[] = [
@@ -60,17 +39,17 @@
 
 	const inputFormList: InputForm[] = [
 		{
-			label: `${$t('common.title')} *`,
+			label: `${$t('common.title')}`,
 			name: 'title',
 			type: 'text',
-			required: false
+			required: true
 		},
 		{
-			label: `${$t('common.level')} *`,
+			label: `${$t('common.level')}`,
 			name: 'difficultyLevel',
 			type: 'select',
 			selectOptionsList: levelList,
-			required: false
+			required: true
 		},
 		{
 			label: `${$t('common.startDate')}`,
@@ -79,10 +58,10 @@
 			required: false
 		},
 		{
-			label: `${$t('common.passingPoint')} *`,
+			label: `${$t('common.passingPoint')}`,
 			name: 'passingPoint',
 			type: 'number',
-			required: false
+			required: true
 		},
 		{
 			label: `${$t('common.endDate')}`,
@@ -91,10 +70,10 @@
 			required: false
 		},
 		{
-			label: `${$t('common.totalPoints')} *`,
+			label: `${$t('common.totalPoints')}`,
 			name: 'point',
 			type: 'number',
-			required: false
+			required: true
 		},
 		{
 			label: `${$t('common.file')}`,
@@ -126,6 +105,10 @@
 			return async ({ update }) => {
 				await update({ reset: false });
 			};
+		}}
+		on:submit={() => {
+			isSubmitting = true;
+			showLoadingToast();
 		}}
 		enctype="multipart/form-data"
 	>
@@ -180,9 +163,10 @@
 
 		<Button
 			type="submit"
-			on:click={handleSubmit}
-			class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-			>{$t('common.save')}</Button
+			disabled={isSubmitting}
+			class="w-full text-white bg-secondary hover:bg-darkGreen focus:ring-4 focus:outline-none focus:ring-primaryColor font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting
+				? 'opacity-50 cursor-wait'
+				: ''} ">{$t('common.save')}</Button
 		>
 	</form>
 </Modal>

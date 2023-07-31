@@ -12,8 +12,8 @@ export const actions = {
 		try {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
-				passingPoint: form.get('passingPoint'),
-				point: form.get('point'),
+				passingPoint: parseInt(form.get('passingPoint')),
+				point: parseInt(form.get('point')),
 				image: form.get('image')
 			});
 			const response = await fetch('/api/quizzes/create', {

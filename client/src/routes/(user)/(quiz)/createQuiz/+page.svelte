@@ -3,9 +3,13 @@
 	import { Button } from 'flowbite-svelte';
 	import { t } from '$i18n/translations';
 	import ModalInforQuiz from '$components/createQuiz/modalInforQuiz.svelte';
+	import Toast from '$components/toast.svelte';
+
 	let defautlOpenModal = true;
 	export let form;
 </script>
+
+<Toast {form} />
 
 <div class="w-full h-96 flex justify-center items-center gap-6">
 	<Button

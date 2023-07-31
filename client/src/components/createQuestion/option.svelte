@@ -10,16 +10,20 @@
 	export let answerValue = false;
 
 	$: questionData.subscribe((data) => {
-		if (question === 'A') content = data[index].options.optionA;
-		if (question === 'B') content = data[index].options.optionB;
-		if (question === 'C') content = data[index].options.optionC;
-		if (question === 'D') content = data[index].options.optionD;
+		if (index >= 0 && index < data.length) {
+			if (question === 'A') content = data[index].options.optionA;
+			if (question === 'B') content = data[index].options.optionB;
+			if (question === 'C') content = data[index].options.optionC;
+			if (question === 'D') content = data[index].options.optionD;
+		}
 	});
 	$: questionData.update((data) => {
-		if (question === 'A') data[index].options.optionA = content;
-		if (question === 'B') data[index].options.optionB = content;
-		if (question === 'C') data[index].options.optionC = content;
-		if (question === 'D') data[index].options.optionD = content;
+		if (index >= 0 && index < data.length) {
+			if (question === 'A') data[index].options.optionA = content;
+			if (question === 'B') data[index].options.optionB = content;
+			if (question === 'C') data[index].options.optionC = content;
+			if (question === 'D') data[index].options.optionD = content;
+		}
 		return data;
 	});
 
@@ -46,6 +50,12 @@
 					answerB: false,
 					answerC: false,
 					answerD: false
+				};
+				data[index].options = {
+					optionA: $t('common.falseAnswer'),
+					optionB: $t('common.trueAnswer'),
+					optionC: '',
+					optionD: ''
 				};
 				if (question === $t('common.falseAnswer')) data[index].answers.answerA = true;
 				else if (question === $t('common.trueAnswer')) data[index].answers.answerB = true;

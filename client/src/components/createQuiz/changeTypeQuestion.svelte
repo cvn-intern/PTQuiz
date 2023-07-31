@@ -13,6 +13,14 @@
 	})();
 	$: questionData.update((data) => {
 		if (defaultType != data[index].type) {
+			if(data[index].type === 3){
+				data[index].options = {
+					optionA: '',
+					optionB: '',
+					optionC: '',
+					optionD: ''
+				};
+			}
 			data[index].type = defaultType;
 			data[index].answers = {
 				answerA: false,

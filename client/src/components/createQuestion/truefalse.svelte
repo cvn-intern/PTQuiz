@@ -5,7 +5,9 @@
 	export let index: number;
 	let test: AnswerType;
 	$: questionData.subscribe((data) => {
-		test = data[index].answers;
+		if (index >= 0 && index < data.length) {
+			test = data[index].answers;
+		}
 	});
 </script>
 

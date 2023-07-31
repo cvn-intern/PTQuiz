@@ -1,53 +1,24 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import toast from 'svelte-french-toast';
 	import { enhance } from '$app/forms';
 	import { t } from '$i18n/translations';
 	import { AppRoute } from '$constants/appRoute';
+	import Toast from '$components/toast.svelte';
+	import { showLoadingToast, showToast } from '$libs/toast/toast';
 	export let data;
 
 	export let form;
-	let sharedToastId: string | number;
-	let isProcessing: boolean = false;
+
 	let isSubmitting = false;
 	$: {
 		if (form?.isDone) {
 			isSubmitting = false;
 		}
-	}
-	const showLoadingToast = (): void => {
-		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
-	};
-
-	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
-	};
-	const handleSubmit = async (): Promise<void> => {
-		if (isProcessing) return;
-		isProcessing = true;
-
-		showLoadingToast();
-
-		form = null;
-
-		while (!form?.isDone) {
-			await new Promise((resolve) => setTimeout(resolve, 100));
-		}
-
-		dismissLoadingToast();
-
 		if (form?.isSuccess) {
-			toast.success(t.get('common.success'));
-			invalidateAll();
-			window.location.href = AppRoute.HOME;
-		} else {
-			dismissLoadingToast();
-			toast.error(form?.error.message || 'Invalid token');
+			goto(AppRoute.HOME);
 		}
-
-		isProcessing = false;
-	};
+	}
 	onMount(() => {
 		if (data.user) {
 			goto(AppRoute.HOME);
@@ -55,6 +26,7 @@
 	});
 </script>
 
+<Toast {form} />
 <section class="flex flex-col items-center justify-center w-full">
 	<div class=" md:w-panel bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
@@ -63,6 +35,7 @@
 				method="POST"
 				on:submit={() => {
 					isSubmitting = true;
+					showLoadingToast();
 				}}
 				class="w-full px-4 lg:px-0 mx-auto"
 				use:enhance={() => {
@@ -78,6 +51,7 @@
 						type="password"
 						name="password"
 						id="password"
+						required
 						placeholder={$t('common.newPassword')}
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 					/>
@@ -88,13 +62,13 @@
 						type="password"
 						name="confirmPassword"
 						id="confirmPassword"
+						required
 						placeholder={$t('common.confirmPassword')}
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
 					/>
 				</div>
 				<div class="pt-4">
 					<button
-						on:click={handleSubmit}
 						aria-label="Reset Password"
 						type="submit"
 						disabled={isSubmitting}

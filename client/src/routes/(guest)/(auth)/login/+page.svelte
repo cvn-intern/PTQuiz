@@ -6,15 +6,16 @@
 	import toast from 'svelte-french-toast';
 	import Error from '../../../+error.svelte';
 	import { t } from '$i18n/translations';
-	import type { ActionData } from './$types.js';
 	import { dismissLoadingToast, showLoadingToast } from '../../../../libs/toast/toast';
 	import { initializeFirebase, startSignIn } from '../../../../libs/services/firebaseConfig';
 	import { AppRoute } from '$constants/appRoute';
+	import Toast from '$components/toast.svelte';
 
-	export let form: ActionData;
+	export let form;
 	export let data;
 
 	let isSubmitting = false;
+
 	$: {
 		if (form?.isDone) {
 			isSubmitting = false;
@@ -52,10 +53,7 @@
 
 	let isProcessing: boolean = false;
 	const signIn = (providerName: string) => async (): Promise<void> => {
-		if (isProcessing) return;
-		isProcessing = true;
-
-		showLoadingToast();
+		form = 'loading';
 
 		try {
 			const response = await startSignIn(window.firebase, providerName);
@@ -74,33 +72,12 @@
 		}
 	};
 
-	const handleSubmit = async (): Promise<void> => {
-		if (isProcessing) return;
-		isProcessing = true;
-
-		showLoadingToast();
-
-		form = null;
-
-		while (!form?.isDone) {
-			await new Promise((resolve) => setTimeout(resolve, 100));
-		}
-
-		dismissLoadingToast();
-
-		if (form?.isSuccess) {
-			goto(AppRoute.HOME);
-			toast.success(t.get('common.success'));
-		} else {
-			dismissLoadingToast();
-			toast.error(form?.error.message || 'Invalid credentials');
-		}
-
-		isProcessing = false;
-	};
+	$: if (form?.isSuccess) goto(AppRoute.HOME);
 </script>
 
 <section class="flex text-white justify-center w-full">
+	<Toast {form} />
+
 	<div class=" w-panel rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
 		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
 			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.loginToYourAccount')}</h1>
@@ -108,13 +85,14 @@
 				method="POST"
 				class="w-full px-4 lg:px-0 mx-auto"
 				action="?/login"
-				on:submit={() => {
-					isSubmitting = true;
-				}}
 				use:enhance={() => {
 					return async ({ update }) => {
 						await update({ reset: false });
 					};
+				}}
+				on:submit={() => {
+					isSubmitting = true;
+					showLoadingToast();
 				}}
 			>
 				<div class="py-4">
@@ -139,6 +117,7 @@
 						name="email"
 						id="email"
 						placeholder="Email"
+						required
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
@@ -151,6 +130,7 @@
 						type="password"
 						name="password"
 						id="password"
+						required
 						placeholder={$t('common.password')}
 						class="block w-full p-4 rounded-md border-gray-200 text-black"
 					/>
@@ -167,7 +147,6 @@
 					<button
 						type="submit"
 						disabled={isSubmitting}
-						on:click={handleSubmit}
 						class={`uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none ${
 							isSubmitting ? 'opacity-50 cursor-wait' : ''
 						}`}>{$t('common.login')}</button
