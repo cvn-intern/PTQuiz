@@ -3,10 +3,16 @@ import { PrismaService } from '../prisma/prisma.service';
 import { QuestionResponse } from './type/questionResponse.type';
 import { QuestionDto } from './dto/question.dto';
 import { QuestionError } from '../error/index';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class QuestionService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private cloudinary: CloudinaryService,
+    ) {}
+
+    image_type = ['image/png', 'image/jpg', 'image/jpeg'];
 
     async updateNumberQuestion(quizId: string) {
         try {
@@ -90,6 +96,7 @@ export class QuestionService {
         userId: string,
         quizId: string,
         questionData: QuestionDto,
+        image: Express.Multer.File,
     ) {
         try {
             if (!quizId) {
@@ -123,6 +130,25 @@ export class QuestionService {
                 );
             }
 
+            if (image) {
+                if (!this.image_type.includes(image.mimetype)) {
+                    throw new HttpException(
+                        QuestionError.IMAGE_NOT_VALID,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+
+                if (image.size > parseInt(process.env.MAX_SIZE_IMAGE)) {
+                    throw new HttpException(
+                        QuestionError.IMAGE_TOO_LARGE,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+
+                const image_upload = await this.cloudinary.uploadFile(image);
+                questionData.image = image_upload.url;
+            }
+
             const question = await this.prisma.questions.create({
                 data: {
                     userId: userId,
@@ -147,6 +173,7 @@ export class QuestionService {
         userId: string,
         questionId: string,
         questionData: QuestionDto,
+        image: Express.Multer.File,
     ) {
         try {
             if (!questionId) {
@@ -184,6 +211,19 @@ export class QuestionService {
                     HttpStatus.BAD_REQUEST,
                 );
             }
+
+            if (image) {
+                if (image.size > parseInt(process.env.MAX_SIZE_IMAGE)) {
+                    throw new HttpException(
+                        QuestionError.IMAGE_TOO_LARGE,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+
+                const image_upload = await this.cloudinary.uploadFile(image);
+                questionData.image = image_upload.url;
+            }
+
             return await this.prisma.questions.update({
                 where: {
                     id: questionId,
