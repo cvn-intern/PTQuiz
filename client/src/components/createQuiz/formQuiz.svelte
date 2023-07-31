@@ -4,8 +4,13 @@
 	import { enhance } from '$app/forms';
 	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
 	import { goto } from '$app/navigation';
+	import Icon from '@iconify/svelte';
 	export let form: any;
 	export let result: any;
+	export let action: string;
+	export let isUpdate: boolean;
+	console.log('result', result['image']);
+	console.log('form', form);
 
 	let isSubmitting: boolean = false;
 	$: getMessageError = (name: string): string => {
@@ -14,7 +19,6 @@
 	$: if (form?.message?.isDone) isSubmitting = false;
 	$: if (form?.message?.isSuccess) goto(`/createQuiz/${form?.message?.success?.id}`);
 
-	let selectedLevel: string;
 	let levelList: selectOptionne[] = [
 		{ value: 0, name: 'Easy' },
 		{ value: 1, name: 'Medium' },
@@ -23,10 +27,9 @@
 
 	let formData: FieldForm = {
 		title: '',
-		difficultyLevel: '',
-		startDate: '',
-		endDate: '',
+		difficultyLevel: 0,
 		passingPoint: '',
+		point: '',
 		description: '',
 		image: ''
 	};
@@ -76,11 +79,12 @@
 			required: false
 		}
 	];
+	$: hiddenInputFile = isUpdate;
 </script>
 
 <form
-	class="my-6 flex flex-col space-y-4 items-center bg-white shadow-2xl p-6 rounded-lg dark:bg-gray-800 dark:text-white dark:shadow-none dark:border-gray-600 dark:border-2"
-	action="?/createQuiz"
+	class="my-6 flex flex-col space-y-4 items-center bg-white shadow-lg p-6 rounded-lg dark:bg-gray-800 dark:text-white dark:shadow-none dark:border-gray-600 dark:border-2"
+	{action}
 	method="post"
 	use:enhance={() => {
 		return async ({ update }) => {
@@ -97,17 +101,45 @@
 	</h3>
 	<div class="grid md:grid-cols-2 gap-4 grid-cols-1">
 		{#each inputFormList as { label, name, type, required, selectOptionsList }}
-			<div>
+			<div class="w-full">
 				<Label class="space-y-2 block text-base font-medium text-gray-900 dark:text-w">
 					{label} <span class="text-red-600">{required ? '*' : ''}</span>
 				</Label>
 				{#if type === 'file'}
-					<input
-						type="file"
-						name="image"
-						accept="image/*"
-						class="text-base"
-					/>
+					<div>
+						<input
+							type="file"
+							name="image"
+							accept="image/*"
+							class="text-base {hiddenInputFile ? 'hidden' : ''}"
+						/>
+						{#if result[name] !== ''}
+							<div class="relative">
+								<img
+									src={result[name]}
+									alt="image"
+									class="w-full h-20 cursor-pointer {hiddenInputFile
+										? ''
+										: 'hidden'}"
+								/>
+								<button
+									type="button"
+									class="absolute top-0 left-0 w-full h-full bg-transparent bg-opacity-10 flex justify-center items-center cursor-pointer {hiddenInputFile
+										? ''
+										: 'hidden'}"
+									on:click={() => {
+										hiddenInputFile = !hiddenInputFile;
+									}}
+								>
+									<Icon
+										icon={'typcn:edit'}
+										class={'text-4xl bg-gray-50 hover:bg-neutral-200 hover:text-white p-2 rounded-full'}
+									/>
+								</button>
+							</div>
+						{/if}
+					</div>
+
 					{#if getMessageError('image') !== ''}
 						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
 							{getMessageError('image')}
@@ -123,7 +155,7 @@
 				{:else if type === 'select'}
 					<Select
 						items={selectOptionsList}
-						bind:value={selectedLevel}
+						bind:value={result[name]}
 						{required}
 						id={name}
 						{name}
@@ -142,6 +174,7 @@
 					/>
 				{:else if type === 'number'}
 					<input
+						bind:value={result[name]}
 						minlength="10"
 						maxlength="50"
 						id={name}
@@ -159,6 +192,7 @@
 						placeholder={label}
 						{name}
 						{required}
+						bind:value={result[name]}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
 					<p class="mt-1 text-base text-red-500 dark:text-gray-300">

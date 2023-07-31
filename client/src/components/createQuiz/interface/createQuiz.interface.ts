@@ -11,11 +11,10 @@ export interface InputForm {
 
 export interface FieldForm {
 	title: string;
-	difficultyLevel: string;
+	difficultyLevel: number;
 	image?: any;
-	startDate?: string;
-	endDate?: string;
-	passingPoint?: string;
+	point: number | string;
+	passingPoint?: number | string;
 	description?: string;
 	value?: string;
 }

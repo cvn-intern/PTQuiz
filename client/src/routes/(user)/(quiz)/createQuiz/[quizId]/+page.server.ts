@@ -4,6 +4,7 @@ import { InforQuizFormSchema } from '$libs/schema/inforQuiz';
 import { createDefaultMessage } from '../interface/message.interface';
 import type Message from '../interface/message.interface';
 import { questionData, type QuestionData } from '$stores/questionInfoStore';
+import { fail } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ fetch, params }) => {
 	const response = await fetch(`/api/quizzes/get/${params.quizId}`, {
 		method: 'GET'
@@ -55,28 +56,6 @@ export const actions = {
 				point: parseInt(form.get('point')),
 				image: form.get('image')
 			});
-
-			if (isNaN(+validatedData.passingPoint) || isNaN(+validatedData.point)) {
-				message.isDone = true;
-				message.isSuccess = false;
-				message.error.message = 'Point must be a number';
-				return message;
-			}
-
-			if (+validatedData.passingPoint > +validatedData.point) {
-				message.isDone = true;
-				message.isSuccess = false;
-				message.error.message = 'Passing point must be less than point';
-				return message;
-			}
-
-			if (+validatedData.passingPoint < 0 || +validatedData.point < 0) {
-				message.isDone = true;
-				message.isSuccess = false;
-				message.error.message = 'Point must be greater than 0';
-				return message;
-			}
-
 			const response = await fetch(`/api/quizzes/update/${params.quizId}`, {
 				method: 'PUT',
 				headers: { type: 'multipart/form-data' },
@@ -92,8 +71,16 @@ export const actions = {
 		} catch (error: any) {
 			message.isDone = true;
 			message.isSuccess = false;
-			message.error.message = error.errors[0].message;
-			return message;
+			console.log(error);
+			for (let i = 0; i < error.errors.length; i++) {
+				(message.error.missing as Record<string, boolean>)[`${error.errors[i].path}`] =
+					true;
+				(message.error.message as unknown as Record<string, string>)[
+					`${error.errors[i].path}`
+				] = error.errors[i].message;
+			}
+
+			return fail(400, { message });
 		}
 	}
 };
