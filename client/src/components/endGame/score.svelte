@@ -3,7 +3,7 @@
 	import { t } from '$i18n/translations';
 </script>
 
-<div class="w-full h-40 relative pt-9">
+<div class="w-full h-40 relative">
 	<div
 		class="text-xl font-semibold text-darkGreen w-32 h-32 flex items-center flex-col justify-center z-30 rounded-full bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
 	>

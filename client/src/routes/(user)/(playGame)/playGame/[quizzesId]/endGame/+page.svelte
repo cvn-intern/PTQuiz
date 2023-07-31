@@ -24,7 +24,7 @@
 </script>
 
 <div class="bg-greenLight w-full">
-	<div class="flex flex-col gap-6 items-center py-6 px-4">
+	<div class="flex flex-col gap-6 items-center py-4 px-4">
 		<div class="flex w-11/12 justify-end">
 			<button
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
