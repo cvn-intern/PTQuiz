@@ -30,7 +30,7 @@
 				<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
 			</div>
 			<div class=" md:hidden rounded-xl text-white shadow-xl p-2 bg-green-500">
-				{$t('common.multipleChoice')}
+				{$t('common.multiChoice')}
 			</div>
 		{:else if quizzesType === TypeQuestion.TRUE_FALSE}
 			<div
@@ -59,10 +59,9 @@
 				>
 					C
 				</div>
-
-				<div class=" md:hidden rounded-xl text-white shadow-xl p-2 bg-green-500">
-					{$t('common.guessWords')}
-				</div>
+			</div>
+			<div class="md:hidden rounded-xl text-white shadow-xl p-2 bg-green-500">
+				{$t('common.crossCharacter')}
 			</div>
 		{/if}
 	</div>
