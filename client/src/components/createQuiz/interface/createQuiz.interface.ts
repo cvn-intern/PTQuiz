@@ -6,6 +6,7 @@ export interface InputForm {
 	selectOptionsList?: selectOptionne[];
 	valueSwitchDefault?: string;
 	isDefault?: boolean;
+	value?: any;
 }
 
 export interface FieldForm {

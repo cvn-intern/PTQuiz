@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
-	import { Button, Modal, Label, Input, Select, Textarea, P } from 'flowbite-svelte';
+	import { Button, Label, Select } from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
 	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
-	import { showLoadingToast, dismissLoadingToast } from '$libs/toast/toast';
 	import { goto } from '$app/navigation';
 	export let form: any;
+	export let result: any;
 
 	let isSubmitting: boolean = false;
-
-	$: console.log(form);
-
+	$: getMessageError = (name: string): string => {
+		return form?.message?.error?.message?.[name] ?? '';
+	};
 	$: if (form?.message?.isDone) isSubmitting = false;
-	$: if (form?.message?.isSuccess) goto(`/createQuiz/${form?.success?.id}`);
+	$: if (form?.message?.isSuccess) goto(`/createQuiz/${form?.message?.success?.id}`);
+
 	let selectedLevel: string;
 	let levelList: selectOptionne[] = [
 		{ value: 0, name: 'Easy' },
@@ -88,7 +89,6 @@
 	}}
 	on:submit={() => {
 		isSubmitting = true;
-		showLoadingToast();
 	}}
 	enctype="multipart/form-data"
 >
@@ -102,10 +102,10 @@
 					{label} <span class="text-red-600">{required ? '*' : ''}</span>
 				</Label>
 				{#if type === 'file'}
-					<input type="file" name="image" accept="image/*" class="text-base" />
-					{#if form?.messsage?.error?.missing?.image}
+					<input type="file" name="image" accept="image/*" class="text-base" bind:value={result[name]} />
+					{#if getMessageError('image') !== ''}
 						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-							{form?.message?.error?.message?.image}
+							{getMessageError('image')}
 						</p>
 					{:else}
 						<p
@@ -124,6 +124,9 @@
 						{name}
 						class="bg-gray-50 border border-graydish text-gray-700 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
 					/>
+					<p class="mt-1 text-base text-red-500 dark:text-gray-300">
+						{getMessageError(name)}
+					</p>
 				{:else if type === 'textarea'}
 					<textarea
 						maxlength="100"
@@ -131,6 +134,7 @@
 						{type}
 						placeholder={label}
 						{name}
+						bind:value={result[name]}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
 				{:else}
@@ -142,21 +146,12 @@
 						placeholder={label}
 						{name}
 						{required}
+						bind:value={result[name]}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
-					{#if form?.error?.missing?.title && name === `title`}
-						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-							{form?.messsage?.error?.message?.title}
-						</p>
-					{:else if form?.error?.missing?.passingPoint && name === `passingPoint`}
-						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-                            {form?.messsage?.error?.message?.passingPoint}
-						</p>
-					{:else if form?.error?.missing?.point && name === `point`}
-						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-							{form?.messsage?.error?.message?.point}
-						</p>
-					{/if}
+					<p class="mt-1 text-base text-red-500 dark:text-gray-300">
+						{getMessageError(name)}
+					</p>
 				{/if}
 			</div>
 		{/each}

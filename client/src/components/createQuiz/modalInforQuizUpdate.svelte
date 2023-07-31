@@ -13,7 +13,6 @@
 
 	$: if (form?.isDone) isSubmitting = false;
 
-	let selectedLevel: string;
 	let levelList: selectOptionne[] = [
 		{ value: 0, name: 'Easy' },
 		{ value: 1, name: 'Medium' },
@@ -52,25 +51,11 @@
 			value: result.difficultyLevel
 		},
 		{
-			label: `${$t('common.startDate')}`,
-			name: 'startDate',
-			type: 'date',
-			required: false,
-			value: result.startDate
-		},
-		{
 			label: `${$t('common.passingPoint')}`,
 			name: 'passingPoint',
 			type: 'number',
 			required: true,
 			value: result.passingPoint
-		},
-		{
-			label: `${$t('common.endDate')}`,
-			name: 'endDate',
-			type: 'date',
-			required: false,
-			value: result.endDate
 		},
 		{
 			label: `${$t('common.totalPoints')}`,

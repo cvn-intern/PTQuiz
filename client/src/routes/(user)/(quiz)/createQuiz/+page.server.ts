@@ -9,9 +9,6 @@ export const actions = {
 	createQuiz: async ({ fetch, request }) => {
 		message = createDefaultMessage();
 		const form = await request.formData();
-
-		console.log(form.get('title'));
-
 		try {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
@@ -27,16 +24,14 @@ export const actions = {
 			const result = await response.json();
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
-			console.log(result);
 			message.success.message = result.message;
 			message.success.id = result.data.id;
 			message.error.message = result.message;
 			return message;
 		} catch (error: any) {
-			console.log(error);
 			message.isDone = true;
 			message.isSuccess = false;
-
+			console.log(error);
 			for (let i = 0; i < error.errors.length; i++) {
 				(message.error.missing as Record<string, boolean>)[`${error.errors[i].path}`] =
 					true;
