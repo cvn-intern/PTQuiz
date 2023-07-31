@@ -28,4 +28,6 @@ export enum QuestionError {
     QUESTION_CATEGORY_ID_NOT_FOUND = 'Question category id not found',
     QUESTION_CATEGORY_ID_REQUIRED = 'Question category id required',
     NOT_AUTHORIZED = 'You are not authorized to update',
+    IMAGE_NOT_VALID = 'Image not valid',
+    IMAGE_TOO_LARGE = 'Image too large',
 }
