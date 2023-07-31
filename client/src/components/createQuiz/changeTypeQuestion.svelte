@@ -13,7 +13,7 @@
 	})();
 	$: questionData.update((data) => {
 		if (defaultType != data[index].type) {
-			if(data[index].type === 3){
+			if (data[index].type === 3) {
 				data[index].options = {
 					optionA: '',
 					optionB: '',
@@ -36,7 +36,7 @@
 <Button class="text-slate-900 border bg-gray-200 hover:bg-gray-400">
 	<Chevron>{typeOfQuestion}</Chevron></Button
 >
-<Dropdown class="w-48 p-3 space-y-1">
+<Dropdown class="w-full p-3 space-y-1">
 	<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
 		<Radio name="typeOfQuestion" bind:group={defaultType} value={0}
 			>{$t('common.multiChoice')}</Radio
