@@ -8,6 +8,7 @@
 	import type { Quiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
 	import { TypeQuestion } from '../../../../../libs/constants/typeQuestion';
 	import { tweened } from 'svelte/motion';
+	import SingleChoiceSocket from '../../../../../components/playGame/socket/singleChoiceSocket.svelte';
 
 	export let data;
 
@@ -46,7 +47,6 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-
 	onMount(() => {
 		setTimeout(() => {
 			socket.emit('join-room', {
@@ -91,7 +91,7 @@
 			questions = data;
 			original = questions[questionPointer].time;
 			timer = tweened(original);
- 		});
+		});
 		socket.on('question-pointer', (data) => {
 			questionPointer = data.questionPointer;
 			original = questions[questionPointer].time;
@@ -162,19 +162,12 @@
 					<div
 						class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
 					>
-						{#each Object.keys(questions[questionPointer].options) as optionKey}
-							<button
-								disabled={isHost ? false : true}
-								class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-								on:click={() => {
-									socket.emit('pick-answer', {
-										roomPIN: $page.params.slug,
-										userId: data.user.id,
-										answer: optionKey
-									});
-								}}>{questions[questionPointer].options[optionKey]}</button
-							>
-						{/each}
+						<SingleChoiceSocket
+							question={questions[questionPointer]}
+							{socket}
+							user={data.user}
+							{isHost}
+						/>
 					</div>
 				{/if}
 			</div>

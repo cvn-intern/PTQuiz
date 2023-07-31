@@ -12,7 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { JoinLeaveRoomDto, RoomPINDto } from '../dto';
+import { AnswerDto, JoinLeaveRoomDto, RoomPINDto } from '../dto';
 import { QuestionPointerDto } from '../dto/questionPointer.dto';
 
 @WebSocketGateway(8082, {
@@ -180,5 +180,13 @@ export class SocketGateway
                 message: error.message,
             });
         }
+    }
+
+    @SubscribeMessage('pick-answer')
+    async handlePickAnswer(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: AnswerDto,
+    ) {
+        const result = await this.socketService.pickAnswer(client.id, data);
     }
 }

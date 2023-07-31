@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SocketError } from '../error';
+import { AnswerDto } from './dto';
+import { TypeQuestion } from '../question/type';
+import { AnswerType } from '../question/type/questionInput.type';
 
 @Injectable()
 export class SocketService {
@@ -120,6 +123,7 @@ export class SocketService {
             select: {
                 participant: {
                     select: {
+                        id: true,
                         user: {
                             select: {
                                 id: true,
@@ -130,13 +134,15 @@ export class SocketService {
                     },
                 },
                 roomId: true,
+                isHost: true,
             },
         });
         return roomParticipants.map((roomParticipant) => {
             return {
-                id: roomParticipant.participant.user.id,
+                id: roomParticipant.participant.id,
                 displayName: roomParticipant.participant.user.displayName,
                 avatar: roomParticipant.participant.user.avatar,
+                isHost: roomParticipant.isHost,
             };
         });
     }
@@ -252,5 +258,173 @@ export class SocketService {
             return true;
         }
         return false;
+    }
+
+    isRightAnswer(answerOfUser: AnswerType, answerOfQuestion: AnswerType) {
+        return (
+            answerOfUser.answerA === answerOfQuestion.answerA &&
+            answerOfUser.answerB === answerOfQuestion.answerB &&
+            answerOfUser.answerC === answerOfQuestion.answerC &&
+            answerOfUser.answerD === answerOfQuestion.answerD
+        );
+    }
+    objectToString(object: AnswerType) {
+        return Object.values(object).toString();
+    }
+    stringToArray(str) {
+        return str.split(',').map((item) => item === 'true');
+    }
+    isWrittenQuestion(type: number) {
+        if (type === TypeQuestion.ESSAY) {
+            return true;
+        }
+        return false;
+    }
+    async pickAnswer(socketId: string, answer: AnswerDto) {
+        const foundUser = await this.prisma.room_participants.findFirst({
+            where: {
+                socketId: socketId,
+                room: {
+                    PIN: answer.roomPIN,
+                },
+                isFinished: false,
+            },
+            select: {
+                participantId: true,
+                participant: {
+                    select: {
+                        quizId: true,
+                        quiz: {
+                            select: {
+                                point: true,
+                                numberQuestions: true,
+                            },
+                        },
+                        point: true,
+                    },
+                },
+                roomId: true,
+            },
+        });
+        if (!foundUser) {
+            throw new Error(SocketError.SOCKET_USER_NOT_JOINED);
+        }
+        const foundQuestion = await this.prisma.quiz_questions.findFirst({
+            where: {
+                quizId: foundUser.participant.quizId,
+                questionId: answer.answer.questionId,
+            },
+            select: {
+                question: {
+                    select: {
+                        title: true,
+                        optionA: true,
+                        optionB: true,
+                        optionC: true,
+                        optionD: true,
+                        answerA: true,
+                        answerB: true,
+                        answerC: true,
+                        answerD: true,
+                        written: true,
+                        type: true,
+                        image: true,
+                    },
+                },
+            },
+        });
+        if (!foundQuestion) {
+            throw new Error(SocketError.SOCKET_QUESTION_NOT_FOUND);
+        }
+        if (this.isWrittenQuestion(foundQuestion.question.type)) {
+            const score =
+                foundUser.participant.quiz.point /
+                foundUser.participant.quiz.numberQuestions;
+            let isRight = false;
+            if (
+                answer.answer.writtenAnswer === foundQuestion.question.written
+            ) {
+                isRight = true;
+                await this.prisma.participants.update({
+                    where: {
+                        id: foundUser.participantId,
+                    },
+                    data: {
+                        point: foundUser.participant.point + score,
+                    },
+                });
+            }
+            await this.prisma.user_questions.create({
+                data: {
+                    userId: answer.userId,
+                    participantId: foundUser.participantId,
+                    questionId: answer.answer.questionId,
+                    question: foundQuestion.question.title,
+                    image: foundQuestion.question.image,
+                    optionA: foundQuestion.question.optionA,
+                    optionB: foundQuestion.question.optionB,
+                    optionC: foundQuestion.question.optionC,
+                    optionD: foundQuestion.question.optionD,
+                    answerA: foundQuestion.question.answerA,
+                    answerB: foundQuestion.question.answerB,
+                    answerC: foundQuestion.question.answerC,
+                    answerD: foundQuestion.question.answerD,
+                    written: foundQuestion.question.written,
+                    givenAnswers: answer.answer.writtenAnswer,
+                    score: isRight ? score : 0,
+                    timestamp: new Date(),
+                },
+            });
+        } else {
+            const answerOfQuestion: AnswerType = {
+                answerA: foundQuestion.question.answerA,
+                answerB: foundQuestion.question.answerB,
+                answerC: foundQuestion.question.answerC,
+                answerD: foundQuestion.question.answerD,
+            };
+            const answerOfUser: AnswerType = {
+                answerA: answer.answer.givenAnswers.answerA,
+                answerB: answer.answer.givenAnswers.answerB,
+                answerC: answer.answer.givenAnswers.answerC,
+                answerD: answer.answer.givenAnswers.answerD,
+            };
+            const isRight = this.isRightAnswer(answerOfUser, answerOfQuestion);
+            const score =
+                foundUser.participant.quiz.point /
+                foundUser.participant.quiz.numberQuestions;
+            if (isRight) {
+                await this.prisma.participants.update({
+                    where: {
+                        id: foundUser.participantId,
+                    },
+                    data: {
+                        point: foundUser.participant.point + score,
+                    },
+                });
+            }
+            await this.prisma.user_questions.create({
+                data: {
+                    userId: answer.userId,
+                    participantId: foundUser.participantId,
+                    questionId: answer.answer.questionId,
+                    question: foundQuestion.question.title,
+                    image: foundQuestion.question.image,
+                    optionA: foundQuestion.question.optionA,
+                    optionB: foundQuestion.question.optionB,
+                    optionC: foundQuestion.question.optionC,
+                    optionD: foundQuestion.question.optionD,
+                    answerA: foundQuestion.question.answerA,
+                    answerB: foundQuestion.question.answerB,
+                    answerC: foundQuestion.question.answerC,
+                    answerD: foundQuestion.question.answerD,
+                    written: foundQuestion.question.written,
+                    givenAnswers: this.objectToString(
+                        answer.answer.givenAnswers,
+                    ),
+                    score: isRight ? score : 0,
+                    timestamp: new Date(),
+                },
+            });
+        }
     }
 }
