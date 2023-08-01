@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import {
     WebSocketGateway,
     ConnectedSocket,
@@ -14,6 +14,7 @@ import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
 import { AnswerDto, JoinLeaveRoomDto, RoomPINDto } from '../dto';
 import { QuestionPointerDto } from '../dto/questionPointer.dto';
+import { WebSocketJwtGuard } from '../guard/WebSocketJwtGuard.guard';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -22,6 +23,7 @@ import { QuestionPointerDto } from '../dto/questionPointer.dto';
     transports: ['websocket'],
     path: '/socket.io',
 })
+@UseGuards(WebSocketJwtGuard)
 export class SocketGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
