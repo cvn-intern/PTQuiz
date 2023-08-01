@@ -12,7 +12,13 @@
 
 	export let data;
 
-	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
+	type Participant = {
+		id: string;
+		displayName: string;
+		avatar: string;
+		isHost: boolean;
+		point: number;
+	};
 	type Message = {
 		participant: Participant;
 		content: string;
@@ -74,7 +80,8 @@
 					id: data.userId,
 					displayName: data.userId,
 					avatar: data.avatar,
-					isHost: data.isHost
+					isHost: data.isHost,
+					point: data.point
 				},
 				content: data.message,
 				reaction: data.reaction,
@@ -101,7 +108,13 @@
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
+		socket.on('score-board', (data) => {
+			participants = data;
+		});
 	});
+	$: {
+		console.log(participants);
+	}
 	onDestroy(() => {
 		socket.emit('leave-room', {
 			roomPIN: $page.params.slug,
@@ -167,7 +180,7 @@
 						class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
 					>
 						<SingleChoiceSocket
-                            bind:timer
+							bind:timer
 							question={questions[questionPointer]}
 							bind:isPicked
 							{showModal}

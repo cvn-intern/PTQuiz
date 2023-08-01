@@ -131,6 +131,7 @@ export class SocketService {
                                 avatar: true,
                             },
                         },
+                        point: true,
                     },
                 },
                 roomId: true,
@@ -143,6 +144,7 @@ export class SocketService {
                 displayName: roomParticipant.participant.user.displayName,
                 avatar: roomParticipant.participant.user.avatar,
                 isHost: roomParticipant.isHost,
+                point: roomParticipant.participant.point,
             };
         });
     }
@@ -444,5 +446,66 @@ export class SocketService {
                 foundQuestion.question.answerD,
             ],
         };
+    }
+
+    async getHostSocketId(roomPIN: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const host = await this.prisma.room_participants.findFirst({
+            where: {
+                roomId: room.id,
+                isHost: true,
+            },
+        });
+        if (!host) {
+            throw new Error(SocketError.SOCKET_HOST_NOT_FOUND);
+        }
+        return host.socketId;
+    }
+    async getScoreBoard(roomPIN: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const scoreBoard = await this.prisma.room_participants.findMany({
+            where: {
+                roomId: room.id,
+            },
+            select: {
+                participant: {
+                    select: {
+                        id: true,
+                        user: {
+                            select: {
+                                displayName: true,
+                                avatar: true,
+                            },
+                        },
+                        point: true,
+                    },
+                },
+                isHost: true,
+            },
+            orderBy: {
+                participant: {
+                    point: 'desc',
+                },
+            },
+        });
+        return scoreBoard.map((user) => {
+            return {
+                id: user.participant.id,
+                displayName: user.participant.user.displayName,
+                avatar: user.participant.user.avatar,
+                isHost: user.isHost,
+                point: user.participant.point,
+            };
+        });
     }
 }

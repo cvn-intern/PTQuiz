@@ -192,6 +192,15 @@ export class SocketGateway
             client.emit('answer-result', {
                 ...result,
             });
+            const hostSocketId = await this.socketService.getHostSocketId(
+                data.roomPIN,
+            );
+            if (hostSocketId) {
+                const scoreBoard = await this.socketService.getScoreBoard(
+                    data.roomPIN,
+                );
+                this.server.to(hostSocketId).emit('score-board', scoreBoard);
+            }
         } catch (error) {
             throw new WsException({
                 message: error.message,
