@@ -1,7 +1,12 @@
 <script lang="ts">
-	import Card from './card.svelte';
+	import { goto } from '$app/navigation';
+import Card from './card.svelte';
+	import Icon from '@iconify/svelte';
 	export let nameCategory = '';
 	export let cardList: any[] = [];
+	function addQuiz() {
+		goto('/createQuiz');
+	}
 </script>
 
 <div class="px-4 md:py-8 md:px-12 lg:px-20">
@@ -11,8 +16,9 @@
 		>
 			{nameCategory}
 		</h1>
-		
-
+		<div class=" text-2xl cursor-pointer" on:click={()=>addQuiz()}>
+			<Icon icon="gala:add" class=" bg-green-400 rounded-full"/>
+		</div>
 	</div>
 	<div
 		class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center items-center grid-3xl lg:gap-10"
