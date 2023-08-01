@@ -40,23 +40,27 @@
 </script>
 
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
-	<div class="flex items-center justify-center lg:w-1/4 md:w-1/2 w-1/3 h-full">
+	<div class="flex items-center justify-center lg:w-1/3 md:w-1/2 w-1/3 h-full">
 		<label
 			for="dropzone-file"
 			class="2xl:w-full 2xl:h-full xl:w-full xl:h-full lg:w-full lg:h-full md:w-full md:h-full w-full h-full flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
 		>
 			{#if imageUrl}
-				<div class="relative group hover:opacity-100 w-full h-full">
-					<img
-						class="2xl:w-full 2xl:h-full xl:w-full xl:h-full lg:w-full lg:h-full md:w-full md:h-full w-full h-full object-cover rounded-lg"
-						src={imageUrl}
-						alt="image"
-					/>
-					<button
-						on:click={handleDeleteImage}
-						class="absolute top-0 right-0 bg-red-600 text-white opacity-0 group-hover:opacity-100 px-2 py-1 rounded"
-						>Delete</button
-					>
+				<div class="group hover:opacity-100 w-full h-full flex">
+					<div class="h-full w-full flex items-center">
+						<img
+							class="2xl:w-full 2xl:h-[200px] xl:w-full xl:h-[200px] lg:w-full lg:h-[200px] md:w-full md:h-[200px] w-full h-[200px] object-cover "
+							src={imageUrl}
+							alt="image"
+						/>
+					</div>
+					<div class="relative">
+						<button
+							on:click={handleDeleteImage}
+							class="absolute top-0 right-0 bg-red-600 text-white opacity-0 group-hover:opacity-100 px-2 py-1 rounded"
+							>Delete</button
+						>
+					</div>
 				</div>
 			{:else}
 				<div
@@ -104,7 +108,7 @@
 		</label>
 	</div>
 	<textarea
-		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-full md:text-xl w-3/4 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
+		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-full md:text-xl w-2/3 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
 		placeholder={$t('common.typeYourQuestionHere')}
 		rows="5"
 		bind:value={title}

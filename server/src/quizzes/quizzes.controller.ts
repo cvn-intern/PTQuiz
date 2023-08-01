@@ -98,7 +98,7 @@ export class QuizzesController {
     @Get('/filter')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Filter successfully')
-    async filterCategory(@Query('category') categoryName: string) {
+    async filterCategory(@Query('categoryName') categoryName: string) {
         return await this.quizzesService.filterCategory(categoryName);
     }
 

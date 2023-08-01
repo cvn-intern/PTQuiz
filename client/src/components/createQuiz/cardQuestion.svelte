@@ -59,13 +59,13 @@
 	}
 
 	$: indexNow.subscribe((data) => {
-		if (questionStt - 1 === data.index) effect = 'border border-cyan-600';
+		if (questionStt - 1 === data.index) effect = 'border border-cyan-600 border-4';
 		else effect = '';
 	});
 </script>
 
 <Card padding="none">
-	<div class="flex flex-col items-center py-4 {effect}">
+	<div class="flex flex-col items-center py-4 {effect}  ">
 		<h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
 			{$t('common.question')}
 			{questionStt}
