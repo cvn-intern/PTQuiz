@@ -317,20 +317,20 @@
 					bind:isGuessWordsChecked
 					{showModal}
 				/> -->
-				<!-- <InputText
-					bind:isAnswerChecked
-					bind:answer={quizzes[questionPointer].written}
-					bind:finalAnswer
-					bind:isGuessWordsChecked
-					{showModal}
-				/> -->
-				<ArrangeAnswer
+				<InputText
 					bind:isAnswerChecked
 					bind:answer={quizzes[questionPointer].written}
 					bind:finalAnswer
 					bind:isGuessWordsChecked
 					{showModal}
 				/>
+				<!-- <ArrangeAnswer
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+				/> -->
 			{/if}
 		</div>
 	</div>

@@ -73,19 +73,24 @@
 		}
 	}
 
-	let displayAnswerText: string;
+	function handleInput(event: InputEvent, id: number) {
+		const inputElement = event.target as HTMLInputElement;
+		const inputLength = inputElement.value.length;
 
-	function updateAnswer() {
-		if (displayAnswerText.length > answerSplit.length) {
-			// If the input somehow contains more characters than answerSplit, truncate it
-			displayAnswerText = displayAnswerText.substr(0, answerSplit.length);
+		if (inputLength === 1) {
+			const nextInput = inputElement.nextElementSibling as HTMLInputElement;
+			if (nextInput) {
+				nextInput.focus();
+			}
 		}
 
-		chooseAnswer = displayAnswerText
-			.split('')
-			.map((char: string, id: number) => ({ char, id }));
+		if (inputLength === 0) {
+			const previousInput = inputElement.previousElementSibling as HTMLInputElement;
+			if (previousInput) {
+				previousInput.focus();
+			}
+		}
 	}
-	$: console.log(chooseAnswer);
 </script>
 
 <div class="flex flex-col h-full gap-8">
@@ -100,13 +105,15 @@
 	</div>
 	<div class="flex flex-col h-1/2 items-center">
 		<div class="flex flex-wrap justify-center gap-2 bg-white p-2 md:p-4 rounded-xl">
-			<input
-				type="text"
-				class=" text-4xl border-b-2 border-black text-center"
-				bind:value={displayAnswerText}
-				maxlength={answerSplit.length}
-				on:input={() => updateAnswer()}
-			/>
+			{#each displayAnswer as input}
+				<input
+					type="text"
+					class="w-14 h-16 flex justify-center items-center border- text-4xl"
+					value={input.char}
+					maxlength="1"
+					on:input={(e) => handleInput(e, input.id)}
+				/>
+			{/each}
 		</div>
 	</div>
 </div>
