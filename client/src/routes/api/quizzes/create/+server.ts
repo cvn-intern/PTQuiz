@@ -5,6 +5,7 @@ import { HttpStatus } from '$constants/httpStatus';
 
 export const POST: RequestHandler = async ({ fetch, request }) => {
 	const formData = await request.formData();
+	if (formData.get('image').size === 0) formData.delete('image');
 	console.log(formData);
 
 	const response = await fetch(`${VITE_API_URL}/quizzes/create`, {

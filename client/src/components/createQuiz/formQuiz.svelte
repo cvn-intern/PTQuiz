@@ -10,8 +10,8 @@
 	export let action: string;
 	export let isUpdate: boolean;
 	$: console.log('result', result['image']);
-	$: console.log('form', form);
-
+	$: console.log('form 2', form);
+	$: console.log('action', action);
 	let isSubmitting: boolean = false;
 	$: getMessageError = (name: string): string => {
 		return form?.message?.error?.message?.[name] ?? '';
@@ -27,7 +27,7 @@
 
 	let formData: FieldForm = {
 		title: '',
-		difficultyLevel: 0,
+		difficultyLevel: '',
 		passingPoint: '',
 		point: '',
 		description: '',
@@ -139,12 +139,7 @@
 							</div>
 						{/if}
 					</div>
-
-					{#if getMessageError('image') !== ''}
-						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-							{getMessageError('image')}
-						</p>
-					{:else}
+					{#if getMessageError('image') == ''}
 						<p
 							class="mt-1 text-base text-gray-500 dark:text-gray-300"
 							id="file_input_help"
@@ -161,9 +156,6 @@
 						{name}
 						class="bg-gray-50 border border-graydish text-gray-700 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
 					/>
-					<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-						{getMessageError(name)}
-					</p>
 				{:else if type === 'textarea'}
 					<textarea
 						maxlength="100"
@@ -195,10 +187,14 @@
 						bind:value={result[name]}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
-					<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-						{getMessageError(name)}
-					</p>
 				{/if}
+				<div>
+					{#if !form?.message?.isSuccess}
+						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
+							{getMessageError(name)}
+						</p>
+					{/if}
+				</div>
 			</div>
 		{/each}
 	</div>

@@ -20,13 +20,15 @@ export const actions = {
 				method: 'POST',
 				headers: { type: 'multipart/form-data' },
 				body: form
-			});
+			})
 			const result = await response.json();
+			console.log('result',result);
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
 			message.success.message = result.message;
 			message.success.id = result.data.id;
 			message.error.message = result.message;
+
 			return message;
 		} catch (error: any) {
 			message.isDone = true;
