@@ -4,8 +4,42 @@ import {
     IsNumber,
     IsOptional,
     Length,
+    Validate,
+    ValidationArguments,
+    ValidatorConstraint,
+    ValidatorConstraintInterface,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+
+@ValidatorConstraint({ async: false })
+export class IsEndDateGreaterThanStartDate
+    implements ValidatorConstraintInterface
+{
+    validate(endDate: Date, args: ValidationArguments) {
+        const { object } = args;
+        const startDate = (object as QuizzesDto).startDate;
+        return endDate >= startDate;
+    }
+
+    defaultMessage(args: ValidationArguments) {
+        return 'End date must be greater than start date';
+    }
+}
+
+@ValidatorConstraint({ async: false })
+export class IsPointGreaterThanPassingPoint
+    implements ValidatorConstraintInterface
+{
+    validate(point: number, args: ValidationArguments) {
+        const { object } = args;
+        const passingPoint = (object as QuizzesDto).passingPoint;
+        return point >= passingPoint;
+    }
+
+    defaultMessage(args: ValidationArguments) {
+        return 'Point must be greater than passing point';
+    }
+}
 
 export class QuizzesDto {
     @Length(10, 30, {
@@ -24,13 +58,13 @@ export class QuizzesDto {
     durationMins = -1;
 
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
+    @Transform(({ value }) => JSON.parse(value))
     @IsNotEmpty({ message: 'IsRandom can not empty' })
     @IsBoolean({ message: 'IsRandom must be a boolean' })
     isRandom = false;
 
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
+    @Transform(({ value }) => JSON.parse(value))
     @IsNotEmpty({ message: 'IsRandomOption can not empty' })
     @IsBoolean({ message: 'IsRandomOption must be a boolean' })
     isRandomOption = false;
@@ -44,6 +78,7 @@ export class QuizzesDto {
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'Point can not be empty' })
     @IsNumber({}, { message: 'Point must be a number' })
+    @Validate(IsPointGreaterThanPassingPoint)
     point: number;
 
     @Transform(({ value }) => Number(value))
@@ -65,23 +100,24 @@ export class QuizzesDto {
     @IsOptional()
     @Transform(({ value }) => new Date())
     @IsNotEmpty({ message: 'End date can not be empty' })
+    @Validate(IsEndDateGreaterThanStartDate)
     endDate = new Date();
 
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
+    @Transform(({ value }) => JSON.parse(value))
     passed = false;
 
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
+    @Transform(({ value }) => JSON.parse(value))
     @IsOptional()
     @IsNotEmpty({ message: 'IsActivated can not be empty' })
     @IsBoolean({ message: 'IsActivated must be a boolean' })
     isActivated = true;
 
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
+    @Transform(({ value }) => JSON.parse(value))
     @IsOptional()
     @IsNotEmpty({ message: 'IsShared can not be empty' })
     @IsBoolean({ message: 'IsShared must be a boolean' })
-    isShared = false;
+    isShared = true;
 }
