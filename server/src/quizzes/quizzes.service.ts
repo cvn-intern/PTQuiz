@@ -200,7 +200,6 @@ export class QuizzesService {
 
     async filterCategory(categoryName: string) {
         try {
-            console.log(categoryName);
             if(categoryName==='All'){
                 return await this.getDiscovery();
             }
@@ -208,7 +207,6 @@ export class QuizzesService {
             const resultFilter = categories.filter(
                 (category) => category.category === categoryName,
             );
-            console.log(resultFilter);
             if (resultFilter.length !== 0) return resultFilter;
             else return [];
         } catch (exception) {

@@ -19,8 +19,8 @@
 </script>
 
 
-<div class="py-10">
-	<div class="text-xl font-medium text-center text-gray-500 px-4 md:py-8 md:px-12 lg:px-20 ">
+<div class="py-8">
+	<div class="text-xl font-medium text-center text-gray-500 px-4 md:px-12 lg:px-20 ">
 		<ul class="flex flex-wrap gap-5">
 			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='All'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('All')}>
 				All
