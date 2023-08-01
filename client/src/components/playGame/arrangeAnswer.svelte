@@ -22,12 +22,6 @@
 		return chars.join('');
 	}
 
-	function getRandomCharacter() {
-		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		const randomIndex = Math.floor(Math.random() * characters.length);
-		return characters[randomIndex];
-	}
-
 	let answerSplit: string[];
 	let newAnswer: string;
 	let scrambledAnswer: string;
@@ -36,9 +30,6 @@
 	$: {
 		answerSplit = answer.split('');
 		newAnswer = answer;
-		for (let i = 0; i < 3; i++) {
-			newAnswer += getRandomCharacter();
-		}
 		scrambledAnswer = scrambleString(newAnswer);
 		scrambledAnswerSplit = scrambledAnswer
 			.split('')

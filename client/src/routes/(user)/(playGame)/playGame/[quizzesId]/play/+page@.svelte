@@ -13,6 +13,8 @@
 	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
 	import TextAnswer from '$components/playGame/textAnswer.svelte';
 	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
+	import InputText from '$components/playGame/inputText.svelte';
+	import ArrangeAnswer from '$components/playGame/arrangeAnswer.svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -308,7 +310,21 @@
 					{/each}
 				</div>
 			{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
-				<TextAnswer
+				<!-- <TextAnswer
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+				/> -->
+				<!-- <InputText
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+				/> -->
+				<ArrangeAnswer
 					bind:isAnswerChecked
 					bind:answer={quizzes[questionPointer].written}
 					bind:finalAnswer

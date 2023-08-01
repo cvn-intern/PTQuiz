@@ -23,7 +23,7 @@
 	}
 
 	function getRandomCharacter() {
-		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		const randomIndex = Math.floor(Math.random() * characters.length);
 		return characters[randomIndex];
 	}
@@ -36,7 +36,7 @@
 	$: {
 		answerSplit = answer.split('');
 		newAnswer = answer;
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < 5; i++) {
 			newAnswer += getRandomCharacter();
 		}
 		scrambledAnswer = scrambleString(newAnswer);
@@ -47,31 +47,6 @@
 
 	let chooseAnswer: CharacterObject[] = [];
 	let displayAnswer: CharacterObject[];
-
-	function addToChooseAnswer(input: CharacterObject, index: number) {
-		if (chooseAnswer.length < answerSplit.length) {
-			chooseAnswer = [...chooseAnswer, input];
-
-			scrambledAnswerSplit = [
-				...scrambledAnswerSplit.slice(0, index),
-				...scrambledAnswerSplit.slice(index + 1)
-			];
-		}
-	}
-	function removeChooseAnswer(input: CharacterObject, index: number) {
-		if (chooseAnswer[index]) {
-			chooseAnswer = [...chooseAnswer.slice(0, index), ...chooseAnswer.slice(index + 1)];
-
-			const insertionIndex = scrambledAnswerSplit.findIndex(
-				(charObj) => charObj.id > input.id
-			);
-			scrambledAnswerSplit = [
-				...scrambledAnswerSplit.slice(0, insertionIndex),
-				input,
-				...scrambledAnswerSplit.slice(insertionIndex)
-			];
-		}
-	}
 
 	function checkAnswer(finalAnswer: string, answer: string) {
 		if (finalAnswer === answer) {
@@ -97,35 +72,41 @@
 			chooseAnswer = [];
 		}
 	}
+
+	let displayAnswerText: string;
+
+	function updateAnswer() {
+		if (displayAnswerText.length > answerSplit.length) {
+			// If the input somehow contains more characters than answerSplit, truncate it
+			displayAnswerText = displayAnswerText.substr(0, answerSplit.length);
+		}
+
+		chooseAnswer = displayAnswerText
+			.split('')
+			.map((char: string, id: number) => ({ char, id }));
+	}
+	$: console.log(chooseAnswer);
 </script>
 
 <div class="flex flex-col h-full gap-8">
 	<div class="flex flex-col h-1/2 items-center">
-		<div class="flex flex-wrap justify-center gap-2 bg-white p-2 md:p-4 rounded-xl">
-			{#each displayAnswer as input, index}
-				<button
-					class=" w-14 h-16 flex justify-center items-center border-b-2 border-black"
-					on:click={() => {
-						removeChooseAnswer(input, index);
-					}}
-				>
+		<div class="flex flex-wrap justify-center gap-2">
+			{#each scrambledAnswerSplit as input}
+				<button class="p-3 w-14 h-16 rounded-lg border shadow-lg bg-secondary">
 					<p class="text-4xl">{input.char}</p>
 				</button>
 			{/each}
 		</div>
 	</div>
 	<div class="flex flex-col h-1/2 items-center">
-		<div class="flex flex-wrap justify-center gap-2">
-			{#each scrambledAnswerSplit as input, index}
-				<button
-					class="p-3 w-14 h-16 rounded-lg border shadow-lg bg-secondary"
-					on:click={() => {
-						addToChooseAnswer(input, index);
-					}}
-				>
-					<p class="text-4xl">{input.char}</p>
-				</button>
-			{/each}
+		<div class="flex flex-wrap justify-center gap-2 bg-white p-2 md:p-4 rounded-xl">
+			<input
+				type="text"
+				class=" text-4xl border-b-2 border-black text-center"
+				bind:value={displayAnswerText}
+				maxlength={answerSplit.length}
+				on:input={() => updateAnswer()}
+			/>
 		</div>
 	</div>
 </div>
