@@ -123,7 +123,6 @@ export class QuizzesService {
                     const quizzes = await this.getInfoOfPublicQuiz(
                         quizzesOfdiscovery[index].quizId,
                     );
-
                     if (indexOfCategory === -1) {
                         discovery.push({
                             category: category.name,
@@ -205,19 +204,98 @@ export class QuizzesService {
         }
     }
 
-    async filterCategory(categoryName: string) {
+    async filterCategory(categoryName: string, page: number) {
         try {
-            console.log(categoryName);
-            if(categoryName==='All'){
-                return await this.getDiscovery();
+            page = page || 1;
+            const pageSize = 5;
+            if (categoryName === 'All') {
+                const [quizzesOfUser, totalQuizzes] =
+                    await this.prisma.$transaction([
+                        this.prisma.quizzes.findMany({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                            },
+                            select: {
+                                id: true,
+                                title: true,
+                                description: true,
+                                image: true,
+                                numberQuestions: true,
+                                durationMins: true,
+                                difficultyLevel: true,
+                            },
+                            take: pageSize,
+                            skip: (page - 1) * pageSize,
+                        }),
+                        this.prisma.quizzes.count({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                            },
+                        }),
+                    ]);
+            } else {
+                const [quizzesOfUser, totalQuizzes] =
+                    await this.prisma.$transaction([
+                        this.prisma.quizzes.findMany({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                quizQuestions: {
+                                    some: {
+                                        question: {
+                                            categoryId: categoryName,
+                                        },
+                                    },
+                                },
+                            },
+                            select: {
+                                id: true,
+                                title: true,
+                                description: true,
+                                image: true,
+                                numberQuestions: true,
+                                durationMins: true,
+                                difficultyLevel: true,
+                            },
+                            take: pageSize,
+                            skip: (page - 1) * pageSize,
+                        }),
+                        this.prisma.quizzes.count({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                quizQuestions: {
+                                    some: {
+                                        question: {
+                                            categoryId: categoryName,
+                                        },
+                                    },
+                                },
+                            },
+                        }),
+                    ]);
             }
-            const categories = await this.getDiscovery();
-            const resultFilter = categories.filter(
-                (category) => category.category === categoryName,
-            );
-            console.log(resultFilter);
-            if (resultFilter.length !== 0) return resultFilter;
-            else return [];
+            // if (categoryName === 'All') {
+            //     return await this.getDiscovery();
+            // }
+            // const categories = await this.getDiscovery();
+            // const resultFilter = categories.filter(
+            //     (category) => category.category === categoryName,
+            // );
+            // console.log(resultFilter);
+
+            // if (resultFilter.length !== 0) return resultFilter;
+            // else return [];
         } catch (exception) {
             throw new HttpException(
                 QuizzesError.NOT_FOUND_CATEGORY,

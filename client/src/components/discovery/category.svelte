@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Pagination from '$components/pagination.svelte';
 	import Card from './card.svelte';
 	export let nameCategory = '';
 	export let cardList: any[] = [];
@@ -11,8 +12,6 @@
 		>
 			{nameCategory}
 		</h1>
-		
-
 	</div>
 	<div
 		class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center items-center grid-3xl lg:gap-10"
@@ -29,6 +28,7 @@
 				id={card.id}
 			/>
 		{/each}
+		<!-- <Pagination {} /> -->
 	</div>
 </div>
 

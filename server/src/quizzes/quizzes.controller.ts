@@ -78,12 +78,6 @@ export class QuizzesController {
         return await this.quizzesService.getAllQuizzesOfUser(userId, page);
     }
 
-    @Get('/discovery')
-    @HttpCode(HttpStatus.OK)
-    @ResponseMessage('Get discovery successfully')
-    async getdiscovery() {
-        return await this.quizzesService.getDiscovery();
-    }
     @Get('/info')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get info of Quiz successfully')
@@ -98,8 +92,11 @@ export class QuizzesController {
     @Get('/filter')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Filter successfully')
-    async filterCategory(@Query('categoryName') categoryName: string) {
-        return await this.quizzesService.filterCategory(categoryName);
+    async filterCategory(
+        @Query('categoryName') categoryName: string,
+        @Query('page') page: number,
+    ) {
+        return await this.quizzesService.filterCategory(categoryName, page);
     }
 
     @Get('/all-questions')
