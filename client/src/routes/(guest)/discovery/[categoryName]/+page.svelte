@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Category from '$components/discovery/category.svelte';
+	import { t } from '$i18n/translations.js';
 	import type { TypeCategory } from './category.type.js';
 
 	export let data;
@@ -22,26 +23,26 @@
 <div class="py-8">
 	<div class="text-xl font-medium text-center text-gray-500 px-4 md:px-12 lg:px-20 flex justify-center">
 		<ul class="flex flex-wrap gap-5">
-			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='All'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('All')}>
-				All
+			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab===$t('common.all')? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab($t('common.all'))}>
+				{$t('common.all')}
 			</li>
-			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='Math'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('Math')}>
-				Math
+			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab===$t('common.math')? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab($t('common.math'))}>
+				{$t('common.math')}
 			</li>
-			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='Science'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('Science')}>
-				Science
+			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab===$t('common.science')? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab($t('common.science'))}>
+				{$t('common.science')}
 			</li>
-			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='History'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('History')}>
-				History
+			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab===$t('common.history')? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab($t('common.history'))}>
+				{$t('common.history')}
 			</li>
-			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='English'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('English')}>
-				English
+			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab===$t('common.english')? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab($t('common.english'))}>
+				{$t('common.english')}
 			</li>
-			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='Geography'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('Geography')}>
-				Geography
+			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab===$t('common.geography')? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab($t('common.geography'))}>
+				{$t('common.geography')}
 			</li>
-			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab==='Other'? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab('Other')}>
-				Other
+			<li class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab===$t('common.other')? cssForCurrentTab : cssForOtherTab}"  on:click={()=>changeTab($t('common.other'))}>
+				{$t('common.other')}
 			</li>
 
 		</ul>

@@ -23,7 +23,7 @@
 				class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none md:w-1/6 w-3/6"
 				>{$t('common.createQuizIntro')}</button
 			>
-			<div class="relative z-10">
+			<div class="relative z-10 ">
 				<SortBy defaultSort={0} />
 			</div>
 		</div>
