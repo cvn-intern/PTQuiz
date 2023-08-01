@@ -208,83 +208,102 @@ export class QuizzesService {
         try {
             page = page || 1;
             const pageSize = 5;
+            let quizzesOfUser, totalQuizzes;
             if (categoryName === 'All') {
-                const [quizzesOfUser, totalQuizzes] =
-                    await this.prisma.$transaction([
-                        this.prisma.quizzes.findMany({
-                            where: {
-                                isShared: true,
-                                user: {
-                                    role: Role.Admin,
+                [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                        },
+                        select: {
+                            category: {
+                                select: {
+                                    name: true,
                                 },
                             },
-                            select: {
-                                id: true,
-                                title: true,
-                                description: true,
-                                image: true,
-                                numberQuestions: true,
-                                durationMins: true,
-                                difficultyLevel: true,
-                            },
-                            take: pageSize,
-                            skip: (page - 1) * pageSize,
-                        }),
-                        this.prisma.quizzes.count({
-                            where: {
-                                isShared: true,
-                                user: {
-                                    role: Role.Admin,
+                            user: {
+                                select: {
+                                    displayName: true,
                                 },
                             },
-                        }),
-                    ]);
+                            id: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                        },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                        },
+                    }),
+                ]);
             } else {
-                const [quizzesOfUser, totalQuizzes] =
-                    await this.prisma.$transaction([
-                        this.prisma.quizzes.findMany({
-                            where: {
-                                isShared: true,
-                                user: {
-                                    role: Role.Admin,
+                [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                            category: {
+                                name: categoryName,
+                            },
+                        },
+                        select: {
+                            category: {
+                                select: {
+                                    name: true,
                                 },
-                                quizQuestions: {
-                                    some: {
-                                        question: {
-                                            categoryId: categoryName,
-                                        },
+                            },
+                            user: {
+                                select: {
+                                    displayName: true,
+                                },
+                            },
+                            id: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                        },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                            quizQuestions: {
+                                some: {
+                                    question: {
+                                        categoryId: categoryName,
                                     },
                                 },
                             },
-                            select: {
-                                id: true,
-                                title: true,
-                                description: true,
-                                image: true,
-                                numberQuestions: true,
-                                durationMins: true,
-                                difficultyLevel: true,
-                            },
-                            take: pageSize,
-                            skip: (page - 1) * pageSize,
-                        }),
-                        this.prisma.quizzes.count({
-                            where: {
-                                isShared: true,
-                                user: {
-                                    role: Role.Admin,
-                                },
-                                quizQuestions: {
-                                    some: {
-                                        question: {
-                                            categoryId: categoryName,
-                                        },
-                                    },
-                                },
-                            },
-                        }),
-                    ]);
+                        },
+                    }),
+                ]);
             }
+            return {
+                quizzes: quizzesOfUser,
+                totalQuizzes: totalQuizzes,
+            };
             // if (categoryName === 'All') {
             //     return await this.getDiscovery();
             // }

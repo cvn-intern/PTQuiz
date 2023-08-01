@@ -1,8 +1,10 @@
 <script lang="ts">
 	import Pagination from '$components/pagination.svelte';
 	import Card from './card.svelte';
+
 	export let nameCategory = '';
 	export let cardList: any[] = [];
+	export let totalQuizzes: number;
 </script>
 
 <div class="px-4 md:py-8 md:px-12 lg:px-20">
@@ -28,7 +30,7 @@
 				id={card.id}
 			/>
 		{/each}
-		<!-- <Pagination {} /> -->
+		<Pagination {totalQuizzes} bind:quizzes={cardList} />
 	</div>
 </div>
 
