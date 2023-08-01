@@ -2,20 +2,16 @@
 	import { goto } from '$app/navigation';
 	import Quizzes from '$components/quizzes/quizzes.svelte';
 	import { t } from '$i18n/translations';
-	import { quizStore } from '$libs/stores/quizStore';
 	export let data;
-	$: data = data;
-	let { quizzes, totalQuizzes } = data;
+	let quizzes: any;
+	let totalQuizzes: any;
+	$: {
+		quizzes = data.quizzes;
+		totalQuizzes = data.totalQuizzes;
+	}
 	function handleCreateQuiz() {
 		goto('/createQuiz');
 	}
-
-	// quizStore.set({ quizzes, totalQuizzes });
-
-	// $: quizStore.subscribe(({ quizzes: newQuizzes, totalQuizzes: newTotalQuizzes }) => {
-	// 	quizzes = newQuizzes;
-	// 	totalQuizzes = newTotalQuizzes;
-	// });
 </script>
 
 <div>

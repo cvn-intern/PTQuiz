@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Pagination from '$components/pagination.svelte';
+	import Pagination from './pagination.svelte';
 	import Card from './card.svelte';
 
 	export let nameCategory = '';
@@ -30,7 +30,7 @@
 				id={card.id}
 			/>
 		{/each}
-		<Pagination {totalQuizzes} bind:quizzes={cardList} />
+		<Pagination {totalQuizzes} bind:quizzes={cardList} {nameCategory} />
 	</div>
 </div>
 

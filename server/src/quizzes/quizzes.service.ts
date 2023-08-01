@@ -208,49 +208,72 @@ export class QuizzesService {
         try {
             page = page || 1;
             const pageSize = 5;
-            console.log(categoryName);
-            let quizzesOfUser, totalQuizzes;
+
             if (categoryName === 'All' || categoryName === undefined) {
-                [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
-                    this.prisma.quizzes.findMany({
-                        where: {
-                            isShared: true,
-                            user: {
-                                role: Role.Admin,
-                            },
-                        },
-                        select: {
-                            category: {
-                                select: {
-                                    name: true,
+                const categories = await this.prisma.categories.findMany();
+
+                const quizPromises = categories.map((category) => {
+                    return this.prisma.$transaction([
+                        this.prisma.quizzes.findMany({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                category: {
+                                    name: category.name,
                                 },
                             },
-                            user: {
-                                select: {
-                                    displayName: true,
+                            select: {
+                                category: {
+                                    select: {
+                                        name: true,
+                                    },
+                                },
+                                user: {
+                                    select: {
+                                        displayName: true,
+                                    },
+                                },
+                                id: true,
+                                title: true,
+                                description: true,
+                                image: true,
+                                numberQuestions: true,
+                                durationMins: true,
+                                difficultyLevel: true,
+                            },
+                            take: pageSize,
+                            skip: (page - 1) * pageSize,
+                        }),
+                        this.prisma.quizzes.count({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                category: {
+                                    name: category.name,
                                 },
                             },
-                            id: true,
-                            title: true,
-                            description: true,
-                            image: true,
-                            numberQuestions: true,
-                            durationMins: true,
-                            difficultyLevel: true,
-                        },
-                        take: pageSize,
-                        skip: (page - 1) * pageSize,
+                        }),
+                    ]);
+                });
+
+                const result = await Promise.all(
+                    quizPromises.map(async (promise, index) => {
+                        const [quizzes, count] = await promise;
+                        return {
+                            category: categories[index].name,
+                            quizzes: quizzes,
+                            totalQuizzes: count,
+                        };
                     }),
-                    this.prisma.quizzes.count({
-                        where: {
-                            isShared: true,
-                            user: {
-                                role: Role.Admin,
-                            },
-                        },
-                    }),
-                ]);
+                );
+
+                return result;
             } else {
+                let quizzesOfUser, totalQuizzes;
                 [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
                     this.prisma.quizzes.findMany({
                         where: {
@@ -300,22 +323,15 @@ export class QuizzesService {
                         },
                     }),
                 ]);
-            }
-            return {
-                quizzes: quizzesOfUser,
-                totalQuizzes: totalQuizzes,
-            };
-            // if (categoryName === 'All') {
-            //     return await this.getDiscovery();
-            // }
-            // const categories = await this.getDiscovery();
-            // const resultFilter = categories.filter(
-            //     (category) => category.category === categoryName,
-            // );
-            // console.log(resultFilter);
 
-            // if (resultFilter.length !== 0) return resultFilter;
-            // else return [];
+                return [
+                    {
+                        category: categoryName,
+                        quizzes: quizzesOfUser,
+                        totalQuizzes: totalQuizzes,
+                    },
+                ];
+            }
         } catch (exception) {
             throw new HttpException(
                 QuizzesError.NOT_FOUND_CATEGORY,

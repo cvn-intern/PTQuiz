@@ -7,7 +7,6 @@
 
 	export let quizzes: IQuiz[];
 	export let totalQuizzes: number;
-
 	function handleCreateQuiz() {
 		goto('/createQuiz');
 	}

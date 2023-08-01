@@ -88,10 +88,12 @@
 		</ul>
 	</div>
 	{#each categories as category}
-		<Category
-			nameCategory={category.category}
-			cardList={category.quizzes}
-			totalQuizzes={data.totalQuizzes}
-		/>
+		{#if category.quizzes.length}
+			<Category
+				nameCategory={category.category}
+				cardList={category.quizzes}
+				totalQuizzes={category.totalQuizzes}
+			/>
+		{/if}
 	{/each}
 </div>
