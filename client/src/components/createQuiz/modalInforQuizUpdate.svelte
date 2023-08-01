@@ -1,9 +1,5 @@
 <script lang="ts">
-	import { t } from '$i18n/translations';
-	import { Button, Modal, Label, Input, Select, Textarea } from 'flowbite-svelte';
-	import { enhance } from '$app/forms';
-	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
-	import { showLoadingToast, dismissLoadingToast } from '$libs/toast/toast';
+	import { Button, Modal } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	import FormQuiz from './formQuiz.svelte';
 	export let classButton: string;
@@ -23,5 +19,5 @@
 >
 
 <Modal bind:open={formModal} size="md" class="w-full z-50" {outsideclose} autoclose={false}>
-	<FormQuiz bind:result {form} action={'?/updateQuiz'} isUpdate={true}/>
+	<FormQuiz bind:result {form} action={'?/updateQuiz'} isUpdate={true} />
 </Modal>
