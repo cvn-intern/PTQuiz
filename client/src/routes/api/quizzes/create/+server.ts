@@ -4,10 +4,9 @@ import { VITE_API_URL } from '$env/static/private';
 import { HttpStatus } from '$constants/httpStatus';
 
 export const POST: RequestHandler = async ({ fetch, request }) => {
+	console.log('request', await request.formData());
 	const formData = await request.formData();
-	if (formData.get('image').size === 0) formData.delete('image');
-	console.log(formData);
-
+	console.log('formData', formData);
 	const response = await fetch(`${VITE_API_URL}/quizzes/create`, {
 		method: 'POST',
 		body: formData

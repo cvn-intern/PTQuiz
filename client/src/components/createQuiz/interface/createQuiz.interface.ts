@@ -16,7 +16,6 @@ export interface FieldForm {
 	point: number | string;
 	passingPoint?: number | string;
 	description?: string;
-	value?: string;
 }
 
 export interface selectOptionne {

@@ -16,13 +16,17 @@ export const actions = {
 				point: parseInt(form.get('point')),
 				image: form.get('image')
 			});
+			if (form.get('image').size === 0) form.delete('image');
+
+			console.log('form', form);
+
 			const response = await fetch('/api/quizzes/create', {
 				method: 'POST',
 				headers: { type: 'multipart/form-data' },
 				body: form
-			})
+			});
 			const result = await response.json();
-			console.log('result',result);
+			console.log('result', result);
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
 			message.success.message = result.message;

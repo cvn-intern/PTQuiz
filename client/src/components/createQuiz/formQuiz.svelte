@@ -9,9 +9,9 @@
 	export let result: any;
 	export let action: string;
 	export let isUpdate: boolean;
-	$: console.log('result', result['image']);
-	$: console.log('form 2', form);
-	$: console.log('action', action);
+	// $: console.log('result', result['image']);
+	// $: console.log('form 2', form);
+	// $: console.log('action', action);
 	let isSubmitting: boolean = false;
 	$: getMessageError = (name: string): string => {
 		return form?.message?.error?.message?.[name] ?? '';
