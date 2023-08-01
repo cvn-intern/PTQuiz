@@ -28,9 +28,9 @@
 						class="hidden md:grid grid-cols-2 grid-rows-2 gap-2 bg-primary p-3 rounded-xl md:items-center"
 					>
 						<div class="w-12 h-10 rounded-lg animate-changeColorGreen" />
-						<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
-						<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
-						<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
 					</div>
 					<div class=" md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
 						{$t('common.singleChoice')}
@@ -42,7 +42,7 @@
 						<div class="w-12 h-10 rounded-lg animate-changeColorGreen" />
 						<div class="w-12 h-10 rounded-lg animate-changeColorGreen" />
 						<div class="w-12 h-10 rounded-lg animate-changeColorGreen" />
-						<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
 					</div>
 					<div class=" md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
 						{$t('common.multiChoice')}
@@ -52,7 +52,7 @@
 						class="hidden md:grid grid-cols-2 grid-rows-1 gap-2 bg-primary p-2 rounded-xl items-center"
 					>
 						<div class="w-12 h-10 rounded-lg animate-changeColorGreen" />
-						<div class="w-12 h-10 rounded-lg animate-changeColorRed" />
+						<div class="w-12 h-10 rounded-lg bg-red-500" />
 					</div>
 					<div class=" md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
 						{$t('common.trueFalse')}
@@ -60,17 +60,17 @@
 				{:else if quizzesType === TypeQuestion.GUESS_WORDS}
 					<div class="md:flex hidden p-4 gap-2 bg-primary rounded-xl items-center">
 						<div
-							class="w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl animate-sequenceA"
+							class="w-10 h-12 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceA"
 						>
 							A
 						</div>
 						<div
-							class="w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl animate-sequenceB"
+							class="w-10 h-12 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceB"
 						>
 							B
 						</div>
 						<div
-							class="w-10 h-12 flex justify-center items-center rounded-lg border shadow-lg bg-secondary text-2xl animate-sequenceC"
+							class="w-10 h-12 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceC"
 						>
 							C
 						</div>

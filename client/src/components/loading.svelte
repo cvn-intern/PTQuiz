@@ -1,6 +1,6 @@
 <div class="page-container">
 	<div class="loading">
-		<span>Loading</span>
+		<span>Quiz Pt</span>
 	</div>
 </div>
 
