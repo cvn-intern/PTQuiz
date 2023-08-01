@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { t } from '../../libs/i18n/translations';
+	import Icon from '@iconify/svelte';
 
 	export let title: string;
 	export let author: string;
@@ -51,6 +52,20 @@
 	function handleEdit() {
 		goto(`/createQuiz/${id}`);
 	}
+
+	async function deleteQuiz(id:string) {
+		const response = await fetch(`/api/quizzes/delete/${id}`, {
+			method: 'DELETE'
+		});
+		const result = await response.json();
+		if (response.status === 200) {
+			toast.success(t.get('common.success'));
+			location.reload();
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 </script>
 
 <section
@@ -60,9 +75,17 @@
 	<div>
 		<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
 	</div>
-	<div class="flex flex-col w-full">
+	<div class="flex flex-col w-full justify-between gap-12 h-full">
 		<div>
-			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">{title}</h1>
+			<div class="flex flex-row justify-between items-center">
+				<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">
+					{title}
+				</h1>
+				<button on:click={()=>deleteQuiz(id)}>
+					<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
+				</button>
+			</div>
+
 			<p class="text-sm text-zinc-400 md:w-full md:block hidden">{description}</p>
 		</div>
 		<div
@@ -71,6 +94,7 @@
 			<p class="text-sm text-zinc-400">
 				{$t('common.createdAt')}: <span class="text-zinc-400"> {formattedDateTime}</span>
 			</p>
+
 			<div class="flex flex-row gap-4">
 				<button
 					aria-label="Edit"
