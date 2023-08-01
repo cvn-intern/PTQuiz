@@ -12,9 +12,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { AnswerDto, JoinLeaveRoomDto, RoomPINDto } from '../dto';
+import { AnswerDto, RoomPinDTO } from '../dto';
 import { QuestionPointerDto } from '../dto/questionPointer.dto';
-import { WebSocketJwtGuard } from '../guard/WebSocketJwtGuard.guard';
+import { WebSocketJwtGuard } from '../WebSocketJwtGuard.guard';
+import { SocketClient } from '../socketClient.class';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -56,14 +57,19 @@ export class SocketGateway
     afterInit() {
         this.logger.log('Initialized!');
     }
+
     @SubscribeMessage('join-room')
     async handleJoinRoom(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: JoinLeaveRoomDto,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
-            const { roomPIN, userId } = data;
-            await this.socketService.joinRoom(roomPIN, userId, client.id);
+            const { roomPIN } = data;
+            await this.socketService.joinRoom(
+                roomPIN,
+                client.user.id,
+                client.id,
+            );
             client.join(roomPIN);
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
@@ -77,13 +83,17 @@ export class SocketGateway
 
     @SubscribeMessage('leave-room')
     async handleLeaveRoom(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: JoinLeaveRoomDto,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
-            const { roomPIN, userId } = data;
+            const { roomPIN } = data;
             client.leave(roomPIN);
-            await this.socketService.leaveRoom(roomPIN, userId, client.id);
+            await this.socketService.leaveRoom(
+                roomPIN,
+                client.user.id,
+                client.id,
+            );
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
             this.server.to(roomPIN).emit('room-users', roomParticipants);
@@ -115,14 +125,14 @@ export class SocketGateway
     }
     @SubscribeMessage('is-host')
     async handleIsHost(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: JoinLeaveRoomDto,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
-            const { roomPIN, userId } = data;
+            const { roomPIN } = data;
             const isHost = await this.socketService.checkRoomHost(
                 roomPIN,
-                userId,
+                client.user.id,
             );
             client.emit('is-host', {
                 isHost,
@@ -136,12 +146,12 @@ export class SocketGateway
 
     @SubscribeMessage('start-game')
     async handleStartQuiz(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: RoomPINDto,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
             const { roomPIN } = data;
-            await this.socketService.startGame(roomPIN);
+            await this.socketService.startGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit('started', {
                 isStarted: true,
             });
@@ -154,12 +164,12 @@ export class SocketGateway
 
     @SubscribeMessage('end-game')
     async handleEndGame(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: RoomPINDto,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
             const { roomPIN } = data;
-            await this.socketService.endGame(roomPIN);
+            await this.socketService.endGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit('ended', {
                 isEnded: true,
             });
@@ -173,7 +183,7 @@ export class SocketGateway
     @SubscribeMessage('get-quiz-questions')
     async handleGetQuestions(
         @ConnectedSocket() client: Socket,
-        @MessageBody() data: RoomPINDto,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
             const { roomPIN } = data;
@@ -205,11 +215,15 @@ export class SocketGateway
 
     @SubscribeMessage('pick-answer')
     async handlePickAnswer(
-        @ConnectedSocket() client: Socket,
+        @ConnectedSocket() client: SocketClient,
         @MessageBody() data: AnswerDto,
     ) {
         try {
-            const result = await this.socketService.pickAnswer(client.id, data);
+            const result = await this.socketService.pickAnswer(
+                client.id,
+                client.user.id,
+                data,
+            );
             client.emit('answer-result', {
                 ...result,
             });

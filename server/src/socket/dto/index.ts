@@ -1,3 +1,2 @@
-export * from './joinLeaveRoom.dto';
-export * from './quizId.dto';
+export * from './roomPin.dto';
 export * from './answer.dto';

@@ -1,10 +1,10 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../../prisma/prisma.service';
-import { Payload, Status } from '../../auth/types';
+import { PrismaService } from '../prisma/prisma.service';
+import { Payload, Status } from '../auth/types';
 import { WsException } from '@nestjs/websockets';
-import { JwtError } from '../../error';
-import { AuthError } from '../../error/authError.enum';
+import { JwtError } from '../error';
+import { AuthError } from '../error/authError.enum';
 
 @Injectable()
 export class WebSocketJwtGuard implements CanActivate {
@@ -34,7 +34,6 @@ export class WebSocketJwtGuard implements CanActivate {
             }
             const client = context.switchToWs().getClient();
             client.user = payload;
-            console.log(client);
             return true;
         } catch (error) {
             if (error.name === JwtError.TOKEN_EXPIRED_ERROR) {
@@ -51,13 +50,15 @@ export class WebSocketJwtGuard implements CanActivate {
     }
 
     private extractTokenFromHeader(context: ExecutionContext): string | null {
+        let token = null;
         const {
             headers: { authorization },
         } = context.getArgs()[0].handshake;
-        console.log(authorization);
         if (authorization && authorization.split(' ')[0] === 'Bearer') {
-            return authorization.split(' ')[1];
+            token = authorization.split(' ')[1];
+        } else {
+            token = context.getArgs()[0].handshake.auth.token;
         }
-        return null;
+        return token;
     }
 }

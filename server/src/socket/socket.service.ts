@@ -191,9 +191,9 @@ export class SocketService {
         return foundUser.room.PIN;
     }
 
-    async endGame(roomPIN: string) {
+    async endGame(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
-            where: { PIN: roomPIN },
+            where: { PIN: roomPIN, userId },
         });
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
@@ -219,9 +219,9 @@ export class SocketService {
         });
     }
 
-    async startGame(roomPIN: string) {
+    async startGame(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
-            where: { PIN: roomPIN },
+            where: { PIN: roomPIN, userId },
         });
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
@@ -320,7 +320,7 @@ export class SocketService {
         }
         return false;
     }
-    async pickAnswer(socketId: string, answer: AnswerDto) {
+    async pickAnswer(socketId: string, userId: string, answer: AnswerDto) {
         let isCorrect = false;
         let score = 0;
         const foundUser = await this.prisma.room_participants.findFirst({
@@ -397,7 +397,7 @@ export class SocketService {
             }
             await this.prisma.user_questions.create({
                 data: {
-                    userId: answer.userId,
+                    userId,
                     participantId: foundUser.participantId,
                     questionId: answer.answer.questionId,
                     question: foundQuestion.question.title,
@@ -445,7 +445,7 @@ export class SocketService {
             }
             await this.prisma.user_questions.create({
                 data: {
-                    userId: answer.userId,
+                    userId,
                     participantId: foundUser.participantId,
                     questionId: answer.answer.questionId,
                     question: foundQuestion.question.title,
