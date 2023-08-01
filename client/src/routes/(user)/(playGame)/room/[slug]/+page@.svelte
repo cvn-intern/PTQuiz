@@ -123,6 +123,7 @@
 	let isButtonDisabled = false;
 
 	async function sendMessage() {
+		if (isButtonDisabled) return;
 		socket.emit('send-message', {
 			roomPIN: $page.params.slug,
 			userId: data.user.id,
@@ -132,9 +133,10 @@
 		});
 		messageContent = '';
 		selectedReaction = '';
+		isButtonDisabled = true;
 		setTimeout(() => {
 			isButtonDisabled = false;
-		}, 3000);
+		}, 500);
 	}
 </script>
 

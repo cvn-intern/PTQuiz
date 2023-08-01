@@ -102,7 +102,9 @@
 			</div>
 			<button
 				type="submit"
-				class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none"
+				class={`w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none ${
+					isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''
+				}`}
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
