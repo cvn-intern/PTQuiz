@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import socket from '../../../../../libs/socket/socket';
 	import { page } from '$app/stores';
-	import { Progressbar, Spinner } from 'flowbite-svelte';
+	import { Modal, Progressbar, Spinner } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import QuestionDisplay from '../../../../../components/playGame/questionDisplay.svelte';
 	import type { Quiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
@@ -30,6 +30,7 @@
 	let questionPointer: number = 0;
 	let isLoading: boolean = true;
 	let showModal: boolean = false;
+	let showScoreBoard: boolean = false;
 	let errorMessage: string = '';
 	let participants: Participant[] = [];
 	let messages: Message[] = [];
@@ -148,6 +149,12 @@
 		navigator.clipboard.writeText(url);
 		toast.success('Copied to clipboard');
 	};
+	const getScoreBoard = () => {
+		showScoreBoard = true;
+		setTimeout(() => {
+			showScoreBoard = false;
+		}, 5000);
+	};
 </script>
 
 {#if isLoading}
@@ -165,6 +172,10 @@
 				<button
 					class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
 					on:click={nextQuestion}>Next</button
+				>
+				<button
+					class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+					on:click={getScoreBoard}>Score board</button
 				>
 			{/if}
 			<div>
@@ -367,4 +378,23 @@
 			{/each}
 		{/if}
 	</div>
+{/if}
+
+{#if showScoreBoard}
+	<Modal bind:open={showScoreBoard} autoclose placement="top-center">
+		<div class="flex flex-col justify-center items-center">
+			{#each participants as participant, index}
+				<div class="flex gap-4 items-center">
+					<p>No {index + 1}</p>
+					<p class="truncate w-32">{participant.displayName}</p>
+					<img
+						src={participant.avatar}
+						alt={participant.displayName}
+						class="w-10 h-10 rounded-full ml-4"
+					/>
+					<p>{participant.point}</p>
+				</div>
+			{/each}
+		</div>
+	</Modal>
 {/if}
