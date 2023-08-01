@@ -16,15 +16,15 @@ export class SocketService {
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
+        if (room.isStarted) {
+            throw new Error(SocketError.SOCKET_ROOM_STARTED);
+        }
         if (room.isClosed) {
             throw new Error(SocketError.SOCKET_ROOM_CLOSED);
         }
         const user = await this.prisma.users.findUnique({
             where: { id: userId },
         });
-        if (room.isClosed) {
-            throw new Error(SocketError.SOCKET_ROOM_CLOSED);
-        }
         if (!user) {
             throw new Error(SocketError.SOCKET_USER_NOT_FOUND);
         }
@@ -98,6 +98,11 @@ export class SocketService {
                 id: foundUser.id,
             },
         });
+        await this.prisma.user_questions.deleteMany({
+            where: {
+                participantId: foundUser.participantId,
+            },
+        });
         await this.prisma.participants.delete({
             where: {
                 id: foundUser.participantId,
@@ -131,6 +136,7 @@ export class SocketService {
                                 avatar: true,
                             },
                         },
+                        point: true,
                     },
                 },
                 roomId: true,
@@ -143,6 +149,7 @@ export class SocketService {
                 displayName: roomParticipant.participant.user.displayName,
                 avatar: roomParticipant.participant.user.avatar,
                 isHost: roomParticipant.isHost,
+                point: roomParticipant.participant.point,
             };
         });
     }
@@ -184,19 +191,47 @@ export class SocketService {
         return foundUser.room.PIN;
     }
 
-    async endRoom(roomPIN: string) {
+    async endGame(roomPIN: string) {
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN },
         });
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
+
+        await this.prisma.rooms.update({
+            where: {
+                id: room.id,
+            },
+            data: {
+                isClosed: true,
+                isStarted: false,
+            },
+        });
+
         await this.prisma.room_participants.updateMany({
             where: {
                 roomId: room.id,
             },
             data: {
                 isFinished: true,
+            },
+        });
+    }
+
+    async startGame(roomPIN: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        await this.prisma.rooms.update({
+            where: {
+                id: room.id,
+            },
+            data: {
+                isStarted: true,
             },
         });
     }
@@ -394,9 +429,7 @@ export class SocketService {
                 answerC: answer.answer.givenAnswers.answerC,
                 answerD: answer.answer.givenAnswers.answerD,
             };
-            console.log(answerOfQuestion, answerOfUser);
             isCorrect = this.isRightAnswer(answerOfUser, answerOfQuestion);
-            console.log(isCorrect);
             if (isCorrect) {
                 score +=
                     foundUser.participant.quiz.point /
@@ -444,5 +477,66 @@ export class SocketService {
                 foundQuestion.question.answerD,
             ],
         };
+    }
+
+    async getHostSocketId(roomPIN: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const host = await this.prisma.room_participants.findFirst({
+            where: {
+                roomId: room.id,
+                isHost: true,
+            },
+        });
+        if (!host) {
+            throw new Error(SocketError.SOCKET_HOST_NOT_FOUND);
+        }
+        return host.socketId;
+    }
+    async getScoreBoard(roomPIN: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const scoreBoard = await this.prisma.room_participants.findMany({
+            where: {
+                roomId: room.id,
+            },
+            select: {
+                participant: {
+                    select: {
+                        id: true,
+                        user: {
+                            select: {
+                                displayName: true,
+                                avatar: true,
+                            },
+                        },
+                        point: true,
+                    },
+                },
+                isHost: true,
+            },
+            orderBy: {
+                participant: {
+                    point: 'desc',
+                },
+            },
+        });
+        return scoreBoard.map((user) => {
+            return {
+                id: user.participant.id,
+                displayName: user.participant.user.displayName,
+                avatar: user.participant.user.avatar,
+                isHost: user.isHost,
+                point: user.participant.point,
+            };
+        });
     }
 }

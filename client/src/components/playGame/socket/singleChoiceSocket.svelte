@@ -14,7 +14,7 @@
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 	let fourOptions: any[] = [];
-
+	let isLoading: boolean = false;
 	let answers = [false, false, false, false];
 	let score: number;
 	$: {
@@ -50,11 +50,12 @@
 			isCorrect = data.isCorrect;
 			score = data.score;
 			isPicked = true;
+			isLoading = false;
 			fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 				id: optionKey,
 				contents: question.options[optionKey],
 				isCorrect: data.answer[index],
-				disabled: isPicked ? true : false
+				disabled: isLoading || isPicked ? true : false
 			}));
 			timer = tweened(0);
 			showModal = true;
@@ -64,8 +65,7 @@
 		});
 	});
 	$: {
-		if ($timer <= 0 && !isPicked) {
-			console.log('time out');
+		if ($timer <= 0 && !isPicked && !isLoading) {
 			pickAnswer();
 		}
 	}
@@ -74,16 +74,27 @@
 {#each fourOptions as option, index}
 	<button
 		disabled={option.disabled}
-		class={`h-10 hover:bg-green-700 text-black font-bold py-2 px-4 rounded-xl ${
+		class={`h-10  text-black font-bold py-2 px-4 rounded-xl ${
 			isPicked
 				? option.isCorrect
 					? 'bg-green-500'
 					: answers[index]
 					? 'bg-red-500'
 					: 'bg-gray-200'
-				: 'bg-white'
+				: answers[index]
+				? 'bg-blue-500'
+				: isLoading
+				? 'bg-black'
+				: 'bg-gray-200 hover:bg-darkGreen'
 		} ${option.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 		on:click={() => {
+			isLoading = true;
+			fourOptions = Object.keys(question.options).map((optionKey, index) => ({
+				id: optionKey,
+				contents: question.options[optionKey],
+				isCorrect: false,
+				disabled: isLoading || isPicked ? true : false
+			}));
 			answers[index] = true;
 			pickAnswer();
 		}}>{option.contents}</button

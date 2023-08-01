@@ -2,7 +2,8 @@
 	import { onDestroy, onMount } from 'svelte';
 	import socket from '../../../../../libs/socket/socket';
 	import { page } from '$app/stores';
-	import { Progressbar } from 'flowbite-svelte';
+	import { Modal, Progressbar, Spinner } from 'flowbite-svelte';
+	import toast from 'svelte-french-toast';
 	import QuestionDisplay from '../../../../../components/playGame/questionDisplay.svelte';
 	import type { Quiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
 	import { TypeQuestion } from '../../../../../libs/constants/typeQuestion';
@@ -13,7 +14,13 @@
 
 	export let data;
 
-	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
+	type Participant = {
+		id: string;
+		displayName: string;
+		avatar: string;
+		isHost: boolean;
+		point: number;
+	};
 	type Message = {
 		participant: Participant;
 		content: string;
@@ -22,9 +29,11 @@
 		left: number;
 		style: string;
 	};
+	let isEndGame: boolean = false;
 	let questionPointer: number = 0;
 	let isLoading: boolean = true;
 	let showModal: boolean = false;
+	let showScoreBoard: boolean = false;
 	let errorMessage: string = '';
 	let participants: Participant[] = [];
 	let messages: Message[] = [];
@@ -74,7 +83,8 @@
 					id: data.userId,
 					displayName: data.userId,
 					avatar: data.avatar,
-					isHost: data.isHost
+					isHost: data.isHost,
+					point: data.point
 				},
 				content: data.message,
 				reaction: data.reaction,
@@ -101,6 +111,12 @@
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
+		socket.on('score-board', (data) => {
+			participants = data;
+		});
+		socket.on('ended', (data) => {
+			isEndGame = data.isEnded;
+		});
 	});
 	onDestroy(() => {
 		socket.emit('leave-room', {
@@ -109,6 +125,10 @@
 		});
 	});
 	function startGame() {
+		isEndGame = false;
+		socket.emit('start-game', {
+			roomPIN: $page.params.slug
+		});
 		socket.emit('get-quiz-questions', {
 			roomPIN: $page.params.slug
 		});
@@ -138,6 +158,21 @@
 			isButtonDisabled = false;
 		}, 500);
 	}
+	const handleCopy = () => {
+		navigator.clipboard.writeText(url);
+		toast.success('Copied to clipboard');
+	};
+	const getScoreBoard = () => {
+		showScoreBoard = true;
+		setTimeout(() => {
+			showScoreBoard = false;
+		}, 5000);
+	};
+	const endGame = () => {
+		socket.emit('end-game', {
+			roomPIN: $page.params.slug
+		});
+	};
 </script>
 
 {#if isLoading}
@@ -148,11 +183,37 @@
 	<div class="bg-greenLight w-full h-screen px-4 lg:px-16 py-4">
 		{#if errorMessage}
 			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
+		{:else if isEndGame}
+			<div class="flex flex-col justify-center items-center">
+				{#each participants as participant, index}
+					<div class="flex gap-4 items-center">
+						<p>No {index + 1}</p>
+						<p class="truncate w-32">{participant.displayName}</p>
+						<img
+							src={participant.avatar}
+							alt={participant.displayName}
+							class="w-10 h-10 rounded-full ml-4"
+						/>
+						<p>{participant.point}</p>
+					</div>
+				{/each}
+			</div>
 		{:else if questions.length > 0}
 			{#if isHost}
+				{#if questionPointer < questions.length - 1}
+					<button
+						class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+						on:click={nextQuestion}>Next</button
+					>
+				{:else}
+					<button
+						class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+						on:click={endGame}>End game</button
+					>
+				{/if}
 				<button
 					class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-					on:click={nextQuestion}>Next</button
+					on:click={getScoreBoard}>Score board</button
 				>
 			{/if}
 			<div>
@@ -193,4 +254,23 @@
 			/>
 		{/if}
 	</div>
+{/if}
+
+{#if showScoreBoard}
+	<Modal bind:open={showScoreBoard} autoclose placement="top-center">
+		<div class="flex flex-col justify-center items-center">
+			{#each participants as participant, index}
+				<div class="flex gap-4 items-center">
+					<p>No {index + 1}</p>
+					<p class="truncate w-32">{participant.displayName}</p>
+					<img
+						src={participant.avatar}
+						alt={participant.displayName}
+						class="w-10 h-10 rounded-full ml-4"
+					/>
+					<p>{participant.point}</p>
+				</div>
+			{/each}
+		</div>
+	</Modal>
 {/if}
