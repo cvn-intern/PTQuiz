@@ -8,4 +8,6 @@ export enum QuizzesError {
     ERROR_QUIZ = 'Quiz error',
     NOT_PERMISSION = 'You do not have permission to do this action',
     FILE_TOO_LARGE = 'File too large',
+    POINT_CANNOT_LESS_THAN_PASSINGPOINT = 'Point cannot less than passing point',
+    ENDDATE_CANNOT_LESS_THAN_STARTDATE = 'End date cannot less than start date',
 }
