@@ -21,13 +21,6 @@
 		}
 		return chars.join('');
 	}
-
-	function getRandomCharacter() {
-		const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		const randomIndex = Math.floor(Math.random() * characters.length);
-		return characters[randomIndex];
-	}
-
 	let answerSplit: string[];
 	let newAnswer: string;
 	let scrambledAnswer: string;
@@ -36,9 +29,6 @@
 	$: {
 		answerSplit = answer.split('');
 		newAnswer = answer;
-		for (let i = 0; i < 5; i++) {
-			newAnswer += getRandomCharacter();
-		}
 		scrambledAnswer = scrambleString(newAnswer);
 		scrambledAnswerSplit = scrambledAnswer
 			.split('')
@@ -58,8 +48,8 @@
 
 	$: {
 		displayAnswer = answerSplit.map((char: string, id: number) => ({
-			char: chooseAnswer[id] ? chooseAnswer[id].char : '',
-			id: chooseAnswer[id] ? chooseAnswer[id].id : -1
+			char: '',
+			id: id
 		}));
 	}
 
@@ -73,21 +63,49 @@
 		}
 	}
 
-	function handleInput(event: InputEvent, id: number) {
+	function handleInput(
+		event: Event & { currentTarget: EventTarget & HTMLInputElement },
+		id: number
+	) {
 		const inputElement = event.target as HTMLInputElement;
-		const inputLength = inputElement.value.length;
+		const inputValue = inputElement.value;
 
-		if (inputLength === 1) {
+		if (inputValue.length === 1) {
+			if (chooseAnswer.length < answerSplit.length) {
+				chooseAnswer = [...chooseAnswer, { char: inputValue, id }];
+			}
+
 			const nextInput = inputElement.nextElementSibling as HTMLInputElement;
 			if (nextInput) {
 				nextInput.focus();
 			}
+		} else if (inputValue.length === 0) {
+			const indexToRemove = chooseAnswer.findIndex((item) => item.id === id);
+			if (indexToRemove !== -1) {
+				chooseAnswer = [
+					...chooseAnswer.slice(0, indexToRemove),
+					...chooseAnswer.slice(indexToRemove + 1)
+				];
+			}
 		}
+	}
 
-		if (inputLength === 0) {
+	function handleKeyDown(event: KeyboardEvent, id: number) {
+		const inputElement = event.target as HTMLInputElement;
+		const inputValue = inputElement.value;
+		if ((event.key === 'Backspace' || event.key === 'Delete') && inputValue === '') {
 			const previousInput = inputElement.previousElementSibling as HTMLInputElement;
 			if (previousInput) {
 				previousInput.focus();
+			}
+		}
+		if (inputValue.length === 1 && event.key != 'Backspace' && event.key != 'Delete') {
+			if (chooseAnswer.length < answerSplit.length) {
+				chooseAnswer = [...chooseAnswer, { char: inputValue, id }];
+			}
+			const nextInput = inputElement.nextElementSibling as HTMLInputElement;
+			if (nextInput) {
+				nextInput.focus();
 			}
 		}
 	}
@@ -108,10 +126,12 @@
 			{#each displayAnswer as input}
 				<input
 					type="text"
-					class="w-14 h-16 flex justify-center items-center border- text-4xl"
+					id="input"
+					class="w-14 h-16 border-0 border-b-2 border-b-black text-4xl outline-0 focus:border-b-2 focus:border-b-black"
 					value={input.char}
 					maxlength="1"
-					on:input={(e) => handleInput(e, input.id)}
+					on:input={(event) => handleInput(event, input.id)}
+					on:keydown={(event) => handleKeyDown(event, input.id)}
 				/>
 			{/each}
 		</div>

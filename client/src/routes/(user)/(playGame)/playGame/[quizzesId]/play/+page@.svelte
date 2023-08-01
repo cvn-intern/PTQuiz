@@ -65,7 +65,9 @@
 
 	function fullTimer() {
 		original = quizzes[questionPointer].time;
-		timer = tweened(original);
+		timer = tweened(original, {
+			duration: 1000
+		});
 	}
 
 	const givenAn: {
