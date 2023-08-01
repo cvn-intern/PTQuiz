@@ -28,7 +28,7 @@
 		top: 50%;
 		margin: auto;
 		transform: translateY(-50%);
-		transform: scale(3);
+		transform: scale(2);
 	}
 
 	.loading span {
