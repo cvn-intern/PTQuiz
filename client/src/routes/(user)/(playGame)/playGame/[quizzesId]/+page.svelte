@@ -31,7 +31,7 @@
 	});
 	function handleClickExitButton() {
 		if (!buttonCancelClicked) {
-			goto('/discovery');
+			goto('/discovery/All');
 			buttonCancelClicked = true;
 		}
 	}
@@ -61,7 +61,7 @@
 					}
 				)}
 				on:click={() => {
-					goto('/discovery');
+					goto('/discovery/All');
 				}}
 				on:click={handleClickExitButton}
 			>

@@ -16,13 +16,14 @@ import Card from './card.svelte';
 		>
 			{nameCategory}
 		</h1>
-		<div class=" text-2xl cursor-pointer" on:click={()=>addQuiz()}>
-			<Icon icon="gala:add" class=" bg-green-400 rounded-full"/>
-		</div>
+		
 	</div>
 	<div
 		class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center items-center grid-3xl lg:gap-10"
 	>
+	<div class="cursor-pointer max-w-sm lg:w-80 bg-gray-50 shadow-lg rounded-xl p-6 flex items-center justify-center w-full h-full" on:click={()=>addQuiz()}>
+		<Icon icon="zondicons:add-solid" class="w-20 h-20 text-green-500 hover:w-24 hover:h-24"/>
+	</div>
 		{#each cardList as card}
 			<Card
 				nameOfQuiz={card.title}
