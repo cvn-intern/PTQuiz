@@ -1,7 +1,7 @@
 import type { TypeCategory } from './category.type';
 
-export async function load({ fetch }) {
-	const response = await fetch('/api/quizzes/discovery');
+export async function load({ fetch, params }) {
+	const response = await fetch(`/api/quizzes/discovery/${params.categoryName}`);
 	const result = await response.json();
 	if (response.status === 200) {
 		const categories: TypeCategory[] = result.map((category: TypeCategory) => {

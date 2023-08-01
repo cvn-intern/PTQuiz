@@ -200,11 +200,16 @@ export class QuizzesService {
 
     async filterCategory(categoryName: string) {
         try {
+            console.log(categoryName);
+            if(categoryName==='All'){
+                return await this.getDiscovery();
+            }
             const categories = await this.getDiscovery();
             const resultFilter = categories.filter(
                 (category) => category.category === categoryName,
             );
-            if (resultFilter.length !== 0) return resultFilter[0].quizzes;
+            console.log(resultFilter);
+            if (resultFilter.length !== 0) return resultFilter;
             else return [];
         } catch (exception) {
             throw new HttpException(
