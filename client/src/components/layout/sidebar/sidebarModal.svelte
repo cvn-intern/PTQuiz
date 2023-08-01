@@ -49,7 +49,7 @@
 				<SidebarItem
 					name={$t('common.discovery')}
 					icon={'mdi:world'}
-					navigateTo={'/discovery'}
+					navigateTo={'/discovery/All'}
 				/>
 			{:else}
 				<SidebarItem
