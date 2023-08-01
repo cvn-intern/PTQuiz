@@ -16,15 +16,15 @@ export class SocketService {
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
+        if (room.isStarted) {
+            throw new Error(SocketError.SOCKET_ROOM_STARTED);
+        }
         if (room.isClosed) {
             throw new Error(SocketError.SOCKET_ROOM_CLOSED);
         }
         const user = await this.prisma.users.findUnique({
             where: { id: userId },
         });
-        if (room.isClosed) {
-            throw new Error(SocketError.SOCKET_ROOM_CLOSED);
-        }
         if (!user) {
             throw new Error(SocketError.SOCKET_USER_NOT_FOUND);
         }
@@ -96,6 +96,11 @@ export class SocketService {
         await this.prisma.room_participants.delete({
             where: {
                 id: foundUser.id,
+            },
+        });
+        await this.prisma.user_questions.deleteMany({
+            where: {
+                participantId: foundUser.participantId,
             },
         });
         await this.prisma.participants.delete({
@@ -186,19 +191,47 @@ export class SocketService {
         return foundUser.room.PIN;
     }
 
-    async endRoom(roomPIN: string) {
+    async endGame(roomPIN: string) {
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN },
         });
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
+
+        await this.prisma.rooms.update({
+            where: {
+                id: room.id,
+            },
+            data: {
+                isClosed: true,
+                isStarted: false,
+            },
+        });
+
         await this.prisma.room_participants.updateMany({
             where: {
                 roomId: room.id,
             },
             data: {
                 isFinished: true,
+            },
+        });
+    }
+
+    async startGame(roomPIN: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: { PIN: roomPIN },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        await this.prisma.rooms.update({
+            where: {
+                id: room.id,
+            },
+            data: {
+                isStarted: true,
             },
         });
     }
@@ -396,9 +429,7 @@ export class SocketService {
                 answerC: answer.answer.givenAnswers.answerC,
                 answerD: answer.answer.givenAnswers.answerD,
             };
-            console.log(answerOfQuestion, answerOfUser);
             isCorrect = this.isRightAnswer(answerOfUser, answerOfQuestion);
-            console.log(isCorrect);
             if (isCorrect) {
                 score +=
                     foundUser.participant.quiz.point /

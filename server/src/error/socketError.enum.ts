@@ -7,4 +7,5 @@ export enum SocketError {
     SOCKET_QUIZ_NOT_FOUND = 'Quiz does not exist',
     SOCKET_QUESTION_NOT_FOUND = 'Question does not exist',
     SOCKET_HOST_NOT_FOUND = 'Host does not exist',
+    SOCKET_ROOM_STARTED = 'Room has already started',
 }

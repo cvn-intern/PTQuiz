@@ -132,15 +132,34 @@ export class SocketGateway
         }
     }
 
-    @SubscribeMessage('start')
+    @SubscribeMessage('start-game')
     async handleStartQuiz(
         @ConnectedSocket() client: Socket,
         @MessageBody() data: RoomPINDto,
     ) {
         try {
             const { roomPIN } = data;
+            await this.socketService.startGame(roomPIN);
             this.server.to(roomPIN).emit('started', {
                 isStarted: true,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage('end-game')
+    async handleEndGame(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: RoomPINDto,
+    ) {
+        try {
+            const { roomPIN } = data;
+            await this.socketService.endGame(roomPIN);
+            this.server.to(roomPIN).emit('ended', {
+                isEnded: true,
             });
         } catch (error) {
             throw new WsException({
@@ -192,15 +211,10 @@ export class SocketGateway
             client.emit('answer-result', {
                 ...result,
             });
-            const hostSocketId = await this.socketService.getHostSocketId(
+            const scoreBoard = await this.socketService.getScoreBoard(
                 data.roomPIN,
             );
-            if (hostSocketId) {
-                const scoreBoard = await this.socketService.getScoreBoard(
-                    data.roomPIN,
-                );
-                this.server.to(hostSocketId).emit('score-board', scoreBoard);
-            }
+            this.server.to(data.roomPIN).emit('score-board', scoreBoard);
         } catch (error) {
             throw new WsException({
                 message: error.message,
