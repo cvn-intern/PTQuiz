@@ -22,20 +22,18 @@ export const actions = {
 				body: form
 			});
 			const result = await response.json();
-			console.log('result', result);
+
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
-			if (message.isSuccess) {
-				message.success.message = result.message;
-				message.success.id = result.data.id;
-			}
+			message.success.id = result.data.id;
+			message.success.message = result.message;
 			message.error.message = result.message;
 
 			return message;
 		} catch (error: any) {
 			message.isDone = true;
 			message.isSuccess = false;
-			console.log(error);
+
 			for (let i = 0; i < error.errors.length; i++) {
 				(message.error.missing as Record<string, boolean>)[`${error.errors[i].path}`] =
 					true;

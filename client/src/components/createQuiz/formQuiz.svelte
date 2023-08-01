@@ -15,7 +15,7 @@
 		return form?.message?.error?.message?.[name] ?? '';
 	};
 	$: if (form?.message?.isDone) isSubmitting = false;
-	$: if (form?.message?.isSuccess) goto(`/createQuiz/${form?.message?.success?.id}`);
+	$: if (form?.isSuccess && !isUpdate) goto(`/createQuiz/${form?.success?.id}`);
 
 	let levelList: selectOptionne[] = [
 		{ value: 0, name: 'Easy' },
@@ -28,7 +28,7 @@
 		difficultyLevel: '',
 		passingPoint: '',
 		point: '',
-		description: '',
+		description: ''
 	};
 
 	export const snapshot = {
@@ -80,7 +80,7 @@
 </script>
 
 <form
-	class="my-6 flex flex-col space-y-4 items-center bg-white shadow-lg p-6 rounded-lg dark:bg-gray-800 dark:text-white dark:shadow-none dark:border-gray-600 dark:border-2"
+	class="my-6 flex flex-col space-y-4 items-center rounded-lg dark:bg-gray-800 dark:text-white dark:shadow-none dark:border-gray-600 dark:border-2 w-full"
 	{action}
 	method="post"
 	use:enhance={() => {
@@ -96,7 +96,7 @@
 	<h3 class="text-xl font-medium text-gray-900 dark:text-white">
 		{$t('common.informationQuiz')}
 	</h3>
-	<div class="grid md:grid-cols-2 gap-4 grid-cols-1">
+	<div class="grid md:grid-cols-2 gap-4 grid-cols-1 w-full">
 		{#each inputFormList as { label, name, type, required, selectOptionsList }}
 			<div class="w-full">
 				<Label class="space-y-2 block text-base font-medium text-gray-900 dark:text-w">
@@ -112,7 +112,13 @@
 						/>
 						{#if result[name] !== ''}
 							<div class="relative">
-								<img src={result[name]} alt="image" class="w-full h-20 cursor-pointer {hiddenInputFile? '': 'hidden'}" />
+								<img
+									src={result[name]}
+									alt="image"
+									class="w-full h-32 cursor-pointer {hiddenInputFile
+										? ''
+										: 'hidden'}"
+								/>
 								<button
 									type="button"
 									class="absolute top-0 left-0 w-full h-full bg-transparent bg-opacity-10 flex justify-center items-center cursor-pointer {hiddenInputFile
@@ -180,11 +186,9 @@
 					/>
 				{/if}
 				<div>
-					{#if !form?.message?.isDone}
-						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
-							{getMessageError(name)}
-						</p>
-					{/if}
+					<p class="mt-1 text-base text-red-500 dark:text-gray-300">
+						{getMessageError(name)}
+					</p>
 				</div>
 			</div>
 		{/each}

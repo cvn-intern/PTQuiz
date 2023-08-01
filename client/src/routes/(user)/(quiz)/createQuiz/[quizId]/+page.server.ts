@@ -71,7 +71,7 @@ export const actions = {
 		} catch (error: any) {
 			message.isDone = true;
 			message.isSuccess = false;
-			console.log(error);
+			
 			for (let i = 0; i < error.errors.length; i++) {
 				(message.error.missing as Record<string, boolean>)[`${error.errors[i].path}`] =
 					true;
