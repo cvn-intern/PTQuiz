@@ -21,7 +21,7 @@
 		{#each cardList as card}
 			<Card
 				nameOfQuiz={card.title}
-				author={card.user.displayName}
+				author={card?.user?.displayName}
 				image={card.image}
 				category={nameCategory}
 				time={card.durationMins}

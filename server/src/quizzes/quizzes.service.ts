@@ -208,8 +208,9 @@ export class QuizzesService {
         try {
             page = page || 1;
             const pageSize = 5;
+            console.log(categoryName);
             let quizzesOfUser, totalQuizzes;
-            if (categoryName === 'All') {
+            if (categoryName === 'All' || categoryName === undefined) {
                 [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
                     this.prisma.quizzes.findMany({
                         where: {

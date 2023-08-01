@@ -4,17 +4,18 @@
 	import { t } from '$i18n/translations';
 	import { quizStore } from '$libs/stores/quizStore';
 	export let data;
+	$: data = data;
 	let { quizzes, totalQuizzes } = data;
 	function handleCreateQuiz() {
 		goto('/createQuiz');
 	}
 
-	quizStore.set({ quizzes, totalQuizzes });
+	// quizStore.set({ quizzes, totalQuizzes });
 
-	$: quizStore.subscribe(({ quizzes: newQuizzes, totalQuizzes: newTotalQuizzes }) => {
-		quizzes = newQuizzes;
-		totalQuizzes = newTotalQuizzes;
-	});
+	// $: quizStore.subscribe(({ quizzes: newQuizzes, totalQuizzes: newTotalQuizzes }) => {
+	// 	quizzes = newQuizzes;
+	// 	totalQuizzes = newTotalQuizzes;
+	// });
 </script>
 
 <div>
