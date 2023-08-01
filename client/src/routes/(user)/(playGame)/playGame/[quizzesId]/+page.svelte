@@ -6,7 +6,6 @@
 	import { t } from '$i18n/translations';
 	import { gameInfoStore } from '$stores/gameInfoStore';
 	import { onMount } from 'svelte';
-	import { onDestroy } from 'svelte';
 	export let data;
 
 	let gameInfo = data.gameInfo;
