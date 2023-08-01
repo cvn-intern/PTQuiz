@@ -112,13 +112,7 @@
 						/>
 						{#if result[name] !== ''}
 							<div class="relative">
-								<img
-									src={result[name]}
-									alt="image"
-									class="w-full h-20 cursor-pointer {hiddenInputFile
-										? ''
-										: 'hidden'}"
-								/>
+								<img src={result[name]} alt="image" class="w-full h-20 cursor-pointer {hiddenInputFile? '': 'hidden'}" />
 								<button
 									type="button"
 									class="absolute top-0 left-0 w-full h-full bg-transparent bg-opacity-10 flex justify-center items-center cursor-pointer {hiddenInputFile
@@ -186,7 +180,7 @@
 					/>
 				{/if}
 				<div>
-					{#if !form?.message?.isSuccess}
+					{#if !form?.message?.isDone}
 						<p class="mt-1 text-base text-red-500 dark:text-gray-300">
 							{getMessageError(name)}
 						</p>

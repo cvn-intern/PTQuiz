@@ -25,9 +25,12 @@ export const actions = {
 			console.log('result', result);
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
-			message.success.message = result.message;
-			message.success.id = result.data.id;
+			if (message.isSuccess) {
+				message.success.message = result.message;
+				message.success.id = result.data.id;
+			}
 			message.error.message = result.message;
+
 			return message;
 		} catch (error: any) {
 			message.isDone = true;
