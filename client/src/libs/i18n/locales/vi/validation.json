@@ -34,7 +34,7 @@
 	"EXPIRED_TOKEN": "Token đã hết hạn",
 	"USER_INVALID_CREDENTIALS_ATTEMPTS_LEFT": "Email hoặc mật khẩu không đúng, bạn còn {{attemptsLeft}} lần thử",
 	"ACCESS_TOKEN_EXPIRED": "Access token hết hạn",
-	"TITLE_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS": "Tiêu đề quiz phải có ít nhất 10 ký tự",
+	"TITLE_QUIZ_MUST_BE_AT_LEAST_1_CHARACTERS": "Tiêu đề quiz phải có ít nhất 1 ký tự",
 	"TITLE_QUIZ_TOO_LONG": "Tiêu đề quiz quá dài",
 	"DESCRIPTION_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS": "Mô tả quiz phải có ít nhất 10 ký tự",
 	"DESCRIPTION_QUIZ_TOO_LONG": "Mô tả quiz quá dài",

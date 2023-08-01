@@ -42,8 +42,8 @@ export class IsPointGreaterThanPassingPoint
 }
 
 export class QuizzesDto {
-    @Length(10, 30, {
-        message: 'Title must be between 10 and 30 characters',
+    @Length(1, 30, {
+        message: 'Title must be between 1 and 30 characters',
     })
     @IsNotEmpty({ message: 'Title can not be empty' })
     title: string;

@@ -7,7 +7,7 @@ export const InforQuizFormSchema = z
 	.object({
 		title: z
 			.string()
-			.min(10, t.get('validation.TITLE_QUIZ_MUST_BE_AT_LEAST_10_CHARACTERS'))
+			.min(1, t.get('validation.TITLE_QUIZ_MUST_BE_AT_LEAST_1_CHARACTERS'))
 			.max(50, t.get('validation.TITLE_QUIZ_TOO_LONG')),
 		passingPoint: z
 			.number(t.get('validation.PASSING_POINT_MUST_BE_A_NUMBER'))

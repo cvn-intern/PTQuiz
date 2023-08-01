@@ -9,9 +9,7 @@
 	export let result: any;
 	export let action: string;
 	export let isUpdate: boolean;
-	// $: console.log('result', result['image']);
-	// $: console.log('form 2', form);
-	// $: console.log('action', action);
+
 	let isSubmitting: boolean = false;
 	$: getMessageError = (name: string): string => {
 		return form?.message?.error?.message?.[name] ?? '';
@@ -31,7 +29,6 @@
 		passingPoint: '',
 		point: '',
 		description: '',
-		image: ''
 	};
 
 	export const snapshot = {
@@ -177,7 +174,7 @@
 					/>
 				{:else}
 					<input
-						minlength="10"
+						minlength="1"
 						maxlength="50"
 						id={name}
 						type="text"

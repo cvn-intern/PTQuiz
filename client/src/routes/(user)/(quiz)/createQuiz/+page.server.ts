@@ -16,10 +16,6 @@ export const actions = {
 				point: parseInt(form.get('point')),
 				image: form.get('image')
 			});
-			if (form.get('image').size === 0) form.delete('image');
-
-			console.log('form', form);
-
 			const response = await fetch('/api/quizzes/create', {
 				method: 'POST',
 				headers: { type: 'multipart/form-data' },
@@ -32,7 +28,6 @@ export const actions = {
 			message.success.message = result.message;
 			message.success.id = result.data.id;
 			message.error.message = result.message;
-
 			return message;
 		} catch (error: any) {
 			message.isDone = true;
