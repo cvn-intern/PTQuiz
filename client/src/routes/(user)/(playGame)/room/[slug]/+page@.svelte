@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import socket from '../../../../../libs/socket/socket';
 	import { page } from '$app/stores';
-	import { Modal, Progressbar, Spinner } from 'flowbite-svelte';
+	import { Modal, Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import QuestionDisplay from '../../../../../components/playGame/questionDisplay.svelte';
 	import type { Quiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
@@ -11,9 +10,10 @@
 	import SingleChoiceSocket from '../../../../../components/playGame/socket/singleChoiceSocket.svelte';
 	import WaitingRoom from '$components/playGame/socket/waitingRoom.svelte';
 	import Loading from '$components/loading.svelte';
-
-	export let data;
-
+	import type { LayoutData } from '../../../../$types';
+	import { io } from 'socket.io-client';
+	import { createSocket } from '../../../../../libs/socket/socket';
+	export let data: LayoutData;
 	type Participant = {
 		id: string;
 		displayName: string;
@@ -29,6 +29,7 @@
 		left: number;
 		style: string;
 	};
+	const socket = createSocket(data.url, data.token);
 	let isEndGame: boolean = false;
 	let questionPointer: number = 0;
 	let isLoading: boolean = true;
@@ -69,15 +70,15 @@
 				userId: data.user.id
 			});
 		}, 1000);
-		socket.on('room-users', (data) => {
+		socket.on('room-users', (data: any) => {
 			isLoading = false;
 			participants = data;
 		});
-		socket.on('exception', (data) => {
+		socket.on('exception', (data: any) => {
 			isLoading = false;
 			errorMessage = data.message;
 		});
-		socket.on('room-messages', (data) => {
+		socket.on('room-messages', (data: any) => {
 			const newMessage = {
 				participant: {
 					id: data.userId,
@@ -96,25 +97,25 @@
 			};
 			messages = [...messages, newMessage];
 		});
-		socket.on('is-host', (data) => {
+		socket.on('is-host', (data: any) => {
 			isHost = data.isHost;
 		});
-		socket.on('quiz-questions', (data) => {
+		socket.on('quiz-questions', (data: any) => {
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
-		socket.on('question-pointer', (data) => {
+		socket.on('question-pointer', (data: any) => {
 			questionPointer = data.questionPointer;
 			isPicked = false;
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
-		socket.on('score-board', (data) => {
+		socket.on('score-board', (data: any) => {
 			participants = data;
 		});
-		socket.on('ended', (data) => {
+		socket.on('ended', (data: any) => {
 			isEndGame = data.isEnded;
 		});
 	});
@@ -123,6 +124,7 @@
 			roomPIN: $page.params.slug,
 			userId: data.user.id
 		});
+		socket.disconnect();
 	});
 	function startGame() {
 		isEndGame = false;
