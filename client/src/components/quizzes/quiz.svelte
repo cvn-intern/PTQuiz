@@ -23,7 +23,7 @@
 	let sharedToastId: string | number;
 
 	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
+		toast.dismiss(sharedToastId.toString());
 	};
 
 	async function handleStart() {

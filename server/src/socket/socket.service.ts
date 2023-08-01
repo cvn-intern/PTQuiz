@@ -49,6 +49,7 @@ export class SocketService {
                 userId: user.id,
                 quizId: room.quizId,
                 point: 0,
+                correct: 0,
             },
         });
 
@@ -137,6 +138,7 @@ export class SocketService {
                             },
                         },
                         point: true,
+                        correct: true,
                     },
                 },
                 roomId: true,
@@ -150,6 +152,7 @@ export class SocketService {
                 avatar: roomParticipant.participant.user.avatar,
                 isHost: roomParticipant.isHost,
                 point: roomParticipant.participant.point,
+                correct: roomParticipant.participant.correct,
             };
         });
     }
@@ -289,15 +292,12 @@ export class SocketService {
 
     async checkRoomHost(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
-            where: { PIN: roomPIN },
+            where: { PIN: roomPIN, userId },
         });
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
         }
-        if (room.userId === userId) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     isRightAnswer(answerOfUser: AnswerType, answerOfQuestion: AnswerType) {
@@ -343,6 +343,7 @@ export class SocketService {
                             },
                         },
                         point: true,
+                        correct: true,
                     },
                 },
                 roomId: true,
@@ -392,6 +393,7 @@ export class SocketService {
                     },
                     data: {
                         point: foundUser.participant.point + score,
+                        correct: foundUser.participant.correct + 1,
                     },
                 });
             }
@@ -440,6 +442,7 @@ export class SocketService {
                     },
                     data: {
                         point: foundUser.participant.point + score,
+                        correct: foundUser.participant.correct + 1,
                     },
                 });
             }
@@ -519,6 +522,7 @@ export class SocketService {
                             },
                         },
                         point: true,
+                        correct: true,
                     },
                 },
                 isHost: true,
@@ -536,6 +540,7 @@ export class SocketService {
                 avatar: user.participant.user.avatar,
                 isHost: user.isHost,
                 point: user.participant.point,
+                correct: user.participant.correct,
             };
         });
     }

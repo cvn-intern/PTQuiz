@@ -8,4 +8,5 @@ export enum SocketError {
     SOCKET_QUESTION_NOT_FOUND = 'Question does not exist',
     SOCKET_HOST_NOT_FOUND = 'Host does not exist',
     SOCKET_ROOM_STARTED = 'Room has already started',
+    SOCKET_ROOM_PERMISSION_DENIED = 'You do not have permission to do this',
 }

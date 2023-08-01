@@ -6,6 +6,7 @@
 	import { Modal } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	import { tweened, type Tweened } from 'svelte/motion';
+	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
 	export let showModal: boolean;
 	export let question: Quiz;
 	export let socket: Socket;
@@ -30,9 +31,8 @@
 	}
 	let isCorrect: boolean = false;
 	const pickAnswer = () => {
-		socket.emit('pick-answer', {
+		socket.emit(ListenChannel.PICK_ANSWER, {
 			roomPIN: $page.params.slug,
-			userId: user.id,
 			answer: {
 				questionId: question.id,
 				writtenAnswer: '',
@@ -46,7 +46,7 @@
 		});
 	};
 	onMount(() => {
-		socket.on('answer-result', (data) => {
+		socket.on(EmitChannel.ANSWER_RESULT, (data) => {
 			isCorrect = data.isCorrect;
 			score = data.score;
 			isPicked = true;
@@ -57,7 +57,6 @@
 				isCorrect: data.answer[index],
 				disabled: isLoading || isPicked ? true : false
 			}));
-			timer = tweened(0);
 			showModal = true;
 			setTimeout(() => {
 				showModal = false;
@@ -89,6 +88,7 @@
 		} ${option.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 		on:click={() => {
 			isLoading = true;
+			timer = tweened(0);
 			fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 				id: optionKey,
 				contents: question.options[optionKey],

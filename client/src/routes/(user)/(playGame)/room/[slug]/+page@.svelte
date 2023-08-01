@@ -11,8 +11,8 @@
 	import WaitingRoom from '$components/playGame/socket/waitingRoom.svelte';
 	import Loading from '$components/loading.svelte';
 	import type { LayoutData } from '../../../../$types';
-	import { io } from 'socket.io-client';
 	import { createSocket } from '../../../../../libs/socket/socket';
+	import { EmitChannel, ListenChannel } from '../../../../../libs/constants/socketChannel';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -20,6 +20,7 @@
 		avatar: string;
 		isHost: boolean;
 		point: number;
+		correct: number;
 	};
 	type Message = {
 		participant: Participant;
@@ -58,34 +59,32 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-
 	onMount(() => {
 		setTimeout(() => {
-			socket.emit('join-room', {
-				roomPIN: $page.params.slug,
-				userId: data.user.id
+			socket.emit(ListenChannel.JOIN_ROOM, {
+				roomPIN: $page.params.slug
 			});
-			socket.emit('is-host', {
-				roomPIN: $page.params.slug,
-				userId: data.user.id
+			socket.emit(ListenChannel.IS_HOST, {
+				roomPIN: $page.params.slug
 			});
 		}, 1000);
-		socket.on('room-users', (data: any) => {
+		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
 			participants = data;
 		});
-		socket.on('exception', (data: any) => {
+		socket.on(EmitChannel.EXCEPTION, (data: any) => {
 			isLoading = false;
 			errorMessage = data.message;
 		});
-		socket.on('room-messages', (data: any) => {
+		socket.on(EmitChannel.ROOM_MESSAGES, (data: any) => {
 			const newMessage = {
 				participant: {
 					id: data.userId,
 					displayName: data.userId,
 					avatar: data.avatar,
 					isHost: data.isHost,
-					point: data.point
+					point: data.point,
+					correct: data.correct
 				},
 				content: data.message,
 				reaction: data.reaction,
@@ -97,46 +96,45 @@
 			};
 			messages = [...messages, newMessage];
 		});
-		socket.on('is-host', (data: any) => {
+		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
 		});
-		socket.on('quiz-questions', (data: any) => {
+		socket.on(EmitChannel.QUIZ_QUESTIONS, (data: any) => {
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
-		socket.on('question-pointer', (data: any) => {
+		socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
 			questionPointer = data.questionPointer;
 			isPicked = false;
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
-		socket.on('score-board', (data: any) => {
+		socket.on(EmitChannel.SCORE_BOARD, (data: any) => {
 			participants = data;
 		});
-		socket.on('ended', (data: any) => {
+		socket.on(EmitChannel.ENDED, (data: any) => {
 			isEndGame = data.isEnded;
 		});
 	});
 	onDestroy(() => {
-		socket.emit('leave-room', {
-			roomPIN: $page.params.slug,
-			userId: data.user.id
+		socket.emit(ListenChannel.LEAVE_ROOM, {
+			roomPIN: $page.params.slug
 		});
 		socket.disconnect();
 	});
 	function startGame() {
 		isEndGame = false;
-		socket.emit('start-game', {
+		socket.emit(ListenChannel.START_GAME, {
 			roomPIN: $page.params.slug
 		});
-		socket.emit('get-quiz-questions', {
+		socket.emit(ListenChannel.GET_QUIZ_QUESTIONS, {
 			roomPIN: $page.params.slug
 		});
 	}
 	const nextQuestion = () => {
-		socket.emit('change-question-pointer', {
+		socket.emit(ListenChannel.CHANGE_QUESTION_POINTER, {
 			questionPointer: questionPointer + 1,
 			roomPIN: $page.params.slug
 		});
@@ -146,7 +144,7 @@
 
 	async function sendMessage() {
 		if (isButtonDisabled) return;
-		socket.emit('send-message', {
+		socket.emit(ListenChannel.SEND_MESSAGE, {
 			roomPIN: $page.params.slug,
 			userId: data.user.id,
 			avatar: data.user.avatar,
@@ -171,7 +169,7 @@
 		}, 5000);
 	};
 	const endGame = () => {
-		socket.emit('end-game', {
+		socket.emit(ListenChannel.END_GAME, {
 			roomPIN: $page.params.slug
 		});
 	};
@@ -270,6 +268,7 @@
 						alt={participant.displayName}
 						class="w-10 h-10 rounded-full ml-4"
 					/>
+					<p>{participant.correct}</p>
 					<p>{participant.point}</p>
 				</div>
 			{/each}
