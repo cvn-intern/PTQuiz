@@ -292,10 +292,13 @@ export class SocketService {
 
     async checkRoomHost(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
-            where: { PIN: roomPIN, userId },
+            where: { PIN: roomPIN },
         });
         if (!room) {
             throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        if (room.userId !== userId) {
+            return false;
         }
         return true;
     }

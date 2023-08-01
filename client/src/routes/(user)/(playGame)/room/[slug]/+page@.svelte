@@ -12,7 +12,7 @@
 	import Loading from '$components/loading.svelte';
 	import type { LayoutData } from '../../../../$types';
 	import { createSocket } from '../../../../../libs/socket/socket';
-	import { EmitChannel, ListenChannel } from '../../../../../libs/constants/socketChannel';
+	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -180,7 +180,7 @@
 		<Loading />
 	</div>
 {:else}
-	<div class="bg-greenLight w-full h-screen px-4 lg:px-16 py-4">
+	<div class="bg-greenLight w-full h-screen px-4 lg:px-16">
 		{#if errorMessage}
 			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
 		{:else if isEndGame}
@@ -199,46 +199,72 @@
 				{/each}
 			</div>
 		{:else if questions.length > 0}
-			{#if isHost}
-				{#if questionPointer < questions.length - 1}
-					<button
-						class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-						on:click={nextQuestion}>Next</button
-					>
-				{:else}
-					<button
-						class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-						on:click={endGame}>End game</button
-					>
-				{/if}
-				<button
-					class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-					on:click={getScoreBoard}>Score board</button
-				>
-			{/if}
 			<div>
-				<div class="pt-4">
-					<Progressbar progress={stringTimer} size="h-4" color="gray" />
-				</div>
-				<QuestionDisplay
-					quizzesType={questions[questionPointer].type}
-					quizzesTitle={questions[questionPointer].title}
-				/>
-				{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
-					<div
-						class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
-					>
-						<SingleChoiceSocket
-							bind:timer
-							question={questions[questionPointer]}
-							bind:isPicked
-							{showModal}
-							{socket}
-							user={data.user}
-							{isHost}
-						/>
+				<div class="flex flex-col h-screen w-full font-sans p-2 gap-4">
+					<div class="pt-4">
+						<Progressbar progress={stringTimer} size="h-4" color="gray" />
 					</div>
-				{/if}
+					{#if isHost}
+						<div class="flex gap-4">
+							{#if questionPointer < questions.length - 1}
+								<button
+									class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+									on:click={nextQuestion}>Next</button
+								>
+							{:else}
+								<button
+									class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+									on:click={endGame}>End game</button
+								>
+							{/if}
+							<button
+								class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+								on:click={getScoreBoard}>Score board</button
+							>
+						</div>
+					{/if}
+					<div class="h-full p-2 gap-2">
+						<div class="question h-1/2">
+							<QuestionDisplay
+								quizzesType={questions[questionPointer].type}
+								quizzesTitle={questions[questionPointer].title}
+							/>
+						</div>
+						<div class="answer h-1/2">
+							{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+								<div
+									class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+								>
+									<SingleChoiceSocket
+										bind:timer
+										question={questions[questionPointer]}
+										bind:isPicked
+										{showModal}
+										{socket}
+										user={data.user}
+										{isHost}
+										isTrueFalse={false}
+									/>
+								</div>
+							{:else if questions[questionPointer].type === TypeQuestion.TRUE_FALSE}
+								<div
+									class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
+								>
+									<SingleChoiceSocket
+										bind:timer
+										question={questions[questionPointer]}
+										bind:isPicked
+										{showModal}
+										{socket}
+										user={data.user}
+										{isHost}
+										isTrueFalse={true}
+									/>
+								</div>
+							{/if}
+						</div>
+					</div>
+				</div>
 			</div>
 		{:else}
 			<WaitingRoom
