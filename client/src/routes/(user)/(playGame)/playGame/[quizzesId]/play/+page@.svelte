@@ -273,7 +273,7 @@
 	}
 </script>
 
-<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4 overflow-y-scroll">
+<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
 	<div class="pt-4">
 		<Progressbar progress={stringTimer} size="h-4" color="gray" />
 	</div>
