@@ -1,30 +1,46 @@
 <script lang="ts">
+	import type { Socket } from 'socket.io-client';
+	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
+	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
+	import { page } from '$app/stores';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 	type Message = {
-		participant: Participant;
+		user: {
+			id: string;
+			displayName: string;
+			avatar: string;
+		};
 		content: string;
-		reaction: string | null;
-		id: number;
-		left: number;
-		style: string;
 	};
-
 	export let startGame: () => void;
-	export let sendMessage: () => void;
 	export let url: string;
 	export let participants: Participant[];
-	export let messages: Message[];
 	export let isHost: boolean;
-	export let messageContent: string;
-	export let selectedReaction: string | null;
-	export let isButtonDisabled: boolean;
-
-	let reactions = ['😄', '😍', '🤣', '😊', '🙌'];
+	export let socket: Socket;
+	let messages: Message[] = [];
+	let messageContent: string;
+	let isDisabled = false;
+	onMount(() => {
+		socket.on(EmitChannel.ROOM_MESSAGES, (data) => {
+			messages = [...messages, data];
+		});
+	});
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 	const handleCopy = () => {
 		navigator.clipboard.writeText(url);
 		toast.success('Copied to clipboard');
+	};
+	const sendMessage = () => {
+		isDisabled = true;
+		setTimeout(() => {
+			isDisabled = false;
+		}, 3000);
+		socket.emit(ListenChannel.SEND_MESSAGE, {
+			content: messageContent,
+			roomPIN: $page.params.slug
+		});
+		messageContent = '';
 	};
 </script>
 
@@ -69,41 +85,19 @@
 	<div class="flex justify-center h-full items-center md:hidden">
 		You can chat, throw react, and see others participants name on host screen
 	</div>
-	<div class="flex justify-center">
-		<form on:submit|preventDefault={sendMessage} class="flex items-center space-x-2">
+	<div class="flex flex-col items-center">
+		<form class="flex items-center space-x-2" on:submit|preventDefault={sendMessage}>
 			<input
 				bind:value={messageContent}
+				name="message"
 				placeholder="Type a message..."
-				class="border-2 border-blue-500 rounded-lg px-4 py-2 w-64 focus:outline-none focus:border-blue-700 transition-colors duration-200 ease-in-out"
+				class="border-2 rounded-lg px-4 py-2 w-64 focus:outline-none focus:border-blue-700 transition-colors duration-200 ease-in-out"
 			/>
-			<div class="relative group">
-				<button
-					on:click={() => {
-						selectedReaction = reactions[0];
-					}}
-					class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none"
-					>{reactions[0]}</button
-				>
-				<div
-					class="absolute left-0 mt-2 space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-				>
-					{#each reactions.slice(1) as reaction}
-						<button
-							disabled={isButtonDisabled}
-							on:click={() => {
-								selectedReaction = reaction;
-								isButtonDisabled = true;
-							}}
-							class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none"
-							>{reaction}</button
-						>
-					{/each}
-				</div>
-			</div>
 			<button
+				disabled={isDisabled}
 				type="submit"
 				class={`w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl focus:outline-none ${
-					isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''
+					isDisabled ? 'opacity-50 cursor-not-allowed' : ''
 				}`}
 			>
 				<svg
@@ -123,75 +117,4 @@
 			</button>
 		</form>
 	</div>
-	<style>
-		@keyframes flyAndFade {
-			0% {
-				transform: translateY(30vh);
-				opacity: 1;
-			}
-			100% {
-				transform: translateY(0vh);
-				opacity: 0;
-			}
-		}
-	</style>
-	{#each messages as message (message.id)}
-		<div class="balloon flex items-center relative" style={message.style}>
-			<img
-				src={message.participant.avatar}
-				alt={message.participant.displayName}
-				class="w-12 h-12 rounded-full mr-2"
-			/>
-			<div class="text-center truncate">
-				<p>{message.content} {message.reaction}</p>
-			</div>
-		</div>
-
-		<style>
-			.balloon {
-				display: inline-block;
-				width: 120px;
-				height: 145px;
-				background: hsl(215, 50%, 65%);
-				border-radius: 80%;
-				position: relative;
-				box-shadow: inset -10px -10px 0 rgba(0, 0, 0, 0.07);
-				margin: 20px 30px;
-				transition: transform 0.5s ease;
-				z-index: 10;
-				animation: balloons 1s ease-in-out infinite;
-				transform-origin: bottom center;
-			}
-			@keyframes balloons {
-				0%,
-				100% {
-					transform: translateY(0px) rotate(-4deg);
-				}
-				50% {
-					transform: translateY(-20px) rotate(4deg);
-				}
-			}
-			.balloon:before {
-				content: '▲';
-				font-size: 20px;
-				color: hsl(215, 30%, 50%);
-				display: block;
-				text-align: center;
-				width: 100%;
-				position: absolute;
-				bottom: -12px;
-				z-index: -100;
-			}
-			.balloon:after {
-				display: inline-block;
-				top: 153px;
-				position: absolute;
-				height: 50px;
-				width: 1px;
-				margin: 0 auto;
-				content: '';
-				background: rgba(0, 0, 0, 0.2);
-			}
-		</style>
-	{/each}
 </div>

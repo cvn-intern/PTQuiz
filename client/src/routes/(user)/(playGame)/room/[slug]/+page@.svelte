@@ -27,14 +27,7 @@
 		isHost: boolean;
 		point: number;
 		correct: number;
-	};
-	type Message = {
-		participant: Participant;
-		content: string;
-		reaction: string | null;
-		id: number;
-		left: number;
-		style: string;
+		isAnswered: boolean;
 	};
 	const socket = createSocket(data.url, data.token);
 	let isEndGame: boolean = false;
@@ -44,10 +37,7 @@
 	let showScoreBoard: boolean = false;
 	let errorMessage: string = '';
 	let participants: Participant[] = [];
-	let messages: Message[] = [];
-	let messageContent: string = '';
 	let questions: SocketQuiz[] = [];
-	let selectedReaction: string | null = '';
 	let url = $page.url.href;
 	let isHost: boolean = false;
 	let isPicked = false;
@@ -65,6 +55,7 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
+
 	onMount(() => {
 		setTimeout(() => {
 			socket.emit(ListenChannel.JOIN_ROOM, {
@@ -76,31 +67,31 @@
 		}, 1000);
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
-			participants = data;
+			if (data.signal === 'join') {
+				participants = data.roomParticipants.map((participant: any) => {
+					return {
+						...participant,
+						isAnswered: false
+					};
+				});
+			} else {
+				const newParticipantsId = data.roomParticipants.map((participant: any) => {
+					return participant.id;
+				});
+				const participantsId = participants.map((participant: any) => {
+					return participant.id;
+				});
+				const intersection = participantsId.filter((element: any) =>
+					newParticipantsId.includes(element)
+				);
+				participants = participants.filter((participant: any) => {
+					return intersection.includes(participant.id);
+				});
+			}
 		});
 		socket.on(EmitChannel.EXCEPTION, (data: any) => {
 			isLoading = false;
 			errorMessage = data.message;
-		});
-		socket.on(EmitChannel.ROOM_MESSAGES, (data: any) => {
-			const newMessage = {
-				participant: {
-					id: data.userId,
-					displayName: data.userId,
-					avatar: data.avatar,
-					isHost: data.isHost,
-					point: data.point,
-					correct: data.correct
-				},
-				content: data.message,
-				reaction: data.reaction,
-				id: Date.now(),
-				left: Math.random() * 80,
-				style: `position: absolute; left: ${
-					Math.random() * 80
-				}vw; animation: flyAndFade 5s linear forwards;`
-			};
-			messages = [...messages, newMessage];
 		});
 		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
@@ -114,6 +105,12 @@
 		socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
 			questionPointer = data.questionPointer;
 			isPicked = false;
+			participants = participants.map((participant: any) => {
+				return {
+					...participant,
+					isAnswered: false
+				};
+			});
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
@@ -146,28 +143,6 @@
 		});
 	};
 
-	let isButtonDisabled = false;
-
-	async function sendMessage() {
-		if (isButtonDisabled) return;
-		socket.emit(ListenChannel.SEND_MESSAGE, {
-			roomPIN: $page.params.slug,
-			userId: data.user.id,
-			avatar: data.user.avatar,
-			message: messageContent,
-			reaction: selectedReaction
-		});
-		messageContent = '';
-		selectedReaction = '';
-		isButtonDisabled = true;
-		setTimeout(() => {
-			isButtonDisabled = false;
-		}, 500);
-	}
-	const handleCopy = () => {
-		navigator.clipboard.writeText(url);
-		toast.success('Copied to clipboard');
-	};
 	const getScoreBoard = () => {
 		showScoreBoard = true;
 		setTimeout(() => {
@@ -217,6 +192,7 @@
 							{questions}
 							{endGame}
 							{getScoreBoard}
+                            {participants}
 						/>
 					{/if}
 					<div class="h-full p-2 gap-2">
@@ -298,17 +274,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom
-				{startGame}
-				{url}
-				{participants}
-				bind:messages
-				{sendMessage}
-				bind:messageContent
-				bind:selectedReaction
-				{isHost}
-				bind:isButtonDisabled
-			/>
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} />
 		{/if}
 	</div>
 {/if}

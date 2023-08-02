@@ -26,9 +26,6 @@
 
 		setTimeout(() => {
 			showModal = false;
-			// if (isGif) {
-			// 	isShowOption = false;
-			// }
 		}, 2000);
 	}
 </script>

@@ -311,7 +311,11 @@ export class SocketService {
         return str.split(',').map((item) => item === 'true');
     }
     isWrittenQuestion(type: number) {
-        if (type === TypeQuestion.ESSAY) {
+        if (
+            type === TypeQuestion.ESSAY ||
+            type === TypeQuestion.INPUT_TEXT ||
+            type === TypeQuestion.ARRANGE_WORD
+        ) {
             return true;
         }
         return false;
@@ -496,7 +500,7 @@ export class SocketService {
         }
         return host.socketId;
     }
-    async getScoreBoard(roomPIN: string) {
+    async getScoreBoard(roomPIN: string, questionId: string) {
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN },
         });
@@ -529,7 +533,16 @@ export class SocketService {
                 },
             },
         });
-        return scoreBoard.map((user) => {
+        const result = scoreBoard.map(async (user) => {
+            const isAnswered = await this.prisma.user_questions.findFirst({
+                where: {
+                    participantId: user.participant.id,
+                    questionId,
+                },
+                select: {
+                    givenAnswers: true,
+                },
+            });
             return {
                 id: user.participant.id,
                 displayName: user.participant.user.displayName,
@@ -537,8 +550,10 @@ export class SocketService {
                 isHost: user.isHost,
                 point: user.participant.point,
                 correct: user.participant.correct,
+                isAnswered: isAnswered ? true : false,
             };
         });
+        return Promise.all(result);
     }
 
     async getAnswerQuestion(questionId: string) {

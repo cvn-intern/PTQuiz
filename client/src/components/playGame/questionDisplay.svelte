@@ -35,7 +35,7 @@
 
 	$: viewCount = 2;
 	$: isShowGif = false;
-	
+
 	async function showGif() {
 		const duration = await getDuration(quizzesImage);
 		isShowGif = true;
