@@ -1,3 +1,4 @@
+import { CryptoService } from './../../crypto/crypto.service';
 import { Logger, UseGuards } from '@nestjs/common';
 import {
     WebSocketGateway,
@@ -12,12 +13,13 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { AnswerDto, RoomPinDTO } from '../dto';
+import { AnswerDto, RoomPinDto } from '../dto';
 import { QuestionPointerDto } from '../dto/questionPointer.dto';
 import { WebSocketJwtGuard } from '../WebSocketJwtGuard.guard';
 import { SocketClient } from '../socketClient.class';
 import { SocketError } from '../../error';
 import { EmitChannel, ListenChannel } from '../socketChannel.enum';
+import { QuestionIdDto } from '../dto/questionId.dto';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -32,7 +34,10 @@ export class SocketGateway
 {
     @WebSocketServer() server: Server;
 
-    constructor(public socketService: SocketService) {}
+    constructor(
+        public socketService: SocketService,
+        private cryptoService: CryptoService,
+    ) {}
     private logger: Logger = new Logger('SocketGateway');
 
     handleConnection(@ConnectedSocket() client: Socket): void {
@@ -65,7 +70,7 @@ export class SocketGateway
     @SubscribeMessage(ListenChannel.JOIN_ROOM)
     async handleJoinRoom(
         @ConnectedSocket() client: SocketClient,
-        @MessageBody() data: RoomPinDTO,
+        @MessageBody() data: RoomPinDto,
     ) {
         try {
             const { roomPIN } = data;
@@ -90,7 +95,7 @@ export class SocketGateway
     @SubscribeMessage(ListenChannel.LEAVE_ROOM)
     async handleLeaveRoom(
         @ConnectedSocket() client: SocketClient,
-        @MessageBody() data: RoomPinDTO,
+        @MessageBody() data: RoomPinDto,
     ) {
         try {
             const { roomPIN } = data;
@@ -134,7 +139,7 @@ export class SocketGateway
     @SubscribeMessage(ListenChannel.IS_HOST)
     async handleIsHost(
         @ConnectedSocket() client: SocketClient,
-        @MessageBody() data: RoomPinDTO,
+        @MessageBody() data: RoomPinDto,
     ) {
         try {
             const { roomPIN } = data;
@@ -155,7 +160,7 @@ export class SocketGateway
     @SubscribeMessage(ListenChannel.START_GAME)
     async handleStartQuiz(
         @ConnectedSocket() client: SocketClient,
-        @MessageBody() data: RoomPinDTO,
+        @MessageBody() data: RoomPinDto,
     ) {
         try {
             const { roomPIN } = data;
@@ -173,7 +178,7 @@ export class SocketGateway
     @SubscribeMessage(ListenChannel.END_GAME)
     async handleEndGame(
         @ConnectedSocket() client: SocketClient,
-        @MessageBody() data: RoomPinDTO,
+        @MessageBody() data: RoomPinDto,
     ) {
         try {
             const { roomPIN } = data;
@@ -191,7 +196,7 @@ export class SocketGateway
     @SubscribeMessage(ListenChannel.GET_QUIZ_QUESTIONS)
     async handleGetQuestions(
         @ConnectedSocket() client: Socket,
-        @MessageBody() data: RoomPinDTO,
+        @MessageBody() data: RoomPinDto,
     ) {
         try {
             const { roomPIN } = data;
@@ -250,6 +255,27 @@ export class SocketGateway
             this.server
                 .to(data.roomPIN)
                 .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.GET_ANSWER_QUESTION)
+    async handleGetAnswerQuestion(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: QuestionIdDto,
+    ) {
+        try {
+            const { questionId } = data;
+            const answer = await this.socketService.getAnswerQuestion(
+                questionId,
+            );
+            const decryptAnswer = await this.cryptoService.encryptData(
+                JSON.stringify(answer),
+            );
+            client.emit(EmitChannel.ANSWER_QUESTION, decryptAnswer);
         } catch (error) {
             throw new WsException({
                 message: error.message,

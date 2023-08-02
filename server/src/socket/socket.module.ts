@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SocketGateway } from './gateways/socket.gateway';
 import { SocketService } from './socket.service';
 import { JwtModule } from '@nestjs/jwt';
+import { CryptoService } from '../crypto/crypto.service';
 
 @Module({
     imports: [
@@ -10,6 +11,6 @@ import { JwtModule } from '@nestjs/jwt';
             secret: process.env.JWT_SECRET,
         }),
     ],
-    providers: [SocketGateway, SocketService],
+    providers: [SocketGateway, SocketService, CryptoService],
 })
 export class SocketModule {}

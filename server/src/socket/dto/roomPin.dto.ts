@@ -1,3 +1,3 @@
-export class RoomPinDTO {
+export class RoomPinDto {
     roomPIN: string;
 }

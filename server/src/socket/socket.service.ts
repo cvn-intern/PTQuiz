@@ -272,13 +272,6 @@ export class SocketService {
                     optionC: question.question.optionC,
                     optionD: question.question.optionD,
                 },
-                answers: {
-                    answerA: question.question.answerA,
-                    answerB: question.question.answerB,
-                    answerC: question.question.answerC,
-                    answerD: question.question.answerD,
-                },
-                written: question.question.written,
                 image: question.question.image,
                 type: question.question.type,
                 time: question.question.time,
@@ -546,5 +539,24 @@ export class SocketService {
                 correct: user.participant.correct,
             };
         });
+    }
+
+    async getAnswerQuestion(questionId: string) {
+        const answer = await this.prisma.questions.findUnique({
+            where: {
+                id: questionId,
+            },
+            select: {
+                answerA: true,
+                answerB: true,
+                answerC: true,
+                answerD: true,
+                written: true,
+            },
+        });
+        if (!answer) {
+            throw new Error(SocketError.SOCKET_QUESTION_NOT_FOUND);
+        }
+        return answer;
     }
 }

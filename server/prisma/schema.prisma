@@ -53,6 +53,7 @@ model questions {
     image   String?  @db.Text
     type    Int
     time    Int?
+    hint    String?  @db.Text
 
     quizQuestions quiz_questions[]
     user          users            @relation(fields: [userId], references: [id]) // owner

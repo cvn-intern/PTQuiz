@@ -3,16 +3,18 @@
 	import { page } from '$app/stores';
 	import { Modal, Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
-	import QuestionDisplay from '../../../../../components/playGame/questionDisplay.svelte';
-	import type { Quiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
-	import { TypeQuestion } from '../../../../../libs/constants/typeQuestion';
+	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
+	import type { SocketQuiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
+	import { TypeQuestion } from '$libs/constants/typeQuestion';
 	import { tweened } from 'svelte/motion';
-	import SingleChoiceSocket from '../../../../../components/playGame/socket/singleChoiceSocket.svelte';
+	import SingleChoiceSocket from '$components/playGame/socket/singleChoiceSocket.svelte';
 	import WaitingRoom from '$components/playGame/socket/waitingRoom.svelte';
 	import Loading from '$components/loading.svelte';
 	import type { LayoutData } from '../../../../$types';
-	import { createSocket } from '../../../../../libs/socket/socket';
 	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
+	import MultiChoiceSocket from '$components/playGame/socket/multiChoiceSocket.svelte';
+	import { createSocket } from '../../../../../libs/socket/socket';
+	import CrossWordsSocket from '../../../../../components/playGame/socket/crossWordsSocket.svelte';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -40,13 +42,13 @@
 	let participants: Participant[] = [];
 	let messages: Message[] = [];
 	let messageContent: string = '';
-	let questions: Quiz[] = [];
+	let questions: SocketQuiz[] = [];
 	let selectedReaction: string | null = '';
 	let url = $page.url.href;
 	let isHost: boolean = false;
 	let isPicked = false;
 
-	let original = 20;
+	let original = 10;
 	let stringTimer: string;
 	let timer = tweened(original);
 
@@ -228,6 +230,9 @@
 							<QuestionDisplay
 								quizzesType={questions[questionPointer].type}
 								quizzesTitle={questions[questionPointer].title}
+								quizzesNumber={questions.length}
+								quizzesPointer={questionPointer}
+								quizzesImage={questions[questionPointer].image}
 							/>
 						</div>
 						<div class="answer h-1/2">
@@ -241,8 +246,6 @@
 										bind:isPicked
 										{showModal}
 										{socket}
-										user={data.user}
-										{isHost}
 										isTrueFalse={false}
 									/>
 								</div>
@@ -256,11 +259,29 @@
 										bind:isPicked
 										{showModal}
 										{socket}
-										user={data.user}
-										{isHost}
 										isTrueFalse={true}
 									/>
 								</div>
+							{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
+								<div
+									class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+								>
+									<MultiChoiceSocket
+										bind:timer
+										question={questions[questionPointer]}
+										bind:isPicked
+										{showModal}
+										{socket}
+									/>
+								</div>
+							{:else if questions[questionPointer].type === TypeQuestion.GUESS_WORDS}
+								<CrossWordsSocket
+									bind:timer
+									question={questions[questionPointer]}
+									bind:isPicked
+									{showModal}
+									{socket}
+								/>
 							{/if}
 						</div>
 					</div>
