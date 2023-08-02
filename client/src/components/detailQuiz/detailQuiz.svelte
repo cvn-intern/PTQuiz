@@ -6,6 +6,8 @@
 	export let questionList: any;
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
+	import Loading from '$components/loading.svelte';
+	import logo from '../../assets/logo.png';
 
 	const typeI18n = (type: number) => {
 		switch (type) {
@@ -116,7 +118,10 @@
 				</ul>
 			</div>
 		{:else}
-			<div class="flex mt-4 gap-4 items-center">
+			<div class="w-full flex justify-center">
+				<img src={logo} alt="" class="w-40 h-40 animate-bounce" />
+			</div>
+			<div class="flex mt-4 gap-4 items-center justify-center">
 				<Icon icon="mdi-light:format-float-none" class="text-2xl" />
 				<p>{$t('common.noQuestionsInYourQuiz')}</p>
 			</div>
