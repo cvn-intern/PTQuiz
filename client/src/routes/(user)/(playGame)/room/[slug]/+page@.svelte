@@ -269,20 +269,22 @@
 									/>
 								</div>
 							{:else if questions[questionPointer].type === TypeQuestion.GUESS_WORDS}
-								<!-- <CrossWordsSocket
+								<CrossWordsSocket
 									bind:timer
 									question={questions[questionPointer]}
 									bind:isPicked
 									{showModal}
 									{socket}
-								/> -->
-								<!-- <ArrangeAnswerSocket
+								/>
+							{:else if questions[questionPointer].type === TypeQuestion.ARRANGE_WORD}
+								<ArrangeAnswerSocket
 									bind:timer
 									question={questions[questionPointer]}
 									bind:isPicked
 									{showModal}
 									{socket}
-								/> -->
+								/>
+							{:else if questions[questionPointer].type === TypeQuestion.INPUT_TEXT}
 								<InputTextSocket
 									bind:timer
 									question={questions[questionPointer]}
