@@ -3,12 +3,12 @@
 	import Quiz from './quiz.svelte';
 	import { t } from '../../libs/i18n/translations';
 	import { goto } from '$app/navigation';
-	import type { IQuiz } from '../../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/[[sortBy]]/quiz.type';
+	import type { IQuiz } from '../../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/[[sortBy]]/[page]/quiz.type';
 	import Icon from '@iconify/svelte';
 	import SortBy from './sortBy.svelte';
 
-	export let quizzes: IQuiz[] = [];
-
+	export let quizzes: IQuiz[];
+	export let totalQuizzes: number;
 	function handleCreateQuiz() {
 		goto('/createQuiz');
 	}
@@ -30,7 +30,6 @@
 		{#each quizzes as quiz}
 			<Quiz
 				title={quiz.title}
-				author={quiz.username}
 				description={quiz.description}
 				numberOfQuestions={quiz.numberOfQuestions}
 				image={quiz.image}
@@ -38,5 +37,8 @@
 				id={quiz.id}
 			/>
 		{/each}
+		<div class="">
+			<Pagination {quizzes} {totalQuizzes} />
+		</div>
 	</div>
 </section>

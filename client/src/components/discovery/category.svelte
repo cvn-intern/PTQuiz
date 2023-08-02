@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-import Card from './card.svelte';
+	import Pagination from './pagination.svelte';
+	import Card from './card.svelte';
 	import Icon from '@iconify/svelte';
+
 	export let nameCategory = '';
 	export let cardList: any[] = [];
+	export let totalQuizzes: number;
 	function addQuiz() {
 		goto('/createQuiz');
 	}
@@ -27,7 +30,7 @@ import Card from './card.svelte';
 		{#each cardList as card}
 			<Card
 				nameOfQuiz={card.title}
-				author={card.user.displayName}
+				author={card?.user?.displayName}
 				image={card.image}
 				category={nameCategory}
 				time={card.durationMins}
@@ -36,6 +39,7 @@ import Card from './card.svelte';
 				id={card.id}
 			/>
 		{/each}
+		<Pagination {totalQuizzes} bind:quizzes={cardList} {nameCategory} />
 	</div>
 </div>
 
