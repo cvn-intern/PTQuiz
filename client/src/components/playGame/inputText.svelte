@@ -7,6 +7,7 @@
 	export let isAnswerChecked: boolean;
 	export let finalAnswer: string;
 	export let isGuessWordsChecked: boolean;
+	export let pickGuessWords: (finalAnswer: string) => void;
 
 	type CharacterObject = {
 		char: string;
@@ -49,7 +50,7 @@
 
 	$: {
 		displayAnswer = answerSplit.map((char: string, id: number) => ({
-			char: '',
+			char: chooseAnswer[id] ? chooseAnswer[id].char : '',
 			id: id
 		}));
 	}
@@ -57,6 +58,7 @@
 	$: {
 		finalAnswer = chooseAnswer.map((obj) => obj.char).join('');
 	}
+
 	$: {
 		if (!isAnswerChecked) {
 			isGuessWordsChecked = true;
@@ -109,6 +111,20 @@
 				nextInput.focus();
 			}
 		}
+		if (event.key === 'Enter') {
+			showModal = true;
+			
+			pickGuessWords(finalAnswer);
+			setTimeout(() => {
+				showModal = false;
+			}, 2000);
+		}
+	}
+
+	$: {
+		console.log(displayAnswer);
+		console.log(chooseAnswer);
+		console.log(finalAnswer);
 	}
 </script>
 

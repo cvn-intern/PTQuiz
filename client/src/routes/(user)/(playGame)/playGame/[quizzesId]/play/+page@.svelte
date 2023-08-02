@@ -325,6 +325,7 @@
 					bind:finalAnswer
 					bind:isGuessWordsChecked
 					{showModal}
+					{pickGuessWords}
 				/>
 				<!-- <ArrangeAnswer
 					bind:isAnswerChecked
