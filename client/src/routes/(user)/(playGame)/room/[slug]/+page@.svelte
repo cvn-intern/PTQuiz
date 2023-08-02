@@ -67,8 +67,6 @@
 		}, 1000);
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
-			// participants = data;
-			// Keep every participant's isAnswered state
 			if (data.signal === 'join') {
 				participants = data.roomParticipants.map((participant: any) => {
 					return {

@@ -533,7 +533,6 @@ export class SocketService {
                 },
             },
         });
-        // check users answered or not
         const result = scoreBoard.map(async (user) => {
             const isAnswered = await this.prisma.user_questions.findFirst({
                 where: {
