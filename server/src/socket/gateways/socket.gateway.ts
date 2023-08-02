@@ -160,7 +160,7 @@ export class SocketGateway
         try {
             const { roomPIN } = data;
             await this.socketService.startGame(roomPIN, client.user.id);
-            this.server.to(roomPIN).emit('started', {
+            this.server.to(roomPIN).emit(EmitChannel.STARTED, {
                 isStarted: true,
             });
         } catch (error) {
