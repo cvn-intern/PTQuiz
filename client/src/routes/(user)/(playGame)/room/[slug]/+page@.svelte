@@ -23,9 +23,11 @@
 		isHost: boolean;
 		point: number;
 		correct: number;
+		isAnswered: boolean;
 	};
 	const socket = createSocket(data.url, data.token);
 	let isEndGame: boolean = false;
+	let numberOfAnswer: number = 0;
 	let questionPointer: number = 0;
 	let isLoading: boolean = true;
 	let showModal: boolean = false;
@@ -50,6 +52,11 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
+	$: {
+		numberOfAnswer = participants.filter((participant: any) => {
+			return participant.isAnswered;
+		}).length;
+	}
 	onMount(() => {
 		setTimeout(() => {
 			socket.emit(ListenChannel.JOIN_ROOM, {
@@ -61,7 +68,29 @@
 		}, 1000);
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
-			participants = data;
+			// participants = data;
+			// Keep every participant's isAnswered state
+			if (data.signal === 'join') {
+				participants = data.roomParticipants.map((participant: any) => {
+					return {
+						...participant,
+						isAnswered: false
+					};
+				});
+			} else {
+				const newParticipantsId = data.roomParticipants.map((participant: any) => {
+					return participant.id;
+				});
+				const participantsId = participants.map((participant: any) => {
+					return participant.id;
+				});
+				const intersection = participantsId.filter((element: any) =>
+					newParticipantsId.includes(element)
+				);
+				participants = participants.filter((participant: any) => {
+					return intersection.includes(participant.id);
+				});
+			}
 		});
 		socket.on(EmitChannel.EXCEPTION, (data: any) => {
 			isLoading = false;
@@ -79,6 +108,12 @@
 		socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
 			questionPointer = data.questionPointer;
 			isPicked = false;
+			participants = participants.map((participant: any) => {
+				return {
+					...participant,
+					isAnswered: false
+				};
+			});
 			original = questions[questionPointer].time;
 			timer = tweened(original);
 		});
@@ -154,6 +189,9 @@
 		{:else if questions.length > 0}
 			<div>
 				<div class="flex flex-col h-screen w-full font-sans p-2 gap-4">
+                    <div>
+                        {numberOfAnswer}/{participants.length} answered
+                    </div>
 					<div class="pt-4">
 						<Progressbar progress={stringTimer} size="h-4" color="gray" />
 					</div>
@@ -258,6 +296,7 @@
 					/>
 					<p>{participant.correct}</p>
 					<p>{participant.point}</p>
+					<p>{participant.isAnswered}</p>
 				</div>
 			{/each}
 		</div>

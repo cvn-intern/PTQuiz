@@ -54,9 +54,10 @@ export class SocketGateway
             if (roomPIN) {
                 const roomParticipants =
                     await this.socketService.getRoomParticipants(roomPIN);
-                this.server
-                    .to(roomPIN)
-                    .emit(EmitChannel.ROOM_USERS, roomParticipants);
+                this.server.to(roomPIN).emit(EmitChannel.ROOM_USERS, {
+                    roomParticipants,
+                    signal: 'leave',
+                });
             }
         } catch (error) {
             throw new WsException({
@@ -83,9 +84,10 @@ export class SocketGateway
             client.join(roomPIN);
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
-            this.server
-                .to(roomPIN)
-                .emit(EmitChannel.ROOM_USERS, roomParticipants);
+            this.server.to(roomPIN).emit(EmitChannel.ROOM_USERS, {
+                roomParticipants,
+                signal: 'join',
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -108,9 +110,10 @@ export class SocketGateway
             );
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
-            this.server
-                .to(roomPIN)
-                .emit(EmitChannel.ROOM_USERS, roomParticipants);
+            this.server.to(roomPIN).emit(EmitChannel.ROOM_USERS, {
+                roomParticipants,
+                signal: 'leave',
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -167,7 +170,7 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN } = data;
-            await this.socketService.startGame(roomPIN, client.user.id);
+            // await this.socketService.startGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit(EmitChannel.STARTED, {
                 isStarted: true,
             });
@@ -185,7 +188,7 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN } = data;
-            await this.socketService.endGame(roomPIN, client.user.id);
+            // await this.socketService.endGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit('ended', {
                 isEnded: true,
             });
@@ -254,6 +257,7 @@ export class SocketGateway
             });
             const scoreBoard = await this.socketService.getScoreBoard(
                 data.roomPIN,
+                data.answer.questionId,
             );
             this.server
                 .to(data.roomPIN)
