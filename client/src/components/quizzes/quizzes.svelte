@@ -36,6 +36,7 @@
 				image={quiz.image}
 				createdAt={quiz.createdAt}
 				id={quiz.id}
+				{quiz}
 			/>
 		{/each}
 		<div class="">

@@ -30,6 +30,8 @@
 	let stringTimer: string;
 	let finalAnswer: string;
 	let isTrueFalse: boolean = false;
+	let isShowOption: boolean = true;
+	let isGif: boolean = false;
 
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
@@ -53,14 +55,18 @@
 		duration: 1000
 	});
 
+	if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+		isGif = true;
+		isShowOption = false;
+	}
+
 	setInterval(() => {
-		if ($timer > 0) {
+		if ($timer > 0 && isShowOption) {
 			$timer--;
 		}
 	}, 1000);
 
 	$: stringTimer = (($timer * 100) / original).toString();
-
 	function zeroTimer() {
 		timer = tweened(0);
 	}
@@ -210,6 +216,7 @@
 				pickAnswer(-1);
 				selectedAnswerIndex = -1;
 				showModal = true;
+
 				setTimeout(() => {
 					showModal = false;
 				}, 2000);
@@ -217,20 +224,26 @@
 		}
 	}
 
-	$: {
-		if (isAnswerChecked === true) {
-			zeroTimer();
-			if (questionPointer < quizzes.length - 1) {
-				setTimeout(() => {
-					questionPointer++;
-					fullTimer();
-					isAnswerChecked = false;
-				}, 2000);
-			} else {
-				setTimeout(() => {
-					submitQuiz();
-				}, 2000);
-			}
+	function changeIsShowOption() {
+		if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+			isShowOption = false;
+		}
+	}
+
+	$: if (isAnswerChecked === true) {
+		zeroTimer();
+		if (questionPointer < quizzes.length - 1) {
+			setTimeout(() => {
+				questionPointer++;
+				fullTimer();
+
+				changeIsShowOption();
+				isAnswerChecked = false;
+			}, 2000);
+		} else {
+			setTimeout(() => {
+				submitQuiz();
+			}, 2000);
 		}
 	}
 
@@ -251,6 +264,12 @@
 		} else {
 			isTrueFalse = false;
 		}
+
+		if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+			isGif = true;
+		} else {
+			isGif = false;
+		}
 	}
 </script>
 
@@ -266,10 +285,29 @@
 				quizzesNumber={quizzes.length}
 				quizzesPointer={questionPointer}
 				quizzesImage={quizzes[questionPointer].image}
+				bind:isShowOption
 			/>
 		</div>
 		<div class="answer h-1/3">
-			{#if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+			{#if quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
+				<div
+					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+				>
+					{#each fourOptions as opt, index}
+						<SingleChoiceAnswer
+							option={opt}
+							{index}
+							{isAnswerChecked}
+							{selectedAnswerIndex}
+							{pickAnswer}
+							{showModal}
+							{isTrueFalse}
+							bind:isGif
+							bind:isShowOption
+						/>
+					{/each}
+				</div>
+			{:else if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
 				<div class="grid grid-cols-2 grid-rows-2 w-full gap-2 md:gap-4 h-full">
 					{#each fourOptions as opt, index}
 						<SingleChoiceAnswer
@@ -280,6 +318,8 @@
 							{pickAnswer}
 							{showModal}
 							{isTrueFalse}
+							bind:isGif
+							bind:isShowOption
 						/>
 					{/each}
 				</div>
@@ -307,32 +347,37 @@
 								{pickAnswer}
 								{showModal}
 								{isTrueFalse}
+								bind:isGif
+								bind:isShowOption
 							/>
 						{/if}
 					{/each}
 				</div>
 			{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
-				<!-- <CrossWords
-					bind:isAnswerChecked
-					bind:answer={quizzes[questionPointer].written}
-					bind:finalAnswer
-					bind:isGuessWordsChecked
-					{showModal}
-				/> -->
-				<InputText
+				<CrossWords
 					bind:isAnswerChecked
 					bind:answer={quizzes[questionPointer].written}
 					bind:finalAnswer
 					bind:isGuessWordsChecked
 					{showModal}
 				/>
-				<!-- <ArrangeAnswer
+			{:else if quizzes[questionPointer].type === TypeQuestion.INPUT_TEXT}
+				<InputText
 					bind:isAnswerChecked
 					bind:answer={quizzes[questionPointer].written}
 					bind:finalAnswer
 					bind:isGuessWordsChecked
 					{showModal}
-				/> -->
+					{pickGuessWords}
+				/>
+			{:else if quizzes[questionPointer].type === TypeQuestion.ARRANGE_WORD}
+				<ArrangeAnswer
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+				/>
 			{/if}
 		</div>
 	</div>

@@ -15,6 +15,10 @@
 	import MultiChoiceSocket from '$components/playGame/socket/multiChoiceSocket.svelte';
 	import { createSocket } from '../../../../../libs/socket/socket';
 	import CrossWordsSocket from '../../../../../components/playGame/socket/crossWordsSocket.svelte';
+	import ArrangeAnswerSocket from '$components/playGame/socket/arrangeAnswerSocket.svelte';
+	import InputTextSocket from '$components/playGame/socket/inputTextSocket.svelte';
+	import HostButton from '$components/playGame/socket/hostButton.svelte';
+	import ScoreboardModal from '$components/playGame/scoreboardModal.svelte';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -196,26 +200,16 @@
 						<Progressbar progress={stringTimer} size="h-4" color="gray" />
 					</div>
 					{#if isHost}
-						<div class="flex gap-4">
-							{#if questionPointer < questions.length - 1}
-								<button
-									class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-									on:click={nextQuestion}>Next</button
-								>
-							{:else}
-								<button
-									class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-									on:click={endGame}>End game</button
-								>
-							{/if}
-							<button
-								class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-								on:click={getScoreBoard}>Score board</button
-							>
-						</div>
+						<HostButton
+							{nextQuestion}
+							{questionPointer}
+							{questions}
+							{endGame}
+							{getScoreBoard}
+						/>
 					{/if}
 					<div class="h-full p-2 gap-2">
-						<div class="question h-1/2">
+						<div class="question h-2/3">
 							<QuestionDisplay
 								quizzesType={questions[questionPointer].type}
 								quizzesTitle={questions[questionPointer].title}
@@ -224,7 +218,7 @@
 								quizzesImage={questions[questionPointer].image}
 							/>
 						</div>
-						<div class="answer h-1/2">
+						<div class="answer h-1/3">
 							{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
 								<div
 									class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
@@ -271,6 +265,22 @@
 									{showModal}
 									{socket}
 								/>
+							{:else if questions[questionPointer].type === TypeQuestion.ARRANGE_WORD}
+								<ArrangeAnswerSocket
+									bind:timer
+									question={questions[questionPointer]}
+									bind:isPicked
+									{showModal}
+									{socket}
+								/>
+							{:else if questions[questionPointer].type === TypeQuestion.INPUT_TEXT}
+								<InputTextSocket
+									bind:timer
+									question={questions[questionPointer]}
+									bind:isPicked
+									{showModal}
+									{socket}
+								/>
 							{/if}
 						</div>
 					</div>
@@ -283,22 +293,5 @@
 {/if}
 
 {#if showScoreBoard}
-	<Modal bind:open={showScoreBoard} autoclose placement="top-center">
-		<div class="flex flex-col justify-center items-center">
-			{#each participants as participant, index}
-				<div class="flex gap-4 items-center">
-					<p>No {index + 1}</p>
-					<p class="truncate w-32">{participant.displayName}</p>
-					<img
-						src={participant.avatar}
-						alt={participant.displayName}
-						class="w-10 h-10 rounded-full ml-4"
-					/>
-					<p>{participant.correct}</p>
-					<p>{participant.point}</p>
-					<p>{participant.isAnswered}</p>
-				</div>
-			{/each}
-		</div>
-	</Modal>
+	<ScoreboardModal {participants} {showScoreBoard} />
 {/if}

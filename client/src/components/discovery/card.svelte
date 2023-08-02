@@ -3,12 +3,14 @@
 	import Icon from '@iconify/svelte';
 	import clsx from 'clsx';
 	import { t } from '$i18n/translations';
+	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
 	export let image = '';
 	export let nameOfQuiz = '';
 	export let author = '';
 	export let category = '';
 	export let level = 1;
 	export let id = '';
+	export let cardInfor: any;
 	let stringLevel = '';
 	if (level === 0) {
 		stringLevel = 'Easy';
@@ -37,16 +39,43 @@
 				return $t('common.mixed');
 		}
 	};
+
+	$: isOpen = false;
+	$: questionList = [];
+	
+	const handleClickView = async () => {
+		isOpen = !isOpen;
+		const result = await getQuestionOfQuiz(cardInfor.id);
+		if(result.statusCode === 200) {
+			questionList = result.data;
+		}
+	};
+	async function getQuestionOfQuiz(id: string) {
+		const response = await fetch(`/api/quizzes/get-questions-no-answer/${id}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+		});
+		const result = await response.json();
+		return result;
+	}
 </script>
 
 <div class="max-w-sm lg:w-80 bg-gray-50 shadow-lg rounded-xl p-6">
 	<div class="flex flex-col">
-		<div class="w-full mb-3">
+		<div class="w-full mb-3 relative">
 			<img
 				src={image}
 				alt="Just a flower"
 				class="w-full object-fill rounded-xl shadow-lg h-72"
 			/>
+			<button
+				class="absolute top-2 right-2 text-zinc-600 bg-cyan-100 p-1 rounded-full hover:bg-cyan-200 hover:text-gray-800"
+				on:click={handleClickView}
+			>
+				<Icon icon={'ph:eye-thin'} />
+			</button>
 		</div>
 		<div class="flex-auto justify-evenly mt-4">
 			<div class="flex flex-wrap">
@@ -107,3 +136,4 @@
 		</div>
 	</div>
 </div>
+<DetailQuiz {isOpen} {cardInfor} {questionList}/>
