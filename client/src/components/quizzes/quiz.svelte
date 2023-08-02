@@ -112,4 +112,4 @@
 		</div>
 	</div>
 </button>
-<DetailQuiz {id} {isOpen} />
+<DetailQuiz {isOpen} />

@@ -125,11 +125,8 @@
 	"crossCharacter": "Tự luận",
 	"question": "Câu hỏi",
 	"noQuizzesFound": "Không tìm thấy bộ câu hỏi nào",
-	"math":"Toán",
-	"science":"Khoa học",
-	"english":"Tiếng Anh",
-	"literature":"Văn học",
-	"geography":"Địa lý",
-	"history":"Lịch sử",
-	"other":"Khác"	
+	"arrageWord": "Sắp xếp từ",
+	"guessWord": "Đoán từ",
+	"inputText": "Nhập từ",
+	"gifSingleChoice": "Đoán Gif"
 }

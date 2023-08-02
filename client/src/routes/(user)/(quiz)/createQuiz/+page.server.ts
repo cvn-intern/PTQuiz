@@ -10,8 +10,6 @@ export const actions = {
 		message = createDefaultMessage();
 		const form = await request.formData();
 
-		console.log(form.get('title'));
-
 		try {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
@@ -33,7 +31,6 @@ export const actions = {
 			message.error.message = result.message;
 			return message;
 		} catch (error: any) {
-			console.log(error);
 			message.isDone = true;
 			message.isSuccess = false;
 

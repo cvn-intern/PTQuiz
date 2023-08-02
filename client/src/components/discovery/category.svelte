@@ -11,8 +11,6 @@
 		>
 			{nameCategory}
 		</h1>
-		
-
 	</div>
 	<div
 		class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center items-center grid-3xl lg:gap-10"
@@ -27,6 +25,7 @@
 				amountOfQuestions={card.numberQuestions}
 				level={card.difficultyLevel}
 				id={card.id}
+				cardInfor={card}
 			/>
 		{/each}
 	</div>

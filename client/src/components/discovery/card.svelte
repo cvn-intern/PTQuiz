@@ -10,6 +10,7 @@
 	export let category = '';
 	export let level = 1;
 	export let id = '';
+	export let cardInfor: any;
 	let stringLevel = '';
 	if (level === 0) {
 		stringLevel = 'Easy';
@@ -40,8 +41,24 @@
 	};
 
 	$: isOpen = false;
-	const handleClickView = () => {
+	$: questionList = [];
+	
+	const handleClickView = async () => {
 		isOpen = !isOpen;
+		const result = await getQuestionOfQuiz(cardInfor.id);
+		if(result.statusCode === 200) {
+			questionList = result.data;
+		}
+	};
+	async function getQuestionOfQuiz(id: string) {
+		const response = await fetch(`/api/quizzes/get-questions-no-answer/${id}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+		});
+		const result = await response.json();
+		return result;
 	}
 </script>
 
@@ -119,4 +136,4 @@
 		</div>
 	</div>
 </div>
-<DetailQuiz {id} {isOpen} />
+<DetailQuiz {isOpen} {cardInfor} {questionList}/>

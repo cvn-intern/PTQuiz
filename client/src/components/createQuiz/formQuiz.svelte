@@ -9,8 +9,6 @@
 
 	let isSubmitting: boolean = false;
 
-	$: console.log(form);
-
 	$: if (form?.message?.isDone) isSubmitting = false;
 	$: if (form?.message?.isSuccess) goto(`/createQuiz/${form?.success?.id}`);
 	let selectedLevel: string;
