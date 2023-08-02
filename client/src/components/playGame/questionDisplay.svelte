@@ -10,7 +10,7 @@
 </script>
 
 <div class="flex flex-col h-full gap-4">
-	<div class={`${quizzesImage ? 'h-1/2' : ''} flex flex-col w-full `}>
+	<div class={`${quizzesImage ? 'h-1/2' : 'h-full'} flex flex-col w-full overflow-y-hidden`}>
 		<div class="flex justify-between">
 			<div
 				class="w-16 md:w-24 h-full shadow-xl rounded-xl bg-primary flex justify-center items-center text-xl md:text-4xl"
@@ -84,7 +84,7 @@
 	</div>
 	{#if quizzesImage}
 		<div class="h-1/2 w-full flex justify-center items-center">
-			<img src={quizzesImage} alt="quizzesImage" class="h-full rounded-xl shadow-xl" />
+			<img src={quizzesImage} alt="quizzesImage" class="max-h-full rounded-xl shadow-xl" />
 		</div>
 	{/if}
 </div>
