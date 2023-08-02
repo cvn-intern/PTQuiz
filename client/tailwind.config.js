@@ -23,7 +23,8 @@ export default {
 				orangeLogo: '#f76800',
 				yellowLogo: '#ffb411',
 				blueLogo: '#00d6ca',
-				run1st : "#FFAA00",
+				run1st: '#FFAA00',
+				bgChat: '#BAD1CD',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',

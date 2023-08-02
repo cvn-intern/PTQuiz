@@ -77,50 +77,45 @@
 		const result = await response.json();
 		return result;
 	}
-
 </script>
 
-<div
-	on:click={handleClickView}
-	class="flex flex-row justify-center md:items-start items-center border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer"
-	aria-details="Quiz Details"
->
-	<div>
-		<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
-	</div>
-	<div class="flex flex-col w-full justify-between gap-12 h-full">
+<div class="relative z-0 w-full">
+	<button
+		on:click={handleClickView}
+		class="flex flex-row justify-center md:items-start border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer w-full"
+		aria-details="Quiz Details"
+	>
 		<div>
-			<div class="flex flex-row justify-between items-center">
-				<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">
-					{title}
-				</h1>
-				<button on:click={() => deleteQuiz(id)}>
-					<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
-				</button>
-			</div>
+			<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
 		</div>
-		<div
-			class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2"
-		>
+		<div class="flex flex-col w-full justify-start gap-2 h-full text-start">
+			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">
+				{title}
+			</h1>
+
 			<p class="text-sm text-zinc-400">
 				{$t('common.createdAt')}: <span class="text-zinc-400"> {createdAt}</span>
 			</p>
-
-			<div class="flex flex-row gap-4 relative z-10">
-				<button
-					aria-label="Edit"
-					on:click={handleEdit}
-					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-					>{$t('common.editBtn')}</button
-				>
-				<button
-					aria-label="Start"
-					on:click={handleStart}
-					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-					>{$t('common.startBtn')}</button
-				>
-			</div>
 		</div>
+	</button>
+	<div class="absolute top-5 right-5 z-10">
+		<button on:click={() => deleteQuiz(id)}>
+			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
+		</button>
+	</div>
+	<div class="flex flex-row gap-4 absolute bottom-2 right-2 z-10">
+		<button
+			aria-label="Edit"
+			on:click={handleEdit}
+			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
+			>{$t('common.editBtn')}</button
+		>
+		<button
+			aria-label="Start"
+			on:click={handleStart}
+			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
+			>{$t('common.startBtn')}</button
+		>
 	</div>
 </div>
 <DetailQuiz {isOpen} cardInfor={quiz} {questionList} />
