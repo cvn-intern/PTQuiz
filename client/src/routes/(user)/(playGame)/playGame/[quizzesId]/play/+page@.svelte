@@ -13,6 +13,7 @@
 	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
 	import TextAnswer from '$components/playGame/textAnswer.svelte';
 	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
+	import { onMount } from 'svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -28,6 +29,8 @@
 	let stringTimer: string;
 	let finalAnswer: string;
 	let isTrueFalse: boolean = false;
+	let isShowOption: boolean = true;
+	let isGif: boolean = false;
 
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
@@ -49,14 +52,18 @@
 	let original = quizzes[0].time;
 	let timer = tweened(original);
 
+	if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+		isGif = true;
+		isShowOption = false;
+	}
+
 	setInterval(() => {
-		if ($timer > 0) {
+		if ($timer > 0 && isShowOption) {
 			$timer--;
 		}
 	}, 1000);
 
 	$: stringTimer = (($timer * 100) / original).toString();
-
 	function zeroTimer() {
 		timer = tweened(0);
 	}
@@ -204,27 +211,35 @@
 				pickAnswer(-1);
 				selectedAnswerIndex = -1;
 				showModal = true;
+
 				setTimeout(() => {
 					showModal = false;
+					changeIsShowOption();
 				}, 2000);
 			}
 		}
 	}
 
-	$: {
-		if (isAnswerChecked === true) {
-			zeroTimer();
-			if (questionPointer < quizzes.length - 1) {
-				setTimeout(() => {
-					questionPointer++;
-					fullTimer();
-					isAnswerChecked = false;
-				}, 2000);
-			} else {
-				setTimeout(() => {
-					submitQuiz();
-				}, 2000);
-			}
+	function changeIsShowOption() {
+		if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+			isShowOption = false;
+		}
+	}
+
+	$: if (isAnswerChecked === true) {
+		zeroTimer();
+		if (questionPointer < quizzes.length - 1) {
+			setTimeout(() => {
+				questionPointer++;
+				fullTimer();
+
+				changeIsShowOption();
+				isAnswerChecked = false;
+			}, 2000);
+		} else {
+			setTimeout(() => {
+				submitQuiz();
+			}, 2000);
 		}
 	}
 
@@ -245,6 +260,12 @@
 		} else {
 			isTrueFalse = false;
 		}
+
+		if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+			isGif = true;
+		} else {
+			isGif = false;
+		}
 	}
 </script>
 
@@ -260,10 +281,11 @@
 				quizzesNumber={quizzes.length}
 				quizzesPointer={questionPointer}
 				quizzesImage={quizzes[questionPointer].image}
+				bind:isShowOption
 			/>
 		</div>
 		<div class="answer h-1/2">
-			{#if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+			{#if quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
 				<div
 					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
 				>
@@ -276,6 +298,26 @@
 							{pickAnswer}
 							{showModal}
 							{isTrueFalse}
+							bind:isGif
+							bind:isShowOption
+						/>
+					{/each}
+				</div>
+			{:else if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+				<div
+					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+				>
+					{#each fourOptions as opt, index}
+						<SingleChoiceAnswer
+							option={opt}
+							{index}
+							{isAnswerChecked}
+							{selectedAnswerIndex}
+							{pickAnswer}
+							{showModal}
+							{isTrueFalse}
+							bind:isGif
+							bind:isShowOption
 						/>
 					{/each}
 				</div>
@@ -303,6 +345,8 @@
 								{pickAnswer}
 								{showModal}
 								{isTrueFalse}
+								bind:isGif
+								bind:isShowOption
 							/>
 						{/if}
 					{/each}

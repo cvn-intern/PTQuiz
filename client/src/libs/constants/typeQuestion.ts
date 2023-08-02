@@ -3,4 +3,7 @@ export enum TypeQuestion {
     SINGLE_CHOICE = 1,
     GUESS_WORDS = 2,
     TRUE_FALSE = 3,
+    ARRANGE_WORD = 4,
+    INPUT_TEXT = 5,
+    GIF_SINGLE_CHOICE = 6,
 }
