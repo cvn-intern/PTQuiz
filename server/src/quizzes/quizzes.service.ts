@@ -36,35 +36,42 @@ export class QuizzesService {
         return discovery.findIndex((item) => item.category === category);
     }
 
-    async getAllQuizzesOfUser(userId: string, page: number) {
+    async getAllQuizzesOfUser(userId: string, page: number, sortBy: number) {
         try {
             page = page || 1;
             const pageSize = 5;
-            const [quizzesOfUser, totalQuizzes] =
-                await this.prisma.$transaction([
-                    this.prisma.quizzes.findMany({
-                        where: {
-                            userId: userId,
-                        },
-                        select: {
-                            createdAt: true,
-                            title: true,
-                            description: true,
-                            image: true,
-                            numberQuestions: true,
-                            durationMins: true,
-                            difficultyLevel: true,
-                            id: true,
-                        },
-                        take: pageSize,
-                        skip: (page - 1) * pageSize,
-                    }),
-                    this.prisma.quizzes.count({
-                        where: {
-                            userId: userId,
-                        },
-                    }),
-                ]);
+            let [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
+                this.prisma.quizzes.findMany({
+                    where: {
+                        userId: userId,
+                    },
+                    select: {
+                        createdAt: true,
+                        title: true,
+                        description: true,
+                        image: true,
+                        numberQuestions: true,
+                        durationMins: true,
+                        difficultyLevel: true,
+                        id: true,
+                    },
+                    orderBy:
+                        sortBy == 0
+                            ? { createdAt: 'asc' }
+                            : sortBy == 1
+                            ? { createdAt: 'desc' }
+                            : sortBy == 2
+                            ? { title: 'asc' }
+                            : { title: 'desc' },
+                    take: pageSize,
+                    skip: (page - 1) * pageSize,
+                }),
+                this.prisma.quizzes.count({
+                    where: {
+                        userId: userId,
+                    },
+                }),
+            ]);
             return { quizzesOfUser, totalQuizzes };
         } catch (err) {
             throw new HttpException(
@@ -209,7 +216,7 @@ export class QuizzesService {
             page = page || 1;
             const pageSize = 5;
 
-            if (categoryName === 'All' || categoryName === undefined) {
+            if (categoryName === 'all' || categoryName === undefined) {
                 const categories = await this.prisma.categories.findMany();
 
                 const quizPromises = categories.map((category) => {
@@ -273,6 +280,29 @@ export class QuizzesService {
 
                 return result;
             } else {
+                switch (categoryName) {
+                    case 'math':
+                        categoryName = 'Math';
+                        break;
+                    case 'science':
+                        categoryName = 'Science';
+                        break;
+                    case 'history':
+                        categoryName = 'History';
+                        break;
+                    case 'geography':
+                        categoryName = 'Geography';
+                        break;
+                    case 'english':
+                        categoryName = 'English';
+                        break;
+                    case 'literature':
+                        categoryName = 'Literature';
+                        break;
+                    case 'other':
+                        categoryName = 'Other';
+                        break;
+                }
                 let quizzesOfUser, totalQuizzes;
                 [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
                     this.prisma.quizzes.findMany({

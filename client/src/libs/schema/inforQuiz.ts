@@ -18,7 +18,3 @@ export const InforQuizFormSchema = z.object({
 		.max(100, t.get('validation.POINT_MUST_BE_AT_MOST_100')),
 	image: z.any().refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
 });
-// .refine((data) => data.point <= data.passingPoint, {
-// 	message: t.get('validation.POINT_MUST_BE_GREATER_THAN_PASSING_POINT'),
-// 	path: ['point']
-// });

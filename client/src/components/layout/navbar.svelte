@@ -70,7 +70,7 @@
 			<li>
 				<button
 					on:click={() => {
-						goto('/discovery/All');
+						goto('/discovery/all');
 					}}
 					title={$t('common.discovery')}
 					class="hover:text-secondary"

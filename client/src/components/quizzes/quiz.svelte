@@ -10,15 +10,6 @@
 	export let createdAt: string;
 	export let id: string;
 
-	const dateObj = new Date(createdAt);
-	const hours = String(dateObj.getUTCHours()).padStart(2, '0');
-	const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
-	const seconds = String(dateObj.getUTCSeconds()).padStart(2, '0');
-	const day = String(dateObj.getUTCDate()).padStart(2, '0');
-	const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
-	const year = dateObj.getUTCFullYear();
-	const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
-
 	let sharedToastId: string | number;
 
 	const dismissLoadingToast = (): void => {
@@ -68,7 +59,7 @@
 			class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2"
 		>
 			<p class="text-sm text-zinc-400">
-				{$t('common.createdAt')}: <span class="text-zinc-400"> {formattedDateTime}</span>
+				{$t('common.createdAt')}: <span class="text-zinc-400"> {createdAt}</span>
 			</p>
 			<div class="flex flex-row gap-4">
 				<button

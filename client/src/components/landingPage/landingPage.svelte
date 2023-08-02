@@ -15,7 +15,7 @@
 	<div class="card flex flex-col md:flex-row gap-6 md:gap-20 md:justify-center">
 		<PlayCard
 			src={PlayGame}
-			href={'/discovery/All'}
+			href={'/discovery/all'}
 			altText={'Play Game'}
 			title={$t('common.playGame')}
 			intro={$t('common.playGameIntro')}

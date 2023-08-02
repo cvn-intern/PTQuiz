@@ -74,8 +74,13 @@ export class QuizzesController {
     async getQuizzes(
         @GetCurrentUser('id') userId: string,
         @Query('page') page: number,
+        @Query('sortBy') sortBy: number,
     ) {
-        return await this.quizzesService.getAllQuizzesOfUser(userId, page);
+        return await this.quizzesService.getAllQuizzesOfUser(
+            userId,
+            page,
+            sortBy,
+        );
     }
 
     @Get('/info')
