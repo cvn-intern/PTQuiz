@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Category from '$components/discovery/category.svelte';
+	import { t } from '$i18n/translations.js';
 	import type { TypeCategory } from './category.type.js';
 
 	export let data;
@@ -19,7 +20,7 @@
 	}
 </script>
 
-<div class="py-10">
+<div class="py-8">
 	<div class="text-xl font-medium text-center text-gray-500 px-4 md:py-8 md:px-12 lg:px-20">
 		<ul class="flex flex-wrap gap-5">
 			<li
@@ -29,7 +30,7 @@
 					: cssForOtherTab}"
 				on:click={() => changeTab('All')}
 			>
-				All
+				{$t('common.all')}
 			</li>
 			<li
 				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
@@ -38,7 +39,7 @@
 					: cssForOtherTab}"
 				on:click={() => changeTab('Math')}
 			>
-				Math
+				{$t('common.math')}
 			</li>
 			<li
 				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
@@ -47,7 +48,7 @@
 					: cssForOtherTab}"
 				on:click={() => changeTab('Science')}
 			>
-				Science
+				{$t('common.science')}
 			</li>
 			<li
 				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
@@ -56,7 +57,7 @@
 					: cssForOtherTab}"
 				on:click={() => changeTab('History')}
 			>
-				History
+				{$t('common.history')}
 			</li>
 			<li
 				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
@@ -65,7 +66,7 @@
 					: cssForOtherTab}"
 				on:click={() => changeTab('English')}
 			>
-				English
+				{$t('common.english')}
 			</li>
 			<li
 				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
@@ -74,7 +75,7 @@
 					: cssForOtherTab}"
 				on:click={() => changeTab('Geography')}
 			>
-				Geography
+				{$t('common.geography')}
 			</li>
 			<li
 				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
@@ -83,7 +84,7 @@
 					: cssForOtherTab}"
 				on:click={() => changeTab('Other')}
 			>
-				Other
+				{$t('common.other')}
 			</li>
 		</ul>
 	</div>
