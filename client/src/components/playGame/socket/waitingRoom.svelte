@@ -6,7 +6,8 @@
 	import { page } from '$app/stores';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 	type Message = {
-		participant: {
+		user: {
+			id: string;
 			displayName: string;
 			avatar: string;
 		};

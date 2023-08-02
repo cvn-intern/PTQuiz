@@ -126,7 +126,8 @@ export class SocketGateway
         try {
             const { content, roomPIN } = data;
             this.server.to(roomPIN).emit(EmitChannel.ROOM_MESSAGES, {
-                participant: {
+                user: {
+                    id: client.user.id,
                     displayName: client.user.displayName,
                     avatar: client.user.avatar,
                 },
