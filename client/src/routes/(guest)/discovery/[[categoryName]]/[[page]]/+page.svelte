@@ -28,7 +28,7 @@
 				'All'
 					? cssForCurrentTab
 					: cssForOtherTab}"
-				on:click={() => changeTab('All')}
+				on:click={() => changeTab('all')}
 			>
 				{$t('common.all')}
 			</li>
@@ -37,7 +37,7 @@
 				'Math'
 					? cssForCurrentTab
 					: cssForOtherTab}"
-				on:click={() => changeTab('Math')}
+				on:click={() => changeTab('math')}
 			>
 				{$t('common.math')}
 			</li>
@@ -46,7 +46,7 @@
 				'Science'
 					? cssForCurrentTab
 					: cssForOtherTab}"
-				on:click={() => changeTab('Science')}
+				on:click={() => changeTab('science')}
 			>
 				{$t('common.science')}
 			</li>
@@ -55,7 +55,7 @@
 				'History'
 					? cssForCurrentTab
 					: cssForOtherTab}"
-				on:click={() => changeTab('History')}
+				on:click={() => changeTab('history')}
 			>
 				{$t('common.history')}
 			</li>
@@ -64,7 +64,7 @@
 				'English'
 					? cssForCurrentTab
 					: cssForOtherTab}"
-				on:click={() => changeTab('English')}
+				on:click={() => changeTab('english')}
 			>
 				{$t('common.english')}
 			</li>
@@ -73,7 +73,7 @@
 				'Geography'
 					? cssForCurrentTab
 					: cssForOtherTab}"
-				on:click={() => changeTab('Geography')}
+				on:click={() => changeTab('geography')}
 			>
 				{$t('common.geography')}
 			</li>
@@ -82,7 +82,7 @@
 				'Other'
 					? cssForCurrentTab
 					: cssForOtherTab}"
-				on:click={() => changeTab('Other')}
+				on:click={() => changeTab('other')}
 			>
 				{$t('common.other')}
 			</li>
