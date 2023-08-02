@@ -19,7 +19,7 @@
 	}
 </script>
 
-<div class="py-8">
+<div class="py-8 w-screen">
 	<div
 		class=" flex text-xl font-medium text-center text-gray-500 px-4 md:py-8 md:px-12 lg:px-20 justify-center"
 	>
