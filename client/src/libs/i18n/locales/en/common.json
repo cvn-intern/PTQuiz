@@ -125,6 +125,13 @@
 	"crossCharacter": "Cross Character",
 	"question": "Question",
 	"noQuizzesFound": "No quizzes found",
+	"arrageWord": "Arrage Word",
+	"guessWord": "Guess Word",
+	"inputText": "Input Text",
+	"gifSingleChoice": "Guess Gif",
 	"playAgain": "Play Again",
-	"all": "All"
+	"all": "All",
+	"uploadGif": "Upload GIF",
+	"requireGift": "Require GIF",
+	"titleOfArrangeWord": "Arrange the words correctly"
 }

@@ -1,10 +1,8 @@
 import {
     Controller,
-    Get,
     HttpCode,
     HttpStatus,
     Post,
-    Query,
     Body,
     UseGuards,
     UseInterceptors,

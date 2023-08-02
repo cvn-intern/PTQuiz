@@ -3,7 +3,8 @@ import type { IQuiz, IQuizAPI } from './quiz.type';
 
 export async function load({ fetch, params }) {
 	const page = params.page || 1;
-	const response = await fetch(`/api/quizzes/${page}`);
+	const sortBy = params.sortBy || 0;
+	const response = await fetch(`/api/quizzes/${page}/${sortBy}`);
 	const result = await response.json();
 
 	if (response.status === 200) {

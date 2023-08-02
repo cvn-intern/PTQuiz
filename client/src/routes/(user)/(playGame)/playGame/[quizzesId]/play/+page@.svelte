@@ -11,9 +11,10 @@
 	import { t } from '$i18n/translations.js';
 	import { TypeQuestion } from '$constants/typeQuestion.js';
 	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
-	import TextAnswer from '$components/playGame/textAnswer.svelte';
 	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
-	import { onMount } from 'svelte';
+	import InputText from '$components/playGame/inputText.svelte';
+	import ArrangeAnswer from '$components/playGame/arrangeAnswer.svelte';
+	import CrossWords from '$components/playGame/crossWords.svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -50,7 +51,9 @@
 	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
 
 	let original = quizzes[0].time;
-	let timer = tweened(original);
+	let timer = tweened(original, {
+		duration: 1000
+	});
 
 	if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
 		isGif = true;
@@ -70,7 +73,9 @@
 
 	function fullTimer() {
 		original = quizzes[questionPointer].time;
-		timer = tweened(original);
+		timer = tweened(original, {
+			duration: 1000
+		});
 	}
 
 	const givenAn: {
@@ -214,7 +219,6 @@
 
 				setTimeout(() => {
 					showModal = false;
-					changeIsShowOption();
 				}, 2000);
 			}
 		}
@@ -274,7 +278,7 @@
 		<Progressbar progress={stringTimer} size="h-4" color="gray" />
 	</div>
 	<div class="h-full p-2 flex flex-col gap-4">
-		<div class="question h-1/2">
+		<div class="question h-2/3">
 			<QuestionDisplay
 				quizzesType={quizzes[questionPointer].type}
 				quizzesTitle={quizzes[questionPointer].title}
@@ -284,7 +288,7 @@
 				bind:isShowOption
 			/>
 		</div>
-		<div class="answer h-1/2">
+		<div class="answer h-1/3">
 			{#if quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
 				<div
 					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
@@ -304,9 +308,7 @@
 					{/each}
 				</div>
 			{:else if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
-				<div
-					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
-				>
+				<div class="grid grid-cols-2 grid-rows-2 w-full gap-2 md:gap-4 h-full">
 					{#each fourOptions as opt, index}
 						<SingleChoiceAnswer
 							option={opt}
@@ -352,7 +354,24 @@
 					{/each}
 				</div>
 			{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
-				<TextAnswer
+				<CrossWords
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+				/>
+			{:else if quizzes[questionPointer].type === TypeQuestion.INPUT_TEXT}
+				<InputText
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+					{pickGuessWords}
+				/>
+			{:else if quizzes[questionPointer].type === TypeQuestion.ARRANGE_WORD}
+				<ArrangeAnswer
 					bind:isAnswerChecked
 					bind:answer={quizzes[questionPointer].written}
 					bind:finalAnswer

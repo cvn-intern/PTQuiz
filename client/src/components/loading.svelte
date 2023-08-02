@@ -1,6 +1,6 @@
 <div class="page-container">
 	<div class="loading">
-		<span>Quiz Pt</span>
+		<span>Quiz<sup class="text-orangeLogo">P</sup><sup class="text-blueLogo">T</sup></span>
 	</div>
 </div>
 

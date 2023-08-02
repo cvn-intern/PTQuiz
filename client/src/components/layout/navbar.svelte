@@ -56,7 +56,9 @@
 	<a class="logo flex items-center gap-2" href="/">
 		<img src={logo} alt="logo" class="hidden md:block w-16" />
 		<h1 class="hidden text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
-			PentaQuiz
+			Quiz<sup class="text-xl text-orangeLogo">P</sup><sup class="text-xl text-blueLogo"
+				>T</sup
+			>
 		</h1>
 	</a>
 	<SidebarModal hiddenModal={isHidden} {user} />
@@ -70,7 +72,7 @@
 			<li>
 				<button
 					on:click={() => {
-						goto('/discovery/All');
+						goto('/discovery/all');
 					}}
 					title={$t('common.discovery')}
 					class="hover:text-secondary"

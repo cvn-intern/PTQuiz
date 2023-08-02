@@ -9,7 +9,13 @@ interface Message {
 			point: boolean;
 			image: boolean;
 		};
-		message: string;
+		message: {
+			title: string;
+			description: string;
+			passingPoint: string;
+			point: string;
+			image: string;
+		};
 	};
 	success: {
 		message: string;
@@ -29,7 +35,13 @@ function createDefaultMessage(): Message {
 				point: false,
 				image: false
 			},
-			message: ''
+			message: {
+				title: '',
+				description: '',
+				passingPoint: '',
+				point: '',
+				image: ''
+			}
 		},
 		success: {
 			message: '',
