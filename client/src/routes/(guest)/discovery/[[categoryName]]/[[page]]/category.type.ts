@@ -1,5 +1,7 @@
 export interface TypeCategory {
-	category: string;
+	category: {
+		name: string;
+	};
 	quizzes: quiz[];
 }
 export interface quiz {

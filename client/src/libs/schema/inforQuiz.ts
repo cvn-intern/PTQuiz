@@ -23,3 +23,4 @@ export const InforQuizFormSchema = z
 		message: t.get('validation.POINT_MUST_BE_GREATER_THAN_PASSING_POINT'),
 		path: ['point']
 	});
+

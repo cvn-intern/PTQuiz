@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build && npm prune --production
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["node", "build"]

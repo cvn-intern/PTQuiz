@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import {
     WebSocketGateway,
     ConnectedSocket,
@@ -12,7 +12,12 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { JoinLeaveRoomDto } from '../dto';
+import { AnswerDto, RoomPinDTO } from '../dto';
+import { QuestionPointerDto } from '../dto/questionPointer.dto';
+import { WebSocketJwtGuard } from '../WebSocketJwtGuard.guard';
+import { SocketClient } from '../socketClient.class';
+import { SocketError } from '../../error';
+import { EmitChannel, ListenChannel } from '../socketChannel.enum';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -21,6 +26,7 @@ import { JoinLeaveRoomDto } from '../dto';
     transports: ['websocket'],
     path: '/socket.io',
 })
+@UseGuards(WebSocketJwtGuard)
 export class SocketGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -42,7 +48,9 @@ export class SocketGateway
             if (roomPIN) {
                 const roomParticipants =
                     await this.socketService.getRoomParticipants(roomPIN);
-                this.server.to(roomPIN).emit('room-users', roomParticipants);
+                this.server
+                    .to(roomPIN)
+                    .emit(EmitChannel.ROOM_USERS, roomParticipants);
             }
         } catch (error) {
             throw new WsException({
@@ -53,18 +61,25 @@ export class SocketGateway
     afterInit() {
         this.logger.log('Initialized!');
     }
-    @SubscribeMessage('join-room')
+
+    @SubscribeMessage(ListenChannel.JOIN_ROOM)
     async handleJoinRoom(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: JoinLeaveRoomDto,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
-            const { roomPIN, userId } = data;
-            await this.socketService.joinRoom(roomPIN, userId, client.id);
+            const { roomPIN } = data;
+            await this.socketService.joinRoom(
+                roomPIN,
+                client.user.id,
+                client.id,
+            );
             client.join(roomPIN);
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
-            this.server.to(roomPIN).emit('room-users', roomParticipants);
+            this.server
+                .to(roomPIN)
+                .emit(EmitChannel.ROOM_USERS, roomParticipants);
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -72,18 +87,24 @@ export class SocketGateway
         }
     }
 
-    @SubscribeMessage('leave-room')
+    @SubscribeMessage(ListenChannel.LEAVE_ROOM)
     async handleLeaveRoom(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: JoinLeaveRoomDto,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
     ) {
         try {
-            const { roomPIN, userId } = data;
+            const { roomPIN } = data;
             client.leave(roomPIN);
-            await this.socketService.leaveRoom(roomPIN, userId, client.id);
+            await this.socketService.leaveRoom(
+                roomPIN,
+                client.user.id,
+                client.id,
+            );
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
-            this.server.to(roomPIN).emit('room-users', roomParticipants);
+            this.server
+                .to(roomPIN)
+                .emit(EmitChannel.ROOM_USERS, roomParticipants);
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -91,19 +112,144 @@ export class SocketGateway
         }
     }
 
-    @SubscribeMessage('send-message')
+    @SubscribeMessage(ListenChannel.SEND_MESSAGE)
     async handleMessage(
         @ConnectedSocket() client: Socket,
         @MessageBody() data: any,
     ) {
         try {
             const { roomPIN, userId, avatar, message, reaction } = data;
-            this.server.to(roomPIN).emit('room-messages', {
+            this.server.to(roomPIN).emit(EmitChannel.ROOM_MESSAGES, {
                 userId,
                 avatar,
                 message,
                 reaction,
             });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+    @SubscribeMessage(ListenChannel.IS_HOST)
+    async handleIsHost(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
+    ) {
+        try {
+            const { roomPIN } = data;
+            const isHost = await this.socketService.checkRoomHost(
+                roomPIN,
+                client.user.id,
+            );
+            client.emit(EmitChannel.IS_HOST, {
+                isHost,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.START_GAME)
+    async handleStartQuiz(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
+    ) {
+        try {
+            const { roomPIN } = data;
+            await this.socketService.startGame(roomPIN, client.user.id);
+            this.server.to(roomPIN).emit(EmitChannel.STARTED, {
+                isStarted: true,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.END_GAME)
+    async handleEndGame(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: RoomPinDTO,
+    ) {
+        try {
+            const { roomPIN } = data;
+            await this.socketService.endGame(roomPIN, client.user.id);
+            this.server.to(roomPIN).emit('ended', {
+                isEnded: true,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.GET_QUIZ_QUESTIONS)
+    async handleGetQuestions(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: RoomPinDTO,
+    ) {
+        try {
+            const { roomPIN } = data;
+            const questions = await this.socketService.getQuestions(roomPIN);
+            this.server.to(roomPIN).emit(EmitChannel.QUIZ_QUESTIONS, questions);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.CHANGE_QUESTION_POINTER)
+    async handleGetQuestion(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: QuestionPointerDto,
+    ) {
+        try {
+            const { roomPIN, questionPointer } = data;
+            const isHost = await this.socketService.checkRoomHost(
+                roomPIN,
+                client.user.id,
+            );
+            if (!isHost) {
+                throw new WsException({
+                    message: SocketError.SOCKET_ROOM_PERMISSION_DENIED,
+                });
+            }
+            this.server.to(roomPIN).emit(EmitChannel.QUESTION_POINTER, {
+                questionPointer,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.PICK_ANSWER)
+    async handlePickAnswer(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: AnswerDto,
+    ) {
+        try {
+            const result = await this.socketService.pickAnswer(
+                client.id,
+                client.user.id,
+                data,
+            );
+            client.emit(EmitChannel.ANSWER_RESULT, {
+                ...result,
+            });
+            const scoreBoard = await this.socketService.getScoreBoard(
+                data.roomPIN,
+            );
+            this.server
+                .to(data.roomPIN)
+                .emit(EmitChannel.SCORE_BOARD, scoreBoard);
         } catch (error) {
             throw new WsException({
                 message: error.message,

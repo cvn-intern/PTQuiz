@@ -66,6 +66,7 @@ model questions {
 model quizzes {
     id     String @id @default(cuid())
     userId String // owner
+    categoryId String?
 
     title           String   @db.Text
     numberQuestions Int
@@ -88,6 +89,7 @@ model quizzes {
     quizQuestions quiz_questions[]
     participants  participants[]
     room          rooms[]
+    category      categories?       @relation(fields: [categoryId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -103,6 +105,7 @@ model categories {
     sortOrder Int    @default(0)
 
     questions questions[]
+    quizzes   quizzes[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

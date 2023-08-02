@@ -1,8 +1,18 @@
 import { io } from 'socket.io-client';
 
-const socket = io(`${import.meta.env.VITE_SOCKET_URL}`, {
-	transports: ['websocket'],
-	path: '/socket.io'
-});
-
-export default socket;
+export const createSocket = (url: string, token: string) => {
+	const socket = io(url, {
+		path: '/socket.io',
+		transports: ['websocket'],
+		extraHeaders: {
+			authorization: `Bearer ${token}`,
+			hallo: 'hallo'
+		},
+        auth: {
+            token: token
+        },
+		secure: true,
+		withCredentials: true
+	});
+	return socket;
+};

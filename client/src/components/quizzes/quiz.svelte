@@ -4,7 +4,6 @@
 	import { t } from '../../libs/i18n/translations';
 
 	export let title: string;
-	export let author: string;
 	export let description: string;
 	export let numberOfQuestions: number;
 	export let image: string;
@@ -23,7 +22,7 @@
 	let sharedToastId: string | number;
 
 	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
+		toast.dismiss(sharedToastId.toString());
 	};
 
 	async function handleStart() {
