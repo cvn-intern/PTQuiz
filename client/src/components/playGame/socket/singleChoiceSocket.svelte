@@ -7,6 +7,7 @@
 	import Icon from '@iconify/svelte';
 	import { tweened, type Tweened } from 'svelte/motion';
 	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
+	import TrueFalseModal from '$components/trueFalseModal.svelte';
 	export let showModal: boolean;
 	export let question: SocketQuiz;
 	export let socket: Socket;
@@ -138,13 +139,5 @@
 {/if}
 
 {#if showModal}
-	<Modal bind:open={showModal} autoclose placement="top-center">
-		<div class="flex justify-center items-center">
-			{#if isCorrect}
-				<Icon icon="flat-color-icons:ok" class="text-9xl" />
-			{:else}
-				<Icon icon="teenyicons:x-circle-solid" class="text-9xl text-red-500 " />
-			{/if}
-		</div>
-	</Modal>
+	<TrueFalseModal bind:open={showModal} isTrue = {isCorrect} />
 {/if}

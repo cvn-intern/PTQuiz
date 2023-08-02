@@ -65,12 +65,6 @@
 		return chars.join('');
 	}
 
-	function getRandomCharacter() {
-		const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		const randomIndex = Math.floor(Math.random() * characters.length);
-		return characters[randomIndex];
-	}
-
 	let answerSplit: string[];
 	let newAnswer: string;
 	let scrambledAnswer: string;
@@ -80,9 +74,6 @@
 		if (isGetAnswer) {
 			answerSplit = answer.split('');
 			newAnswer = answer;
-			for (let i = 0; i < 5; i++) {
-				newAnswer += getRandomCharacter();
-			}
 			scrambledAnswer = scrambleString(newAnswer);
 			scrambledAnswerSplit = scrambledAnswer
 				.split('')
