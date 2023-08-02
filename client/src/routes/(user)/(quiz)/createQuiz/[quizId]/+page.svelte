@@ -104,9 +104,15 @@
 		dataSave = data;
 	});
 	function checkInput() {
-		if (dataSave[index].type === 0 || dataSave[index].type === 1) {
+		if (
+			dataSave[index].type === 0 ||
+			dataSave[index].type === 1 ||
+			dataSave[index].type === 6
+		) {
+			if (dataSave[index].title === '') {
+				return false;
+			}
 			if (
-				dataSave[index].title === '' ||
 				dataSave[index].options.optionA === '' ||
 				dataSave[index].options.optionB === '' ||
 				dataSave[index].options.optionC === '' ||
@@ -122,19 +128,37 @@
 			) {
 				return false;
 			}
-		} else if (dataSave[index].type === 2) {
-			if (dataSave[index].title === '' || dataSave[index].written === '') {
+		} else if (dataSave[index].type === 2 || dataSave[index].type === 5) {
+			if (dataSave[index].title === '') {
 				return false;
 			}
-		} else {
+			if (dataSave[index].written === '') {
+				return false;
+			}
+		} else if (dataSave[index].type === 3) {
+			if (dataSave[index].title === '') {
+				return false;
+			}
 			if (
-				dataSave[index].title === '' ||
-				(dataSave[index].answers.answerA === false &&
-					dataSave[index].answers.answerB === false)
+				dataSave[index].answers.answerA === false &&
+				dataSave[index].answers.answerB === false
 			) {
 				return false;
 			}
+		} else if (dataSave[index].type === 4) {
+			if (dataSave[index].written === '') {
+				return false;
+			}
 		}
+		if (dataSave[index].type === 6) {
+			if (dataSave[index].title === '') {
+				return false;
+			}
+			if (dataSave[index].image === '') {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -221,13 +245,13 @@
 		</div>
 		<div class="md:w-5/6 w-full">
 			<div class="flex justify-between gap-10">
-				<div class="flex gap-4">
+				<div class="flex gap-4 sm:flex-row flex-col">
 					<ChangeTypeQuestion bind:defaultType={typeOfQuestion} {index} />
 					<ChangeTimeQuestion bind:defaultTime={timeOfQuestion} {index} />
 					<ChangeCategoryQuestion bind:defaultCategory={categoryOfQuestion} {index} />
 				</div>
 
-				<div class="flex gap-2">
+				<div class="flex gap-2 sm:flex-row flex-col">
 					<Button class="bg-red-500" on:click={exit}>{$t('common.exit')}</Button>
 					<Button class="bg-green-600" disabled={isSubmitting} on:click={handleSave}
 						>{$t('common.save')}</Button

@@ -52,13 +52,13 @@
 					answerD: false
 				};
 				data[index].options = {
-					optionA: $t('common.falseAnswer'),
-					optionB: $t('common.trueAnswer'),
+					optionA: $t('common.trueAnswer'),
+					optionB: $t('common.falseAnswer'),
 					optionC: '',
 					optionD: ''
 				};
-				if (question === $t('common.falseAnswer')) data[index].answers.answerA = true;
-				else if (question === $t('common.trueAnswer')) data[index].answers.answerB = true;
+				if (question === $t('common.trueAnswer')) data[index].answers.answerA = true;
+				else if (question === $t('common.falseAnswer')) data[index].answers.answerB = true;
 				return data;
 			});
 		}

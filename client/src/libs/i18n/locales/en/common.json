@@ -126,5 +126,11 @@
 	"question": "Question",
 	"noQuizzesFound": "No quizzes found",
 	"playAgain": "Play Again",
-	"all": "All"
+	"all": "All",
+	"arrangeWord": "Arrange Word",
+	"inputText": "Input Text",
+	"gifSingleChoice": "Gif Single Choice",
+	"uploadGif": "Upload GIF",
+	"requireGift": "Require GIF",
+	"titleOfArrangeWord": "Arrange the words correctly"
 }

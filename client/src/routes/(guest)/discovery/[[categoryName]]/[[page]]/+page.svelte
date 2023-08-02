@@ -8,8 +8,7 @@
 	export let data;
 	let categories: TypeCategory[];
 	$: categories = data.quizzes;
-	let cssForCurrentTab =
-		' text-blue-600  border-blue-600  active dark:text-blue-500 dark:border-blue-500';
+	let cssForCurrentTab = ' active dark:text-blue-500 dark:border-blue-500 bg-secondary';
 	let cssForOtherTab =
 		' border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300';
 	let currentTab = $page.params.categoryName;
@@ -21,11 +20,12 @@
 </script>
 
 <div class="py-8">
-	<div class="text-xl font-medium text-center text-gray-500 px-4 md:py-8 md:px-12 lg:px-20">
+	<div
+		class=" flex text-xl font-medium text-center text-gray-500 px-4 md:py-8 md:px-12 lg:px-20 justify-center"
+	>
 		<ul class="flex flex-wrap gap-5">
 			<li
-				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
-				'All'
+				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'all'
 					? cssForCurrentTab
 					: cssForOtherTab}"
 				on:click={() => changeTab('all')}
@@ -33,8 +33,7 @@
 				{$t('common.all')}
 			</li>
 			<li
-				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
-				'Math'
+				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'math'
 					? cssForCurrentTab
 					: cssForOtherTab}"
 				on:click={() => changeTab('math')}
@@ -42,8 +41,7 @@
 				{$t('common.math')}
 			</li>
 			<li
-				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
-				'Science'
+				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'science'
 					? cssForCurrentTab
 					: cssForOtherTab}"
 				on:click={() => changeTab('science')}
@@ -51,8 +49,7 @@
 				{$t('common.science')}
 			</li>
 			<li
-				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
-				'History'
+				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'history'
 					? cssForCurrentTab
 					: cssForOtherTab}"
 				on:click={() => changeTab('history')}
@@ -60,8 +57,7 @@
 				{$t('common.history')}
 			</li>
 			<li
-				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
-				'English'
+				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'english'
 					? cssForCurrentTab
 					: cssForOtherTab}"
 				on:click={() => changeTab('english')}
@@ -69,8 +65,7 @@
 				{$t('common.english')}
 			</li>
 			<li
-				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
-				'Geography'
+				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'geography'
 					? cssForCurrentTab
 					: cssForOtherTab}"
 				on:click={() => changeTab('geography')}
@@ -78,8 +73,7 @@
 				{$t('common.geography')}
 			</li>
 			<li
-				class=" cursor-pointer mr-2 inline-block p-4 border-b-2 rounded-t-lg {currentTab ===
-				'Other'
+				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'other'
 					? cssForCurrentTab
 					: cssForOtherTab}"
 				on:click={() => changeTab('other')}

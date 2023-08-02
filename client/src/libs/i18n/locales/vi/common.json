@@ -126,5 +126,11 @@
 	"question": "Câu hỏi",
 	"noQuizzesFound": "Không tìm thấy bộ câu hỏi nào",
 	"playAgain": "Chơi lại",
-	"all": "Tất cả"
+	"all": "Tất cả",
+	"arrangeWord": "Sắp xếp từ",
+	"inputText": "Nhập văn bản",
+	"gifSingleChoice": "Đoán GIF",
+	"uploadGif": "Tải GIF lên",
+	"requireGift": "Yêu cầu GIF",
+	"titleOfArrangeWord": "Sắp xếp thành từ chính xác"
 }

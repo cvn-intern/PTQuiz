@@ -6,17 +6,22 @@
 	let imageFile;
 	let inputFocused = false;
 	let imageUrl: string;
-
+	let typeOfquestion: number;
 	$: questionData.subscribe((data: any) => {
 		if (index >= 0 && index < data.length) {
 			title = data[index].title;
 			imageUrl = data[index].image;
+			typeOfquestion = data[index].type;
 		}
 	});
 	$: questionData.update((data: any) => {
 		if (index >= 0 && index < data.length) {
 			data[index].title = title;
 			data[index].image = imageUrl;
+		}
+		if (data[index].type === 4) {
+			data[index].title = $t('common.titleOfArrangeWord');
+			title = $t('common.titleOfArrangeWord');
 		}
 		return data;
 	});
@@ -49,9 +54,9 @@
 				<div class="group hover:opacity-100 w-full h-full flex">
 					<div class="h-full w-full flex items-center">
 						<img
-							class="2xl:w-full 2xl:h-[200px] xl:w-full xl:h-[200px] lg:w-full lg:h-[200px] md:w-full md:h-[200px] w-full h-[200px] object-cover "
+							class="2xl:w-full 2xl:h-[200px] xl:w-full xl:h-[200px] lg:w-full lg:h-[200px] md:w-full md:h-[200px] w-full h-[200px] object-cover"
 							src={imageUrl}
-							alt="image"
+							alt="Question"
 						/>
 					</div>
 					<div class="relative">
@@ -86,13 +91,18 @@
 					>
 						<span
 							class="xl:font-semibold lg:font-semibold md:font-semibold font-semibold"
-							>{$t('common.uploadImage')}</span
+							>{typeOfquestion === 6
+								? $t('common.uploadGif')
+								: $t('common.uploadImage')}</span
 						>
 					</p>
 					<p
-						class="2xl:text-xs xl:text-xs lg:text-[10px] md:text-xl text-xs text-gray-500 dark:text-gray-400"
+						class="2xl:text-xs xl:text-xs lg:text-[10px] md:text-xl text-xs text-gray-500 dark:text-gray-400 {typeOfquestion ===
+						6
+							? 'text-red-600'
+							: ''}"
 					>
-						{$t('common.PNGorJPG')}
+						{typeOfquestion === 6 ? $t('common.requireGift') : $t('common.PNGorJPG')}
 					</p>
 				</div>
 			{/if}
@@ -113,5 +123,6 @@
 		rows="5"
 		bind:value={title}
 		maxlength="100"
+		disabled={typeOfquestion === 4}
 	/>
 </div>
