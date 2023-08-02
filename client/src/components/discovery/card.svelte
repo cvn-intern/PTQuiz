@@ -1,4 +1,4 @@
-<script lang="ts">
+ <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import clsx from 'clsx';

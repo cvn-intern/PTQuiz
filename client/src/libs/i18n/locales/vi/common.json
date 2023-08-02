@@ -128,5 +128,7 @@
 	"arrageWord": "Sắp xếp từ",
 	"guessWord": "Đoán từ",
 	"inputText": "Nhập từ",
-	"gifSingleChoice": "Đoán Gif"
+	"gifSingleChoice": "Đoán Gif",
+	"playAgain": "Chơi lại",
+	"all": "Tất cả"
 }

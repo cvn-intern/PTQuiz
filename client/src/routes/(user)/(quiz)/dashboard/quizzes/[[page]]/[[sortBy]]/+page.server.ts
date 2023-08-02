@@ -1,15 +1,16 @@
 import img1 from '$assets/testimg.png';
 import type { IQuiz, IQuizAPI } from './quiz.type';
 
-export async function load({ fetch }) {
-	const response = await fetch('/api/quizzes/getAll');
+export async function load({ fetch, params }) {
+	const page = params.page || 1;
+	const response = await fetch(`/api/quizzes/${page}`);
 	const result = await response.json();
+
 	if (response.status === 200) {
-		const quizzes: IQuiz[] = result.map((quiz: IQuizAPI) => {
+		const quizzes: IQuiz[] = result.quizzesOfUser.map((quiz: IQuizAPI) => {
 			return {
 				title: quiz.title,
 				description: quiz.description,
-				username: quiz.user.displayName,
 				numberOfQuestions: quiz.numberOfQuestions,
 				image: quiz.image,
 				createdAt: quiz.createdAt,
@@ -17,7 +18,8 @@ export async function load({ fetch }) {
 			};
 		});
 		return {
-			quizzes: quizzes
+			quizzes: quizzes,
+			totalQuizzes: result.totalQuizzes
 		};
 	} else {
 		return {

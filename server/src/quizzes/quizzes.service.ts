@@ -39,29 +39,36 @@ export class QuizzesService {
         return discovery.findIndex((item) => item.category === category);
     }
 
-    async getAllQuizzesOfUser(userId: string) {
+    async getAllQuizzesOfUser(userId: string, page: number) {
         try {
-            const quizzesOfUser = await this.prisma.quizzes.findMany({
-                where: {
-                    userId: userId,
-                },
-                select: {
-                    user: {
-                        select: {
-                            displayName: true,
+            page = page || 1;
+            const pageSize = 5;
+            const [quizzesOfUser, totalQuizzes] =
+                await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            userId: userId,
                         },
-                    },
-                    createdAt: true,
-                    title: true,
-                    description: true,
-                    image: true,
-                    numberQuestions: true,
-                    durationMins: true,
-                    difficultyLevel: true,
-                    id: true,
-                },
-            });
-            return quizzesOfUser;
+                        select: {
+                            createdAt: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                            id: true,
+                        },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            userId: userId,
+                        },
+                    }),
+                ]);
+            return { quizzesOfUser, totalQuizzes };
         } catch (err) {
             throw new HttpException(
                 QuizzesError.FAILED_GET_ALL_QUIZZES,
@@ -119,7 +126,6 @@ export class QuizzesService {
                     const quizzes = await this.getInfoOfPublicQuiz(
                         quizzesOfdiscovery[index].quizId,
                     );
-
                     if (indexOfCategory === -1) {
                         discovery.push({
                             category: category.name,
@@ -201,19 +207,134 @@ export class QuizzesService {
         }
     }
 
-    async filterCategory(categoryName: string) {
+    async filterCategory(categoryName: string, page: number) {
         try {
-            console.log(categoryName);
-            if (categoryName === 'All') {
-                return await this.getDiscovery();
+            page = page || 1;
+            const pageSize = 5;
+
+            if (categoryName === 'All' || categoryName === undefined) {
+                const categories = await this.prisma.categories.findMany();
+
+                const quizPromises = categories.map((category) => {
+                    return this.prisma.$transaction([
+                        this.prisma.quizzes.findMany({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                category: {
+                                    name: category.name,
+                                },
+                            },
+                            select: {
+                                category: {
+                                    select: {
+                                        name: true,
+                                    },
+                                },
+                                user: {
+                                    select: {
+                                        displayName: true,
+                                    },
+                                },
+                                id: true,
+                                title: true,
+                                description: true,
+                                image: true,
+                                numberQuestions: true,
+                                durationMins: true,
+                                difficultyLevel: true,
+                            },
+                            take: pageSize,
+                            skip: (page - 1) * pageSize,
+                        }),
+                        this.prisma.quizzes.count({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                category: {
+                                    name: category.name,
+                                },
+                            },
+                        }),
+                    ]);
+                });
+
+                const result = await Promise.all(
+                    quizPromises.map(async (promise, index) => {
+                        const [quizzes, count] = await promise;
+                        return {
+                            category: categories[index].name,
+                            quizzes: quizzes,
+                            totalQuizzes: count,
+                        };
+                    }),
+                );
+
+                return result;
+            } else {
+                let quizzesOfUser, totalQuizzes;
+                [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                            category: {
+                                name: categoryName,
+                            },
+                        },
+                        select: {
+                            category: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                            user: {
+                                select: {
+                                    displayName: true,
+                                },
+                            },
+                            id: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                        },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                            quizQuestions: {
+                                some: {
+                                    question: {
+                                        categoryId: categoryName,
+                                    },
+                                },
+                            },
+                        },
+                    }),
+                ]);
+
+                return [
+                    {
+                        category: categoryName,
+                        quizzes: quizzesOfUser,
+                        totalQuizzes: totalQuizzes,
+                    },
+                ];
             }
-            const categories = await this.getDiscovery();
-            const resultFilter = categories.filter(
-                (category) => category.category === categoryName,
-            );
-            console.log(resultFilter);
-            if (resultFilter.length !== 0) return resultFilter;
-            else return [];
         } catch (exception) {
             throw new HttpException(
                 QuizzesError.NOT_FOUND_CATEGORY,

@@ -128,5 +128,7 @@
 	"arrageWord": "Arrage Word",
 	"guessWord": "Guess Word",
 	"inputText": "Input Text",
-	"gifSingleChoice": "Guess Gif"
+	"gifSingleChoice": "Guess Gif",
+	"playAgain": "Play Again",
+	"all": "All"
 }

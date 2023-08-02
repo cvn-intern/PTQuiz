@@ -9,7 +9,6 @@ export const actions = {
 	createQuiz: async ({ fetch, request }) => {
 		message = createDefaultMessage();
 		const form = await request.formData();
-
 		try {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
@@ -23,12 +22,13 @@ export const actions = {
 				body: form
 			});
 			const result = await response.json();
+
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
-			console.log(result);
-			message.success.message = result.message;
 			message.success.id = result.data.id;
+			message.success.message = result.message;
 			message.error.message = result.message;
+
 			return message;
 		} catch (error: any) {
 			message.isDone = true;
