@@ -12,13 +12,13 @@
 	export let socket: Socket;
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
-	export let isTrueFalse: boolean;
 	let fourOptions: any[] = [];
-	let isLoading: boolean = false;
 	let answers = [false, false, false, false];
+	let isSelecting: boolean = false;
 	let score: number;
 	$: {
 		if (!isPicked) {
+			isSelecting = true;
 			answers = [false, false, false, false];
 			fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 				id: optionKey,
@@ -46,16 +46,17 @@
 	};
 	onMount(() => {
 		socket.on(EmitChannel.ANSWER_RESULT, (data) => {
+			timer = tweened(0);
 			isCorrect = data.isCorrect;
 			score = data.score;
 			isPicked = true;
-			isLoading = false;
 			fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 				id: optionKey,
 				contents: question.options[optionKey],
 				isCorrect: data.answer[index],
-				disabled: isLoading || isPicked ? true : false
+				disabled: isPicked ? true : false
 			}));
+			isSelecting = false;
 			showModal = true;
 			setTimeout(() => {
 				showModal = false;
@@ -63,80 +64,31 @@
 		});
 	});
 	$: {
-		if ($timer <= 0 && !isPicked && !isLoading) {
+		if ($timer <= 0 && !isPicked) {
 			pickAnswer();
 		}
 	}
 </script>
 
-{#if isTrueFalse === false}
-	{#each fourOptions as option, index}
-		<button
-			disabled={option.disabled}
-			class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl ${
-				isPicked
-					? option.isCorrect
-						? 'bg-green-500'
-						: answers[index]
-						? 'bg-red-500'
-						: 'bg-gray-200'
-					: answers[index]
-					? 'bg-blue-300'
-					: isLoading
-					? 'bg-gray-200'
+{#each fourOptions as option, index}
+	<button
+		disabled={option.disabled}
+		class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl ${
+			isSelecting
+				? answers[index]
+					? ' bg-blue-300'
 					: 'bg-white'
-			} ${option.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-			on:click={() => {
-				isLoading = true;
-				timer = tweened(0);
-				fourOptions = Object.keys(question.options).map((optionKey, index) => ({
-					id: optionKey,
-					contents: question.options[optionKey],
-					isCorrect: false,
-					disabled: isLoading || isPicked ? true : false
-				}));
-				answers[index] = true;
-				pickAnswer();
-			}}
-		>
-			<p class="text-xl md:text-3xl text-left">{option.contents}</p>
-		</button>
-	{/each}
-{:else}
-	{#each fourOptions.slice(0, 2) as option, index}
-		<button
-			disabled={option.disabled}
-			class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl ${
-				isPicked
-					? option.isCorrect
-						? 'bg-green-500'
-						: answers[index]
-						? 'bg-red-500'
-						: 'bg-gray-200'
-					: answers[index]
-					? 'bg-blue-300'
-					: isLoading
-					? 'bg-gray-200'
-					: 'bg-white'
-			} ${option.disabled ? 'cursor-not-allowed' : 'cursor-pointer'} justify-center`}
-			on:click={() => {
-				isLoading = true;
-				timer = tweened(0);
-				fourOptions = Object.keys(question.options).map((optionKey, index) => ({
-					id: optionKey,
-					contents: question.options[optionKey],
-					isCorrect: false,
-					disabled: isLoading || isPicked ? true : false
-				}));
-				answers[index] = true;
-				pickAnswer();
-			}}
-		>
-			<p class="text-5xl flex justify-center">{option.contents}</p>
-		</button>
-	{/each}
-{/if}
-
+				: option.isCorrect
+				? 'bg-green-500'
+				: 'bg-red-500'
+		} ${option.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+		on:click={() => {
+			answers[index] = !answers[index];
+		}}
+	>
+		<p class="text-xl md:text-3xl text-left">{option.contents}</p>
+	</button>
+{/each}
 {#if showModal}
 	<Modal bind:open={showModal} autoclose placement="top-center">
 		<div class="flex justify-center items-center">

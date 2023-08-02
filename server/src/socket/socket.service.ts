@@ -272,13 +272,6 @@ export class SocketService {
                     optionC: question.question.optionC,
                     optionD: question.question.optionD,
                 },
-                answers: {
-                    answerA: question.question.answerA,
-                    answerB: question.question.answerB,
-                    answerC: question.question.answerC,
-                    answerD: question.question.answerD,
-                },
-                written: question.question.written,
                 image: question.question.image,
                 type: question.question.type,
                 time: question.question.time,
