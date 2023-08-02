@@ -24,14 +24,6 @@
 		point: number;
 		correct: number;
 	};
-	type Message = {
-		participant: Participant;
-		content: string;
-		reaction: string | null;
-		id: number;
-		left: number;
-		style: string;
-	};
 	const socket = createSocket(data.url, data.token);
 	let isEndGame: boolean = false;
 	let questionPointer: number = 0;
@@ -40,10 +32,7 @@
 	let showScoreBoard: boolean = false;
 	let errorMessage: string = '';
 	let participants: Participant[] = [];
-	let messages: Message[] = [];
-	let messageContent: string = '';
 	let questions: SocketQuiz[] = [];
-	let selectedReaction: string | null = '';
 	let url = $page.url.href;
 	let isHost: boolean = false;
 	let isPicked = false;
@@ -77,26 +66,6 @@
 		socket.on(EmitChannel.EXCEPTION, (data: any) => {
 			isLoading = false;
 			errorMessage = data.message;
-		});
-		socket.on(EmitChannel.ROOM_MESSAGES, (data: any) => {
-			const newMessage = {
-				participant: {
-					id: data.userId,
-					displayName: data.userId,
-					avatar: data.avatar,
-					isHost: data.isHost,
-					point: data.point,
-					correct: data.correct
-				},
-				content: data.message,
-				reaction: data.reaction,
-				id: Date.now(),
-				left: Math.random() * 80,
-				style: `position: absolute; left: ${
-					Math.random() * 80
-				}vw; animation: flyAndFade 5s linear forwards;`
-			};
-			messages = [...messages, newMessage];
 		});
 		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
@@ -142,24 +111,6 @@
 		});
 	};
 
-	let isButtonDisabled = false;
-
-	async function sendMessage() {
-		if (isButtonDisabled) return;
-		socket.emit(ListenChannel.SEND_MESSAGE, {
-			roomPIN: $page.params.slug,
-			userId: data.user.id,
-			avatar: data.user.avatar,
-			message: messageContent,
-			reaction: selectedReaction
-		});
-		messageContent = '';
-		selectedReaction = '';
-		isButtonDisabled = true;
-		setTimeout(() => {
-			isButtonDisabled = false;
-		}, 500);
-	}
 	const handleCopy = () => {
 		navigator.clipboard.writeText(url);
 		toast.success('Copied to clipboard');
@@ -288,17 +239,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom
-				{startGame}
-				{url}
-				{participants}
-				bind:messages
-				{sendMessage}
-				bind:messageContent
-				bind:selectedReaction
-				{isHost}
-				bind:isButtonDisabled
-			/>
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} />
 		{/if}
 	</div>
 {/if}
