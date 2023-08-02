@@ -1,8 +1,32 @@
+<script lang="ts">
+	import type { IQuiz } from '../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/quiz.type';
+
+	export let totalQuizzes: number;
+	export let quizzes: IQuiz[];
+	const quizzesPerPage = 5;
+	let currentPage = 1;
+	const numberOfPages = Math.ceil(totalQuizzes / quizzesPerPage);
+
+	async function fetchQuizzes(page: number) {
+		currentPage = page;
+		const response = await fetch(`/api/quizzes/${page}`);
+		const data = await response.json();
+		quizzes = data.quizzesOfUser;
+		totalQuizzes = data.totalQuizzes;
+	}
+
+	function handlePageChange(page: number) {
+		currentPage = page;
+		fetchQuizzes(currentPage);
+	}
+</script>
+
 <nav aria-label="Page navigation example">
 	<ul class="flex items-center -space-x-px h-8 text-sm">
 		<li>
 			<a
-				href="#"
+				href="/dashboard/quizzes/{currentPage - 1}"
+				on:click={() => handlePageChange(currentPage - 1)}
 				class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 			>
 				<span class="sr-only">Previous</span>
@@ -23,45 +47,25 @@
 				</svg>
 			</a>
 		</li>
+		{#each Array(numberOfPages) as _, i}
+			<li>
+				<a
+					href="/dashboard/quizzes/{i + 1}"
+					on:click={() => handlePageChange(i + 1)}
+					aria-current="page"
+					class="z-10 flex items-center justify-center px-3 h-8 leading {currentPage ===
+					i + 1
+						? 'tight text-white border border-secondary bg-secondary hover:bg-darkGreen hover:text-white'
+						: 'tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}"
+					>{i + 1}</a
+				>
+			</li>
+		{/each}
+
 		<li>
 			<a
-				href="#"
-				aria-current="page"
-				class="z-10 flex items-center justify-center px-3 h-8 leading-tight text-white border border-secondary bg-secondary hover:bg-darkGreen hover:text-white"
-				>1</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
-				class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-				>2</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
-				class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-				>3</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
-				class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-				>4</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
-				class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-				>5</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
+				href="/dashboard/quizzes/{currentPage + 1}"
+				on:click={() => handlePageChange(currentPage + 1)}
 				class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 			>
 				<span class="sr-only">Next</span>

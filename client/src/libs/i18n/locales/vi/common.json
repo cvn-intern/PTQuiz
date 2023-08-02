@@ -125,11 +125,6 @@
 	"crossCharacter": "Tự luận",
 	"question": "Câu hỏi",
 	"noQuizzesFound": "Không tìm thấy bộ câu hỏi nào",
-	"math":"Toán",
-	"science":"Khoa học",
-	"english":"Tiếng Anh",
-	"literature":"Văn học",
-	"geography":"Địa lý",
-	"history":"Lịch sử",
-	"other":"Khác"	
+	"playAgain": "Chơi lại",
+	"all": "Tất cả"
 }

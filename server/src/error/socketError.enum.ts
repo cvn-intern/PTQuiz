@@ -4,4 +4,9 @@ export enum SocketError {
     SOCKET_ROOM_NOT_FOUND = 'Room does not exist',
     SOCKET_USER_NOT_FOUND = 'User does not exist',
     SOCKET_USER_NOT_JOINED = 'User has not joined this room',
+    SOCKET_QUIZ_NOT_FOUND = 'Quiz does not exist',
+    SOCKET_QUESTION_NOT_FOUND = 'Question does not exist',
+    SOCKET_HOST_NOT_FOUND = 'Host does not exist',
+    SOCKET_ROOM_STARTED = 'Room has already started',
+    SOCKET_ROOM_PERMISSION_DENIED = 'You do not have permission to do this',
 }
