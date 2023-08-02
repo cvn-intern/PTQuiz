@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-	import { Modal } from 'flowbite-svelte';
+	import TrueFalseModal from '$components/trueFalseModal.svelte';
 
 	export let option: {
 		id: string;
@@ -51,14 +50,9 @@
 	{/if}
 
 	{#if showModal}
-		<Modal bind:open={showModal} autoclose outsideclose>
-			<div class="flex justify-center items-center">
-				{#if option.isCorrect && selectedAnswerIndex != -1}
-					<Icon icon="flat-color-icons:ok" class="text-9xl" />
-				{:else}
-					<Icon icon="teenyicons:x-circle-solid" class="text-9xl text-red-500 " />
-				{/if}
-			</div>
-		</Modal>
+		<TrueFalseModal
+			bind:open={showModal}
+			isTrue={option.isCorrect && selectedAnswerIndex != -1}
+		/>
 	{/if}
 </button>
