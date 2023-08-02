@@ -2,7 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuestionService } from '../question/question.service';
 import { QuizzesError } from '../error/quizzesError.enum';
-import { QuestionResponse } from '../question/type/questionResponse.type';
+import {
+    QuestionResponse,
+    QuestionResponseNoAnswer,
+} from '../question/type/questionResponse.type';
 import { QuizzesDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { Role } from '../auth/types';
@@ -598,6 +601,51 @@ export class QuizzesService {
             });
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+    async getQuestionsOfQuiz(quizId: string) {
+        try {
+            const quiz = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+            if (!quiz) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const questions = await this.prisma.quiz_questions.findMany({
+                where: {
+                    quizId: quizId,
+                },
+                select: {
+                    question: {
+                        select: {
+                            title: true,
+                            image: true,
+                            type: true,
+                            time: true,
+                        },
+                    },
+                },
+            });
+            const allQuestions = questions.map((question) => {
+                const questionResponse: QuestionResponseNoAnswer = {
+                    title: question.question.title,
+                    image: question.question.image,
+                    type: question.question.type,
+                    time: question.question.time,
+                };
+                return questionResponse;
+            });
+            return allQuestions;
+        } catch (error) {
+            throw new HttpException(
+                QuizzesError.ERROR_QUIZ,
+                HttpStatus.BAD_REQUEST,
+            );
         }
     }
 }

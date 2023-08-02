@@ -37,6 +37,7 @@
 				amountOfQuestions={card.numberQuestions}
 				level={card.difficultyLevel}
 				id={card.id}
+				cardInfor={card}
 			/>
 		{/each}
 		<Pagination {totalQuizzes} bind:quizzes={cardList} {nameCategory} />
