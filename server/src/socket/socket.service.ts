@@ -311,7 +311,11 @@ export class SocketService {
         return str.split(',').map((item) => item === 'true');
     }
     isWrittenQuestion(type: number) {
-        if (type === TypeQuestion.ESSAY) {
+        if (
+            type === TypeQuestion.ESSAY ||
+            type === TypeQuestion.INPUT_TEXT ||
+            type === TypeQuestion.ARRANGE_WORD
+        ) {
             return true;
         }
         return false;

@@ -31,7 +31,6 @@
 	};
 	const socket = createSocket(data.url, data.token);
 	let isEndGame: boolean = false;
-	let numberOfAnswer: number = 0;
 	let questionPointer: number = 0;
 	let isLoading: boolean = true;
 	let showModal: boolean = false;
@@ -56,11 +55,7 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-	$: {
-		numberOfAnswer = participants.filter((participant: any) => {
-			return participant.isAnswered;
-		}).length;
-	}
+
 	onMount(() => {
 		setTimeout(() => {
 			socket.emit(ListenChannel.JOIN_ROOM, {
@@ -193,9 +188,6 @@
 		{:else if questions.length > 0}
 			<div>
 				<div class="flex flex-col h-screen w-full font-sans p-2 gap-4">
-                    <div>
-                        {numberOfAnswer}/{participants.length} answered
-                    </div>
 					<div class="pt-4">
 						<Progressbar progress={stringTimer} size="h-4" color="gray" />
 					</div>
@@ -206,6 +198,7 @@
 							{questions}
 							{endGame}
 							{getScoreBoard}
+                            {participants}
 						/>
 					{/if}
 					<div class="h-full p-2 gap-2">
