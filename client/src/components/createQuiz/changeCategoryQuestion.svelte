@@ -62,7 +62,7 @@
 <Button class="text-slate-900 border bg-gray-200 hover:bg-gray-400">
 	<Chevron>{categoryOfQuestion}</Chevron></Button
 >
-<Dropdown class="w-full p-3 space-y-1">
+<Dropdown class="p-3 space-y-1">
 	<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
 		<Radio name="categoryOfQuestion" bind:group={defaultCategory} value={0}
 			>{$t('common.math')}</Radio

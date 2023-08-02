@@ -131,5 +131,7 @@
 	"gifSingleChoice": "Guess Gif",
 	"playAgain": "Play Again",
 	"all": "All",
-	"noQuestionsInYourQuiz": "No questions in your quiz"
+	"uploadGif": "Upload GIF",
+	"requireGift": "Require GIF",
+	"titleOfArrangeWord": "Arrange the words correctly"
 }

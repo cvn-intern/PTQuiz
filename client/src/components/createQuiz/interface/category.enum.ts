@@ -5,5 +5,5 @@ export enum Category {
 	HISTORY = 'clkjsrewf0001k6m5bpxteo0t',
 	GEOGRAPHY = '4clkjsrewg0002k6m565jmkvvw',
 	LITERATURE = 'clkjsrewg0003k6m5tpo9b8nx',
-	OTHER = '6clkjsrewg0004k6m5dt89zll5'
+	OTHER = 'clkjsrewg0004k6m5dt89zll5'
 }
