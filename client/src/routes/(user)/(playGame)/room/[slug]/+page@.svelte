@@ -14,6 +14,7 @@
 	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
 	import MultiChoiceSocket from '$components/playGame/socket/multiChoiceSocket.svelte';
 	import { createSocket } from '../../../../../libs/socket/socket';
+	import CrossWordsSocket from '../../../../../components/playGame/socket/crossWordsSocket.svelte';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -273,6 +274,14 @@
 										{socket}
 									/>
 								</div>
+							{:else if questions[questionPointer].type === TypeQuestion.GUESS_WORDS}
+								<CrossWordsSocket
+									bind:timer
+									question={questions[questionPointer]}
+									bind:isPicked
+									{showModal}
+									{socket}
+								/>
 							{/if}
 						</div>
 					</div>

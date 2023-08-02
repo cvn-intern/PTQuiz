@@ -540,4 +540,23 @@ export class SocketService {
             };
         });
     }
+
+    async getAnswerQuestion(questionId: string) {
+        const answer = await this.prisma.questions.findUnique({
+            where: {
+                id: questionId,
+            },
+            select: {
+                answerA: true,
+                answerB: true,
+                answerC: true,
+                answerD: true,
+                written: true,
+            },
+        });
+        if (!answer) {
+            throw new Error(SocketError.SOCKET_QUESTION_NOT_FOUND);
+        }
+        return answer;
+    }
 }
