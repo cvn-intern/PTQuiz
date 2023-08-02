@@ -1,4 +1,5 @@
 <script lang="ts">
+	import TrueFalseModal from '$components/trueFalseModal.svelte';
 	import Icon from '@iconify/svelte';
 	import { Modal } from 'flowbite-svelte';
 	export let answer: any;
@@ -30,7 +31,7 @@
 	$: {
 		answerSplit = answer.split('');
 		newAnswer = answer;
-		scrambledAnswer = scrambleString(newAnswer);
+		scrambledAnswer = scrambleString(newAnswer.toUpperCase());
 		scrambledAnswerSplit = scrambledAnswer
 			.split('')
 			.map((char: string, id: number) => ({ char, id }));
@@ -121,13 +122,5 @@
 	</div>
 </div>
 {#if showModal}
-	<Modal bind:open={showModal} autoclose>
-		<div class="flex justify-center items-center">
-			{#if checkAnswer(finalAnswer, answer)}
-				<Icon icon="flat-color-icons:ok" class="text-9xl" />
-			{:else}
-				<Icon icon="teenyicons:x-circle-solid" class="text-9xl text-red-500" />
-			{/if}
-		</div>
-	</Modal>
+	<TrueFalseModal bind:open={showModal} isTrue={checkAnswer(finalAnswer, answer)} />
 {/if}
