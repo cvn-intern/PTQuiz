@@ -14,3 +14,10 @@ export type QuestionResponse = {
     createdAt: Date;
     updatedAt: Date;
 };
+
+export type QuestionResponseNoAnswer = {
+    title: string;
+    image: string;
+    type: number;
+    time: number;
+};

@@ -2,6 +2,8 @@
 	import { goto } from '$app/navigation';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { t } from '../../libs/i18n/translations';
+	import Icon from '@iconify/svelte';
+	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
 
 	export let title: string;
 	export let description: string;
@@ -9,6 +11,7 @@
 	export let image: string;
 	export let createdAt: string;
 	export let id: string;
+	export let quiz: any;
 
 	let sharedToastId: string | number;
 
@@ -41,19 +44,60 @@
 	function handleEdit() {
 		goto(`/createQuiz/${id}`);
 	}
+
+	async function deleteQuiz(id: string) {
+		const response = await fetch(`/api/quizzes/delete/${id}`, {
+			method: 'DELETE'
+		});
+		const result = await response.json();
+		if (response.status === 200) {
+			toast.success(t.get('common.success'));
+			location.reload();
+		} else {
+			toast.error(result.message);
+		}
+	}
+	$: isOpen = false;
+	$: questionList = [];
+
+	const handleClickView = async () => {
+		isOpen = !isOpen;
+		const result = await getQuestionOfQuiz(id);
+		if (result.statusCode === 200) {
+			questionList = result.data;
+		}
+	};
+	async function getQuestionOfQuiz(id: string) {
+		const response = await fetch(`/api/quizzes/get-questions-no-answer/${id}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const result = await response.json();
+		return result;
+	}
+
 </script>
 
-<section
+<div
+	on:click={handleClickView}
 	class="flex flex-row justify-center md:items-start items-center border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer"
 	aria-details="Quiz Details"
 >
 	<div>
 		<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
 	</div>
-	<div class="flex flex-col w-full">
+	<div class="flex flex-col w-full justify-between gap-12 h-full">
 		<div>
-			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">{title}</h1>
-			<p class="text-sm text-zinc-400 md:w-full md:block hidden">{description}</p>
+			<div class="flex flex-row justify-between items-center">
+				<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">
+					{title}
+				</h1>
+				<button on:click={() => deleteQuiz(id)}>
+					<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
+				</button>
+			</div>
 		</div>
 		<div
 			class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2"
@@ -61,7 +105,8 @@
 			<p class="text-sm text-zinc-400">
 				{$t('common.createdAt')}: <span class="text-zinc-400"> {createdAt}</span>
 			</p>
-			<div class="flex flex-row gap-4">
+
+			<div class="flex flex-row gap-4 relative z-10">
 				<button
 					aria-label="Edit"
 					on:click={handleEdit}
@@ -77,4 +122,5 @@
 			</div>
 		</div>
 	</div>
-</section>
+</div>
+<DetailQuiz {isOpen} cardInfor={quiz} {questionList} />
