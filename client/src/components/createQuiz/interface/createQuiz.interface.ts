@@ -6,17 +6,16 @@ export interface InputForm {
 	selectOptionsList?: selectOptionne[];
 	valueSwitchDefault?: string;
 	isDefault?: boolean;
+	value?: any;
 }
 
 export interface FieldForm {
 	title: string;
-	difficultyLevel: string;
+	difficultyLevel: number | string;
 	image?: any;
-	startDate?: string;
-	endDate?: string;
-	passingPoint?: string;
+	point: number | string;
+	passingPoint?: number | string;
 	description?: string;
-	value?: string;
 }
 
 export interface selectOptionne {
