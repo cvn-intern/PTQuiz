@@ -25,7 +25,7 @@ function transformQuizData(quizzes: any[]): any[] {
 }
 
 export async function load({ fetch, params }) {
-	const categoryName = params.categoryName || 'All';
+	const categoryName = params.categoryName || 'all';
 	const page = params.page || 1;
 	const response = await fetch(`/api/quizzes/discovery/${categoryName}/${page}`);
 	const result = await response.json();
