@@ -130,5 +130,6 @@
 	"inputText": "Nhập từ",
 	"gifSingleChoice": "Đoán Gif",
 	"playAgain": "Chơi lại",
-	"all": "Tất cả"
+	"all": "Tất cả",
+	"noQuestionsInYourQuiz": "Không có câu hỏi nào trong bộ câu hỏi của bạn"
 }

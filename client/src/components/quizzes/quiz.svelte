@@ -11,6 +11,7 @@
 	export let image: string;
 	export let createdAt: string;
 	export let id: string;
+	export let quiz: any;
 
 	let sharedToastId: string | number;
 
@@ -57,12 +58,32 @@
 		}
 	}
 	$: isOpen = false;
+	$: questionList = [];
+
+	const handleClickView = async () => {
+		isOpen = !isOpen;
+		const result = await getQuestionOfQuiz(id);
+		if (result.statusCode === 200) {
+			questionList = result.data;
+		}
+	};
+	async function getQuestionOfQuiz(id: string) {
+		const response = await fetch(`/api/quizzes/get-questions-no-answer/${id}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const result = await response.json();
+		return result;
+	}
+
 </script>
 
-<button
+<div
+	on:click={handleClickView}
 	class="flex flex-row justify-center md:items-start items-center border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer"
 	aria-details="Quiz Details"
-	on:click={() => (isOpen = !isOpen)}
 >
 	<div>
 		<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
@@ -85,7 +106,7 @@
 				{$t('common.createdAt')}: <span class="text-zinc-400"> {createdAt}</span>
 			</p>
 
-			<div class="flex flex-row gap-4">
+			<div class="flex flex-row gap-4 relative z-10">
 				<button
 					aria-label="Edit"
 					on:click={handleEdit}
@@ -101,5 +122,5 @@
 			</div>
 		</div>
 	</div>
-</button>
-<DetailQuiz {isOpen} />
+</div>
+<DetailQuiz {isOpen} cardInfor={quiz} {questionList} />

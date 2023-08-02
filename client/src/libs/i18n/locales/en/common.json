@@ -130,5 +130,6 @@
 	"inputText": "Input Text",
 	"gifSingleChoice": "Guess Gif",
 	"playAgain": "Play Again",
-	"all": "All"
+	"all": "All",
+	"noQuestionsInYourQuiz": "No questions in your quiz"
 }
