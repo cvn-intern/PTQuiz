@@ -133,5 +133,7 @@
 	"all": "Tất cả",
 	"uploadGif": "Tải GIF lên",
 	"requireGift": "Yêu cầu GIF",
-	"titleOfArrangeWord": "Sắp xếp thành từ chính xác"
+	"titleOfArrangeWord": "Sắp xếp thành từ chính xác",
+	"arrayWord": "Sắp xếp từ",
+	"noQuestionsInYourQuiz": "Không có câu hỏi nào trong bộ câu hỏi của bạn"
 }

@@ -6,6 +6,7 @@
 	import { t } from '$i18n/translations';
 	import { gameInfoStore } from '$stores/gameInfoStore';
 	import { onMount } from 'svelte';
+	import Chat from '$components/playGame/socket/chat.svelte';
 	export let data;
 
 	let gameInfo = data.gameInfo;
