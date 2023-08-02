@@ -34,7 +34,7 @@ export class RoomService {
 
             if (isExistRoom)
                 throw new HttpException(
-                    'Room is already exist',
+                    `Room is already exist. Your room URL is : \n ${process.env.CLIENT_URL}/room/${isExistRoom.PIN}`,
                     HttpStatus.BAD_REQUEST,
                 );
 
