@@ -171,8 +171,6 @@
 			pickAnswer();
 		}
 	}
-
-	$: console.log(chooseAnswer);
 </script>
 
 {#if isGetAnswer}

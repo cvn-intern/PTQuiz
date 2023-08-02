@@ -113,7 +113,7 @@
 		}
 		if (event.key === 'Enter') {
 			showModal = true;
-			
+
 			pickGuessWords(finalAnswer);
 			setTimeout(() => {
 				showModal = false;
@@ -121,11 +121,6 @@
 		}
 	}
 
-	$: {
-		console.log(displayAnswer);
-		console.log(chooseAnswer);
-		console.log(finalAnswer);
-	}
 </script>
 
 <div class="flex flex-col h-full gap-8">
