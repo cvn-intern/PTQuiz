@@ -143,10 +143,6 @@
 		});
 	};
 
-	const handleCopy = () => {
-		navigator.clipboard.writeText(url);
-		toast.success('Copied to clipboard');
-	};
 	const getScoreBoard = () => {
 		showScoreBoard = true;
 		setTimeout(() => {
