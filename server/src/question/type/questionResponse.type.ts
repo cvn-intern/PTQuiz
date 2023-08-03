@@ -13,6 +13,7 @@ export type QuestionResponse = {
     time: number;
     createdAt: Date;
     updatedAt: Date;
+    hint: string;
 };
 
 export type QuestionResponseNoAnswer = {

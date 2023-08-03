@@ -61,6 +61,7 @@ export class QuestionService {
                 time,
                 createdAt,
                 updatedAt,
+                hint,
             } = question;
             const questionResponse: QuestionResponse = {
                 id: id,
@@ -85,6 +86,7 @@ export class QuestionService {
                 time: time,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                hint: hint,
             };
             return questionResponse;
         } catch (err) {

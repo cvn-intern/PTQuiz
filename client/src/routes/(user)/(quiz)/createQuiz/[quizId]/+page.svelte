@@ -47,7 +47,8 @@
 		image: '',
 		type: 1,
 		index: 1,
-		time: 20
+		time: 20,
+		hint: ''
 	};
 	questionData.set([newQuestion]);
 	indexNow.set({
@@ -82,7 +83,7 @@
 				case 'clkjsrewg0003k6m5tpo9b8nx':
 					categoryOfQuestion = 5;
 					break;
-				case '6clkjsrewg0004k6m5dt89zll5':
+				case 'clkjsrewg0004k6m5dt89zll5':
 					categoryOfQuestion = 6;
 					break;
 				default:
@@ -158,7 +159,6 @@
 				return false;
 			}
 		}
-
 		return true;
 	}
 
@@ -181,7 +181,12 @@
 			url = `/api/question/update/${dataSave[index].id}`;
 			method = 'PUT';
 		}
-
+		if (dataSave[index].image === null) {
+			dataSave[index].image = '';
+		}
+		if (dataSave[index].written === null) {
+			dataSave[index].written = '';
+		}
 		const formData = new FormData();
 		formData.append('categoryId', dataSave[index].categoryId);
 		formData.append('title', dataSave[index].title);
@@ -196,6 +201,7 @@
 		formData.append('answerD', dataSave[index].answers.answerD);
 		formData.append('written', dataSave[index].written);
 		formData.append('time', dataSave[index].time);
+		formData.append('hint', dataSave[index].hint);
 
 		if (dataSave[index].image !== '') {
 			await fetch(dataSave[index].image)
