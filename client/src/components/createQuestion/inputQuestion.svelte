@@ -50,17 +50,15 @@
 	};
 
 	let editor: Editor;
-	// onMount(() => {
-	// 	questionData.subscribe((data) => {
-	// 		title = data[index].title;
-	// 		editor.setHtml(title);
-	// 	});
-	// });
-	const dispatch = createEventDispatcher();
+	onMount(() => {
+		questionData.subscribe(async (data) => {
+			title = data[index].title;
+			await tick();
+			editor.setHtml(title);
+		});
+	});
 	function handleEditor(evt) {
 		title = evt.detail;
-		console.log(title);
-		dispatch('change');
 	}
 </script>
 
@@ -156,6 +154,7 @@
 		<p id="editor">
 			<Editor
 				html={title}
+				bind:this={editor}
 				actions={[
 					'h1',
 					'h2',

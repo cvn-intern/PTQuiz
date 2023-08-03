@@ -136,5 +136,10 @@
 	"titleOfArrangeWord": "Sắp xếp thành từ chính xác",
 	"arrayWord": "Sắp xếp từ",
 	"noQuestionsInYourQuiz": "Không có câu hỏi nào trong bộ câu hỏi của bạn",
-	"hint": "Gợi ý"
+	"hint": "Gợi ý",
+	"errorOptions": "Các câu trả lời không được trống",
+	"errorAnswer": "Hãy chọn ít nhất một câu trả lời đúng",
+	"errorWritten": "Câu trả lời không được trống",
+	"errorTitle": "Tiêu đề câu hỏi không được trống",
+	"errorGif": "GIF không được trống"
 }

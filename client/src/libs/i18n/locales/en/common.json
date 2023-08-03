@@ -136,5 +136,10 @@
 	"titleOfArrangeWord": "Arrange the words correctly",
 	"arrangeWord": "Arrange Word",
 	"noQuestionsInYourQuiz": "No question in your quiz",
-	"hint": "Hint"
+	"hint": "Hint",
+	"errorOptions": "Options can't be empty",
+	"errorAnswer": "Please choose at least one answer",
+	"errorWritten": "Answer can't be empty",
+	"errorTitle": "Title can't be empty",
+	"errorGif": "GIF can't be empty"
 }
