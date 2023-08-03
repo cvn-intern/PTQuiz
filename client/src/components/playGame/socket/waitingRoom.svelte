@@ -5,6 +5,8 @@
 	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
 	import { page } from '$app/stores';
 	import Chat from './chat.svelte';
+	import { t } from '$i18n/translations';
+	import Icon from '@iconify/svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -28,21 +30,30 @@
 				<div class="flex flex-row justify-between w-full items-center">
 					<div class="flex gap-4 items-center">
 						<button
-							class="h-10 bg-secondary/90 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-							on:click={handleCopy}>Click here to copy link</button
+							class="h-10 bg-blueLogo/80 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-xl shadow-xl shadow-blueLogo/20 border-2 border-gray-200/40 flex items-center gap-2"
+							on:click={handleCopy}
 						>
+							<Icon icon="icon-park-outline:copy-link" class="text-2xl text-white" />
+							<p class="uppercase">{$t('common.clickHereToCopyLink')}</p>
+						</button>
 						<img class="hidden md:block" width="120px" src={qrCode} alt="" title="" />
 					</div>
 					<button
-						class="h-10 bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-						on:click={startGame}>Start</button
+						class="h-10 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex items-center gap-1 uppercase"
+						on:click={startGame}
 					>
+						<p>{$t('common.startBtn')}</p>
+						<Icon icon="streamline-emojis:rocket" class="text-3xl" />
+					</button>
 				</div>
 			{/if}
 		</div>
 		<div class="flex flex-col gap-4 justify-center items-center pt-6">
-			<div class="text-4xl">Waiting for players...</div>
-			<div class="text-2xl">Participants: {participants.length}</div>
+			<div class="text-4xl flex items-center gap-2 uppercase text-zinc-700 font-bold text-center">
+				{$t("common.waitingForPlayers")}
+			</div>
+			<div class="text-2xl py-2 px-4 text-neutral-700 bg-white/40 border rounded-full flex gap-2">
+				<Icon icon="formkit:people" class="text-3xl" /> {participants.length}</div>
 		</div>
 	</div>
 	<div class="w-full flex justify-center">
@@ -51,7 +62,7 @@
 		>
 			{#each participants as participant (participant.displayName)}
 				<div
-					class="rounded-xl md:w-48 h-20 flex items-center justify-between text-white p-2 bg-secondary hover:animate-wiggle col-span-1 shadow-xl"
+					class="rounded-xl md:w-48 h-20 flex items-center justify-between text-white p-2 bg-secondary hover:animate-wiggle col-span-1 shadow-xl shadow-secondary/40 border-2 border-gray-200/40"
 				>
 					<p class="truncate w-32">{participant.displayName}</p>
 					<img

@@ -2,10 +2,11 @@
 	import Icon from '@iconify/svelte';
 	import Message from './message.svelte';
 	import MyMessage from './myMessage.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
 	import type { Socket } from 'socket.io-client';
 	import { page } from '$app/stores';
+	import { t } from '$i18n/translations';
 	export let participants: any[];
 	export let user: any;
 	export let socket: Socket;
@@ -20,10 +21,21 @@
 	let messages: Message[] = [];
 	let messageContent: string;
 	let isDisabled = false;
+	let element: any;
+
+	const scrollToBottom = async (node: any) => {
+		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+	};
+
+	onMount(async () => {
+		scrollToBottom(element);
+	});
 
 	onMount(() => {
-		socket.on(EmitChannel.ROOM_MESSAGES, (data) => {
+		socket.on(EmitChannel.ROOM_MESSAGES, async (data) => {
 			messages = [...messages, data];
+			await tick();
+			scrollToBottom(element);
 		});
 	});
 
@@ -46,12 +58,15 @@
 </script>
 
 <div
-	class="md:w-96 md:max-w-sm max-w-xs w-screenHalf backdrop-opacity-10 backdrop-invert bg-greenLight rounded-t-lg shadow-2xl {isShowChat
+	class="md:w-96 md:max-w-sm max-w-xs w-screen backdrop-opacity-10 backdrop-invert bg-greenLight rounded-t-lg shadow-2xl {isShowChat
 		? 'fixed right-0 bottom-0 z-60'
 		: 'hidden'}"
 >
 	<div class="relative flex flex-col gap-4">
-		<div class="overflow-y-scroll max-h-halfScreen h-halfScreen px-3 pt-7 no-scrollbar">
+		<div
+			bind:this={element}
+			class="overflow-y-scroll max-h-halfScreen h-halfScreen px-3 pt-7 no-scrollbar"
+		>
 			{#each messages as message}
 				{#if message.user.id === user.id}
 					<MyMessage
@@ -68,10 +83,7 @@
 				{/if}
 			{/each}
 		</div>
-		<form
-			class="flex justify-center absolute bottom-0 w-full"
-			on:submit|preventDefault={sendMessage}
-		>
+		<form class="flex justify-center w-full relative" on:submit|preventDefault={sendMessage}>
 			<input
 				maxlength="80"
 				type="text"
@@ -109,6 +121,6 @@
 >
 	<div class="flex justify-center items-center gap-2">
 		<Icon icon="et:chat" class="text-2xl" />
-		<p>Open chat here</p>
+		<p>{$t('common.openChatHere')}</p>
 	</div>
 </button>

@@ -142,5 +142,8 @@
 	"errorWritten": "Câu trả lời không được trống",
 	"errorTitle": "Tiêu đề câu hỏi không được trống",
 	"errorGif": "GIF không được trống",
-	"confirmDelete": "Bạn có chắc chắn muốn xóa?"
+	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
+	"openChatHere": "Mở trò chuyện ở đây",
+	"clickHereToCopyLink": "Sao chép liên kết",
+	"waitingForPlayers": "Đang chờ người chơi...."
 }
