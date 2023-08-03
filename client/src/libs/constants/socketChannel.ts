@@ -11,7 +11,7 @@ export enum EmitChannel {
 	ANSWER_QUESTION = 'answer-question',
 	EXCEPTION = 'exception',
 	GIF_QUESTION = 'gif-question',
-    HOST_LEFT = 'host-left'
+	HOST_LEFT = 'host-left'
 }
 
 export enum ListenChannel {
