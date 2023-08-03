@@ -82,12 +82,13 @@
 			</li>
 		</ul>
 	</div>
-	{#each categories as category}
+	{#each categories as category, indexOfCategory}
 		{#if category.quizzes.length}
 			<Category
 				nameCategory={category.category}
 				cardList={category.quizzes}
 				totalQuizzes={category.totalQuizzes}
+				{indexOfCategory}
 			/>
 		{/if}
 	{/each}
