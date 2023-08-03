@@ -65,8 +65,8 @@
 	<a class="logo flex items-center gap-2" href="/">
 		<img src={logo} alt="logo" class="hidden md:block w-16" />
 		<h1 class="hidden text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
-			Quiz<sup class="text-xl text-orangeLogo">P</sup><sup class="text-xl text-blueLogo"
-				>T</sup
+			Quiz<sup class="text-lg md:text-xl text-orangeLogo">P</sup><sup
+				class="text-lg md:text-xl text-blueLogo">T</sup
 			>
 		</h1>
 	</a>

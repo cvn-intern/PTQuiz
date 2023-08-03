@@ -289,7 +289,7 @@
 	<div class="pt-2">
 		<ProgressBar {stringTimer} />
 	</div>
-	<div class="h-full p-2 flex flex-col gap-4">
+	<div class="h-full flex flex-col gap-4">
 		<div class="question h-2/3">
 			<QuestionDisplay
 				quizzesType={quizzes[questionPointer].type}
