@@ -80,7 +80,8 @@
 </script>
 
 <div class="relative z-0 w-full">
-	<button
+	<a href="#"
+		role="button"
 		on:click={handleClickView}
 		class="flex flex-row justify-center md:items-start border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer w-full"
 		aria-details="Quiz Details"
@@ -97,7 +98,7 @@
 				{$t('common.createdAt')}: <span class="text-zinc-400"> {createdAt}</span>
 			</p>
 		</div>
-	</button>
+	</a>
 	<div class="absolute top-5 right-5 z-10">
 		<button on:click={() => deleteQuiz(id)}>
 			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
