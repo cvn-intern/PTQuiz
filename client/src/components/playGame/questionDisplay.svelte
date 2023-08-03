@@ -58,7 +58,11 @@
 </script>
 
 <div class="flex flex-col h-full w-full">
-	<div class={`${quizzesImage ? 'h-1/2' : 'h-full'} flex flex-col w-full overflow-y-hidden`}>
+	<div
+		class={`${
+			quizzesImage ? 'h-1/2' : 'h-full'
+		} flex flex-col w-full overflow-y-hidden relative`}
+	>
 		<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
 		<div class="flex justify-center items-center px-4 flex-1">
 			{#if isShowOption}

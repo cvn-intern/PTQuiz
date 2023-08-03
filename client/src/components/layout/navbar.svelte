@@ -38,12 +38,18 @@
 	let isDropdownOpen = false;
 
 	function toggleDropdown() {
-		isDropdownOpen = !isDropdownOpen;
+		isDropdownOpen = true;
+		document.body.addEventListener('click', unToggleDropdown);
 	}
 
 	function handleOptionClick(value: any) {
 		$locale = value;
 		handleChange({ target: { value } });
+	}
+
+	function unToggleDropdown() {
+		isDropdownOpen = false;
+		document.body.removeEventListener('click', unToggleDropdown);
 	}
 </script>
 
@@ -140,7 +146,7 @@
 			<div class="relative">
 				<button
 					class=" p-2 rounded-md focus:outline-none bg-primary"
-					on:click={toggleDropdown}
+					on:click|stopPropagation={toggleDropdown}
 				>
 					{#if $locale === 'en'}
 						<Icon icon="twemoji-flag-for-flag-united-kingdom" class="text-3xl" />
@@ -148,9 +154,11 @@
 						<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
 					{/if}
 				</button>
-
 				{#if isDropdownOpen}
-					<div class="absolute mt-2 w-full rounded-md shadow-lg">
+					<div
+						class="absolute mt-2 w-full rounded-md shadow-lg"
+						on:click|stopPropagation={() => {}}
+					>
 						{#each $locales as value}
 							<button
 								class="cursor-pointer p-2 hover:bg-gray-200"

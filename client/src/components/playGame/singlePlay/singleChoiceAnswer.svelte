@@ -33,6 +33,7 @@
 	}
 </script>
 
+
 {#if isShowOption}
 	<button
 		on:click={handleAnswerSelection}

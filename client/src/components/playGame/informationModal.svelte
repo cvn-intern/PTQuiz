@@ -8,18 +8,8 @@
 	import { onMount } from 'svelte';
 	let modalIsOpen = false;
 
-	const closeModal = () => {
-		modalIsOpen = false;
-	};
-
 	const openModal = () => {
-		modalIsOpen = true;
-	};
-
-	const handleOutsideClick = (event: MouseEvent) => {
-		if (event.target === event.currentTarget) {
-			closeModal();
-		}
+		modalIsOpen = !modalIsOpen;
 	};
 
 	onMount(() => {
@@ -30,21 +20,13 @@
 	});
 </script>
 
-<button class="flex justify-end" on:click={openModal}>
-	<Icon icon="teenyicons:double-caret-left-outline" class="w-12 h-12" />
+<button class="absolute right-0" on:click={openModal}>
+	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
 </button>
 
 {#if modalIsOpen}
-	<button class="absolute right-0 z-50">
-		<div class="bg-primary rounded-xl p-2 shadow-lg relative group">
-			<button
-				class="absolute left-0 top-14 md:top-20 z-40 opacity-0 transition-opacity duration-200 group-hover:opacity-100 bg-white rounded-r-2xl shadow-xl border-black-2"
-				on:click={() => {
-					closeModal();
-				}}
-			>
-				<Icon icon="system-uicons:chevron-right-double" class="w-12 h-12 " />
-			</button>
+	<button class="absolute right-0 mt-12 z-50">
+		<div class="bg-primary rounded-xl p-2 shadow-lg relative group flex flex-col">
 			<div class="flex flex-col gap-2 items-center">
 				<div
 					class="w-16 md:w-24 h-full font-semibold rounded-xl flex justify-center items-center text-xl md:text-4xl"
@@ -120,14 +102,52 @@
 						<div class="md:hidden text-black p-2 bg-primary">
 							{$t('common.crossCharacter')}
 						</div>
+					{:else if quizzesType === TypeQuestion.ARRANGE_WORD}
+						<div class="md:flex hidden p-4 gap-2 bg-primary rounded-xl items-center">
+							<div
+								class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceA"
+							>
+								A
+							</div>
+							<div
+								class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceB"
+							>
+								B
+							</div>
+							<div
+								class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceC"
+							>
+								C
+							</div>
+						</div>
+						<div class="md:hidden text-black p-2 bg-primary">
+							{$t('common.arrangeWord')}
+						</div>
+					{:else if quizzesType === TypeQuestion.INPUT_TEXT}
+						<div class="md:flex hidden p-4 gap-2 bg-primary rounded-xl items-center">
+							<div
+								class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceA"
+							>
+								A
+							</div>
+							<div
+								class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceB"
+							>
+								B
+							</div>
+							<div
+								class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceC"
+							>
+								C
+							</div>
+						</div>
+						<div class="md:hidden text-black p-2 bg-primary">
+							{$t('common.inputText')}
+						</div>
 					{/if}
 				</div>
 				<hr class="w-full" />
-				<Icon
-					icon="heroicons-outline:light-bulb"
-					class="w-16 h-16 text-yellow-400"
-					on:click={closeModal}
-				/>
+				<Icon icon="heroicons-outline:light-bulb" class="w-16 h-16 text-yellow-400" />
 			</div>
 		</div>
 	</button>
