@@ -19,6 +19,8 @@
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
 	import ScoreboardModal from '$components/playGame/scoreboardModal.svelte';
 	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
+	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
+	import Position from '$components/endGame/position.svelte';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -47,7 +49,7 @@
 	let timer = tweened(original, {
 		duration: 1000
 	});
-	
+
 	setInterval(() => {
 		if ($timer > 0) {
 			$timer--;
@@ -167,20 +169,7 @@
 		{#if errorMessage}
 			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
 		{:else if isEndGame}
-			<div class="flex flex-col justify-center items-center">
-				{#each participants as participant, index}
-					<div class="flex gap-4 items-center">
-						<p>No {index + 1}</p>
-						<p class="truncate w-32">{participant.displayName}</p>
-						<img
-							src={participant.avatar}
-							alt={participant.displayName}
-							class="w-10 h-10 rounded-full ml-4"
-						/>
-						<p>{participant.point}</p>
-					</div>
-				{/each}
-			</div>
+			<EndGameSocket {participants} length={questions.length} />
 		{:else if questions.length > 0}
 			<div>
 				<div class="flex flex-col h-screen w-full font-sans p-2 gap-4">
