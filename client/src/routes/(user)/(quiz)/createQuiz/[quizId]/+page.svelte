@@ -122,6 +122,7 @@
 		) {
 			return $t('common.errorAnswer');
 		}
+		console.log('hi em');
 		return '';
 	}
 	function checkInputTextType25() {
@@ -172,7 +173,7 @@
 		if (dataSave[index].title === '') {
 			return $t('common.errorTitle');
 		}
-		if (dataSave[index].type === 1) {
+		if (dataSave[index].type === 1 || dataSave[index].type === 0) {
 			return checkInputChoiceType01();
 		}
 		if (dataSave[index].type === 2 || dataSave[index].type === 5) {
@@ -198,6 +199,7 @@
 			isDisabled = false;
 		}, 3000);
 		let checkSave = checkInput();
+		console.log(dataSave[index]);
 		if (checkSave !== '') {
 			dismissLoadingToast();
 			showToast('error', checkSave);
