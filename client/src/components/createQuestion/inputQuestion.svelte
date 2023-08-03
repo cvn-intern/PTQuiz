@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
 	import { questionData } from '$stores/questionInfoStore';
+	import Editor from 'cl-editor/src/Editor.svelte';
+	import { createEventDispatcher, onMount, tick } from 'svelte';
 	export let index: number;
 	let title: string;
 	let imageFile;
@@ -46,6 +48,20 @@
 			return data;
 		});
 	};
+
+	let editor: Editor;
+	// onMount(() => {
+	// 	questionData.subscribe((data) => {
+	// 		title = data[index].title;
+	// 		editor.setHtml(title);
+	// 	});
+	// });
+	const dispatch = createEventDispatcher();
+	function handleEditor(evt) {
+		title = evt.detail;
+		console.log(title);
+		dispatch('change');
+	}
 </script>
 
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
@@ -137,5 +153,24 @@
 			bind:value={hint}
 			maxlength="50"
 		/>
+		<p id="editor">
+			<Editor
+				html={title}
+				actions={[
+					'h1',
+					'h2',
+					'b',
+					'i',
+					'strike',
+					'ul',
+					'left',
+					'center',
+					'justify',
+					'undo',
+					'redo'
+				]}
+				on:change={handleEditor}
+			/>
+		</p>
 	</div>
 </div>
