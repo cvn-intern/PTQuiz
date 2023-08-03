@@ -50,7 +50,7 @@
 	let timer = tweened(original, {
 		duration: 1000
 	});
-	
+
 	setInterval(() => {
 		if ($timer > 0 && isShowOption) {
 			$timer--;
@@ -136,6 +136,9 @@
 		});
 		socket.on(EmitChannel.ENDED, (data: any) => {
 			isEndGame = data.isEnded;
+		});
+		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
+			window.location.href = $page.url.href;
 		});
 	});
 	onDestroy(() => {
@@ -309,7 +312,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user}/>
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user} />
 		{/if}
 	</div>
 {/if}

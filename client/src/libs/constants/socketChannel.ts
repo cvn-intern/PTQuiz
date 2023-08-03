@@ -10,7 +10,8 @@ export enum EmitChannel {
 	SCORE_BOARD = 'score-board',
 	ANSWER_QUESTION = 'answer-question',
 	EXCEPTION = 'exception',
-	GIF_QUESTION = 'gif-question'
+	GIF_QUESTION = 'gif-question',
+    HOST_LEFT = 'host-left'
 }
 
 export enum ListenChannel {
