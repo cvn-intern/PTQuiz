@@ -141,6 +141,6 @@
 	"errorAnswer": "Hãy chọn ít nhất một câu trả lời đúng",
 	"errorWritten": "Câu trả lời không được trống",
 	"errorTitle": "Tiêu đề câu hỏi không được trống",
-	"errorGif": "GIF không được trống"
+	"errorGif": "GIF không được trống",
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?"
 }
