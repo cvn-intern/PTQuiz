@@ -24,6 +24,8 @@ export default {
 				yellowLogo: '#ffb411',
 				blueLogo: '#00d6ca',
 				run1st: '#FFAA00',
+				run2st: '#179cd4',
+				run3st: '#23d964',
 				bgChat: '#BAD1CD',
 				primaryColor: {
 					50: '#FFF5F2',
@@ -106,7 +108,7 @@ export default {
 			scale: {
 				102: '1.02'
 			},
-			zIndex: { 
+			zIndex: {
 				60: '60',
 				70: '70',
 				80: '80',

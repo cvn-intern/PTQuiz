@@ -4,7 +4,7 @@
 	export let participants: any[];
 </script>
 
-<Modal bind:open={showScoreBoard} autoclose placement="top-center">
+<Modal bind:open={showScoreBoard} outsideclose>
 	<div class="flex flex-col justify-center items-center">
 		{#each participants as participant, index}
 			<div class="flex gap-4 items-center">
