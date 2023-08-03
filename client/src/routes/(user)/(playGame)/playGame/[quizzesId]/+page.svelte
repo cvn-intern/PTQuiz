@@ -6,7 +6,6 @@
 	import { t } from '$i18n/translations';
 	import { gameInfoStore } from '$stores/gameInfoStore';
 	import { onMount } from 'svelte';
-	import Chat from '$components/playGame/socket/chat.svelte';
 	export let data;
 
 	let gameInfo = data.gameInfo;
@@ -19,11 +18,6 @@
 	setTimeout(() => {
 		textReady = 'READY ?';
 	}, 1000);
-
-	$: isShowButton = false;
-	setTimeout(() => {
-		isShowButton = true;
-	}, 1500);
 
 	let buttonCancelClicked = false;
 	let buttonPlayClicked = false;
@@ -57,7 +51,6 @@
 				class={clsx(
 					' text-white font-bold text-xl  justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-orangeLogo rounded-2xl hover:translate-y-px ',
 					{
-						hidden: !isShowButton,
 						'pointer-events-none opacity-50': buttonCancelClicked
 					}
 				)}
@@ -72,7 +65,6 @@
 				class={clsx(
 					' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
 					{
-						hidden: !isShowButton,
 						'pointer-events-none opacity-50': buttonPlayClicked
 					}
 				)}
@@ -82,4 +74,5 @@
 			</button>
 		</div>
 	</div>
+	
 </div>

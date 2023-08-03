@@ -3,7 +3,6 @@
 	import type { QuizzesType, UserAnswer } from './quizzes.interface.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import CryptoJS from 'crypto-js';
 	import SingleChoiceAnswer from '$components/playGame/singlePlay/singleChoiceAnswer.svelte';
@@ -15,6 +14,7 @@
 	import InputText from '$components/playGame/singlePlay/inputText.svelte';
 	import ArrangeAnswer from '$components/playGame/singlePlay/arrangeAnswer.svelte';
 	import CrossWords from '$components/playGame/singlePlay/crossWords.svelte';
+	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -48,7 +48,9 @@
 	let gameInfo: any;
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 
-	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
+	if (!gameInfo) {
+		window.location.href = `/playGame/${quizzesId}`;
+	}
 
 	let original = quizzes[0].time;
 	let timer = tweened(original, {
@@ -67,6 +69,7 @@
 	}, 1000);
 
 	$: stringTimer = (($timer * 100) / original).toString();
+
 	function zeroTimer() {
 		timer = tweened(0);
 	}
@@ -273,9 +276,9 @@
 	}
 </script>
 
-<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4 overflow-y-scroll">
-	<div class="pt-4">
-		<Progressbar progress={stringTimer} size="h-4" color="gray" />
+<div class="bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
+	<div class="pt-2">
+		<ProgressBar {stringTimer} />
 	</div>
 	<div class="h-full p-2 flex flex-col gap-4">
 		<div class="question h-2/3">

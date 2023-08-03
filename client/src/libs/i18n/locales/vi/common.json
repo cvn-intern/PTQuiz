@@ -125,7 +125,7 @@
 	"crossCharacter": "Tự luận",
 	"question": "Câu hỏi",
 	"noQuizzesFound": "Không tìm thấy bộ câu hỏi nào",
-	"arrageWord": "Sắp xếp từ",
+	"arrangeWord": "Sắp xếp từ",
 	"guessWord": "Đoán từ",
 	"inputText": "Nhập từ",
 	"gifSingleChoice": "Đoán Gif",
@@ -135,5 +135,6 @@
 	"requireGift": "Yêu cầu GIF",
 	"titleOfArrangeWord": "Sắp xếp thành từ chính xác",
 	"arrayWord": "Sắp xếp từ",
-	"noQuestionsInYourQuiz": "Không có câu hỏi nào trong bộ câu hỏi của bạn"
+	"noQuestionsInYourQuiz": "Không có câu hỏi nào trong bộ câu hỏi của bạn",
+	"hint": "Gợi ý"
 }

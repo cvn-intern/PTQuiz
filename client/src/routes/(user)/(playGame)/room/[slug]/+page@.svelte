@@ -20,6 +20,7 @@
 	import InputTextSocket from '$components/playGame/socket/inputTextSocket.svelte';
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
 	import ScoreboardModal from '$components/playGame/socket/scoreboardModal.svelte';
+	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -46,8 +47,10 @@
 
 	let original = 10;
 	let stringTimer: string;
-	let timer = tweened(original);
-
+	let timer = tweened(original, {
+		duration: 1000
+	});
+	
 	setInterval(() => {
 		if ($timer > 0 && isShowOption) {
 			$timer--;
@@ -196,8 +199,8 @@
 		{:else if questions.length > 0}
 			<div>
 				<div class="flex flex-col h-screen w-full font-sans p-2 gap-4">
-					<div class="pt-4">
-						<Progressbar progress={stringTimer} size="h-4" color="gray" />
+					<div class="pt-2">
+						<ProgressBar {stringTimer} />
 					</div>
 					{#if isHost}
 						<HostButton
@@ -253,7 +256,7 @@
 								</div>
 							{:else if questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
 								<div
-									class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
+									class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
 								>
 									<SingleChoiceGifSocket
 										bind:timer
@@ -306,7 +309,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} />
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user}/>
 		{/if}
 	</div>
 {/if}

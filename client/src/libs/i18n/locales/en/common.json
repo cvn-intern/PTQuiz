@@ -135,5 +135,6 @@
 	"requireGift": "Require GIF",
 	"titleOfArrangeWord": "Arrange the words correctly",
 	"arrangeWord": "Arrange Word",
-	"noQuestionsInYourQuiz": "No question in your quiz"
+	"noQuestionsInYourQuiz": "No question in your quiz",
+	"hint": "Hint"
 }
