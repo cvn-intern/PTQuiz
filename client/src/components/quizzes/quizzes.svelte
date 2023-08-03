@@ -37,6 +37,7 @@
 				createdAt={quiz.createdAt}
 				id={quiz.id}
 				{quiz}
+				bind:quizzes
 			/>
 		{/each}
 		<div class="">
