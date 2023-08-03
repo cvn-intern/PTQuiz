@@ -2,6 +2,8 @@
 	import { TypeQuestion } from '$constants/typeQuestion';
 	import { t } from '$i18n/translations';
 	import clsx from 'clsx';
+	import InformationModal from './informationModal.svelte';
+	import ImageModal from './imageModal.svelte';
 
 	export let quizzesType: number;
 	export let quizzesTitle: string;
@@ -9,6 +11,8 @@
 	export let quizzesPointer: number;
 	export let quizzesImage: string | null;
 	export let isShowOption: boolean = true;
+
+	let modalOpen: boolean = false;
 
 	async function getDuration(url: any) {
 		const res = await fetch(url);
@@ -53,85 +57,13 @@
 	}
 </script>
 
-<div class="flex flex-col md:flex-row h-full w-full md:justify-center">
-	<div class="order-1 h-1/2 flex flex-col w-full md:h-full md:order-2">
-		<div class="flex justify-end gap-4">
-			<div
-				class="w-16 md:w-24 h-full shadow-xl rounded-xl bg-primary flex justify-center items-center text-xl md:text-4xl"
-			>
-				{quizzesPointer + 1}/{quizzesNumber}
-			</div>
-			<div class="flex">
-				{#if quizzesType === TypeQuestion.GIF_SINGLE_CHOICE}
-					<div
-						class="hidden md:grid grid-cols-2 grid-rows-2 gap-1 bg-primary p-2 rounded-xl md:items-center"
-					>
-						<div class="w-10 h-8 rounded-lg animate-changeColorGreen" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-					</div>
-					<div class=" md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
-						{$t('common.singleChoice')}
-					</div>
-				{:else if quizzesType === TypeQuestion.SINGLE_CHOICE}
-					<div
-						class="hidden md:grid grid-cols-2 grid-rows-2 gap-1 bg-primary p-2 rounded-xl md:items-center"
-					>
-						<div class="w-10 h-8 rounded-lg animate-changeColorGreen" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-					</div>
-					<div class=" md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
-						{$t('common.singleChoice')}
-					</div>
-				{:else if quizzesType === TypeQuestion.MULTIPLE_CHOICE}
-					<div
-						class="hidden md:grid grid-cols-2 grid-rows-2 gap-1 bg-primary p-2 rounded-xl items-center"
-					>
-						<div class="w-10 h-8 rounded-lg animate-changeColorGreen" />
-						<div class="w-10 h-8 rounded-lg animate-changeColorGreen" />
-						<div class="w-10 h-8 rounded-lg animate-changeColorGreen" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-					</div>
-					<div class=" md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
-						{$t('common.multiChoice')}
-					</div>
-				{:else if quizzesType === TypeQuestion.TRUE_FALSE}
-					<div
-						class="hidden md:grid grid-cols-2 grid-rows-1 gap-1 bg-primary p-2 rounded-xl items-center"
-					>
-						<div class="w-10 h-8 rounded-lg animate-changeColorGreen" />
-						<div class="w-10 h-8 rounded-lg bg-red-500" />
-					</div>
-					<div class=" md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
-						{$t('common.trueFalse')}
-					</div>
-				{:else if quizzesType === TypeQuestion.GUESS_WORDS}
-					<div class="md:flex hidden p-4 gap-2 bg-primary rounded-xl items-center">
-						<div
-							class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceA"
-						>
-							A
-						</div>
-						<div
-							class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceB"
-						>
-							B
-						</div>
-						<div
-							class="w-8 h-10 flex justify-center items-center border-b-2 border-black text-2xl animate-sequenceC"
-						>
-							C
-						</div>
-					</div>
-					<div class="md:hidden rounded-xl text-black shadow-xl p-2 bg-primary">
-						{$t('common.crossCharacter')}
-					</div>
-				{/if}
-			</div>
-		</div>
+<div class="flex flex-col h-full w-full">
+	<div
+		class={`${
+			quizzesImage ? 'h-1/2' : 'h-full'
+		} flex flex-col w-full overflow-y-hidden relative`}
+	>
+		<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
 		<div class="flex justify-center items-center px-4 flex-1">
 			{#if isShowOption}
 				<p
@@ -188,8 +120,14 @@
 		</div>
 	</div>
 	{#if quizzesImage && quizzesType !== TypeQuestion.GIF_SINGLE_CHOICE}
-		<div class="h-1/2 w-full flex justify-center items-center">
+		<button
+			class="h-1/2 w-full flex justify-center items-center"
+			on:click={() => {
+				modalOpen = true;
+			}}
+		>
 			<img src={quizzesImage} alt="quizzesImage" class="max-h-full rounded-xl shadow-xl" />
-		</div>
+		</button>
+		<ImageModal bind:modalOpen imageSrc={quizzesImage} />
 	{/if}
 </div>

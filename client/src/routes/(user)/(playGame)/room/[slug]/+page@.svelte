@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { Modal, Progressbar } from 'flowbite-svelte';
-	import toast from 'svelte-french-toast';
+
 	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
 	import type { SocketQuiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
 	import { TypeQuestion } from '$libs/constants/typeQuestion';
@@ -19,6 +18,7 @@
 	import InputTextSocket from '$components/playGame/socket/inputTextSocket.svelte';
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
 	import ScoreboardModal from '$components/playGame/scoreboardModal.svelte';
+	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -44,8 +44,10 @@
 
 	let original = 10;
 	let stringTimer: string;
-	let timer = tweened(original);
-
+	let timer = tweened(original, {
+		duration: 1000
+	});
+	
 	setInterval(() => {
 		if ($timer > 0) {
 			$timer--;
@@ -182,8 +184,8 @@
 		{:else if questions.length > 0}
 			<div>
 				<div class="flex flex-col h-screen w-full font-sans p-2 gap-4">
-					<div class="pt-4">
-						<Progressbar progress={stringTimer} size="h-4" color="gray" />
+					<div class="pt-2">
+						<ProgressBar {stringTimer} />
 					</div>
 					{#if isHost}
 						<HostButton
@@ -274,7 +276,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} />
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user}/>
 		{/if}
 	</div>
 {/if}
