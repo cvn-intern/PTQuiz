@@ -74,7 +74,7 @@
 		{form}
 	/>
 	<div
-		class="md:max-h-boxCardQuestion max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4"
+		class="md:max-h-boxCardQuestion max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4 no-scrollbar"
 	>
 		{#each cardListQuestion as cardQuestion, index}
 			<CardQuestion questionStt={index + 1} {index} />

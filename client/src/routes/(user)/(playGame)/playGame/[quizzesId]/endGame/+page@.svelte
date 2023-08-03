@@ -25,8 +25,8 @@
 </script>
 
 <div class="bg-greenLight w-full h-screen">
-	<div class="flex flex-col gap-6 items-center p-4 h-full">
-		<div class="flex w-11/12 justify-between pt-4">
+	<div class="flex flex-col md:gap-6 gap-3 items-center p-4 h-full">
+		<div class="flex w-11/12 justify-between md:pt-4 pt-2">
 			<button
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-secondary"
 				on:click={() => {

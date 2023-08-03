@@ -39,19 +39,19 @@
 		messageContent = '';
 	};
 
-	$: isShowChat = true;
+	$: isShowChat = false;
 	const handleClickOpenChat = () => {
 		isShowChat = !isShowChat;
 	};
 </script>
 
 <div
-	class="md:w-96 md:max-w-sm max-w-xs backdrop-opacity-10 backdrop-invert bg-greenLight rounded-t-lg shadow-2xl {isShowChat
+	class="md:w-96 md:max-w-sm max-w-xs w-screenHalf backdrop-opacity-10 backdrop-invert bg-greenLight rounded-t-lg shadow-2xl {isShowChat
 		? 'fixed right-0 bottom-0 z-60'
 		: 'hidden'}"
 >
 	<div class="relative flex flex-col gap-4">
-		<div class="overflow-y-scroll max-h-halfScreen h-halfScreen px-3 pt-7">
+		<div class="overflow-y-scroll max-h-halfScreen h-halfScreen px-3 pt-7 no-scrollbar">
 			{#each messages as message}
 				{#if message.user.id === user.id}
 					<MyMessage

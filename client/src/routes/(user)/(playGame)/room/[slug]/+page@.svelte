@@ -41,7 +41,7 @@
 	let participants: Participant[] = [];
 	let questions: SocketQuiz[] = [];
 	let url = $page.url.href;
-	let isHost: boolean = false;
+	let isHost: boolean = true;
 	let isPicked = false;
 	let isShowOption: boolean = false;
 
@@ -60,111 +60,130 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-
+	function getNewParticipant(): Participant {
+		const id = participants.length + 1;
+		return {
+			displayName: `Participant ${id}`,
+			avatar: `https://avatars.dicebear.com/api/avataaars/${id}.svg`,
+			id: id.toString(),
+			correct: Math.floor(Math.random() * 100),
+			point: Math.floor(Math.random() * 100),
+			isAnswered: false,
+			isHost: false
+		};
+	}
 	onMount(() => {
-		setTimeout(() => {
-			socket.emit(ListenChannel.JOIN_ROOM, {
-				roomPIN: $page.params.slug
-			});
-			socket.emit(ListenChannel.IS_HOST, {
-				roomPIN: $page.params.slug
-			});
+		// setTimeout(() => {
+		// 	socket.emit(ListenChannel.JOIN_ROOM, {
+		// 		roomPIN: $page.params.slug
+		// 	});
+		// 	socket.emit(ListenChannel.IS_HOST, {
+		// 		roomPIN: $page.params.slug
+		// 	});
+		// }, 1000);
+		// socket.on(EmitChannel.ROOM_USERS, (data: any) => {
+		// 	isLoading = false;
+		// 	if (data.signal === 'join') {
+		// 		participants = data.roomParticipants.map((participant: any) => {
+		// 			return {
+		// 				...participant,
+		// 				isAnswered: false
+		// 			};
+		// 		});
+		// 	} else {
+		// 		const newParticipantsId = data.roomParticipants.map((participant: any) => {
+		// 			return participant.id;
+		// 		});
+		// 		const participantsId = participants.map((participant: any) => {
+		// 			return participant.id;
+		// 		});
+		// 		const intersection = participantsId.filter((element: any) =>
+		// 			newParticipantsId.includes(element)
+		// 		);
+		// 		participants = participants.filter((participant: any) => {
+		// 			return intersection.includes(participant.id);
+		// 		});
+		// 	}
+		// });
+		// socket.on(EmitChannel.EXCEPTION, (data: any) => {
+		// 	isLoading = false;
+		// 	errorMessage = data.message;
+		// });
+		// socket.on(EmitChannel.IS_HOST, (data: any) => {
+		// 	isHost = data.isHost;
+		// });
+		// socket.on(EmitChannel.QUIZ_QUESTIONS, (data: any) => {
+		// 	questions = data;
+		// 	isPicked = false;
+		// 	original = questions[questionPointer].time;
+		// 	timer = tweened(original, {
+		// 		duration: 1000
+		// 	});
+
+		// 	if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+		// 		isShowOption = false;
+		// 	} else {
+		// 		isShowOption = true;
+		// 	}
+		// });
+		// socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
+		// 	questionPointer = data.questionPointer;
+		// 	isPicked = false;
+		// 	participants = participants.map((participant: any) => {
+		// 		return {
+		// 			...participant,
+		// 			isAnswered: false
+		// 		};
+		// 	});
+		// 	original = questions[questionPointer].time;
+		// 	timer = tweened(original, {
+		// 		duration: 1000
+		// 	});
+
+		// 	if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+		// 		isShowOption = false;
+		// 	} else {
+		// 		isShowOption = true;
+		// 	}
+		// });
+		// socket.on(EmitChannel.SCORE_BOARD, (data: any) => {
+		// 	participants = data;
+		// });
+		// socket.on(EmitChannel.ENDED, (data: any) => {
+		// 	isEndGame = data.isEnded;
+		// });
+		// socket.on(EmitChannel.HOST_LEFT, (data: any) => {
+		// 	window.location.href = $page.url.href;
+		// });
+
+		isLoading = false;
+
+		setInterval(() => {
+			if (participants.length < 10) {
+				participants = [...participants, getNewParticipant()];
+			}
 		}, 1000);
-		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
-			isLoading = false;
-			if (data.signal === 'join') {
-				participants = data.roomParticipants.map((participant: any) => {
-					return {
-						...participant,
-						isAnswered: false
-					};
-				});
-			} else {
-				const newParticipantsId = data.roomParticipants.map((participant: any) => {
-					return participant.id;
-				});
-				const participantsId = participants.map((participant: any) => {
-					return participant.id;
-				});
-				const intersection = participantsId.filter((element: any) =>
-					newParticipantsId.includes(element)
-				);
-				participants = participants.filter((participant: any) => {
-					return intersection.includes(participant.id);
-				});
-			}
-		});
-		socket.on(EmitChannel.EXCEPTION, (data: any) => {
-			isLoading = false;
-			errorMessage = data.message;
-		});
-		socket.on(EmitChannel.IS_HOST, (data: any) => {
-			isHost = data.isHost;
-		});
-		socket.on(EmitChannel.QUIZ_QUESTIONS, (data: any) => {
-			questions = data;
-			isPicked = false;
-			original = questions[questionPointer].time;
-			timer = tweened(original, {
-				duration: 1000
-			});
-
-			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
-				isShowOption = false;
-			} else {
-				isShowOption = true;
-			}
-		});
-		socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
-			questionPointer = data.questionPointer;
-			isPicked = false;
-			participants = participants.map((participant: any) => {
-				return {
-					...participant,
-					isAnswered: false
-				};
-			});
-			original = questions[questionPointer].time;
-			timer = tweened(original, {
-				duration: 1000
-			});
-
-			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
-				isShowOption = false;
-			} else {
-				isShowOption = true;
-			}
-		});
-		socket.on(EmitChannel.SCORE_BOARD, (data: any) => {
-			participants = data;
-		});
-		socket.on(EmitChannel.ENDED, (data: any) => {
-			isEndGame = data.isEnded;
-		});
-		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
-			window.location.href = $page.url.href;
-		});
 	});
-	onDestroy(() => {
-		socket.emit(ListenChannel.LEAVE_ROOM, {
-			roomPIN: $page.params.slug
-		});
-		socket.disconnect();
-	});
+	// onDestroy(() => {
+	// 	socket.emit(ListenChannel.LEAVE_ROOM, {
+	// 		roomPIN: $page.params.slug
+	// 	});
+	// 	socket.disconnect();
+	// });
 	function startGame() {
-		isEndGame = false;
-		socket.emit(ListenChannel.START_GAME, {
-			roomPIN: $page.params.slug
-		});
-		socket.emit(ListenChannel.GET_QUIZ_QUESTIONS, {
-			roomPIN: $page.params.slug
-		});
+		// isEndGame = false;
+		// socket.emit(ListenChannel.START_GAME, {
+		// 	roomPIN: $page.params.slug
+		// });
+		// socket.emit(ListenChannel.GET_QUIZ_QUESTIONS, {
+		// 	roomPIN: $page.params.slug
+		// });
 	}
 	const nextQuestion = () => {
-		socket.emit(ListenChannel.CHANGE_QUESTION_POINTER, {
-			questionPointer: questionPointer + 1,
-			roomPIN: $page.params.slug
-		});
+		// socket.emit(ListenChannel.CHANGE_QUESTION_POINTER, {
+		// 	questionPointer: questionPointer + 1,
+		// 	roomPIN: $page.params.slug
+		// });
 	};
 
 	const getScoreBoard = () => {
@@ -174,9 +193,9 @@
 		}, 5000);
 	};
 	const endGame = () => {
-		socket.emit(ListenChannel.END_GAME, {
-			roomPIN: $page.params.slug
-		});
+		// socket.emit(ListenChannel.END_GAME, {
+		// 	roomPIN: $page.params.slug
+		// });
 	};
 </script>
 
