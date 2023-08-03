@@ -14,6 +14,8 @@
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 	export let isShowOption: boolean;
+	export let countDown: any;
+
 	let fourOptions: any[] = [];
 	let isLoading: boolean = false;
 	let answers = [false, false, false, false];
@@ -65,9 +67,11 @@
 	$: {
 		if ($timer <= 0 && !isPicked && !isLoading && isShowOption) {
 			isTimeOut = true;
+			clearInterval(countDown);
 			pickAnswer();
 		} else if ($timer <= 0 && isPicked) {
 			isTimeOut = true;
+			clearInterval(countDown);
 			setTimeout(() => {
 				showModal = false;
 			}, 2000);

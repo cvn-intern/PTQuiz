@@ -62,7 +62,7 @@
 		isShowOption = false;
 	}
 
-	setInterval(() => {
+	let countDown = setInterval(() => {
 		if ($timer > 0 && isShowOption) {
 			$timer--;
 		}
@@ -75,6 +75,11 @@
 	}
 
 	function fullTimer() {
+		countDown = setInterval(() => {
+			if ($timer > 0 && isShowOption) {
+				$timer--;
+			}
+		}, 1000);
 		original = quizzes[questionPointer].time;
 		timer = tweened(original, {
 			duration: 1000
@@ -200,6 +205,8 @@
 
 	$: {
 		if ($timer <= 0 && !isAnswerChecked) {
+			clearInterval(countDown);
+
 			if (isMultipleChecked) {
 				pickMultipleAnswer(multipleChoiceAnswer);
 				isMultipleChecked = false;
@@ -235,6 +242,8 @@
 
 	$: if (isAnswerChecked === true) {
 		zeroTimer();
+		clearInterval(countDown);
+
 		if (questionPointer < quizzes.length - 1) {
 			setTimeout(() => {
 				questionPointer++;

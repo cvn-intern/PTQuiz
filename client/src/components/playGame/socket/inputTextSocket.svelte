@@ -21,6 +21,7 @@
 	export let socket: Socket;
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
+	export let countDown: any;
 
 	type CharacterObject = {
 		char: string;
@@ -160,9 +161,11 @@
 	$: {
 		if ($timer <= 0 && !isPicked && !isDisable) {
 			isTimeout = true;
+			clearInterval(countDown);
 			pickAnswer();
 		} else if ($timer <= 0 && isPicked) {
 			isTimeout = true;
+			clearInterval(countDown);
 			setTimeout(() => {
 				showModal = false;
 			}, 2000);
