@@ -175,7 +175,7 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN } = data;
-            // await this.socketService.startGame(roomPIN, client.user.id);
+            await this.socketService.startGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit(EmitChannel.STARTED, {
                 isStarted: true,
             });
@@ -193,7 +193,7 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN } = data;
-            // await this.socketService.endGame(roomPIN, client.user.id);
+            await this.socketService.endGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit('ended', {
                 isEnded: true,
             });
