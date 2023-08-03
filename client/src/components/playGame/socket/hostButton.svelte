@@ -17,7 +17,6 @@
 		} else {
 			isFullAnswer = false;
 		}
-		console.log(isFullAnswer);
 	}
 </script>
 
