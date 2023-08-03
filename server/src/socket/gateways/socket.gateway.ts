@@ -1,3 +1,4 @@
+import { MessageDto } from './../dto/message.dto';
 import { CryptoService } from './../../crypto/crypto.service';
 import { Logger, UseGuards } from '@nestjs/common';
 import {
@@ -53,9 +54,10 @@ export class SocketGateway
             if (roomPIN) {
                 const roomParticipants =
                     await this.socketService.getRoomParticipants(roomPIN);
-                this.server
-                    .to(roomPIN)
-                    .emit(EmitChannel.ROOM_USERS, roomParticipants);
+                this.server.to(roomPIN).emit(EmitChannel.ROOM_USERS, {
+                    roomParticipants,
+                    signal: 'leave',
+                });
             }
         } catch (error) {
             throw new WsException({
@@ -82,9 +84,10 @@ export class SocketGateway
             client.join(roomPIN);
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
-            this.server
-                .to(roomPIN)
-                .emit(EmitChannel.ROOM_USERS, roomParticipants);
+            this.server.to(roomPIN).emit(EmitChannel.ROOM_USERS, {
+                roomParticipants,
+                signal: 'join',
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -107,9 +110,10 @@ export class SocketGateway
             );
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
-            this.server
-                .to(roomPIN)
-                .emit(EmitChannel.ROOM_USERS, roomParticipants);
+            this.server.to(roomPIN).emit(EmitChannel.ROOM_USERS, {
+                roomParticipants,
+                signal: 'leave',
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -119,16 +123,18 @@ export class SocketGateway
 
     @SubscribeMessage(ListenChannel.SEND_MESSAGE)
     async handleMessage(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: any,
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: MessageDto,
     ) {
         try {
-            const { roomPIN, userId, avatar, message, reaction } = data;
+            const { content, roomPIN } = data;
             this.server.to(roomPIN).emit(EmitChannel.ROOM_MESSAGES, {
-                userId,
-                avatar,
-                message,
-                reaction,
+                user: {
+                    id: client.user.id,
+                    displayName: client.user.displayName,
+                    avatar: client.user.avatar,
+                },
+                content,
             });
         } catch (error) {
             throw new WsException({
@@ -251,6 +257,7 @@ export class SocketGateway
             });
             const scoreBoard = await this.socketService.getScoreBoard(
                 data.roomPIN,
+                data.answer.questionId,
             );
             this.server
                 .to(data.roomPIN)

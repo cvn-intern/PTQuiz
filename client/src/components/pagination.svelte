@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { IQuiz } from '../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/quiz.type';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	export let totalQuizzes: number;
 	export let quizzes: IQuiz[];
 	const quizzesPerPage = 5;
@@ -18,6 +19,7 @@
 		const data = await response.json();
 		quizzes = data.quizzesOfUser;
 		totalQuizzes = data.totalQuizzes;
+		goto(`/dashboard/quizzes/${currentPage}/${currentSort}`);
 	}
 
 	function handlePageChange(page: number) {
@@ -33,8 +35,12 @@
 	<ul class="flex items-center -space-x-px h-8 text-sm">
 		<li>
 			<a
-				href="/dashboard/quizzes/{currentPage - 1}/{currentSort}"
-				on:click={() => handlePageChange(currentPage - 1)}
+				href="#"
+				on:click={(e) => {
+					e.preventDefault();
+					if (currentPage <= 1) return;
+					handlePageChange(currentPage - 1);
+				}}
 				class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 			>
 				<span class="sr-only">Previous</span>
@@ -72,8 +78,12 @@
 
 		<li>
 			<a
-				href="/dashboard/quizzes/{currentPage + 1}/{currentSort}"
-				on:click={() => handlePageChange(currentPage + 1)}
+				href="#"
+				on:click={(e) => {
+					e.preventDefault();
+					if (currentPage >= numberOfPages) return;
+					handlePageChange(currentPage + 1);
+				}}
 				class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 			>
 				<span class="sr-only">Next</span>

@@ -23,7 +23,8 @@ export default {
 				orangeLogo: '#f76800',
 				yellowLogo: '#ffb411',
 				blueLogo: '#00d6ca',
-				run1st : "#FFAA00",
+				run1st: '#FFAA00',
+				bgChat: '#BAD1CD',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -103,6 +104,13 @@ export default {
 			},
 			scale: {
 				102: '1.02'
+			},
+			zIndex: { 
+				60: '60',
+				70: '70',
+				80: '80',
+				90: '90',
+				100: '100',
 			}
 		}
 	},

@@ -133,5 +133,8 @@
 	"all": "All",
 	"uploadGif": "Upload GIF",
 	"requireGift": "Require GIF",
-	"titleOfArrangeWord": "Arrange the words correctly"
+	"titleOfArrangeWord": "Arrange the words correctly",
+	"arrangeWord": "Arrange Word",
+	"noQuestionsInYourQuiz": "No question in your quiz",
+	"hint": "Hint"
 }

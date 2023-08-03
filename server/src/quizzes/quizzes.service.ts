@@ -412,6 +412,7 @@ export class QuizzesService {
                     time: question.question.time,
                     createdAt: question.question.createdAt,
                     updatedAt: question.question.updatedAt,
+                    hint: question.question.hint,
                 };
                 return questionResponse;
             });

@@ -58,5 +58,8 @@ export class QuestionDto {
     time = 20;
 
     @IsOptional()
-    image: string;
+    image = '';
+
+    @IsOptional()
+    hint = '';
 }

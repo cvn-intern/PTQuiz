@@ -4,6 +4,14 @@
 	export let nextQuestion: () => void;
 	export let endGame: () => void;
 	export let getScoreBoard: () => void;
+	export let participants: any[];
+	let numberOfAnswer: number;
+
+	$: {
+		numberOfAnswer = participants.filter((participant: any) => {
+			return participant.isAnswered;
+		}).length;
+	}
 </script>
 
 <div class="flex gap-4">
@@ -22,4 +30,5 @@
 		class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
 		on:click={getScoreBoard}>Score board</button
 	>
+	{numberOfAnswer} / {participants.length} players answered
 </div>

@@ -7,17 +7,21 @@
 	let inputFocused = false;
 	let imageUrl: string;
 	let typeOfquestion: number;
+	let hint: string;
 	$: questionData.subscribe((data: any) => {
 		if (index >= 0 && index < data.length) {
 			title = data[index].title;
 			imageUrl = data[index].image;
 			typeOfquestion = data[index].type;
+			hint = data[index].hint;
 		}
 	});
+
 	$: questionData.update((data: any) => {
 		if (index >= 0 && index < data.length) {
 			data[index].title = title;
 			data[index].image = imageUrl;
+			data[index].hint = hint;
 		}
 		if (data[index].type === 4) {
 			data[index].title = $t('common.titleOfArrangeWord');
@@ -117,12 +121,21 @@
 			/>
 		</label>
 	</div>
-	<textarea
-		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-full md:text-xl w-2/3 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
-		placeholder={$t('common.typeYourQuestionHere')}
-		rows="5"
-		bind:value={title}
-		maxlength="100"
-		disabled={typeOfquestion === 4}
-	/>
+	<div class="flex w-full gap-3 h-full md:flex-row flex-col">
+		<textarea
+			class=" md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-2/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none"
+			placeholder={$t('common.typeYourQuestionHere')}
+			rows="5"
+			bind:value={title}
+			maxlength="100"
+			disabled={typeOfquestion === 4}
+		/>
+		<textarea
+			class="md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-1/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none"
+			placeholder={$t('common.hint')}
+			rows="5"
+			bind:value={hint}
+			maxlength="50"
+		/>
+	</div>
 </div>

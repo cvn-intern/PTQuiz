@@ -31,7 +31,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 			image: question.image,
 			type: question.type,
 			index: 1,
-			time: question.time
+			time: question.time,
+			hint: question.hint
 		};
 		return result;
 	});
@@ -71,7 +72,7 @@ export const actions = {
 		} catch (error: any) {
 			message.isDone = true;
 			message.isSuccess = false;
-			
+
 			for (let i = 0; i < error.errors.length; i++) {
 				(message.error.missing as Record<string, boolean>)[`${error.errors[i].path}`] =
 					true;

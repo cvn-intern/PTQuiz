@@ -6,7 +6,6 @@ export const createSocket = (url: string, token: string) => {
 		transports: ['websocket'],
 		extraHeaders: {
 			authorization: `Bearer ${token}`,
-			hallo: 'hallo'
 		},
         auth: {
             token: token
