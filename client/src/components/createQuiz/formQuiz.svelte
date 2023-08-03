@@ -2,6 +2,7 @@
 	import { t } from '$i18n/translations';
 	import { Button, Label, Select } from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
+	import toast from 'svelte-french-toast';
 	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
@@ -10,12 +11,29 @@
 	export let action: string;
 	export let isUpdate: boolean;
 
+	let sharedToastId: string | number;
+
+	const showLoadingToast = (): void => {
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
+	};
+
+	const dismissLoadingToast = (): void => {
+		toast.dismiss(sharedToastId.toString());
+	};
+
 	let isSubmitting: boolean = false;
 	$: getMessageError = (name: string): string => {
 		return form?.message?.error?.message?.[name] ?? '';
 	};
-	$: if (form?.message?.isDone) isSubmitting = false;
-	$: if (form?.isSuccess && !isUpdate) goto(`/createQuiz/${form?.success?.id}`);
+	$: if (form?.message?.isDone) {
+		dismissLoadingToast();
+		isSubmitting = false;
+	}
+	$: if (form?.isSuccess && !isUpdate) {
+		dismissLoadingToast();
+		toast.success(t.get('common.success'));
+		goto(`/createQuiz/${form?.success?.id}`);
+	}
 
 	let levelList: selectOptionne[] = [
 		{ value: 0, name: 'Easy' },
@@ -90,6 +108,7 @@
 	}}
 	on:submit={() => {
 		isSubmitting = true;
+		showLoadingToast();
 	}}
 	enctype="multipart/form-data"
 >
@@ -114,7 +133,7 @@
 							<div class="relative">
 								<img
 									src={result[name]}
-									alt="image"
+									alt="thumbnail"
 									class="w-full h-32 cursor-pointer {hiddenInputFile
 										? ''
 										: 'hidden'}"
