@@ -40,7 +40,6 @@
 		messageContent = '';
 	};
 
-	$: isShowReaction = false;
 	$: isShowChat = true;
 	const handleClickOpenChat = () => {
 		isShowChat = !isShowChat;
@@ -53,7 +52,7 @@
 		: 'hidden'}"
 >
 	<div class="relative flex flex-col gap-4">
-		<div class="overflow-y-scroll max-h-screen h-screen p-3">
+		<div class="overflow-y-scroll max-h-halfScreen h-halfScreen px-3 pt-7">
 			{#each messages as message}
 				{#if message.user.id === user.id}
 					<MyMessage
@@ -83,15 +82,6 @@
 			/>
 			<div class="absolute right-0 top-1/2 -translate-y-1/2 px-2 flex gap-1">
 				<button
-					type="button"
-					class="border-2 bg-indigo-50 p-1 rounded-xl w-full hover:bg-zinc-200"
-					on:click={() => {
-						isShowReaction = !isShowReaction;
-					}}
-				>
-					<Icon icon="mdi:emoticon" class="text-2xl text-yellowLogo text-center" />
-				</button>
-				<button
 					disabled={isDisabled}
 					type="submit"
 					class={`bg-darkGreen rounded-xl hover:bg-secondary p-1 ${
@@ -103,15 +93,6 @@
 						class="text-3xl text-white text-center p-1"
 					/>
 				</button>
-			</div>
-			<div class="absolute -top-32 left-0 bg-white {isShowReaction ? '' : 'hidden'}">
-				<div class="grid grid-cols-9">
-					{#each REACTIONS as reaction}
-						<button type="button" class="w-10 h-10 border hover:bg-gray-500"
-							>{reaction}
-						</button>
-					{/each}
-				</div>
 			</div>
 		</form>
 		<div class="absolute right-0 z-60 w-full bg-white rounded-md py-0.5 flex justify-end">
