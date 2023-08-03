@@ -54,8 +54,7 @@ export const actions = {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
 				passingPoint: parseInt(form.get('passingPoint')),
-				point: parseInt(form.get('point')),
-				image: form.get('image')
+				point: parseInt(form.get('point'))
 			});
 			const response = await fetch(`/api/quizzes/update/${params.quizId}`, {
 				method: 'PUT',
@@ -63,10 +62,11 @@ export const actions = {
 				body: form
 			});
 			const result = await response.json();
+
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 200;
 			message.success.message = result.message;
-			message.success.id = result.data.id;
+			message.success.id = result?.data?.id;
 			message.error.message = result.message;
 			return message;
 		} catch (error: any) {

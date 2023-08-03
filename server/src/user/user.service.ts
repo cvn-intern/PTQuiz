@@ -28,14 +28,14 @@ export class UserService {
                 );
             }
             if (avatar) {
-                if (avatar.size > +process.env.MAX_FILE_SIZE) {
+                if (avatar.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         UserError.FILE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
                     );
                 } else if (avatar.size > 0) {
                     const image = await this.cloudinary.uploadFile(avatar);
-                    url = image.url;
+                    url = image.secure_url;
                 }
             } else url = user.avatar;
 

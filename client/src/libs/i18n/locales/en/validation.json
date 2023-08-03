@@ -48,5 +48,6 @@
 	"POINT_MUST_BE_A_NUMBER": "Point must be a number",
 	"FILL_ALL_FIELDS": "Please fill all fields",
 	"SAVE_ALL_BEFORE_ADD_QUESTION": "Please save all questions before add new question",
-	"POINT_MUST_BE_GREATER_THAN_PASSING_POINT": "Point must be greater than passing point"
+	"POINT_MUST_BE_GREATER_THAN_PASSING_POINT": "Point must be greater than passing point",
+	"UNKNOWN_FILE_FORMAT": "Unknown file format"
 }

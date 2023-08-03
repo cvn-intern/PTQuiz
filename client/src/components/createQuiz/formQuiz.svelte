@@ -25,7 +25,7 @@
 	$: getMessageError = (name: string): string => {
 		return form?.message?.error?.message?.[name] ?? '';
 	};
-	$: if (form?.message?.isDone) {
+	$: if (form?.message?.isDone || form?.isDone) {
 		dismissLoadingToast();
 		isSubmitting = false;
 	}
