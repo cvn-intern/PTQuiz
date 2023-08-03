@@ -21,6 +21,7 @@
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
 	import ScoreboardModal from '$components/playGame/socket/scoreboardModal.svelte';
 	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
+	import { parse } from 'svelte/compiler';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -50,10 +51,10 @@
 	let timer = tweened(original, {
 		duration: 1000
 	});
-	
+
 	setInterval(() => {
-		if ($timer > 0 && isShowOption) {
-			$timer--;
+		if ($timer >= 1 && isShowOption) {
+			$timer = Math.floor($timer) - 1;
 		}
 	}, 1000);
 
@@ -105,7 +106,9 @@
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
-			timer = tweened(original);
+			timer = tweened(original, {
+				duration: 1000
+			});
 
 			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
 				isShowOption = false;
@@ -123,7 +126,9 @@
 				};
 			});
 			original = questions[questionPointer].time;
-			timer = tweened(original);
+			timer = tweened(original, {
+				duration: 1000
+			});
 
 			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
 				isShowOption = false;
@@ -309,7 +314,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user}/>
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user} />
 		{/if}
 	</div>
 {/if}
