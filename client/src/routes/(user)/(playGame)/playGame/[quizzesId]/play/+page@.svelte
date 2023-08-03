@@ -15,6 +15,7 @@
 	import InputText from '$components/playGame/inputText.svelte';
 	import ArrangeAnswer from '$components/playGame/arrangeAnswer.svelte';
 	import CrossWords from '$components/playGame/crossWords.svelte';
+	import Chat from '$components/playGame/socket/chat.svelte';
 	export let data;
 
 	let questionPointer = 0;
