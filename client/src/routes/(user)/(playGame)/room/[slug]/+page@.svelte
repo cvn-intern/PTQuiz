@@ -19,6 +19,8 @@
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
 	import ScoreboardModal from '$components/playGame/scoreboardModal.svelte';
 	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
+	import ScoreBoard from '$components/endGame/scoreBoardSocket.svelte';
+	import ScoreBoardSocket from '$components/endGame/scoreBoardSocket.svelte';
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -47,7 +49,7 @@
 	let timer = tweened(original, {
 		duration: 1000
 	});
-	
+
 	setInterval(() => {
 		if ($timer > 0) {
 			$timer--;
@@ -169,16 +171,7 @@
 		{:else if isEndGame}
 			<div class="flex flex-col justify-center items-center">
 				{#each participants as participant, index}
-					<div class="flex gap-4 items-center">
-						<p>No {index + 1}</p>
-						<p class="truncate w-32">{participant.displayName}</p>
-						<img
-							src={participant.avatar}
-							alt={participant.displayName}
-							class="w-10 h-10 rounded-full ml-4"
-						/>
-						<p>{participant.point}</p>
-					</div>
+					<ScoreBoardSocket scoreUser={participant} {index} />
 				{/each}
 			</div>
 		{:else if questions.length > 0}
@@ -276,7 +269,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user}/>
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user} />
 		{/if}
 	</div>
 {/if}

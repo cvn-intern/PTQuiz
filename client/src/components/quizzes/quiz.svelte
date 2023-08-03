@@ -83,7 +83,7 @@
 	<a href="#"
 		role="button"
 		on:click={handleClickView}
-		class="flex flex-row justify-center md:items-start border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer w-full"
+		class="flex flex-row justify-center md:items-start border-rose-50 gap-3 border-solid p-6 shadow-md hover:shadow-2xl transition duration-200 transform rounded-xl cursor-pointer w-full"
 		aria-details="Quiz Details"
 	>
 		<div>
@@ -104,7 +104,7 @@
 			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
 		</button>
 	</div>
-	<div class="flex flex-row gap-4 absolute bottom-2 right-2 z-10">
+	<div class="flex flex-row gap-4 absolute bottom-3 right-3 z-10">
 		<button
 			aria-label="Edit"
 			on:click={handleEdit}

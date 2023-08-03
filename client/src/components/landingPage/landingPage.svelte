@@ -16,6 +16,7 @@
 		</h1>
 		<h2 class="text-3xl font-semibold">{$t('common.explore')}</h2>
 	</div>
+	<div />
 	<div class="card flex flex-col md:flex-row gap-6 md:gap-20 md:justify-center">
 		<PlayCard
 			src={PlayGame}
