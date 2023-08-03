@@ -142,7 +142,9 @@
 			isEndGame = data.isEnded;
 		});
 		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
-			window.location.href = $page.url.href;
+			if (!isHost) {
+				window.location.href = $page.url.href;
+			}
 		});
 	});
 	onDestroy(() => {
