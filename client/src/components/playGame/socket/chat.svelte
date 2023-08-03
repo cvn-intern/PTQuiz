@@ -96,7 +96,7 @@
 		</form>
 		<div class="absolute right-0 z-60 w-full bg-white rounded-md py-0.5 flex justify-end">
 			<button on:click={handleClickOpenChat}
-				><Icon icon="pajamas:close-xs" class="text-2xl mr-3 text-zinc-700" /></button
+				><Icon icon="mingcute:down-fill" class="text-2xl mr-3 text-zinc-700" /></button
 			>
 		</div>
 	</div>
