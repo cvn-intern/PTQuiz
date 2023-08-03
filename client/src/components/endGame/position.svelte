@@ -18,7 +18,7 @@
 
 <div class="flex justify-center my-28">
 	<div class="flex items-end">
-		<div class="bg-run2st text-white p-4 pt-6 rounded-tl-2xl relative h-44 w-28">
+		<div class="bg-run2st text-white p-4 pt-6 rounded-tl-2xl relative h-60 w-36">
 			<div class="absolute -top-14 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
 					<img
@@ -49,7 +49,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="bg-run1st text-white p-4 pt-6 rounded-t-2xl relative h-56 w-28">
+		<div class="bg-run1st text-white p-4 pt-6 rounded-t-2xl relative h-72 w-36">
 			<div class="absolute -top-20 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
 					<Icon icon="noto:crown" class="text-3xl" />
@@ -81,7 +81,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="bg-run3st text-white p-4 pt-6 rounded-tr-2xl relative h-32 w-28">
+		<div class="bg-run3st text-white p-4 pt-6 rounded-tr-2xl relative h-48 w-36">
 			<div class="absolute -top-14 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
 					<img
