@@ -11,7 +11,7 @@
 			if (form?.isSuccess) {
 				toast.success(t.get('common.success'));
 			} else {
-				toast.error(form?.error.message);
+				toast.error(form?.error?.message);
 			}
 		} else if (form) {
 			showLoadingToast();

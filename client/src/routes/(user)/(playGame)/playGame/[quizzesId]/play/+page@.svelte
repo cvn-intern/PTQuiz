@@ -10,7 +10,7 @@
 	import { t } from '$i18n/translations.js';
 	import { TypeQuestion } from '$constants/typeQuestion.js';
 	import MultipleChoiceAnswer from '$components/playGame/singlePlay/multipleChoiceAnswer.svelte';
-	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
+	import QuestionDisplay from '$components/playGame/singlePlay/questionDisplay.svelte';
 	import InputText from '$components/playGame/singlePlay/inputText.svelte';
 	import ArrangeAnswer from '$components/playGame/singlePlay/arrangeAnswer.svelte';
 	import CrossWords from '$components/playGame/singlePlay/crossWords.svelte';

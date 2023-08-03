@@ -1,4 +1,4 @@
-import img1 from '$assets/testimg.png';
+import logo from '$assets/logo.png';
 import type { IQuiz, IQuizAPI } from './quiz.type';
 
 export async function load({ fetch, params }) {
@@ -30,7 +30,7 @@ export async function load({ fetch, params }) {
 					description: 'Cannot load quizzes',
 					username: 'Cannot load quizzes',
 					numberOfQuestions: 0,
-					image: img1,
+					image: logo,
 					createdAt: 'Cannot load quizzes'
 				}
 			]

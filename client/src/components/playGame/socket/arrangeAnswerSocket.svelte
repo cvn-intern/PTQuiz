@@ -8,6 +8,7 @@
 	import Loading from '../../loading.svelte';
 	import { page } from '$app/stores';
 	import TrueFalseModal from '$components/trueFalseModal.svelte';
+	import decryptData from '../../../libs/helpers/crypto';
 
 	let answer: string = '';
 	let finalAnswer: string;
@@ -20,13 +21,6 @@
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 
-	const key = import.meta.env.VITE_CRYPTO_KEY;
-
-	function decryptData(cipherText: any) {
-		const bytes = CryptoJS.AES.decrypt(cipherText, key);
-		const originalText = bytes.toString(CryptoJS.enc.Utf8);
-		return JSON.parse(originalText);
-	}
 	type CharacterObject = {
 		char: string;
 		id: number;

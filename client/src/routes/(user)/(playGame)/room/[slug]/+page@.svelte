@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/stores';
-
-	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
+	import QuestionDisplay from '$components/playGame/socket/questionDisplay.svelte';
 	import type { SocketQuiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
 	import { TypeQuestion } from '$libs/constants/typeQuestion';
 	import { tweened } from 'svelte/motion';
 	import SingleChoiceSocket from '$components/playGame/socket/singleChoiceSocket.svelte';
+	import SingleChoiceGifSocket from '$components/playGame/socket/singleChoiceGifSocket.svelte';
 	import WaitingRoom from '$components/playGame/socket/waitingRoom.svelte';
 	import Loading from '$components/loading.svelte';
 	import type { LayoutData } from '../../../../$types';
@@ -17,10 +17,10 @@
 	import ArrangeAnswerSocket from '$components/playGame/socket/arrangeAnswerSocket.svelte';
 	import InputTextSocket from '$components/playGame/socket/inputTextSocket.svelte';
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
-	import ScoreboardModal from '$components/playGame/scoreboardModal.svelte';
+	import ScoreboardModal from '$components/playGame/socket/scoreboardModal.svelte';
 	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
 	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
-	import Position from '$components/endGame/position.svelte';
+
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -43,6 +43,7 @@
 	let url = $page.url.href;
 	let isHost: boolean = false;
 	let isPicked = false;
+	let isShowOption: boolean = false;
 
 	let original = 10;
 	let stringTimer: string;
@@ -51,8 +52,8 @@
 	});
 
 	setInterval(() => {
-		if ($timer > 0) {
-			$timer--;
+		if ($timer >= 1 && isShowOption) {
+			$timer = Math.floor($timer) - 1;
 		}
 	}, 1000);
 
@@ -104,7 +105,15 @@
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
-			timer = tweened(original);
+			timer = tweened(original, {
+				duration: 1000
+			});
+
+			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+				isShowOption = false;
+			} else {
+				isShowOption = true;
+			}
 		});
 		socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
 			questionPointer = data.questionPointer;
@@ -116,7 +125,15 @@
 				};
 			});
 			original = questions[questionPointer].time;
-			timer = tweened(original);
+			timer = tweened(original, {
+				duration: 1000
+			});
+
+			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+				isShowOption = false;
+			} else {
+				isShowOption = true;
+			}
 		});
 		socket.on(EmitChannel.SCORE_BOARD, (data: any) => {
 			participants = data;
@@ -194,6 +211,11 @@
 								quizzesNumber={questions.length}
 								quizzesPointer={questionPointer}
 								quizzesImage={questions[questionPointer].image}
+								questionTime={questions[questionPointer].time}
+								{isHost}
+								{socket}
+								bind:timer
+								bind:isShowOption
 							/>
 						</div>
 						<div class="answer h-1/3">
@@ -221,6 +243,19 @@
 										{showModal}
 										{socket}
 										isTrueFalse={true}
+									/>
+								</div>
+							{:else if questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
+								<div
+									class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+								>
+									<SingleChoiceGifSocket
+										bind:timer
+										question={questions[questionPointer]}
+										bind:isPicked
+										{showModal}
+										{socket}
+										{isShowOption}
 									/>
 								</div>
 							{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
@@ -265,7 +300,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} />
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user} />
 		{/if}
 	</div>
 {/if}

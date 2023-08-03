@@ -60,7 +60,8 @@ export default {
 			},
 			maxHeight: {
 				titleCard: '3.75rem',
-				boxCardQuestion: '27rem'
+				boxCardQuestion: '27rem',
+				halfScreen: '50vh',
 			},
 			maxWidth: {
 				tagName: '33%',
@@ -112,7 +113,10 @@ export default {
 				70: '70',
 				80: '80',
 				90: '90',
-				100: '100'
+				100: '100',
+			},
+			height :{
+				halfScreen: '50vh',
 			}
 		}
 	},
