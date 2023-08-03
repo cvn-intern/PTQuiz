@@ -50,29 +50,13 @@
 			showModal = true;
 		});
 	});
-	function scrambleString(str: string) {
-		let chars = str.split('');
 
-		for (let i = chars.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[chars[i], chars[j]] = [chars[j], chars[i]];
-		}
-		return chars.join('');
-	}
 
 	let answerSplit: string[];
-	let newAnswer: string;
-	let scrambledAnswer: string;
-	let scrambledAnswerSplit: CharacterObject[];
 
 	$: {
 		if (isGetAnswer) {
 			answerSplit = answer.split('');
-			newAnswer = answer;
-			scrambledAnswer = scrambleString(newAnswer);
-			scrambledAnswerSplit = scrambledAnswer
-				.split('')
-				.map((char: string, id: number) => ({ char, id }));
 		}
 	}
 
@@ -175,16 +159,7 @@
 
 {#if isGetAnswer}
 	<div class="flex flex-col h-full gap-8">
-		<div class="flex flex-col h-1/2 items-center">
-			<div class="flex flex-wrap justify-center gap-2">
-				{#each scrambledAnswerSplit as input}
-					<button class="p-3 w-14 h-16 rounded-lg border shadow-lg bg-secondary">
-						<p class="text-4xl">{input.char}</p>
-					</button>
-				{/each}
-			</div>
-		</div>
-		<div class="flex flex-col h-1/2 items-center">
+		<div class="flex flex-col items-center">
 			<div
 				class={`${
 					isDisable ? 'bg-gray-200' : 'bg-white'

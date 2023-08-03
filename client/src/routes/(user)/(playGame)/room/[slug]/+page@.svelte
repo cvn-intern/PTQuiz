@@ -192,7 +192,7 @@
 		<Loading />
 	</div>
 {:else}
-	<div class="bg-greenLight w-full h-screen px-4 lg:px-16">
+	<div class="bg-greenLight w-full h-screen">
 		{#if errorMessage}
 			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
 		{:else if isEndGame}

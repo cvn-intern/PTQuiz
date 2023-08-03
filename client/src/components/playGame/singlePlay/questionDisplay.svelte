@@ -62,9 +62,7 @@
 		<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
 		<div class="flex justify-center items-center px-4 flex-1">
 			{#if isShowOption}
-				<p
-					class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center"
-				>
+				<p class="p-4 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-left">
 					{quizzesTitle}
 				</p>
 			{:else}
