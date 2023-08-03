@@ -14,7 +14,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { AnswerDto, RoomPinDto } from '../dto';
+import { AnswerDto, GifQuestionDto, RoomPinDto } from '../dto';
 import { QuestionPointerDto } from '../dto/questionPointer.dto';
 import { WebSocketJwtGuard } from '../WebSocketJwtGuard.guard';
 import { SocketClient } from '../socketClient.class';
@@ -170,7 +170,7 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN } = data;
-            await this.socketService.startGame(roomPIN, client.user.id);
+            // await this.socketService.startGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit(EmitChannel.STARTED, {
                 isStarted: true,
             });
@@ -188,7 +188,7 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN } = data;
-            await this.socketService.endGame(roomPIN, client.user.id);
+            // await this.socketService.endGame(roomPIN, client.user.id);
             this.server.to(roomPIN).emit('ended', {
                 isEnded: true,
             });
@@ -283,6 +283,24 @@ export class SocketGateway
                 JSON.stringify(answer),
             );
             client.emit(EmitChannel.ANSWER_QUESTION, decryptAnswer);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.GIF_QUESTION)
+    async handleGifQuestion(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: GifQuestionDto,
+    ) {
+        try {
+            this.server.to(data.roomPIN).emit(EmitChannel.GIF_QUESTION, {
+                isShowGif: data.isShowGif,
+                isShowOption: data.isShowOption,
+                duration: data.duration,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
