@@ -2,7 +2,7 @@
 	import type { Socket } from 'socket.io-client';
 	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/playGame/[quizzesId]/play/quizzes.interface';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { Modal } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	import { tweened, type Tweened } from 'svelte/motion';
@@ -13,6 +13,8 @@
 	export let socket: Socket;
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
+	export let countDown: any;
+
 	let fourOptions: any[] = [];
 	let answers = [false, false, false, false];
 	let isSelecting: boolean = false;
@@ -47,7 +49,6 @@
 	};
 	onMount(() => {
 		socket.on(EmitChannel.ANSWER_RESULT, (data) => {
-			timer = tweened(0);
 			isCorrect = data.isCorrect;
 			score = data.score;
 			isPicked = true;
@@ -66,6 +67,7 @@
 	});
 	$: {
 		if ($timer <= 0 && !isPicked) {
+			clearInterval(countDown);
 			pickAnswer();
 		}
 	}
@@ -91,5 +93,5 @@
 	</button>
 {/each}
 {#if showModal}
-	<TrueFalseModal bind:open={showModal} isTrue = {isCorrect} />
+	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}

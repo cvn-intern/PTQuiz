@@ -52,7 +52,7 @@
 		duration: 1000
 	});
 
-	setInterval(() => {
+	let countDown = setInterval(() => {
 		if ($timer >= 1 && isShowOption) {
 			$timer = Math.floor($timer) - 1;
 		}
@@ -109,6 +109,11 @@
 			timer = tweened(original, {
 				duration: 1000
 			});
+			countDown = setInterval(() => {
+				if ($timer >= 1 && isShowOption) {
+					$timer = Math.floor($timer) - 1;
+				}
+			}, 1000);
 
 			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
 				isShowOption = false;
@@ -244,6 +249,7 @@
 										{showModal}
 										{socket}
 										isTrueFalse={false}
+										bind:countDown
 									/>
 								</div>
 							{:else if questions[questionPointer].type === TypeQuestion.TRUE_FALSE}
@@ -257,6 +263,7 @@
 										{showModal}
 										{socket}
 										isTrueFalse={true}
+										bind:countDown
 									/>
 								</div>
 							{:else if questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
@@ -270,6 +277,7 @@
 										{showModal}
 										{socket}
 										{isShowOption}
+										bind:countDown
 									/>
 								</div>
 							{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
@@ -282,6 +290,7 @@
 										bind:isPicked
 										{showModal}
 										{socket}
+										bind:countDown
 									/>
 								</div>
 							{:else if questions[questionPointer].type === TypeQuestion.GUESS_WORDS}
@@ -291,6 +300,7 @@
 									bind:isPicked
 									{showModal}
 									{socket}
+									bind:countDown
 								/>
 							{:else if questions[questionPointer].type === TypeQuestion.ARRANGE_WORD}
 								<ArrangeAnswerSocket
@@ -299,6 +309,7 @@
 									bind:isPicked
 									{showModal}
 									{socket}
+									bind:countDown
 								/>
 							{:else if questions[questionPointer].type === TypeQuestion.INPUT_TEXT}
 								<InputTextSocket
@@ -307,6 +318,7 @@
 									bind:isPicked
 									{showModal}
 									{socket}
+									bind:countDown
 								/>
 							{/if}
 						</div>
