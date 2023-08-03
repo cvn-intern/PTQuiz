@@ -1,8 +1,9 @@
 import { IsNotEmpty, IsNumber, IsOptional, ValidateIf } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class QuestionDto {
     @IsOptional()
-    categoryId = "clk6mopdw0005j3ngsixir2g2";
+    categoryId = 'clk6mopdw0005j3ngsixir2g2';
 
     @IsNotEmpty({ message: 'Title can not be empty' })
     title: string;
@@ -24,18 +25,22 @@ export class QuestionDto {
     optionD = '';
 
     @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
+    @Transform(({ value }) => JSON.parse(value))
     @IsNotEmpty({ message: 'Answer A can not be empty' })
     answerA = false;
 
     @ValidateIf((o) => o.type === 0 || o.type === 1 || o.type === 3)
+    @Transform(({ value }) => JSON.parse(value))
     @IsNotEmpty({ message: 'Answer B can not be empty' })
     answerB = false;
 
     @ValidateIf((o) => o.type === 0 || o.type === 1)
+    @Transform(({ value }) => JSON.parse(value))
     @IsNotEmpty({ message: 'Answer C can not be empty' })
     answerC = false;
 
     @ValidateIf((o) => o.type === 0 || o.type === 1)
+    @Transform(({ value }) => JSON.parse(value))
     @IsNotEmpty({ message: 'Answer D can not be empty' })
     answerD = false;
 
@@ -43,13 +48,18 @@ export class QuestionDto {
     @IsNotEmpty({ message: 'Written can not be empty' })
     written = '';
 
-    @IsOptional()
-    image = '';
-
     @IsNotEmpty({ message: 'Type can not be empty' })
+    @Transform(({ value }) => Number(value))
     type: number;
 
     @IsOptional()
+    @Transform(({ value }) => Number(value))
     @IsNumber()
     time = 20;
+
+    @IsOptional()
+    image = '';
+
+    @IsOptional()
+    hint = '';
 }

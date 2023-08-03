@@ -3,16 +3,18 @@
 	import type { QuizzesType, UserAnswer } from './quizzes.interface.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import CryptoJS from 'crypto-js';
-	import SingleChoiceAnswer from '$components/playGame/singleChoiceAnswer.svelte';
+	import SingleChoiceAnswer from '$components/playGame/singlePlay/singleChoiceAnswer.svelte';
 	import { gameInfoStore } from '$stores/gameInfoStore.js';
 	import { t } from '$i18n/translations.js';
 	import { TypeQuestion } from '$constants/typeQuestion.js';
-	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
-	import TextAnswer from '$components/playGame/textAnswer.svelte';
-	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
+	import MultipleChoiceAnswer from '$components/playGame/singlePlay/multipleChoiceAnswer.svelte';
+	import QuestionDisplay from '$components/playGame/singlePlay/questionDisplay.svelte';
+	import InputText from '$components/playGame/singlePlay/inputText.svelte';
+	import ArrangeAnswer from '$components/playGame/singlePlay/arrangeAnswer.svelte';
+	import CrossWords from '$components/playGame/singlePlay/crossWords.svelte';
+	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -28,6 +30,8 @@
 	let stringTimer: string;
 	let finalAnswer: string;
 	let isTrueFalse: boolean = false;
+	let isShowOption: boolean = true;
+	let isGif: boolean = false;
 
 	const key = import.meta.env.VITE_CRYPTO_KEY;
 
@@ -44,20 +48,43 @@
 	let gameInfo: any;
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 
-	if (!gameInfo) window.location.href = `/playGame/${quizzesId}`;
+	if (!gameInfo) {
+		window.location.href = `/playGame/${quizzesId}`;
+	}
 
-	let original = quizzes[questionPointer].time;
-	let zero = 0;
+	let original = quizzes[0].time;
+	let timer = tweened(original, {
+		duration: 1000
+	});
 
-	let timer = tweened(original);
+	if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+		isGif = true;
+		isShowOption = false;
+	}
 
-	setInterval(() => {
-		if ($timer > 0) {
+	let countDown = setInterval(() => {
+		if ($timer > 0 && isShowOption) {
 			$timer--;
 		}
 	}, 1000);
 
 	$: stringTimer = (($timer * 100) / original).toString();
+
+	function zeroTimer() {
+		timer = tweened(0);
+	}
+
+	function fullTimer() {
+		countDown = setInterval(() => {
+			if ($timer > 0 && isShowOption) {
+				$timer--;
+			}
+		}, 1000);
+		original = quizzes[questionPointer].time;
+		timer = tweened(original, {
+			duration: 1000
+		});
+	}
 
 	const givenAn: {
 		[key: string]: { answerA: boolean; answerB: boolean; answerC: boolean; answerD: boolean };
@@ -141,7 +168,7 @@
 
 		try {
 			isAnswerChecked = true;
-			timer = tweened(zero);
+			zeroTimer();
 			isSubmitting = true;
 
 			const userAnswer: UserAnswer = {
@@ -178,6 +205,8 @@
 
 	$: {
 		if ($timer <= 0 && !isAnswerChecked) {
+			clearInterval(countDown);
+
 			if (isMultipleChecked) {
 				pickMultipleAnswer(multipleChoiceAnswer);
 				isMultipleChecked = false;
@@ -197,6 +226,7 @@
 				pickAnswer(-1);
 				selectedAnswerIndex = -1;
 				showModal = true;
+
 				setTimeout(() => {
 					showModal = false;
 				}, 2000);
@@ -204,20 +234,28 @@
 		}
 	}
 
-	$: {
-		if (isAnswerChecked === true) {
-			timer = tweened(zero);
-			if (questionPointer < quizzes.length - 1) {
-				setTimeout(() => {
-					questionPointer++;
-					timer = tweened(original);
-					isAnswerChecked = false;
-				}, 2000);
-			} else {
-				setTimeout(() => {
-					submitQuiz();
-				}, 2000);
-			}
+	function changeIsShowOption() {
+		if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+			isShowOption = false;
+		}
+	}
+
+	$: if (isAnswerChecked === true) {
+		zeroTimer();
+		clearInterval(countDown);
+
+		if (questionPointer < quizzes.length - 1) {
+			setTimeout(() => {
+				questionPointer++;
+				fullTimer();
+
+				changeIsShowOption();
+				isAnswerChecked = false;
+			}, 2000);
+		} else {
+			setTimeout(() => {
+				submitQuiz();
+			}, 2000);
 		}
 	}
 
@@ -238,22 +276,32 @@
 		} else {
 			isTrueFalse = false;
 		}
+
+		if (quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+			isGif = true;
+		} else {
+			isGif = false;
+		}
 	}
 </script>
 
-<div class=" bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4 overflow-y-scroll">
-	<div class="pt-4">
-		<Progressbar progress={stringTimer} size="h-4" color="gray" />
+<div class="bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
+	<div class="pt-2">
+		<ProgressBar {stringTimer} />
 	</div>
-	<div class="h-full p-2 gap-2">
-		<div class="question h-1/2">
+	<div class="h-full p-2 flex flex-col gap-4">
+		<div class="question h-2/3">
 			<QuestionDisplay
 				quizzesType={quizzes[questionPointer].type}
 				quizzesTitle={quizzes[questionPointer].title}
+				quizzesNumber={quizzes.length}
+				quizzesPointer={questionPointer}
+				quizzesImage={quizzes[questionPointer].image}
+				bind:isShowOption
 			/>
 		</div>
-		<div class="answer h-1/2">
-			{#if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+		<div class="answer h-1/3">
+			{#if quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
 				<div
 					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
 				>
@@ -266,6 +314,24 @@
 							{pickAnswer}
 							{showModal}
 							{isTrueFalse}
+							bind:isGif
+							bind:isShowOption
+						/>
+					{/each}
+				</div>
+			{:else if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+				<div class="grid grid-cols-2 grid-rows-2 w-full gap-2 md:gap-4 h-full">
+					{#each fourOptions as opt, index}
+						<SingleChoiceAnswer
+							option={opt}
+							{index}
+							{isAnswerChecked}
+							{selectedAnswerIndex}
+							{pickAnswer}
+							{showModal}
+							{isTrueFalse}
+							bind:isGif
+							bind:isShowOption
 						/>
 					{/each}
 				</div>
@@ -293,12 +359,31 @@
 								{pickAnswer}
 								{showModal}
 								{isTrueFalse}
+								bind:isGif
+								bind:isShowOption
 							/>
 						{/if}
 					{/each}
 				</div>
 			{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
-				<TextAnswer
+				<CrossWords
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+				/>
+			{:else if quizzes[questionPointer].type === TypeQuestion.INPUT_TEXT}
+				<InputText
+					bind:isAnswerChecked
+					bind:answer={quizzes[questionPointer].written}
+					bind:finalAnswer
+					bind:isGuessWordsChecked
+					{showModal}
+					{pickGuessWords}
+				/>
+			{:else if quizzes[questionPointer].type === TypeQuestion.ARRANGE_WORD}
+				<ArrangeAnswer
 					bind:isAnswerChecked
 					bind:answer={quizzes[questionPointer].written}
 					bind:finalAnswer

@@ -129,7 +129,6 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }): Promi
 };
 export const handleError: HandleServerError = async ({ error }) => {
 	const err: any = error;
-
 	return {
 		code: err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
 		message: err?.body?.message || 'Internal Server Error'

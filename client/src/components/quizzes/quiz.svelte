@@ -2,28 +2,25 @@
 	import { goto } from '$app/navigation';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { t } from '../../libs/i18n/translations';
+	import Icon from '@iconify/svelte';
+	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
+	import { page } from '$app/stores';
+	import Loading from '$components/loading.svelte';
 
 	export let title: string;
-	export let author: string;
 	export let description: string;
 	export let numberOfQuestions: number;
 	export let image: string;
 	export let createdAt: string;
 	export let id: string;
-
-	const dateObj = new Date(createdAt);
-	const hours = String(dateObj.getUTCHours()).padStart(2, '0');
-	const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
-	const seconds = String(dateObj.getUTCSeconds()).padStart(2, '0');
-	const day = String(dateObj.getUTCDate()).padStart(2, '0');
-	const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
-	const year = dateObj.getUTCFullYear();
-	const formattedDateTime = `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+	export let quiz: any;
+	export let quizzes: any;
+	let isDelete = false;
 
 	let sharedToastId: string | number;
 
 	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId);
+		toast.dismiss(sharedToastId.toString());
 	};
 
 	async function handleStart() {
@@ -51,40 +48,104 @@
 	function handleEdit() {
 		goto(`/createQuiz/${id}`);
 	}
+
+	async function deleteQuiz(id: string) {
+		isDelete = true;
+		const response = await fetch(`/api/quizzes/delete/${id}`, {
+			method: 'DELETE'
+		});
+
+		const result = await response.json();
+		isDelete = false;
+
+		if (response.status === 200) {
+			const quizIndex = quizzes.findIndex((quiz: any) => quiz.id === id);
+			quizzes.splice(quizIndex, 1);
+			let redirectUrl = `/dashboard/quizzes/${$page.params.page}/${$page.params.sortBy}`;
+
+			if (quizzes.length === 0) {
+				redirectUrl = `/dashboard/quizzes/${parseInt($page.params.page) - 1}/${
+					$page.params.sortBy
+				}`;
+			}
+
+			window.location.href = redirectUrl;
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+	$: isOpen = false;
+	$: questionList = [];
+
+	const handleClickView = async () => {
+		isOpen = !isOpen;
+		const result = await getQuestionOfQuiz(id);
+		if (result.statusCode === 200) {
+			questionList = result.data;
+		}
+	};
+	async function getQuestionOfQuiz(id: string) {
+		const response = await fetch(`/api/quizzes/get-questions-no-answer/${id}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const result = await response.json();
+		return result;
+	}
 </script>
 
-<section
-	class="flex flex-row justify-center md:items-start items-center border-rose-50 gap-3 border-solid shadow-md p-6 hover:shadow-md transition duration-200 transform hover:scale-102 rounded-xl cursor-pointer"
-	aria-details="Quiz Details"
->
-	<div>
-		<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
-	</div>
-	<div class="flex flex-col w-full">
+{#if isDelete}
+	<Loading />
+{/if}
+
+<div class="relative z-0 w-full">
+	<a
+		href="#"
+		role="button"
+		on:click={handleClickView}
+		class="flex flex-row justify-center md:items-start border-rose-50 gap-3 border-solid p-6 shadow-md hover:shadow-2xl transition duration-200 transform rounded-xl cursor-pointer w-full"
+		aria-details="Quiz Details"
+	>
 		<div>
-			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">{title}</h1>
-			<p class="text-sm text-zinc-400 md:w-full md:block hidden">{description}</p>
+			<img class="w-[176px] h-32 rounded-xl" src={image} alt={title} />
 		</div>
-		<div
-			class="flex md:flex-row flex-col md:justify-between md:items-center items-start md:gap-4 gap-2"
-		>
+		<div class="flex flex-col w-full justify-start gap-2 h-full text-start">
+			<h1 class="md:text-2xl text-base font-bold max-w-sm whitespace-pre-wrap">
+				{title}
+			</h1>
+
 			<p class="text-sm text-zinc-400">
-				{$t('common.createdAt')}: <span class="text-zinc-400"> {formattedDateTime}</span>
+				{$t('common.createdAt')}: <span class="text-zinc-400"> {createdAt}</span>
 			</p>
-			<div class="flex flex-row gap-4">
-				<button
-					aria-label="Edit"
-					on:click={handleEdit}
-					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-					>{$t('common.editBtn')}</button
-				>
-				<button
-					aria-label="Start"
-					on:click={handleStart}
-					class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-					>{$t('common.startBtn')}</button
-				>
-			</div>
 		</div>
+	</a>
+	<div class="absolute top-5 right-5 z-10">
+		<button
+			on:click={() => {
+				if (confirm($t('common.confirmDelete'))) {
+					deleteQuiz(id);
+				}
+			}}
+		>
+			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
+		</button>
 	</div>
-</section>
+	<div class="flex flex-row gap-4 absolute bottom-3 right-3 z-10">
+		<button
+			aria-label="Edit"
+			on:click={handleEdit}
+			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
+			>{$t('common.editBtn')}</button
+		>
+		<button
+			aria-label="Start"
+			on:click={handleStart}
+			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
+			>{$t('common.startBtn')}</button
+		>
+	</div>
+</div>
+<DetailQuiz {isOpen} cardInfor={quiz} {questionList} />

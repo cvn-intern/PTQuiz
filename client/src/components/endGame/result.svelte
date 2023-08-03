@@ -28,8 +28,8 @@
 	];
 </script>
 
-<div class="flex items-center justify-center sm:max-w-sm md:w-1/2">
-	<div class="grid grid-cols-2 bg-white shadow-lg max-w-md p-6 rounded-xl md:gap-6 gap-4">
+<div class="flex items-center justify-center sm:max-w-sm md:w-1/2 ">
+	<div class="grid grid-cols-2 bg-white shadow-lg max-w-md md:p-6 rounded-xl md:gap-6 gap-4 p-4">
 		{#each elementsResult as { name, value, color }}
 			<div class="flex gap-2">
 				<Icon icon={'icon-park-outline:dot'} {color} class={'text-2xl'} />

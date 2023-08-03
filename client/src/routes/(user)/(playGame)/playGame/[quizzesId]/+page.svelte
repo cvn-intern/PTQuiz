@@ -6,7 +6,6 @@
 	import { t } from '$i18n/translations';
 	import { gameInfoStore } from '$stores/gameInfoStore';
 	import { onMount } from 'svelte';
-	import { onDestroy } from 'svelte';
 	export let data;
 
 	let gameInfo = data.gameInfo;
@@ -20,11 +19,6 @@
 		textReady = 'READY ?';
 	}, 1000);
 
-	$: isShowButton = false;
-	setTimeout(() => {
-		isShowButton = true;
-	}, 1500);
-
 	let buttonCancelClicked = false;
 	let buttonPlayClicked = false;
 	onMount(() => {
@@ -32,7 +26,7 @@
 	});
 	function handleClickExitButton() {
 		if (!buttonCancelClicked) {
-			goto('/discovery');
+			goto('/discovery/all');
 			buttonCancelClicked = true;
 		}
 	}
@@ -52,17 +46,16 @@
 		<div class="md:text-9xl text-6xl font-bold text-white">
 			<h1 class="ease-in-out transition-all duration-100">{textReady}</h1>
 		</div>
-		<div class = "flex flex-col md:flex-row justify-center gap-4">
+		<div class="flex flex-col md:flex-row justify-center gap-4">
 			<button
 				class={clsx(
 					' text-white font-bold text-xl  justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-orangeLogo rounded-2xl hover:translate-y-px ',
 					{
-						hidden: !isShowButton,
 						'pointer-events-none opacity-50': buttonCancelClicked
 					}
 				)}
 				on:click={() => {
-					goto('/discovery');
+					goto('/discovery/all');
 				}}
 				on:click={handleClickExitButton}
 			>
@@ -72,7 +65,6 @@
 				class={clsx(
 					' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
 					{
-						hidden: !isShowButton,
 						'pointer-events-none opacity-50': buttonPlayClicked
 					}
 				)}
@@ -82,4 +74,5 @@
 			</button>
 		</div>
 	</div>
+	
 </div>

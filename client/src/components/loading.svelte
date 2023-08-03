@@ -1,15 +1,6 @@
 <div class="page-container">
-	<div class="loading-container">
-		<div class="dot-spinner">
-			<div class="dot-spinner__dot" />
-			<div class="dot-spinner__dot" />
-			<div class="dot-spinner__dot" />
-			<div class="dot-spinner__dot" />
-			<div class="dot-spinner__dot" />
-			<div class="dot-spinner__dot" />
-			<div class="dot-spinner__dot" />
-			<div class="dot-spinner__dot" />
-		</div>
+	<div class="loading">
+		<span>Quiz<sup class="text-orangeLogo">P</sup><sup class="text-blueLogo">T</sup></span>
 	</div>
 </div>
 
@@ -20,116 +11,85 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.2);
 		z-index: 9999;
 	}
-	.loading-container {
+	.loading {
+		font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+		text-transform: uppercase;
+
+		width: 150px;
+		text-align: center;
+		line-height: 50px;
+
 		position: absolute;
+		left: 0;
+		right: 0;
 		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-	}
-	.dot-spinner {
-		--uib-size: 6.8rem;
-		--uib-speed: 0.9s;
-		--uib-color: #1e3f20;
-		position: relative;
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
-		height: var(--uib-size);
-		width: var(--uib-size);
+		margin: auto;
+		transform: translateY(-50%);
+		transform: scale(2);
 	}
 
-	.dot-spinner__dot {
+	.loading span {
+		position: relative;
+		z-index: 999;
+		color: #1e3f20;
+	}
+	.loading:before {
+		content: '';
+		background: #f8fff0;
+		width: 128px;
+		height: 36px;
+		display: block;
 		position: absolute;
 		top: 0;
 		left: 0;
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
-		height: 100%;
-		width: 100%;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+
+		animation: 2s loadingBefore infinite ease-in-out;
 	}
 
-	.dot-spinner__dot::before {
-		content: '';
-		height: 20%;
-		width: 20%;
-		border-radius: 50%;
-		background-color: var(--uib-color);
-		transform: scale(0);
-		opacity: 0.5;
-		animation: pulse0112 calc(var(--uib-speed) * 1.111) ease-in-out infinite;
-		box-shadow: 0 0 20px rgba(18, 31, 53, 0.3);
-	}
-
-	.dot-spinner__dot:nth-child(2) {
-		transform: rotate(45deg);
-	}
-
-	.dot-spinner__dot:nth-child(2)::before {
-		animation-delay: calc(var(--uib-speed) * -0.875);
-	}
-
-	.dot-spinner__dot:nth-child(3) {
-		transform: rotate(90deg);
-	}
-
-	.dot-spinner__dot:nth-child(3)::before {
-		animation-delay: calc(var(--uib-speed) * -0.75);
-	}
-
-	.dot-spinner__dot:nth-child(4) {
-		transform: rotate(135deg);
-	}
-
-	.dot-spinner__dot:nth-child(4)::before {
-		animation-delay: calc(var(--uib-speed) * -0.625);
-	}
-
-	.dot-spinner__dot:nth-child(5) {
-		transform: rotate(180deg);
-	}
-
-	.dot-spinner__dot:nth-child(5)::before {
-		animation-delay: calc(var(--uib-speed) * -0.5);
-	}
-
-	.dot-spinner__dot:nth-child(6) {
-		transform: rotate(225deg);
-	}
-
-	.dot-spinner__dot:nth-child(6)::before {
-		animation-delay: calc(var(--uib-speed) * -0.375);
-	}
-
-	.dot-spinner__dot:nth-child(7) {
-		transform: rotate(270deg);
-	}
-
-	.dot-spinner__dot:nth-child(7)::before {
-		animation-delay: calc(var(--uib-speed) * -0.25);
-	}
-
-	.dot-spinner__dot:nth-child(8) {
-		transform: rotate(315deg);
-	}
-
-	.dot-spinner__dot:nth-child(8)::before {
-		animation-delay: calc(var(--uib-speed) * -0.125);
-	}
-
-	@keyframes pulse0112 {
-		0%,
-		100% {
-			transform: scale(0);
-			opacity: 0.5;
+	@keyframes loadingBefore {
+		0% {
+			transform: translateX(-14px);
 		}
-
 		50% {
-			transform: scale(1);
-			opacity: 1;
+			transform: translateX(14px);
+		}
+		100% {
+			transform: translateX(-14px);
+		}
+	}
+
+	.loading:after {
+		content: '';
+		background: #ff3600;
+		width: 14px;
+		height: 60px;
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		opacity: 0.5;
+
+		animation: 2s loadingAfter infinite ease-in-out;
+	}
+
+	@keyframes loadingAfter {
+		0% {
+			transform: translateX(-50px);
+		}
+		50% {
+			transform: translateX(50px);
+		}
+		100% {
+			transform: translateX(-50px);
 		}
 	}
 </style>

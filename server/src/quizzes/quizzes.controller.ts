@@ -71,16 +71,18 @@ export class QuizzesController {
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get Quizzes successfully')
     @UseGuards(JwtAuthGuard)
-    async getQuizzes(@GetCurrentUser('id') userId: string) {
-        return await this.quizzesService.getAllQuizzesOfUser(userId);
+    async getQuizzes(
+        @GetCurrentUser('id') userId: string,
+        @Query('page') page: number,
+        @Query('sortBy') sortBy: number,
+    ) {
+        return await this.quizzesService.getAllQuizzesOfUser(
+            userId,
+            page,
+            sortBy,
+        );
     }
 
-    @Get('/discovery')
-    @HttpCode(HttpStatus.OK)
-    @ResponseMessage('Get discovery successfully')
-    async getdiscovery() {
-        return await this.quizzesService.getDiscovery();
-    }
     @Get('/info')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Get info of Quiz successfully')
@@ -95,8 +97,11 @@ export class QuizzesController {
     @Get('/filter')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Filter successfully')
-    async filterCategory(@Query('category') categoryName: string) {
-        return await this.quizzesService.filterCategory(categoryName);
+    async filterCategory(
+        @Query('categoryName') categoryName: string,
+        @Query('page') page: number,
+    ) {
+        return await this.quizzesService.filterCategory(categoryName, page);
     }
 
     @Get('/all-questions')
@@ -108,5 +113,12 @@ export class QuizzesController {
         @Query('quizId') quizId: string,
     ) {
         return await this.quizzesService.getAllQuestionsOfQuiz(userId, quizId);
+    }
+
+    @Get('/questions-quiz')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Get questions of quiz successfully')
+    async getQuestionsOfQuiz(@Query('quizId') quizId: string) {
+        return await this.quizzesService.getQuestionsOfQuiz(quizId);
     }
 }

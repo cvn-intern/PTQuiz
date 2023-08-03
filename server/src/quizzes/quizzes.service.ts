@@ -2,7 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuestionService } from '../question/question.service';
 import { QuizzesError } from '../error/quizzesError.enum';
-import { QuestionResponse } from '../question/type/questionResponse.type';
+import {
+    QuestionResponse,
+    QuestionResponseNoAnswer,
+} from '../question/type/questionResponse.type';
 import { QuizzesDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { Role } from '../auth/types';
@@ -36,29 +39,44 @@ export class QuizzesService {
         return discovery.findIndex((item) => item.category === category);
     }
 
-    async getAllQuizzesOfUser(userId: string) {
+    async getAllQuizzesOfUser(userId: string, page: number, sortBy: number) {
         try {
-            const quizzesOfUser = await this.prisma.quizzes.findMany({
-                where: {
-                    userId: userId,
-                },
-                select: {
-                    user: {
-                        select: {
-                            displayName: true,
+            page = page || 1;
+            const pageSize = 5;
+            const [quizzesOfUser, totalQuizzes] =
+                await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            userId: userId,
                         },
-                    },
-                    createdAt: true,
-                    title: true,
-                    description: true,
-                    image: true,
-                    numberQuestions: true,
-                    durationMins: true,
-                    difficultyLevel: true,
-                    id: true,
-                },
-            });
-            return quizzesOfUser;
+                        select: {
+                            createdAt: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                            id: true,
+                        },
+                        orderBy:
+                            sortBy == 0
+                                ? { createdAt: 'asc' }
+                                : sortBy == 1
+                                ? { createdAt: 'desc' }
+                                : sortBy == 2
+                                ? { title: 'asc' }
+                                : { title: 'desc' },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            userId: userId,
+                        },
+                    }),
+                ]);
+            return { quizzesOfUser, totalQuizzes };
         } catch (err) {
             throw new HttpException(
                 QuizzesError.FAILED_GET_ALL_QUIZZES,
@@ -116,7 +134,6 @@ export class QuizzesService {
                     const quizzes = await this.getInfoOfPublicQuiz(
                         quizzesOfdiscovery[index].quizId,
                     );
-
                     if (indexOfCategory === -1) {
                         discovery.push({
                             category: category.name,
@@ -198,14 +215,157 @@ export class QuizzesService {
         }
     }
 
-    async filterCategory(categoryName: string) {
+    async filterCategory(categoryName: string, page: number) {
         try {
-            const categories = await this.getDiscovery();
-            const resultFilter = categories.filter(
-                (category) => category.category === categoryName,
-            );
-            if (resultFilter.length !== 0) return resultFilter[0].quizzes;
-            else return [];
+            page = page || 1;
+            const pageSize = 5;
+
+            if (categoryName === 'all' || categoryName === undefined) {
+                const categories = await this.prisma.categories.findMany();
+
+                const quizPromises = categories.map((category) => {
+                    return this.prisma.$transaction([
+                        this.prisma.quizzes.findMany({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                category: {
+                                    name: category.name,
+                                },
+                            },
+                            select: {
+                                category: {
+                                    select: {
+                                        name: true,
+                                    },
+                                },
+                                user: {
+                                    select: {
+                                        displayName: true,
+                                    },
+                                },
+                                id: true,
+                                title: true,
+                                description: true,
+                                image: true,
+                                numberQuestions: true,
+                                durationMins: true,
+                                difficultyLevel: true,
+                            },
+                            take: pageSize,
+                            skip: (page - 1) * pageSize,
+                        }),
+                        this.prisma.quizzes.count({
+                            where: {
+                                isShared: true,
+                                user: {
+                                    role: Role.Admin,
+                                },
+                                category: {
+                                    name: category.name,
+                                },
+                            },
+                        }),
+                    ]);
+                });
+
+                const result = await Promise.all(
+                    quizPromises.map(async (promise, index) => {
+                        const [quizzes, count] = await promise;
+                        return {
+                            category: categories[index].name,
+                            quizzes: quizzes,
+                            totalQuizzes: count,
+                        };
+                    }),
+                );
+
+                return result;
+            } else {
+                switch (categoryName) {
+                    case 'math':
+                        categoryName = 'Math';
+                        break;
+                    case 'science':
+                        categoryName = 'Science';
+                        break;
+                    case 'history':
+                        categoryName = 'History';
+                        break;
+                    case 'geography':
+                        categoryName = 'Geography';
+                        break;
+                    case 'english':
+                        categoryName = 'English';
+                        break;
+                    case 'literature':
+                        categoryName = 'Literature';
+                        break;
+                    case 'other':
+                        categoryName = 'Other';
+                        break;
+                }
+                let quizzesOfUser, totalQuizzes;
+                [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                            category: {
+                                name: categoryName,
+                            },
+                        },
+                        select: {
+                            category: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                            user: {
+                                select: {
+                                    displayName: true,
+                                },
+                            },
+                            id: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                        },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            isShared: true,
+                            user: {
+                                role: Role.Admin,
+                            },
+                            quizQuestions: {
+                                some: {
+                                    question: {
+                                        categoryId: categoryName,
+                                    },
+                                },
+                            },
+                        },
+                    }),
+                ]);
+
+                return [
+                    {
+                        category: categoryName,
+                        quizzes: quizzesOfUser,
+                        totalQuizzes: totalQuizzes,
+                    },
+                ];
+            }
         } catch (exception) {
             throw new HttpException(
                 QuizzesError.NOT_FOUND_CATEGORY,
@@ -253,6 +413,7 @@ export class QuizzesService {
                     time: question.question.time,
                     createdAt: question.question.createdAt,
                     updatedAt: question.question.updatedAt,
+                    hint: question.question.hint,
                 };
                 return questionResponse;
             });
@@ -283,8 +444,15 @@ export class QuizzesService {
     ) {
         try {
             let url;
+            if (!quiz) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
             if (image) {
-                if (image.size > +process.env.MAX_FILE_SIZE) {
+                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuizzesError.FILE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
@@ -397,7 +565,6 @@ export class QuizzesService {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
     }
-
     async deleteQuiz(userId: string, quizId: string) {
         try {
             if (!quizId) {
@@ -423,6 +590,58 @@ export class QuizzesService {
                     HttpStatus.UNAUTHORIZED,
                 );
             }
+            const rooms = await this.prisma.rooms.findMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            rooms.forEach(async (room) => {
+                const roomParticipants =
+                    await this.prisma.room_participants.findMany({
+                        where: {
+                            roomId: room.id,
+                        },
+                    });
+                roomParticipants.forEach(async (roomParticipant) => {
+                    await this.prisma.room_participants.delete({
+                        where: {
+                            id: roomParticipant.id,
+                        },
+                    });
+                    await this.prisma.user_questions.deleteMany({
+                        where: {
+                            participantId: roomParticipant.participantId,
+                        },
+                    });
+                    await this.prisma.participants.delete({
+                        where: {
+                            id: roomParticipant.participantId,
+                        },
+                    });
+                });
+                await this.prisma.rooms.delete({
+                    where: {
+                        id: room.id,
+                    },
+                });
+            });
+            const participants = await this.prisma.participants.findMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            participants.forEach(async (participant) => {
+                await this.prisma.user_questions.deleteMany({
+                    where: {
+                        participantId: participant.id,
+                    },
+                });
+                await this.prisma.participants.delete({
+                    where: {
+                        id: participant.id,
+                    },
+                });
+            });
             await this.prisma.quiz_questions.deleteMany({
                 where: {
                     quizId: quizId,
@@ -435,6 +654,51 @@ export class QuizzesService {
             });
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+    async getQuestionsOfQuiz(quizId: string) {
+        try {
+            const quiz = await this.prisma.quizzes.findUnique({
+                where: {
+                    id: quizId,
+                },
+            });
+            if (!quiz) {
+                throw new HttpException(
+                    QuizzesError.NOT_FOUND_QUIZZES,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+            const questions = await this.prisma.quiz_questions.findMany({
+                where: {
+                    quizId: quizId,
+                },
+                select: {
+                    question: {
+                        select: {
+                            title: true,
+                            image: true,
+                            type: true,
+                            time: true,
+                        },
+                    },
+                },
+            });
+            const allQuestions = questions.map((question) => {
+                const questionResponse: QuestionResponseNoAnswer = {
+                    title: question.question.title,
+                    image: question.question.image,
+                    type: question.question.type,
+                    time: question.question.time,
+                };
+                return questionResponse;
+            });
+            return allQuestions;
+        } catch (error) {
+            throw new HttpException(
+                QuizzesError.ERROR_QUIZ,
+                HttpStatus.BAD_REQUEST,
+            );
         }
     }
 }

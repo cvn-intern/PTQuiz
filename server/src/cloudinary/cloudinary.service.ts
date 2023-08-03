@@ -10,7 +10,7 @@ export class CloudinaryService {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
                     folder: 'Nestjs',
-                    allowed_formats: ['jpg', 'png', 'jpeg'],
+                    allowed_formats: ['jpg', 'png', 'jpeg', 'gif'],
                 },
                 (error, result) => {
                     if (error) return reject(error);

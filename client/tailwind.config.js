@@ -23,6 +23,10 @@ export default {
 				orangeLogo: '#f76800',
 				yellowLogo: '#ffb411',
 				blueLogo: '#00d6ca',
+				run1st: '#FFAA00',
+				run2st: '#179cd4',
+				run3st: '#23d964',
+				bgChat: '#BAD1CD',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -47,17 +51,23 @@ export default {
 				desktop: '20rem',
 				ipad: '17rem',
 				mobile: '12rem',
-				panel: '446px'
+				panel: '446px',
+				userInfo: '260px',
+				dropDown: '220px',
+				screenHalf: '65vw'
 			},
 			minHeight: {
 				titleCard: '3.5rem'
 			},
 			maxHeight: {
 				titleCard: '3.75rem',
-				boxCardQuestion: '27rem'
+				boxCardQuestion: '27rem',
+				halfScreen: '50vh',
+				attempt: '40vh'
 			},
 			maxWidth: {
-				tagName: '33%'
+				tagName: '33%',
+				dropDown: '200px'
 			},
 			keyframes: {
 				wiggle: {
@@ -99,6 +109,16 @@ export default {
 			},
 			scale: {
 				102: '1.02'
+			},
+			zIndex: {
+				60: '60',
+				70: '70',
+				80: '80',
+				90: '90',
+				100: '100'
+			},
+			height: {
+				halfScreen: '50vh'
 			}
 		}
 	},

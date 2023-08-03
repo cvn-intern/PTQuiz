@@ -38,12 +38,19 @@
 	let isDropdownOpen = false;
 
 	function toggleDropdown() {
-		isDropdownOpen = !isDropdownOpen;
+		isDropdownOpen = true;
+		document.body.addEventListener('click', unToggleDropdown);
 	}
 
 	function handleOptionClick(value: any) {
 		$locale = value;
 		handleChange({ target: { value } });
+		isDropdownOpen = false;
+	}
+
+	function unToggleDropdown() {
+		isDropdownOpen = false;
+		document.body.removeEventListener('click', unToggleDropdown);
 	}
 </script>
 
@@ -56,7 +63,9 @@
 	<a class="logo flex items-center gap-2" href="/">
 		<img src={logo} alt="logo" class="hidden md:block w-16" />
 		<h1 class="hidden text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
-			PentaQuiz
+			Quiz<sup class="text-xl text-orangeLogo">P</sup><sup class="text-xl text-blueLogo"
+				>T</sup
+			>
 		</h1>
 	</a>
 	<SidebarModal hiddenModal={isHidden} {user} />
@@ -70,7 +79,7 @@
 			<li>
 				<button
 					on:click={() => {
-						goto('/discovery');
+						goto('/discovery/all');
 					}}
 					title={$t('common.discovery')}
 					class="hover:text-secondary"
@@ -79,19 +88,19 @@
 				</button>
 			</li>
 		</ul>
-		<div class="flex gap-2 items-center">
+		<div class="flex gap-2 items-center w-userInfo justify-end">
 			{#if user}
-				<div class="flex items-center cursor-pointer">
-					<button
+				<button class="flex items-center cursor-pointer">
+					<div
 						aria-label="profile"
-						class="flex items-center gap-2 text-xl overflow-hidden whitespace-nowrap max-w-[250px] hover:text-secondary"
+						class="flex items-center gap-2 hover:text-secondary max-w-dropDown"
 					>
-						<img src={user.avatar} alt="user avatar" class="rounded-full w-12 h-12" />
-						{user.displayName}
-					</button>
-					<Icon icon="gridicons:dropdown" class="text-2xl" />
-				</div>
-				<Dropdown>
+						<img src={user.avatar} alt="user avatar" class="rounded-full w-10 h-10" />
+						<p class="text-xl truncate">{user.displayName}</p>
+					</div>
+					<Icon icon="mingcute:down-line" class="text-2xl" />
+				</button>
+				<Dropdown class="w-dropDown">
 					<DropdownItem
 						class="flex gap-2 items-center"
 						on:click={() => {
@@ -138,7 +147,7 @@
 			<div class="relative">
 				<button
 					class=" p-2 rounded-md focus:outline-none bg-primary"
-					on:click={toggleDropdown}
+					on:click|stopPropagation={toggleDropdown}
 				>
 					{#if $locale === 'en'}
 						<Icon icon="twemoji-flag-for-flag-united-kingdom" class="text-3xl" />
@@ -146,9 +155,11 @@
 						<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
 					{/if}
 				</button>
-
 				{#if isDropdownOpen}
-					<div class="absolute mt-2 w-full rounded-md shadow-lg">
+					<div
+						class="absolute mt-2 w-full rounded-md shadow-lg"
+						on:click|stopPropagation={() => {}}
+					>
 						{#each $locales as value}
 							<button
 								class="cursor-pointer p-2 hover:bg-gray-200"
