@@ -1,4 +1,3 @@
-import { io } from 'socket.io-client';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {

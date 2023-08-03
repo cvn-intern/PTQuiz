@@ -3,11 +3,11 @@
 	import type { Socket } from 'socket.io-client';
 	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
 	import { onMount } from 'svelte';
-	import { tweened, type Tweened } from 'svelte/motion';
-	import CryptoJS from 'crypto-js';
 	import Loading from '../../loading.svelte';
 	import { page } from '$app/stores';
 	import TrueFalseModal from '$components/trueFalseModal.svelte';
+	import decryptData from '../../../libs/helpers/crypto';
+	import type { Tweened } from 'svelte/motion';
 
 	let answer: string = '';
 	let finalAnswer: string;
@@ -15,19 +15,13 @@
 	let isCorrect: boolean = false;
 	let isDisable: boolean = false;
 	let score: number;
+	let isTimeout: boolean = false;
 	export let showModal: boolean;
 	export let question: SocketQuiz;
 	export let socket: Socket;
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 
-	const key = import.meta.env.VITE_CRYPTO_KEY;
-
-	function decryptData(cipherText: any) {
-		const bytes = CryptoJS.AES.decrypt(cipherText, key);
-		const originalText = bytes.toString(CryptoJS.enc.Utf8);
-		return JSON.parse(originalText);
-	}
 	type CharacterObject = {
 		char: string;
 		id: number;
@@ -36,6 +30,7 @@
 		if (!isPicked) {
 			isDisable = false;
 			isGetAnswer = false;
+			isTimeout = false;
 			chooseAnswer = [];
 			socket.emit(ListenChannel.GET_ANSWER_QUESTION, {
 				questionId: question.id
@@ -52,9 +47,6 @@
 			score = data.score;
 			isPicked = true;
 			showModal = true;
-			setTimeout(() => {
-				showModal = false;
-			}, 2000);
 		});
 	});
 	function scrambleString(str: string) {
@@ -132,7 +124,6 @@
 			}
 		}
 		if (event.key === 'Enter') {
-			timer = tweened(0);
 			pickAnswer();
 		}
 	}
@@ -168,7 +159,13 @@
 	};
 	$: {
 		if ($timer <= 0 && !isPicked && !isDisable) {
+			isTimeout = true;
 			pickAnswer();
+		} else if ($timer <= 0 && isPicked) {
+			isTimeout = true;
+			setTimeout(() => {
+				showModal = false;
+			}, 2000);
 		}
 	}
 </script>
@@ -194,7 +191,9 @@
 					<input
 						disabled={isDisable}
 						type="text"
-						class={`${isDisable ?'bg-gray-200' : 'bg-white'} w-14 h-16 border-b-2 border-b-black text-4xl border-transparent focus:border-transparent focus:border-b-2 focus:border-b-green-500 focus:ring-0 uppercase`}
+						class={`${
+							isDisable ? 'bg-gray-200' : 'bg-white'
+						} w-14 h-16 border-b-2 border-b-black text-4xl border-transparent focus:border-transparent focus:border-b-2 focus:border-b-green-500 focus:ring-0 uppercase`}
 						value={input.char}
 						maxlength="1"
 						on:input={(event) => handleInput(event, input.id)}
@@ -210,6 +209,6 @@
 	</div>
 {/if}
 
-{#if showModal}
+{#if showModal && isTimeout}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}
