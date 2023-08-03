@@ -45,7 +45,7 @@
 	};
 </script>
 
-<div class="flex flex-col gap-4 h-full justify-center">
+<div class="flex flex-col gap-4 h-full justify-start p-4">
 	<div class="flex flex-col justify-between gap-4">
 		<div class="flex flex-col w-full justify-center items-center gap-4">
 			{#if isHost}

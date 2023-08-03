@@ -192,7 +192,7 @@
 							{questions}
 							{endGame}
 							{getScoreBoard}
-                            {participants}
+							{participants}
 						/>
 					{/if}
 					<div class="h-full p-2 gap-2">
