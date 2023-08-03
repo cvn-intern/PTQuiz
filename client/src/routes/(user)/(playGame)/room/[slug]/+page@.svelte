@@ -55,7 +55,6 @@
 	setInterval(() => {
 		if ($timer >= 1 && isShowOption) {
 			$timer = Math.floor($timer) - 1;
-			console.log($timer);
 		}
 	}, 1000);
 
