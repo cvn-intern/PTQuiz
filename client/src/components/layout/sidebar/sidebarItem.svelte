@@ -15,7 +15,7 @@
 		'flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-md dark:bg-gray-900 dark:text-white cursor-pointer w-full',
 		{
 			'bg-secondary dark:bg-darkGreen text-white hover:bg-secondary':
-				$page.url.pathname === navigateTo,
+				$page.url.pathname.includes(navigateTo),
 			'hover:bg-primary dark:hover:bg-darkGreen': $page.url.pathname !== navigateTo
 		}
 	)}
