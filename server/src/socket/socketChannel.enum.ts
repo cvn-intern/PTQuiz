@@ -9,6 +9,8 @@ export enum EmitChannel {
     ANSWER_RESULT = 'answer-result',
     SCORE_BOARD = 'score-board',
     ANSWER_QUESTION = 'answer-question',
+    GIF_QUESTION = 'gif-question',
+    HOST_LEFT = 'host-left',
 }
 
 export enum ListenChannel {
@@ -22,4 +24,5 @@ export enum ListenChannel {
     CHANGE_QUESTION_POINTER = 'change-question-pointer',
     PICK_ANSWER = 'pick-answer',
     GET_ANSWER_QUESTION = 'get-answer-question',
+    GIF_QUESTION = 'gif-question',
 }

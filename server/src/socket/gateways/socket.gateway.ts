@@ -14,7 +14,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { AnswerDto, RoomPinDto } from '../dto';
+import { AnswerDto, GifQuestionDto, RoomPinDto } from '../dto';
 import { QuestionPointerDto } from '../dto/questionPointer.dto';
 import { WebSocketJwtGuard } from '../WebSocketJwtGuard.guard';
 import { SocketClient } from '../socketClient.class';
@@ -47,10 +47,8 @@ export class SocketGateway
     async handleDisconnect(@ConnectedSocket() client: Socket) {
         try {
             this.logger.log(`Client disconnected: ${client.id}`);
-            const roomPIN = await this.socketService.leaveRoomImmediately(
-                client.id,
-            );
-            client.leave(roomPIN);
+            const { roomPIN, isHost } =
+                await this.socketService.leaveRoomImmediately(client.id);
             if (roomPIN) {
                 const roomParticipants =
                     await this.socketService.getRoomParticipants(roomPIN);
@@ -58,12 +56,14 @@ export class SocketGateway
                     roomParticipants,
                     signal: 'leave',
                 });
+                client.leave(roomPIN);
+                if (isHost) {
+                    this.server.to(roomPIN).emit(EmitChannel.HOST_LEFT, {
+                        isHost,
+                    });
+                }
             }
-        } catch (error) {
-            throw new WsException({
-                message: error.message,
-            });
-        }
+        } catch (error) {}
     }
     afterInit() {
         this.logger.log('Initialized!');
@@ -102,18 +102,23 @@ export class SocketGateway
     ) {
         try {
             const { roomPIN } = data;
-            client.leave(roomPIN);
-            await this.socketService.leaveRoom(
+            const { isHost } = await this.socketService.leaveRoom(
                 roomPIN,
                 client.user.id,
                 client.id,
             );
+            client.leave(roomPIN);
             const roomParticipants =
                 await this.socketService.getRoomParticipants(roomPIN);
             this.server.to(roomPIN).emit(EmitChannel.ROOM_USERS, {
                 roomParticipants,
                 signal: 'leave',
             });
+            if (isHost) {
+                this.server.to(roomPIN).emit(EmitChannel.HOST_LEFT, {
+                    isHost,
+                });
+            }
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -283,6 +288,24 @@ export class SocketGateway
                 JSON.stringify(answer),
             );
             client.emit(EmitChannel.ANSWER_QUESTION, decryptAnswer);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.GIF_QUESTION)
+    async handleGifQuestion(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: GifQuestionDto,
+    ) {
+        try {
+            this.server.to(data.roomPIN).emit(EmitChannel.GIF_QUESTION, {
+                isShowGif: data.isShowGif,
+                isShowOption: data.isShowOption,
+                duration: data.duration,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
