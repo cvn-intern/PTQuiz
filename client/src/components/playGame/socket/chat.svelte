@@ -74,7 +74,7 @@
 			on:submit|preventDefault={sendMessage}
 		>
 			<input
-				maxlength="100"
+				maxlength="80"
 				type="text"
 				class="border-none rounded-lg w-full p-3 font-semibold"
 				placeholder="Enter message here..."
