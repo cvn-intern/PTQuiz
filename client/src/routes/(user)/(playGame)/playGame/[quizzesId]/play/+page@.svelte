@@ -6,15 +6,15 @@
 	import { Progressbar } from 'flowbite-svelte';
 	import toast from 'svelte-french-toast';
 	import CryptoJS from 'crypto-js';
-	import SingleChoiceAnswer from '$components/playGame/singleChoiceAnswer.svelte';
+	import SingleChoiceAnswer from '$components/playGame/singlePlay/singleChoiceAnswer.svelte';
 	import { gameInfoStore } from '$stores/gameInfoStore.js';
 	import { t } from '$i18n/translations.js';
 	import { TypeQuestion } from '$constants/typeQuestion.js';
-	import MultipleChoiceAnswer from '$components/playGame/multipleChoiceAnswer.svelte';
-	import QuestionDisplay from '$components/playGame/questionDisplay.svelte';
-	import InputText from '$components/playGame/inputText.svelte';
-	import ArrangeAnswer from '$components/playGame/arrangeAnswer.svelte';
-	import CrossWords from '$components/playGame/crossWords.svelte';
+	import MultipleChoiceAnswer from '$components/playGame/singlePlay/multipleChoiceAnswer.svelte';
+	import QuestionDisplay from '$components/playGame/singlePlay/questionDisplay.svelte';
+	import InputText from '$components/playGame/singlePlay/inputText.svelte';
+	import ArrangeAnswer from '$components/playGame/singlePlay/arrangeAnswer.svelte';
+	import CrossWords from '$components/playGame/singlePlay/crossWords.svelte';
 	export let data;
 
 	let questionPointer = 0;
