@@ -3,11 +3,9 @@
 	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/playGame/[quizzesId]/play/quizzes.interface';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { Modal } from 'flowbite-svelte';
-	import Icon from '@iconify/svelte';
-	import { tweened, type Tweened } from 'svelte/motion';
 	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
 	import TrueFalseModal from '$components/trueFalseModal.svelte';
+	import type { Tweened } from 'svelte/motion';
 	export let showModal: boolean;
 	export let question: SocketQuiz;
 	export let socket: Socket;
@@ -15,12 +13,16 @@
 	export let timer: Tweened<number>;
 	export let isTrueFalse: boolean;
 	let fourOptions: any[] = [];
+	let timestamp: number;
+	let isTimeout: boolean = false;
 	let isLoading: boolean = false;
 	let answers = [false, false, false, false];
 	let score: number;
 	$: {
 		if (!isPicked) {
 			answers = [false, false, false, false];
+			isTimeout = false;
+			isLoading = false;
 			fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 				id: optionKey,
 				contents: question.options[optionKey],
@@ -50,22 +52,24 @@
 			isCorrect = data.isCorrect;
 			score = data.score;
 			isPicked = true;
-			isLoading = false;
+			showModal = true;
 			fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 				id: optionKey,
 				contents: question.options[optionKey],
 				isCorrect: data.answer[index],
 				disabled: isLoading || isPicked ? true : false
 			}));
-			showModal = true;
-			setTimeout(() => {
-				showModal = false;
-			}, 2000);
 		});
 	});
 	$: {
 		if ($timer <= 0 && !isPicked && !isLoading) {
+			isTimeout = true;
 			pickAnswer();
+		} else if ($timer <= 0 && isPicked) {
+			isTimeout = true;
+			setTimeout(() => {
+				showModal = false;
+			}, 2000);
 		}
 	}
 </script>
@@ -75,7 +79,7 @@
 		<button
 			disabled={option.disabled}
 			class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl ${
-				isPicked
+				isPicked && isTimeout
 					? option.isCorrect
 						? 'bg-green-500'
 						: answers[index]
@@ -89,7 +93,6 @@
 			} ${option.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 			on:click={() => {
 				isLoading = true;
-				timer = tweened(0);
 				fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 					id: optionKey,
 					contents: question.options[optionKey],
@@ -97,6 +100,7 @@
 					disabled: isLoading || isPicked ? true : false
 				}));
 				answers[index] = true;
+				timestamp = $timer;
 				pickAnswer();
 			}}
 		>
@@ -108,7 +112,7 @@
 		<button
 			disabled={option.disabled}
 			class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl ${
-				isPicked
+				isPicked && isTimeout
 					? option.isCorrect
 						? 'bg-green-500'
 						: answers[index]
@@ -122,7 +126,6 @@
 			} ${option.disabled ? 'cursor-not-allowed' : 'cursor-pointer'} justify-center`}
 			on:click={() => {
 				isLoading = true;
-				timer = tweened(0);
 				fourOptions = Object.keys(question.options).map((optionKey, index) => ({
 					id: optionKey,
 					contents: question.options[optionKey],
@@ -130,6 +133,7 @@
 					disabled: isLoading || isPicked ? true : false
 				}));
 				answers[index] = true;
+				timestamp = $timer;
 				pickAnswer();
 			}}
 		>
@@ -138,6 +142,6 @@
 	{/each}
 {/if}
 
-{#if showModal}
-	<TrueFalseModal bind:open={showModal} isTrue = {isCorrect} />
+{#if showModal && isTimeout}
+	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}
