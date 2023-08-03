@@ -141,6 +141,9 @@
 		socket.on(EmitChannel.ENDED, (data: any) => {
 			isEndGame = data.isEnded;
 		});
+		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
+			window.location.href = $page.url.href;
+		});
 	});
 	onDestroy(() => {
 		socket.emit(ListenChannel.LEAVE_ROOM, {
