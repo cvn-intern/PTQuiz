@@ -49,17 +49,6 @@
 		});
 	};
 
-	let editor: Editor;
-	onMount(() => {
-		questionData.subscribe(async (data) => {
-			title = data[index].title;
-			await tick();
-			editor.setHtml(title);
-		});
-	});
-	function handleEditor(evt) {
-		title = evt.detail;
-	}
 </script>
 
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
@@ -151,25 +140,5 @@
 			bind:value={hint}
 			maxlength="50"
 		/>
-		<p id="editor">
-			<Editor
-				html={title}
-				bind:this={editor}
-				actions={[
-					'h1',
-					'h2',
-					'b',
-					'i',
-					'strike',
-					'ul',
-					'left',
-					'center',
-					'justify',
-					'undo',
-					'redo'
-				]}
-				on:change={handleEditor}
-			/>
-		</p>
 	</div>
 </div>
