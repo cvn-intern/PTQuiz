@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Position from '$components/endGame/position.svelte';
+	import Score from '$components/endGame/score.svelte';
+	import ScoreBoardSocket from '$components/endGame/scoreBoardSocket.svelte';
 	import { t } from '$i18n/translations';
 
 	type Participant = {
@@ -12,7 +14,7 @@
 		correct: number;
 		isAnswered: boolean;
 	};
-
+	let isEndGame: boolean = true;
 	export let participants: Participant[] = [];
 	export let length: number;
 </script>
@@ -27,4 +29,11 @@
 		>
 	</div>
 	<Position {participants} {length} />
+	<div class="flex gap-4 items-center justify-center">
+		<div class="bg-white p-4 overflow-y-scroll no-scrollbar">
+			{#each participants.slice(3) as participant, index}
+				<ScoreBoardSocket scoreUser={participant} index={index + 3} {isEndGame} />
+			{/each}
+		</div>
+	</div>
 </div>

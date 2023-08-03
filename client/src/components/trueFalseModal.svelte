@@ -28,7 +28,8 @@
 </script>
 
 {#if modalOpen}
-	<button
+	<a
+		href="#"
 		class="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-[0.15]"
 		on:click={handleBackdropClick}
 		on:keydown={handleKeyDown}
@@ -40,5 +41,5 @@
 				<img src={falseOption} class="w-32 h-32 md:w-60 md:h-60" alt="False Option" />
 			{/if}
 		</div>
-	</button>
+	</a>
 {/if}
