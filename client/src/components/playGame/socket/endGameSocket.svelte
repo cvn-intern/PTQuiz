@@ -32,7 +32,7 @@
 	<div class="flex gap-4 items-center justify-center">
 		<div
 			class={`${
-				participants.length > 3 ? 'bg-white p-4 overflow-y-scroll no-scrollbar' : ''
+				participants.length > 3 ? 'bg-white p-4 flex flex-col gap-4 overflow-y-scroll no-scrollbar' : ''
 			}`}
 		>
 			{#each participants.slice(3) as participant, index}

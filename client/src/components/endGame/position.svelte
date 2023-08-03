@@ -14,7 +14,6 @@
 	export let participants: Participant[];
 	export let length: number;
 	const topThreeParticipants = participants.slice(0, 3);
-	console.log(topThreeParticipants);
 </script>
 
 <div class="flex justify-center my-28">
