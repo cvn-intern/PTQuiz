@@ -2,7 +2,6 @@
 	import Icon from '@iconify/svelte';
 	import Message from './message.svelte';
 	import MyMessage from './myMessage.svelte';
-	import { REACTIONS } from '$constants/chat';
 	import { onMount } from 'svelte';
 	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
 	import type { Socket } from 'socket.io-client';
