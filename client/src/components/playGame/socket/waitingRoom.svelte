@@ -6,42 +6,19 @@
 	import { page } from '$app/stores';
 	import Chat from './chat.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
-	type Message = {
-		user: {
-			id: string;
-			displayName: string;
-			avatar: string;
-		};
-		content: string;
-	};
+
 	export let startGame: () => void;
 	export let url: string;
 	export let participants: Participant[];
 	export let isHost: boolean;
 	export let socket: Socket;
-	let messages: Message[] = [];
-	let messageContent: string;
-	let isDisabled = false;
-	onMount(() => {
-		socket.on(EmitChannel.ROOM_MESSAGES, (data) => {
-			messages = [...messages, data];
-		});
-	});
+    export let user:any
+
+
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 	const handleCopy = () => {
 		navigator.clipboard.writeText(url);
 		toast.success('Copied to clipboard');
-	};
-	const sendMessage = () => {
-		isDisabled = true;
-		setTimeout(() => {
-			isDisabled = false;
-		}, 3000);
-		socket.emit(ListenChannel.SEND_MESSAGE, {
-			content: messageContent,
-			roomPIN: $page.params.slug
-		});
-		messageContent = '';
 	};
 </script>
 
@@ -84,6 +61,6 @@
 		{/each}
 	</div>
 	<div class="w-full flex justify-end relative">
-		<Chat />
+		<Chat {participants} {socket} {user}/>
 	</div>
 </div>

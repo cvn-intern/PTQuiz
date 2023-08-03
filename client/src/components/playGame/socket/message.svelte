@@ -1,13 +1,18 @@
+<script lang="ts">
+    export let message: string;
+    export let displayName: string;
+    export let avatar: string;
+</script>
 <div>
-	<span class="text-xs text-neutral-600 pl-3">Your name</span>
+	<span class="text-xs text-neutral-600 pl-3">{displayName}</span>
 	<div
 		class="flex gap-2 items-center backdrop-opacity-10 backdrop-invert bg-white/30 rounded-2xl w-full truncate"
 	>
 		<img
-			src="https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg"
+			src={avatar}
 			alt=""
 			class="w-10 h-8"
 		/>
-		<p class="text-neutral-700 text-xs">Message akjshdkas sadasd asdadas asdasdad a</p>
+		<p class="text-neutral-700 text-xs">{message}</p>
 	</div>
 </div>

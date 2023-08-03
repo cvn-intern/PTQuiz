@@ -274,7 +274,7 @@
 				</div>
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} />
+			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user}/>
 		{/if}
 	</div>
 {/if}
