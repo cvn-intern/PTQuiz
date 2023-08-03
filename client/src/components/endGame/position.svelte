@@ -13,12 +13,17 @@
 
 	export let participants: Participant[];
 	export let length: number;
-	const topThreeParticipants = participants.slice(0, 3).sort((a, b) => b.point - a.point);
+	const topThreeParticipants = participants.slice(0, 3);
+	console.log(topThreeParticipants);
 </script>
 
 <div class="flex justify-center my-28">
 	<div class="flex items-end">
-		<div class="bg-run2st text-white p-4 pt-6 rounded-tl-2xl relative h-60 w-36">
+		<div
+			class={`${
+				topThreeParticipants.length < 2 ? 'hidden' : ''
+			} bg-run2st text-white p-4 pt-6 rounded-tl-2xl relative h-60 w-36`}
+		>
 			<div class="absolute -top-14 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
 					<img
@@ -81,7 +86,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="bg-run3st text-white p-4 pt-6 rounded-tr-2xl relative h-48 w-36">
+		<div
+			class={`${topThreeParticipants.length < 3 ? 'hidden' : ''}
+		bg-run3st text-white p-4 pt-6 rounded-tr-2xl relative h-48 w-36`}
+		>
 			<div class="absolute -top-14 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
 					<img

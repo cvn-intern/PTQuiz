@@ -24,15 +24,16 @@
 		class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center items-center grid-3xl lg:gap-10"
 	>
 		{#if indexOfCategory === 0}
-			<div
-				class="cursor-pointer max-w-sm lg:w-80 bg-gray-50 shadow-lg rounded-xl p-6 flex items-center justify-center w-full h-full"
+			<a
+				href="#"
+				class="cursor-pointer max-w-sm lg:w-80 bg-gray-200 shadow-lg rounded-xl p-6 flex items-center justify-center w-full h-full"
 				on:click={() => addQuiz()}
 			>
 				<Icon
 					icon="zondicons:add-solid"
 					class="w-20 h-20 text-green-500 hover:w-24 hover:h-24"
 				/>
-			</div>
+			</a>
 		{/if}
 		{#each cardList as card}
 			<Card

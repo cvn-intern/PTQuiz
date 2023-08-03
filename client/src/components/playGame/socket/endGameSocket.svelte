@@ -30,7 +30,11 @@
 	</div>
 	<Position {participants} {length} />
 	<div class="flex gap-4 items-center justify-center">
-		<div class="bg-white p-4 overflow-y-scroll no-scrollbar">
+		<div
+			class={`${
+				participants.length > 3 ? 'bg-white p-4 overflow-y-scroll no-scrollbar' : ''
+			}`}
+		>
 			{#each participants.slice(3) as participant, index}
 				<ScoreBoardSocket scoreUser={participant} index={index + 3} {isEndGame} />
 			{/each}
