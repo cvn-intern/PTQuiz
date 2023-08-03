@@ -42,5 +42,9 @@
 		class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
 		on:click={getScoreBoard}>Score board</button
 	>
-	{numberOfAnswer} / {participants.length} players answered
+	<div
+		class="h-fit w-fit bg-orangeLogo text-white font-bold  py-2 px-4 rounded-md cursor-default"
+	>
+		{numberOfAnswer} / {participants.length} Players Answered
+	</div>
 </div>

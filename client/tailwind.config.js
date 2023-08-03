@@ -24,6 +24,8 @@ export default {
 				yellowLogo: '#ffb411',
 				blueLogo: '#00d6ca',
 				run1st: '#FFAA00',
+				run2st: '#179cd4',
+				run3st: '#23d964',
 				bgChat: '#BAD1CD',
 				primaryColor: {
 					50: '#FFF5F2',
@@ -51,7 +53,8 @@ export default {
 				mobile: '12rem',
 				panel: '446px',
 				userInfo: '260px',
-				dropDown: '220px'
+				dropDown: '220px',
+				screenHalf: '65vw'
 			},
 			minHeight: {
 				titleCard: '3.5rem'
@@ -60,6 +63,7 @@ export default {
 				titleCard: '3.75rem',
 				boxCardQuestion: '27rem',
 				halfScreen: '50vh',
+				attempt: '40vh'
 			},
 			maxWidth: {
 				tagName: '33%',
@@ -106,15 +110,15 @@ export default {
 			scale: {
 				102: '1.02'
 			},
-			zIndex: { 
+			zIndex: {
 				60: '60',
 				70: '70',
 				80: '80',
 				90: '90',
-				100: '100',
+				100: '100'
 			},
-			height :{
-				halfScreen: '50vh',
+			height: {
+				halfScreen: '50vh'
 			}
 		}
 	},

@@ -142,4 +142,5 @@
 	"errorWritten": "Answer can't be empty",
 	"errorTitle": "Title can't be empty",
 	"errorGif": "GIF can't be empty"
+	"confirmDelete": "Are you sure you want to delete?"
 }
