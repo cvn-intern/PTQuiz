@@ -14,6 +14,7 @@
 		}
 		return data;
 	});
+	$: essay = essay.toUpperCase();
 </script>
 
 <div class=" grid xl:gap-3 lg:gap-2 md:gap-3 grid-cols-1 gap-3 h-1/3 w-full">

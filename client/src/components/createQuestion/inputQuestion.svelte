@@ -121,19 +121,21 @@
 			/>
 		</label>
 	</div>
-	<textarea
-		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-2/3 md:text-xl w-2/3 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
-		placeholder={$t('common.typeYourQuestionHere')}
-		rows="5"
-		bind:value={title}
-		maxlength="100"
-		disabled={typeOfquestion === 4}
-	/>
-	<textarea
-		class="h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-1/3 md:text-xl w-2/3 text-xl border border-gray-300 rounded-xl text-center p-10 resize-none"
-		placeholder={$t('common.hint')}
-		rows="5"
-		bind:value={hint}
-		maxlength="50"
-	/>
+	<div class="flex w-full gap-3 h-full md:flex-row flex-col">
+		<textarea
+			class=" md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-2/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none"
+			placeholder={$t('common.typeYourQuestionHere')}
+			rows="5"
+			bind:value={title}
+			maxlength="100"
+			disabled={typeOfquestion === 4}
+		/>
+		<textarea
+			class="md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-1/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none"
+			placeholder={$t('common.hint')}
+			rows="5"
+			bind:value={hint}
+			maxlength="50"
+		/>
+	</div>
 </div>
