@@ -9,7 +9,9 @@
 	import { indexNow } from '$stores/indexNowStore';
 	import { t } from '$i18n/translations';
 	let isQuestionSave = true;
+	let isDisabled: boolean = false;
 	function addQuestion() {
+		isDisabled = true;
 		questionData.subscribe((data) => {
 			data.forEach((element) => {
 				if (element.id === '') {
@@ -20,8 +22,12 @@
 				}
 			});
 		});
+
 		if (!isQuestionSave) {
 			showToast('error', $t('validation.SAVE_ALL_BEFORE_ADD_QUESTION'));
+			setTimeout(() => {
+				isDisabled = false;
+			}, 3000);
 			return;
 		}
 		indexNow.update((data) => {
@@ -56,6 +62,9 @@
 			hint: ''
 		};
 		questionData.update((data) => [...data, newQuestion]);
+		setTimeout(() => {
+			isDisabled = false;
+		}, 3000);
 	}
 	let cardListQuestion: any;
 	questionData.subscribe((data) => {
@@ -81,7 +90,11 @@
 		{/each}
 	</div>
 	<hr class="bg-gray-950" />
-	<Button class="bg-secondary text-white hover:bg-darkGreen" on:click={addQuestion}>
+	<Button
+		class="bg-secondary text-white hover:bg-darkGreen"
+		on:click={addQuestion}
+		disabled={isDisabled}
+	>
 		<Icon icon={'gridicons:add-outline'} class="text-xl mr-3" />
 		{$t('common.addQuestion')}
 	</Button>

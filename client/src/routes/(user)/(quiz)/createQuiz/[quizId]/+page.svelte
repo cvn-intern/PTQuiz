@@ -23,6 +23,7 @@
 	let length;
 
 	let isSubmitting: boolean = false;
+	let isDisabled: boolean = false;
 
 	length = questionData.subscribe((data) => {
 		length = data;
@@ -104,70 +105,102 @@
 	questionData.subscribe((data) => {
 		dataSave = data;
 	});
-	function checkInput() {
+	function checkInputChoiceType01() {
 		if (
-			dataSave[index].type === 0 ||
-			dataSave[index].type === 1 ||
-			dataSave[index].type === 6
+			dataSave[index].options.optionA === '' ||
+			dataSave[index].options.optionB === '' ||
+			dataSave[index].options.optionC === '' ||
+			dataSave[index].options.optionD === ''
 		) {
-			if (dataSave[index].title === '') {
-				return false;
-			}
-			if (
-				dataSave[index].options.optionA === '' ||
-				dataSave[index].options.optionB === '' ||
-				dataSave[index].options.optionC === '' ||
-				dataSave[index].options.optionD === ''
-			) {
-				return false;
-			}
-			if (
-				dataSave[index].answers.answerA === false &&
-				dataSave[index].answers.answerB === false &&
-				dataSave[index].answers.answerC === false &&
-				dataSave[index].answers.answerD === false
-			) {
-				return false;
-			}
-		} else if (dataSave[index].type === 2 || dataSave[index].type === 5) {
-			if (dataSave[index].title === '') {
-				return false;
-			}
-			if (dataSave[index].written === '') {
-				return false;
-			}
-		} else if (dataSave[index].type === 3) {
-			if (dataSave[index].title === '') {
-				return false;
-			}
-			if (
-				dataSave[index].answers.answerA === false &&
-				dataSave[index].answers.answerB === false
-			) {
-				return false;
-			}
-		} else if (dataSave[index].type === 4) {
-			if (dataSave[index].written === '') {
-				return false;
-			}
+			return $t('common.errorOptions');
+		}
+		if (
+			dataSave[index].answers.answerA === false &&
+			dataSave[index].answers.answerB === false &&
+			dataSave[index].answers.answerC === false &&
+			dataSave[index].answers.answerD === false
+		) {
+			return $t('common.errorAnswer');
+		}
+		return '';
+	}
+	function checkInputTextType25() {
+		if (dataSave[index].written === '') {
+			return $t('common.errorWritten');
+		}
+		return '';
+	}
+	function checkInputChoiceType3() {
+		if (
+			dataSave[index].answers.answerA === false &&
+			dataSave[index].answers.answerB === false
+		) {
+			return $t('common.errorAnswer');
+		}
+		return '';
+	}
+	function checkInputTextType4() {
+		if (dataSave[index].written === '') {
+			return $t('common.errorWritten');
+		}
+		return '';
+	}
+	function checkInputImageType6() {
+		if (
+			dataSave[index].options.optionA === '' ||
+			dataSave[index].options.optionB === '' ||
+			dataSave[index].options.optionC === '' ||
+			dataSave[index].options.optionD === ''
+		) {
+			return $t('common.errorOptions');
+		}
+		if (
+			dataSave[index].answers.answerA === false &&
+			dataSave[index].answers.answerB === false &&
+			dataSave[index].answers.answerC === false &&
+			dataSave[index].answers.answerD === false
+		) {
+			return $t('common.errorAnswer');
+		}
+		if (dataSave[index].image === '') {
+			return $t('common.errorGif');
+		}
+		return '';
+	}
+
+	function checkInput() {
+		if (dataSave[index].title === '') {
+			return $t('common.errorTitle');
+		}
+		if (dataSave[index].type === 1) {
+			return checkInputChoiceType01();
+		}
+		if (dataSave[index].type === 2 || dataSave[index].type === 5) {
+			return checkInputTextType25();
+		}
+		if (dataSave[index].type === 3) {
+			return checkInputChoiceType3();
+		}
+		if (dataSave[index].type === 4) {
+			return checkInputTextType4();
 		}
 		if (dataSave[index].type === 6) {
-			if (dataSave[index].title === '') {
-				return false;
-			}
-			if (dataSave[index].image === '') {
-				return false;
-			}
+			return checkInputImageType6();
 		}
-		return true;
+		return '';
 	}
 
 	async function handleSave() {
 		showLoadingToast();
 		isSubmitting = true;
-		if (!checkInput()) {
+		isDisabled = true;
+		setTimeout(() => {
+			isDisabled = false;
+		}, 3000);
+		let checkSave = checkInput();
+		if (checkSave !== '') {
 			dismissLoadingToast();
-			showToast('error', t.get('validation.FILL_ALL_FIELDS'));
+			showToast('error', checkSave);
 			isSubmitting = false;
 			return;
 		}
@@ -249,6 +282,7 @@
 		<div class="md:hidden block">
 			<MobileSidebar bind:result={data.result.data} {form} />
 		</div>
+
 		<div class="md:w-5/6 w-full">
 			<div class="flex justify-between gap-10">
 				<div class="flex gap-4 sm:flex-row flex-col">
@@ -259,8 +293,10 @@
 
 				<div class="flex gap-2 sm:flex-row flex-col">
 					<Button class="bg-red-500" on:click={exit}>{$t('common.exit')}</Button>
-					<Button class="bg-green-600" disabled={isSubmitting} on:click={handleSave}
-						>{$t('common.save')}</Button
+					<Button
+						class="bg-green-600"
+						disabled={isSubmitting || isDisabled}
+						on:click={handleSave}>{$t('common.save')}</Button
 					>
 				</div>
 			</div>

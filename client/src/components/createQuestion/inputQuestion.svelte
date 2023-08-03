@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
 	import { questionData } from '$stores/questionInfoStore';
+	import Editor from 'cl-editor/src/Editor.svelte';
+	import { createEventDispatcher, onMount, tick } from 'svelte';
 	export let index: number;
 	let title: string;
 	let imageFile;
@@ -46,6 +48,7 @@
 			return data;
 		});
 	};
+
 </script>
 
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
