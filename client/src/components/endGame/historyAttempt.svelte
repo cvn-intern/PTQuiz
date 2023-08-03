@@ -4,8 +4,8 @@
 	import { t } from '$i18n/translations';
 </script>
 
-<div class="w-full md:w-7/12 max-h-96 overflow-y-scroll no-scrollbar">
-	<div class="flex justify-center overflow-x-auto max-h">
+<div class="w-full md:w-7/12 md:max-h-96 overflow-y-scroll no-scrollbar max-h-attempt">
+	<div class="flex justify-center overflow-x-auto max-h no-scrollbar">
 		<table class="w-full text-left text-gray-500 dark:text-gray-400">
 			<thead class="uppercase bg-darkGreen text-white">
 				<tr>
