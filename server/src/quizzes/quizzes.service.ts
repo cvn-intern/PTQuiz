@@ -43,38 +43,39 @@ export class QuizzesService {
         try {
             page = page || 1;
             const pageSize = 5;
-            let [quizzesOfUser, totalQuizzes] = await this.prisma.$transaction([
-                this.prisma.quizzes.findMany({
-                    where: {
-                        userId: userId,
-                    },
-                    select: {
-                        createdAt: true,
-                        title: true,
-                        description: true,
-                        image: true,
-                        numberQuestions: true,
-                        durationMins: true,
-                        difficultyLevel: true,
-                        id: true,
-                    },
-                    orderBy:
-                        sortBy == 0
-                            ? { createdAt: 'asc' }
-                            : sortBy == 1
-                            ? { createdAt: 'desc' }
-                            : sortBy == 2
-                            ? { title: 'asc' }
-                            : { title: 'desc' },
-                    take: pageSize,
-                    skip: (page - 1) * pageSize,
-                }),
-                this.prisma.quizzes.count({
-                    where: {
-                        userId: userId,
-                    },
-                }),
-            ]);
+            const [quizzesOfUser, totalQuizzes] =
+                await this.prisma.$transaction([
+                    this.prisma.quizzes.findMany({
+                        where: {
+                            userId: userId,
+                        },
+                        select: {
+                            createdAt: true,
+                            title: true,
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                            durationMins: true,
+                            difficultyLevel: true,
+                            id: true,
+                        },
+                        orderBy:
+                            sortBy == 0
+                                ? { createdAt: 'asc' }
+                                : sortBy == 1
+                                ? { createdAt: 'desc' }
+                                : sortBy == 2
+                                ? { title: 'asc' }
+                                : { title: 'desc' },
+                        take: pageSize,
+                        skip: (page - 1) * pageSize,
+                    }),
+                    this.prisma.quizzes.count({
+                        where: {
+                            userId: userId,
+                        },
+                    }),
+                ]);
             return { quizzesOfUser, totalQuizzes };
         } catch (err) {
             throw new HttpException(
@@ -564,7 +565,6 @@ export class QuizzesService {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
     }
-
     async deleteQuiz(userId: string, quizId: string) {
         try {
             if (!quizId) {
@@ -590,6 +590,58 @@ export class QuizzesService {
                     HttpStatus.UNAUTHORIZED,
                 );
             }
+            const rooms = await this.prisma.rooms.findMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            rooms.forEach(async (room) => {
+                const roomParticipants =
+                    await this.prisma.room_participants.findMany({
+                        where: {
+                            roomId: room.id,
+                        },
+                    });
+                roomParticipants.forEach(async (roomParticipant) => {
+                    await this.prisma.room_participants.delete({
+                        where: {
+                            id: roomParticipant.id,
+                        },
+                    });
+                    await this.prisma.user_questions.deleteMany({
+                        where: {
+                            participantId: roomParticipant.participantId,
+                        },
+                    });
+                    await this.prisma.participants.delete({
+                        where: {
+                            id: roomParticipant.participantId,
+                        },
+                    });
+                });
+                await this.prisma.rooms.delete({
+                    where: {
+                        id: room.id,
+                    },
+                });
+            });
+            const participants = await this.prisma.participants.findMany({
+                where: {
+                    quizId: quizId,
+                },
+            });
+            participants.forEach(async (participant) => {
+                await this.prisma.user_questions.deleteMany({
+                    where: {
+                        participantId: participant.id,
+                    },
+                });
+                await this.prisma.participants.delete({
+                    where: {
+                        id: participant.id,
+                    },
+                });
+            });
             await this.prisma.quiz_questions.deleteMany({
                 where: {
                     quizId: quizId,

@@ -45,6 +45,7 @@
 	function handleOptionClick(value: any) {
 		$locale = value;
 		handleChange({ target: { value } });
+		isDropdownOpen = false;
 	}
 
 	function unToggleDropdown() {

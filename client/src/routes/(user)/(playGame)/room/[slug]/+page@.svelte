@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { Modal, Progressbar } from 'flowbite-svelte';
-	import toast from 'svelte-french-toast';
 	import QuestionDisplay from '$components/playGame/socket/questionDisplay.svelte';
 	import type { SocketQuiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
 	import { TypeQuestion } from '$libs/constants/typeQuestion';
@@ -21,7 +19,8 @@
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
 	import ScoreboardModal from '$components/playGame/socket/scoreboardModal.svelte';
 	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
-	import { parse } from 'svelte/compiler';
+	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
+
 	export let data: LayoutData;
 	type Participant = {
 		id: string;
@@ -142,6 +141,9 @@
 		socket.on(EmitChannel.ENDED, (data: any) => {
 			isEndGame = data.isEnded;
 		});
+		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
+			window.location.href = $page.url.href;
+		});
 	});
 	onDestroy(() => {
 		socket.emit(ListenChannel.LEAVE_ROOM, {
@@ -187,20 +189,7 @@
 		{#if errorMessage}
 			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
 		{:else if isEndGame}
-			<div class="flex flex-col justify-center items-center">
-				{#each participants as participant, index}
-					<div class="flex gap-4 items-center">
-						<p>No {index + 1}</p>
-						<p class="truncate w-32">{participant.displayName}</p>
-						<img
-							src={participant.avatar}
-							alt={participant.displayName}
-							class="w-10 h-10 rounded-full ml-4"
-						/>
-						<p>{participant.point}</p>
-					</div>
-				{/each}
-			</div>
+			<EndGameSocket {participants} length={questions.length} />
 		{:else if questions.length > 0}
 			<div>
 				<div class="flex flex-col h-screen w-full font-sans p-2 gap-4">

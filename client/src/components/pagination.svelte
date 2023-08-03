@@ -5,7 +5,7 @@
 	export let totalQuizzes: number;
 	export let quizzes: IQuiz[];
 	const quizzesPerPage = 5;
-	let currentPage = 1;
+	let currentPage = parseInt($page?.params?.page) | 1;
 	const numberOfPages = Math.ceil(totalQuizzes / quizzesPerPage);
 
 	let currentSort = 0;

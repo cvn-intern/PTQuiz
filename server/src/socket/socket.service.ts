@@ -68,6 +68,7 @@ export class SocketService {
     }
 
     async leaveRoom(roomPIN: string, userId: string, socketId: string) {
+        let isHost = false;
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN },
         });
@@ -94,6 +95,17 @@ export class SocketService {
         if (!foundUser) {
             throw new Error(SocketError.SOCKET_USER_NOT_JOINED);
         }
+        if (foundUser.isHost === true) {
+            await this.prisma.rooms.update({
+                where: {
+                    id: room.id,
+                },
+                data: {
+                    isStarted: false,
+                },
+            });
+            isHost = true;
+        }
         await this.prisma.room_participants.delete({
             where: {
                 id: foundUser.id,
@@ -110,8 +122,7 @@ export class SocketService {
             },
         });
         return {
-            id: user.id,
-            displayName: user.displayName,
+            isHost,
         };
     }
 
@@ -158,6 +169,7 @@ export class SocketService {
     }
 
     async leaveRoomImmediately(socketId: string) {
+        let isHost = false;
         const foundUser = await this.prisma.room_participants.findFirst({
             where: {
                 socketId: socketId,
@@ -167,14 +179,27 @@ export class SocketService {
                 id: true,
                 room: {
                     select: {
+                        id: true,
                         PIN: true,
                     },
                 },
                 participantId: true,
+                isHost: true,
             },
         });
         if (!foundUser) {
             return null;
+        }
+        if (foundUser.isHost) {
+            isHost = true;
+            await this.prisma.rooms.update({
+                where: {
+                    id: foundUser.room.id,
+                },
+                data: {
+                    isStarted: false,
+                },
+            });
         }
         await this.prisma.room_participants.delete({
             where: {
@@ -191,7 +216,10 @@ export class SocketService {
                 id: foundUser.participantId,
             },
         });
-        return foundUser.room.PIN;
+        return {
+            roomPIN: foundUser.room.PIN,
+            isHost,
+        };
     }
 
     async endGame(roomPIN: string, userId: string) {
