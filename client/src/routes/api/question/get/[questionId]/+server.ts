@@ -8,7 +8,6 @@ export const GET: RequestHandler = async ({ fetch, params }) => {
 	});
 
 	const result = await response.json();
-
 	if (result.statusCode !== HttpStatus.OK) {
 		throw error(HttpStatus.BAD_REQUEST, result.message);
 	}

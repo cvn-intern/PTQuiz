@@ -52,7 +52,8 @@
 			image: '',
 			type: 1,
 			index: 1,
-			time: 20
+			time: 20,
+			hint: ''
 		};
 		questionData.update((data) => [...data, newQuestion]);
 	}

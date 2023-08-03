@@ -11,6 +11,7 @@ export type QuestionData = {
 	type: number;
 	index: number;
 	time: number;
+	hint: string;
 };
 
 export type AnswerType = {
