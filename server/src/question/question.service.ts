@@ -133,13 +133,6 @@ export class QuestionService {
             }
 
             if (image) {
-                if (!this.image_type.includes(image.mimetype)) {
-                    throw new HttpException(
-                        QuestionError.IMAGE_NOT_VALID,
-                        HttpStatus.BAD_REQUEST,
-                    );
-                }
-
                 if (image.size > parseInt(process.env.MAX_SIZE_IMAGE)) {
                     throw new HttpException(
                         QuestionError.IMAGE_TOO_LARGE,
@@ -148,7 +141,7 @@ export class QuestionService {
                 }
 
                 const image_upload = await this.cloudinary.uploadFile(image);
-                questionData.image = image_upload.url;
+                questionData.image = image_upload.secure_url;
             }
 
             const question = await this.prisma.questions.create({

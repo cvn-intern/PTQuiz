@@ -25,7 +25,7 @@ export const actions = {
 
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
-			message.success.id = result.data.id;
+			message.success.id = result?.data?.id;
 			message.success.message = result.message;
 			message.error.message = result.message;
 
