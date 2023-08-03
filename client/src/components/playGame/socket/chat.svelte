@@ -42,14 +42,14 @@
 			<div class="absolute right-0 top-1/2 -translate-y-1/2 px-2 flex gap-1">
 				<button
 					type="button"
-					class="border-2 bg-indigo-50 p-1 rounded-xl w-full"
+					class="border-2 bg-indigo-50 p-1 rounded-xl w-full hover:bg-zinc-200"
 					on:click={() => {
 						isShowReaction = !isShowReaction;
 					}}
 				>
-					<Icon icon="mdi:emoticon" class="text-3xl text-yellowLogo text-center" />
+					<Icon icon="mdi:emoticon" class="text-2xl text-yellowLogo text-center" />
 				</button>
-				<button type="submit" class=" bg-darkGreen p-1 rounded-xl">
+				<button type="submit" class=" bg-darkGreen rounded-xl hover:bg-secondary p-1">
 					<Icon
 						icon="fluent:send-16-filled"
 						class="text-3xl text-white text-center p-1"
@@ -68,7 +68,7 @@
 		</form>
 		<div class="absolute right-0 z-60 w-full bg-white rounded-md py-0.5 flex justify-end">
 			<button on:click={hanleClickOpenChat}
-				><Icon icon="pixelarticons:close" class="text-2xl mr-3" /></button
+				><Icon icon="pajamas:close-xs" class="text-2xl mr-3 text-zinc-700" /></button
 			>
 		</div>
 	</div>
