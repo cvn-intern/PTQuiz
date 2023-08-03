@@ -61,7 +61,7 @@
 	}
 
 	function getRandomCharacter() {
-		const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		const randomIndex = Math.floor(Math.random() * characters.length);
 		return characters[randomIndex];
 	}
