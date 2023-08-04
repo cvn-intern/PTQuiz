@@ -748,11 +748,16 @@ export class SocketService {
         return result.count;
     }
 
-    async kickUser(roomId: string, hostId: string, participantId: string) {
+    async findUserSocketId(
+        roomId: string,
+        hostId: string,
+        participantId: string,
+    ) {
         const room = await this.prisma.rooms.findFirst({
             where: {
                 id: roomId,
                 userId: hostId,
+                isStarted: false,
             },
         });
         if (!room) {
@@ -765,19 +770,8 @@ export class SocketService {
                 isFinished: false,
             },
         });
-        await this.prisma.room_participants.delete({
-            where: {
-                id: participant.id,
-            },
-        });
-        await this.prisma.participants.delete({
-            where: {
-                id: participantId,
-            },
-        });
         return {
             participant,
-            roomPin: room.PIN,
         };
     }
 }

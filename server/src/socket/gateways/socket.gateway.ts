@@ -399,15 +399,6 @@ export class SocketGateway
         }
     }
 
-    @SubscribeMessage(ListenChannel.BE_KICKED)
-    async handleBeKicked(
-        @ConnectedSocket() client: SocketClient,
-        @MessageBody() data: RoomPinDto,
-    ) {
-        const { roomPIN } = data;
-        client.leave(roomPIN);
-    }
-
     @SubscribeMessage(ListenChannel.KICK_USER)
     async handleKickUser(
         @ConnectedSocket() client: SocketClient,
@@ -415,18 +406,13 @@ export class SocketGateway
     ) {
         try {
             const { roomId, participantId } = data;
-            const { participant, roomPin } = await this.socketService.kickUser(
+            const { participant } = await this.socketService.findUserSocketId(
                 roomId,
                 client.user.id,
                 participantId,
             );
             this.server.to(participant.socketId).emit(EmitChannel.BE_KICKED, {
                 beKicked: true,
-            });
-            const roomParticipants =
-                await this.socketService.getRoomParticipants(roomPin);
-            this.server.to(roomPin).emit(EmitChannel.ROOM_USERS, {
-                roomParticipants,
             });
         } catch (error) {
             throw new WsException({

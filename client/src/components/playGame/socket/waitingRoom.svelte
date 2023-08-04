@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { Socket } from 'socket.io-client';
 	import Chat from './chat.svelte';
-	import { ListenChannel } from '../../../libs/constants/socketChannel';
+	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
 	import SettingsRoom from './settingsRoom.svelte';
+	import { onMount } from 'svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -17,6 +18,24 @@
 	let modalOpen = false;
 	$: participantsHost = participants.filter((participant) => participant.isHost)[0];
 	$: participantsNotHost = participants.filter((participant) => !participant.isHost);
+	$: isKicking = participantsNotHost.map((participant) => {
+		return {
+			id: participant.id,
+			isKicking: false
+		};
+	});
+	const kickUser = (id: string, index: any) => {
+		isKicking = isKicking.map((participant) => {
+			if (participant.id === id) {
+				participant.isKicking = true;
+			}
+			return participant;
+		});
+		socket.emit(ListenChannel.KICK_USER, {
+			participantId: id,
+			roomId: room.id
+		});
+	};
 </script>
 
 <div
@@ -58,7 +77,7 @@
 				<div
 					class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 w-screenHalf"
 				>
-					{#each participantsNotHost as participant (participant.displayName)}
+					{#each participantsNotHost as participant, index}
 						<div class="flex flex-col items-center gap-2 w-40 p-2">
 							<img
 								src={participant.avatar}
@@ -66,6 +85,19 @@
 								class="w-24 h-24 rounded-md"
 							/>
 							<p class="px-4 bg-white/50 rounded-md">{participant.displayName}</p>
+							{#if isHost}
+								<button
+									disabled={isKicking[index].isKicking}
+									class={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl shadow-xl ${
+										isKicking[index].isKicking
+											? 'cursor-wait animate-pulse'
+											: ''
+									}`}
+									on:click={() => {
+										kickUser(participant.id, index);
+									}}>Kick user</button
+								>
+							{/if}
 						</div>
 					{/each}
 				</div>

@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 
 	export let errorMessage: string;
+	let isClicked = false;
 </script>
 
 <div class="w-full h-full flex flex-col gap-8">
@@ -29,7 +30,12 @@
 			<button
 				type="button"
 				class="button"
+				disabled={isClicked}
 				on:click={() => {
+					isClicked = true;
+					setTimeout(() => {
+						isClicked = false;
+					}, 2000);
 					window.location.href = $page.url.href;
 				}}
 			>

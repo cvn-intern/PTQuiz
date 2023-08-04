@@ -65,7 +65,11 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-
+    $: {
+        if(beKicked) {
+            errorMessage = 'You have been kicked';
+        }
+    }
 	onMount(() => {
 		socket.emit(ListenChannel.IS_HOST, {
 			roomPIN: $page.params.slug
@@ -187,8 +191,8 @@
 			}
 		});
 		socket.on(EmitChannel.BE_KICKED, (data: any) => {
-			beKicked = true;
-			socket.emit(ListenChannel.BE_KICKED, {
+			beKicked = data.beKicked;
+			socket.emit(ListenChannel.LEAVE_ROOM, {
 				roomPIN: $page.params.slug
 			});
 			socket.disconnect();
