@@ -2,6 +2,9 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Category from '$components/discovery/category.svelte';
+	import ListCategories from '$components/discovery/listCategories.svelte';
+	import MobileListCategories from '$components/discovery/mobileListCategories.svelte';
+	import Dropdown from '$components/dropdown.svelte';
 	import { t } from '$i18n/translations.js';
 	import type { TypeCategory } from './category.type.js';
 
@@ -21,66 +24,12 @@
 
 <div class="py-8 w-screen">
 	<div
-		class=" flex text-xl font-medium text-center text-gray-500 px-4 md:py-8 md:px-12 lg:px-20 justify-center"
+		class=" flex text-xl font-medium text-center text-gray-500 px-4 md:py-8 md:px-12 lg:px-20 justify-center max-md:hidden"
 	>
-		<ul class="flex flex-wrap gap-5">
-			<li
-				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'all'
-					? cssForCurrentTab
-					: cssForOtherTab}"
-				on:click={() => changeTab('all')}
-			>
-				{$t('common.all')}
-			</li>
-			<li
-				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'math'
-					? cssForCurrentTab
-					: cssForOtherTab}"
-				on:click={() => changeTab('math')}
-			>
-				{$t('common.math')}
-			</li>
-			<li
-				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'science'
-					? cssForCurrentTab
-					: cssForOtherTab}"
-				on:click={() => changeTab('science')}
-			>
-				{$t('common.science')}
-			</li>
-			<li
-				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'history'
-					? cssForCurrentTab
-					: cssForOtherTab}"
-				on:click={() => changeTab('history')}
-			>
-				{$t('common.history')}
-			</li>
-			<li
-				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'english'
-					? cssForCurrentTab
-					: cssForOtherTab}"
-				on:click={() => changeTab('english')}
-			>
-				{$t('common.english')}
-			</li>
-			<li
-				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'geography'
-					? cssForCurrentTab
-					: cssForOtherTab}"
-				on:click={() => changeTab('geography')}
-			>
-				{$t('common.geography')}
-			</li>
-			<li
-				class=" cursor-pointer inline-block p-4 rounded-lg {currentTab === 'other'
-					? cssForCurrentTab
-					: cssForOtherTab}"
-				on:click={() => changeTab('other')}
-			>
-				{$t('common.other')}
-			</li>
-		</ul>
+		<ListCategories />
+	</div>
+	<div class="md:hidden text-xl font-medium text-gray-500 px-4 text-end relative z-20">
+		<MobileListCategories />
 	</div>
 	{#each categories as category, indexOfCategory}
 		{#if category.quizzes.length}
