@@ -14,8 +14,9 @@ export enum EmitChannel {
     ROOM_INFO = 'room-info',
     EXCEPTION = 'exception',
     JOINED = 'joined',
-    ROOM_CHANGED = 'room-changed',
     BE_KICKED = 'be-kicked',
+    ROOM_VISIBILITY = 'room-visibility',
+    ROOM_COUNT = 'room-count',
 }
 
 export enum ListenChannel {

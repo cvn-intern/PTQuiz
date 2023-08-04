@@ -362,8 +362,7 @@
 				{isHost}
 				{socket}
 				user={data.user}
-				room={roomInfo.room}
-                roomPassword={roomInfo.roomPassword}
+				room={roomInfo}
 			/>
 		{/if}
 	</div>

@@ -362,12 +362,14 @@ export class SocketGateway
     ) {
         try {
             const { roomId, isPublic } = data;
-            const room = await this.socketService.changeRoomVisibility(
+            const result = await this.socketService.changeRoomVisibility(
                 roomId,
                 client.user.id,
                 isPublic,
             );
-            client.emit(EmitChannel.ROOM_CHANGED, room);
+            client.emit(EmitChannel.ROOM_VISIBILITY, {
+                isPublic: result,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -382,12 +384,14 @@ export class SocketGateway
     ) {
         try {
             const { roomId, count } = data;
-            const room = await this.socketService.changeRoomCount(
+            const result = await this.socketService.changeRoomCount(
                 roomId,
                 client.user.id,
                 count,
             );
-            client.emit(EmitChannel.ROOM_CHANGED, room);
+            client.emit(EmitChannel.ROOM_COUNT, {
+                count: result,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,

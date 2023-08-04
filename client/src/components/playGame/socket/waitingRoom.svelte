@@ -13,6 +13,7 @@
 	export let isHost: boolean;
 	export let socket: Socket;
 	export let user: any;
+	export let room: any;
 	let modalOpen = false;
 	$: participantsHost = participants.filter((participant) => participant.isHost)[0];
 	$: participantsNotHost = participants.filter((participant) => !participant.isHost);
@@ -38,17 +39,19 @@
 						<Icon icon="formkit:people" class="text-3xl" />
 						{participants.length - 1}
 					</div>
-					<div class="flex flex-col items-center gap-2 w-40 relative mt-2">
-						<Icon icon="emojione-v1:crown" class="text-4xl absolute -top-5" />
-						<img
-							src="https://media2.giphy.com/media/iI4yl51ZcrhI3MCtzD/giphy.gif?cid=ecf05e470v04nwqq7w1kozrwj4ugcx8flr1ol0nv4d55349w&ep=v1_gifs_related&rid=giphy.gif&ct=s"
-							alt={participantsHost.displayName}
-							class="w-24 h-24 rounded-md"
-						/>
-						<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700">
-							{participantsHost.displayName}
-						</p>
-					</div>
+					{#if participantsHost}
+						<div class="flex flex-col items-center gap-2 w-40 relative mt-2">
+							<Icon icon="emojione-v1:crown" class="text-4xl absolute -top-5" />
+							<img
+								src={participantsHost.avatar}
+								alt={participantsHost.displayName}
+								class="w-24 h-24 rounded-md"
+							/>
+							<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700">
+								{participantsHost.displayName}
+							</p>
+						</div>
+					{/if}
 				</div>
 			</div>
 			<div class="w-full flex justify-center">
@@ -58,7 +61,7 @@
 					{#each participantsNotHost as participant (participant.displayName)}
 						<div class="flex flex-col items-center gap-2 w-40 p-2">
 							<img
-								src="https://media4.giphy.com/media/XodmZ5OSlGu5jIRMrH/giphy.gif?cid=ecf05e47mdnh5ksdp0mqk5axyuv96cb89wsj2hs332qus791&ep=v1_gifs_related&rid=giphy.gif&ct=s"
+								src={participant.avatar}
 								alt={participant.displayName}
 								class="w-24 h-24 rounded-md"
 							/>
@@ -70,7 +73,7 @@
 		</div>
 	</div>
 	{#if isHost}
-		<SettingsRoom bind:modalOpen {url} {isHost} />
+		<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} />
 	{/if}
 	<Chat {participants} {socket} {user} />
 	<button
