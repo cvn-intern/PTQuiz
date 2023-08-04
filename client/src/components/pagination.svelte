@@ -1,13 +1,14 @@
 <script lang="ts">
 	import type { IQuiz } from '../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/quiz.type';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	export let totalQuizzes: number;
 	export let quizzes: IQuiz[];
+	export let currentPage: number;
+
 	const quizzesPerPage = 5;
-	let currentPage = parseInt($page?.params?.page) | 1;
 	const numberOfPages = Math.ceil(totalQuizzes / quizzesPerPage);
 	let isShow = true;
+	export let defaultSort: number;
 
 	let currentSort = 0;
 	if ($page.params.sortBy !== undefined) {
@@ -25,14 +26,11 @@
 		const data = await response.json();
 		quizzes = data.quizzesOfUser;
 		totalQuizzes = data.totalQuizzes;
-		goto(`/dashboard/quizzes/${currentPage}/${currentSort}`);
 	}
 
 	function handlePageChange(page: number) {
 		currentPage = page;
-		if ($page.params.sortBy !== undefined) {
-			currentSort = parseInt($page.params.sortBy);
-		}
+		currentSort = defaultSort;
 		fetchQuizzes(currentPage, currentSort);
 	}
 </script>
@@ -71,7 +69,7 @@
 			{#each Array(numberOfPages) as _, i}
 				<li>
 					<a
-						href="/dashboard/quizzes/{i + 1}/{currentSort}"
+						href="#"
 						on:click={() => handlePageChange(i + 1)}
 						aria-current="page"
 						class="z-10 flex items-center justify-center px-3 h-8 leading {currentPage ===
