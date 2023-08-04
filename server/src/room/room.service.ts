@@ -41,16 +41,16 @@ export class RoomService {
 
             if (isExistRoom)
                 throw new HttpException(
-                    `${RoomError.ROOM_EXIST} \n ${process.env.CLIENT_URL}/room/${isExistRoom.PIN}`,
+                    `${RoomError.ROOM_EXIST} ${process.env.CLIENT_URL}/room/${isExistRoom.PIN}`,
                     HttpStatus.BAD_REQUEST,
                 );
-
+            const defaultCount = 6;
             const room = await this.prisma.rooms.create({
                 data: {
                     PIN: Math.floor(Math.random() * 1000000).toString(),
                     quizId: body.quizId,
                     userId: userId,
-                    count: 5,
+                    count: defaultCount,
                     isStarted: false,
                     isPublic: true,
                     roomPassword: (

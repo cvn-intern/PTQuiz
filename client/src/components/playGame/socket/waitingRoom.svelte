@@ -56,7 +56,7 @@
 						class="text-2xl py-2 px-4 text-neutral-700 bg-white/40 border rounded-full flex gap-2"
 					>
 						<Icon icon="formkit:people" class="text-3xl" />
-						{participants.length - 1}
+						{participants.length - 1}/{room.room.count - 1}
 					</div>
 					{#if participantsHost}
 						<div class="flex flex-col items-center gap-2 w-40 relative mt-2">
