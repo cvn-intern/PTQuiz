@@ -87,6 +87,7 @@ model quizzes {
     endDate         DateTime
     isActivated     Boolean
     isShared        Boolean
+    isDeleted       Boolean  @default(false)
 
     user          users            @relation(fields: [userId], references: [id])
     quizQuestions quiz_questions[]

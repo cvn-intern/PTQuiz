@@ -148,5 +148,6 @@
 	"acceptDeleteQuiz": "Vâng, chắc chắn rồi :D",
 	"cancelDeleteQuiz": "Từ từ để suy nghĩ",
 	"viewScoreboard": "Xem bảng điểm",
-	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi"
+	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi",
+	"canNotDeleteQuestion": "Phải có ít nhất một câu hỏi trong bộ câu hỏi"
 }

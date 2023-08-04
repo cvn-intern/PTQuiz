@@ -148,5 +148,6 @@
 	"acceptDeleteQuiz": "Yes, I'm sure",
 	"cancelDeleteQuiz": "No, cancel",
 	"viewScoreboard": "View Scoreboard",
-	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question"
+	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question",
+	"canNotDeleteQuestion": "Must have at least one question"
 }

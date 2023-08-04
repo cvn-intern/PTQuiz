@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, Button } from 'flowbite-svelte';
+	import { Card, Button, Modal } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	export let questionStt: number;
 	export let index: number;
@@ -10,6 +10,8 @@
 	let effect = '';
 	let isSubmitting: boolean = false;
 	let isDisabled: boolean = false;
+	let popupModalCannotDelete = false;
+	let popupModalCanDelete = false;
 	function editIndex() {
 		indexNow.set({
 			index: index
@@ -22,59 +24,59 @@
 	});
 
 	async function deleteQuestion() {
-		if (dataSave.length === 1) {
-			isDisabled = true;
-			setTimeout(() => {
-				isDisabled = false;
-			}, 3000);
-			alert('You must have at least one question');
-			return;
+		isSubmitting = true;
+		isDisabled = true;
+		setTimeout(() => {
+			isDisabled = false;
+		}, 3000);
+		const quizId = $page.params.quizId;
+		const questionId = dataSave[index].id;
+
+		if (questionId) {
+			const response = await fetch(`/api/question/delete/${quizId}/${questionId}`, {
+				method: 'DELETE'
+			});
+
+			const res = await response.json();
+
+			isSubmitting = false;
+
+			if (!response.ok) {
+				const message = `An error has occured: ${response.status}`;
+				alert(message);
+				return;
+			}
 		}
-		if (confirm('Are you sure you want to delete this question?')) {
-			isSubmitting = true;
-			isDisabled = true;
-			setTimeout(() => {
-				isDisabled = false;
-			}, 3000);
-			const quizId = $page.params.quizId;
-			const questionId = dataSave[index].id;
 
-			if (questionId) {
-				const response = await fetch(`/api/question/delete/${quizId}/${questionId}`, {
-					method: 'DELETE'
-				});
+		questionData.update((data) => {
+			data.splice(index, 1);
 
-				const res = await response.json();
-
-				isSubmitting = false;
-
-				if (!response.ok) {
-					const message = `An error has occured: ${response.status}`;
-					alert(message);
-					return;
-				}
+			if (index >= data.length) {
+				index = data.length > 0 ? data.length - 1 : 0;
 			}
 
-			questionData.update((data) => {
-				data.splice(index, 1);
-
-				if (index >= data.length) {
-					index = data.length > 0 ? data.length - 1 : 0;
-				}
-
-				indexNow.set({
-					index: index
-				});
-
-				return data;
+			indexNow.set({
+				index: index
 			});
-		}
+
+			return data;
+		});
 	}
 
 	$: indexNow.subscribe((data) => {
 		if (questionStt - 1 === data.index) effect = 'border border-cyan-600 border-4';
 		else effect = '';
 	});
+	function handleDelete() {
+		console.log('hi em');
+		if (dataSave.length === 1) {
+			popupModalCannotDelete = true;
+			popupModalCanDelete = false;
+		} else {
+			popupModalCanDelete = true;
+			popupModalCannotDelete = false;
+		}
+	}
 </script>
 
 <Card padding="none">
@@ -84,7 +86,7 @@
 			{questionStt}
 		</h5>
 		<div class="flex mt-2 space-x-3 lg:mt-3">
-			<Button class="border" on:click={deleteQuestion} disabled={isSubmitting || isDisabled}
+			<Button class="border" on:click={handleDelete} disabled={isSubmitting || isDisabled}
 				><Icon icon={'iconamoon:trash-light'} class={'text-red-500 text-xl'} /></Button
 			>
 			<Button
@@ -97,3 +99,52 @@
 		</div>
 	</div>
 </Card>
+
+<Modal bind:open={popupModalCannotDelete} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			{$t('common.canNotDeleteQuestion')}
+		</h3>
+		<Button color="green">OK</Button>
+	</div>
+</Modal>
+
+<Modal bind:open={popupModalCanDelete} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			{$t('common.confirmDelete')}
+		</h3>
+		<Button color="red" class="mr-2" on:click={deleteQuestion}
+			>{$t('common.acceptDeleteQuiz')}</Button
+		>
+		<Button color="green">{$t('common.cancelDeleteQuiz')}</Button>
+	</div>
+</Modal>
