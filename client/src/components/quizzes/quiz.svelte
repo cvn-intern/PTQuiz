@@ -172,7 +172,7 @@
 		<Button color="red" class="mr-2" on:click={() => deleteQuiz(id)}
 			>{$t('common.acceptDeleteQuiz')}</Button
 		>
-		<Button color="alternative">{$t('common.cancelDeleteQuiz')}</Button>
+		<Button color="green">{$t('common.cancelDeleteQuiz')}</Button>
 	</div>
 </Modal>
 <DetailQuiz {isOpen} cardInfor={quiz} {questionList} />
