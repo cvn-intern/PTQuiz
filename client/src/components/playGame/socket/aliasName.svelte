@@ -58,12 +58,12 @@
 		<Loading />
 	</div>
 {:else}
-	<div class="flex flex-col justify-center items-center h-full gap-4">
+	<div class="flex flex-col justify-center items-center h-full gap-4 bg-room bg-cover">
 		<div class="logo flex flex-col items-center">
 			<img src={logo} alt="logo" class="w-52 animate-wiggle" />
 		</div>
 		<form
-			class="flex flex-col gap-2 p-4 bg-white rounded-xl w-[300px]"
+			class="flex flex-col gap-2 p-4 bg-white rounded-xl w-[300px] shadow-xl border-2 border-gray-200"
 			on:submit|preventDefault={joinRoom}
 		>
 			<label for="aliasName">Alias Name :</label>
@@ -90,7 +90,7 @@
 			{/if}
 			<button
 				disabled={isDisabled}
-				class={`block mt-2 px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white font-bold text-xl focus:outline-none ${
+				class={`block mt-2 px-4 py-2 rounded-md bg-yellowLogo hover:bg-darkGreen text-white font-bold text-xl focus:outline-none ${
 					isDisabled ? 'opacity-50 cursor-not-allowed' : ''
 				}`}
 				type="submit">GO</button
