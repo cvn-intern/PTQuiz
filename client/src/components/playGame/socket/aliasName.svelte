@@ -58,25 +58,23 @@
 		<Loading />
 	</div>
 {:else}
-	<div class="flex justify-center items-center h-full">
-		<form class="flex flex-col gap-4 p-4 bg-white" on:submit|preventDefault={joinRoom}>
-			<div class="logo flex items-center gap-2">
-				<img src={logo} alt="logo" class="hidden md:block w-16" />
-				<h1
-					class="hidden text-2xl md:block md:text-3xl font-bold font-title text-darkGreen"
-				>
-					Quiz<sup class="text-lg md:text-xl text-orangeLogo">P</sup><sup
-						class="text-lg md:text-xl text-blueLogo">T</sup
-					>
-				</h1>
-			</div>
+	<div class="flex flex-col justify-center items-center h-full gap-4">
+		<div class="logo flex flex-col items-center">
+			<img src={logo} alt="logo" class="w-52 animate-wiggle" />
+		</div>
+		<form
+			class="flex flex-col gap-2 p-4 bg-white rounded-xl w-[300px]"
+			on:submit|preventDefault={joinRoom}
+		>
 			<label for="aliasName">Alias Name :</label>
 			<input
 				type="text"
 				name="aliasName"
 				autocomplete="username"
+				placeholder="Alias Name"
 				id="aliasName"
 				bind:value={aliasName}
+				class="rounded-lg"
 			/>
 			{#if !isPublicRoom && !isHost}
 				<label for="roomPassword">Room password :</label>
@@ -84,16 +82,18 @@
 					type="password"
 					name="roomPassword"
 					id="roomPassword"
+					placeholder="Password"
 					autocomplete="current-password"
 					bind:value={roomPassword}
+					class="rounded-lg"
 				/>
 			{/if}
 			<button
 				disabled={isDisabled}
-				class={`block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none ${
+				class={`block mt-2 px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white font-bold text-xl focus:outline-none ${
 					isDisabled ? 'opacity-50 cursor-not-allowed' : ''
 				}`}
-				type="submit">Ok, GO</button
+				type="submit">GO</button
 			>
 		</form>
 	</div>
