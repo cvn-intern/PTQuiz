@@ -25,9 +25,6 @@
 			} else isFullAnswer = false;
 		}
 	}
-	$: {
-		console.log(numberOfAnswer);
-	}
 </script>
 
 <div class="flex gap-4">
