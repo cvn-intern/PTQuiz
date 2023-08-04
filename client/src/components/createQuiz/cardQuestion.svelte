@@ -68,7 +68,6 @@
 		else effect = '';
 	});
 	function handleDelete() {
-		console.log('hi em');
 		if (dataSave.length === 1) {
 			popupModalCannotDelete = true;
 			popupModalCanDelete = false;
