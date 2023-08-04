@@ -12,14 +12,18 @@
 	export let formEditProfile: FormEditProfile;
 	export let form: any;
 	let isSubmitting = false;
+	let imageFile;
+	let inputFocused = false;
+	let imageUrl: string = user?.avatar;
+
 	$: {
 		if (form?.isDone) {
 			isSubmitting = false;
 		}
+		if (form?.isSuccess) {
+			inputFocused = false;
+		}
 	}
-	let imageFile;
-	let inputFocused = false;
-	let imageUrl: string = user?.avatar;
 
 	const handleCancel = () => {
 		formEditProfile.displayName = user.displayName;
@@ -99,6 +103,7 @@
 					id="displayName"
 					name="displayName"
 					required
+					maxlength="30"
 					bind:value={formEditProfile.displayName}
 					class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
 					placeholder={$t('common.displayName')}

@@ -13,6 +13,9 @@
 		if (form?.isDone) {
 			isSubmitting = false;
 		}
+		if (form?.isSuccess) {
+			inputFocused = false;
+		}
 	}
 	function handleCancel() {
 		formChangePassword = {

@@ -146,5 +146,7 @@
 	"mins": "mins",
 	"secs": "secs",
 	"acceptDeleteQuiz": "Yes, I'm sure",
-	"cancelDeleteQuiz": "No, cancel"
+	"cancelDeleteQuiz": "No, cancel",
+	"viewScoreboard": "View Scoreboard",
+	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question"
 }

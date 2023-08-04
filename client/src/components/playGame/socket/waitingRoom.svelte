@@ -1,9 +1,6 @@
 <script lang="ts">
 	import type { Socket } from 'socket.io-client';
-	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
-	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
-	import { page } from '$app/stores';
 	import Chat from './chat.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
@@ -13,6 +10,7 @@
 	export let isHost: boolean;
 	export let socket: Socket;
 	export let user: any;
+    export let room: any;
 
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 	const handleCopy = () => {

@@ -11,6 +11,9 @@ export enum EmitChannel {
     ANSWER_QUESTION = 'answer-question',
     GIF_QUESTION = 'gif-question',
     HOST_LEFT = 'host-left',
+    ROOM_INFO = 'room-info',
+    EXCEPTION = 'exception',
+    JOINED = 'joined',
 }
 
 export enum ListenChannel {
@@ -25,4 +28,5 @@ export enum ListenChannel {
     PICK_ANSWER = 'pick-answer',
     GET_ANSWER_QUESTION = 'get-answer-question',
     GIF_QUESTION = 'gif-question',
+    GET_ROOM_INFO = 'get-room-info',
 }

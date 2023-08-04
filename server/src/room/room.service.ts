@@ -52,7 +52,10 @@ export class RoomService {
                     userId: userId,
                     count: 0,
                     isStarted: false,
-                    isPublic: false,
+                    isPublic: true,
+                    roomPassword: (
+                        Math.floor(Math.random() * 90000) + 10000
+                    ).toString(),
                     isClosed: false,
                     type: 1,
                     createdAt: new Date(),

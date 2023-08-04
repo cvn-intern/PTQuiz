@@ -21,6 +21,7 @@
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 	export let countDown: any;
+	export let isHost: boolean;
 
 	type CharacterObject = {
 		char: string;
@@ -177,6 +178,6 @@
 	</div>
 {/if}
 
-{#if showModal}
+{#if showModal && !isHost}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}
