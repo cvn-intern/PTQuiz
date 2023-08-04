@@ -3,13 +3,14 @@
 	import Quiz from './quiz.svelte';
 	import { t } from '../../libs/i18n/translations';
 	import { goto } from '$app/navigation';
-	import Icon from '@iconify/svelte';
 	import SortBy from './sortBy.svelte';
 	import type { IQuiz } from '../../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/[[sortBy]]/quiz.type';
 
 	export let quizzes: IQuiz[];
 	export let totalQuizzes: number;
 	let defaultSort = 0;
+	let currentPage = 1;
+
 	function handleCreateQuiz() {
 		goto('/createQuiz');
 	}
@@ -25,7 +26,7 @@
 				>{$t('common.createQuizIntro')}</button
 			>
 			<div class="relative z-10">
-				<SortBy {quizzes} {totalQuizzes} {defaultSort} />
+				<SortBy bind:quizzes {totalQuizzes} bind:defaultSort bind:currentPage />
 			</div>
 		</div>
 		{#each quizzes as quiz}
@@ -41,7 +42,7 @@
 			/>
 		{/each}
 		<div class="">
-			<Pagination {quizzes} {totalQuizzes} />
+			<Pagination bind:quizzes {totalQuizzes} bind:defaultSort bind:currentPage />
 		</div>
 	</div>
 </section>

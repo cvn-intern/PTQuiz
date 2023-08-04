@@ -116,7 +116,6 @@
 				});
 			}
 			countDown = setInterval(() => {
-				console.log($timer);
 				if ($timer >= 1 && isShowOption) {
 					$timer = Math.floor($timer) - 1;
 				}

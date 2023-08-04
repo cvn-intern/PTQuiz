@@ -91,6 +91,12 @@ export class PlaygameService {
                     id: quizId,
                 },
             });
+            if (quiz.numberQuestions === 0) {
+                throw new HttpException(
+                    PlayGameError.CAN_NOT_PLAY,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
             const participant = await this.prisma.participants.create({
                 data: {
                     userId: userId,

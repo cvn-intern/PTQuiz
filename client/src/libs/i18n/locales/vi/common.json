@@ -144,5 +144,6 @@
 	"errorGif": "GIF không được trống",
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
 	"mins": "phút",
-	"secs": "giây"
+	"secs": "giây",
+	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi"
 }
