@@ -20,8 +20,8 @@
 	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
 	import type { SocketQuiz } from '../../play-game/[quizzesId]/play/quizzes.interface';
 	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
-	import Error from '../../../../+error.svelte';
 	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
+	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -46,6 +46,8 @@
 	let isHost: boolean = false;
 	let isPicked = false;
 	let isShowOption: boolean = false;
+	let isJoined: boolean = false;
+	let roomInfo: any;
 
 	let original = 10;
 	let stringTimer: string;
@@ -64,14 +66,23 @@
 	}
 
 	onMount(() => {
+		socket.emit(ListenChannel.IS_HOST, {
+			roomPIN: $page.params.slug
+		});
 		setTimeout(() => {
-			socket.emit(ListenChannel.JOIN_ROOM, {
-				roomPIN: $page.params.slug
-			});
-			socket.emit(ListenChannel.IS_HOST, {
+			socket.emit(ListenChannel.GET_ROOM_INFO, {
 				roomPIN: $page.params.slug
 			});
 		}, 1000);
+		socket.on(EmitChannel.ROOM_INFO, (data: any) => {
+			roomInfo = data;
+			if (roomInfo.room.isStarted) {
+				errorMessage = 'Game has already started';
+			} else if (roomInfo.room.isClosed) {
+				errorMessage = 'Room has been closed';
+			}
+			isLoading = false;
+		});
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
 			if (data.signal === 'join') {
@@ -118,7 +129,6 @@
 				});
 			}
 			countDown = setInterval(() => {
-				console.log($timer);
 				if ($timer >= 1 && isShowOption) {
 					$timer = Math.floor($timer) - 1;
 				}
@@ -166,6 +176,9 @@
 		});
 		socket.on(EmitChannel.ENDED, (data: any) => {
 			isEndGame = data.isEnded;
+			if (!isHost) {
+				participants = data.participants;
+			}
 		});
 		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
 			if (!isHost) {
@@ -200,7 +213,8 @@
 	};
 	const endGame = () => {
 		socket.emit(ListenChannel.END_GAME, {
-			roomPIN: $page.params.slug
+			roomPIN: $page.params.slug,
+			participants
 		});
 	};
 </script>
@@ -213,6 +227,8 @@
 	<div class="bg-greenLight w-full h-screen p-2">
 		{#if errorMessage}
 			<ErrorDisplay {errorMessage} />
+		{:else if !isJoined}
+			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
 			<EndGameSocket {participants} length={questions.length} />
 		{:else if questions.length > 0}
@@ -331,7 +347,15 @@
 				{/if}
 			</div>
 		{:else}
-			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user} />
+			<WaitingRoom
+				{startGame}
+				{url}
+				{participants}
+				{isHost}
+				{socket}
+				user={data.user}
+				room={roomInfo.room}
+			/>
 		{/if}
 	</div>
 {/if}

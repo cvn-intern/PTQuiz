@@ -24,6 +24,8 @@ model users {
     accessToken  String? @db.Text
     refreshToken String? @db.Text
     attempts     Int     @default(0)
+    aliasName    String? @db.Text
+    aliasAvatar  String? @db.Text
 
     questions    questions[]
     quizzes      quizzes[]
@@ -65,8 +67,8 @@ model questions {
 }
 
 model quizzes {
-    id     String @id @default(cuid())
-    userId String // owner
+    id         String  @id @default(cuid())
+    userId     String // owner
     categoryId String?
 
     title           String   @db.Text
@@ -90,7 +92,7 @@ model quizzes {
     quizQuestions quiz_questions[]
     participants  participants[]
     room          rooms[]
-    category      categories?       @relation(fields: [categoryId], references: [id])
+    category      categories?      @relation(fields: [categoryId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -176,11 +178,12 @@ model rooms {
     userId String
     quizId String
 
-    count     Int
-    isStarted Boolean
-    isPublic  Boolean
-    type      Int
-    isClosed  Boolean @default(false)
+    count        Int
+    isStarted    Boolean
+    isPublic     Boolean
+    roomPassword String?
+    type         Int
+    isClosed     Boolean @default(false)
 
     host              users               @relation(fields: [userId], references: [id])
     quiz              quizzes             @relation(fields: [quizId], references: [id])

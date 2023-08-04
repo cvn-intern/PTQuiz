@@ -145,5 +145,6 @@
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
 	"mins": "phút",
 	"secs": "giây",
-	"viewScoreboard": "Xem bảng điểm"
+	"viewScoreboard": "Xem bảng điểm",
+	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi"
 }

@@ -10,7 +10,6 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 		body: formData
 	});
 	const result = await response.json();
-	console.log(result);
 
 	if (result.statusCode !== HttpStatus.CREATED) {
 		throw error(HttpStatus.BAD_REQUEST, result.error || result.message);
