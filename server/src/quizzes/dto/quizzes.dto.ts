@@ -55,7 +55,7 @@ export class QuizzesDto {
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'DurationMins can not be empty' })
     @IsNumber({}, { message: 'DurationMins must be a number' })
-    durationMins = -1;
+    durationMins = 0;
 
     @IsOptional()
     @Transform(({ value }) => JSON.parse(value))

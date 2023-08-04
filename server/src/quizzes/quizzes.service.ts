@@ -176,6 +176,11 @@ export class QuizzesService {
                     point: true,
                     passingPoint: true,
                     difficultyLevel: true,
+                    category: {
+                        select: {
+                            id: true,
+                        },
+                    },
                 },
             });
         } catch (err) {

@@ -62,9 +62,6 @@
 			hint: ''
 		};
 		questionData.update((data) => [...data, newQuestion]);
-		// setTimeout(() => {
-		// 	isDisabled = false;
-		// }, 3000);
 	}
 	let cardListQuestion: any;
 	questionData.subscribe((data) => {
