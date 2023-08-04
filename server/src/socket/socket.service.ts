@@ -658,6 +658,7 @@ export class SocketService {
                 isPublic: true,
                 isClosed: true,
                 isStarted: true,
+                count: true,
             },
         });
         if (!room) {
