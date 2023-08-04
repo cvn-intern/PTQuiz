@@ -12,7 +12,7 @@
 	export let quizzesImage: string | null;
 	export let isShowOption: boolean = true;
 
-	let isGifButtonClicked: boolean = true;
+	let isGifButtonClicked: boolean = false;
 	let modalOpen: boolean = false;
 
 	async function getDuration(url: any) {
@@ -44,7 +44,7 @@
 	async function showGif() {
 		const duration = await getDuration(quizzesImage);
 		isShowGif = true;
-		isGifButtonClicked = false;
+		isGifButtonClicked = true;
 		setTimeout(() => {
 			const gif = document.getElementById('gif');
 			if (gif) {
@@ -90,7 +90,7 @@
 					class={clsx(
 						' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
 						{
-							hidden: isGifButtonClicked || isShowGif
+							hidden: !isGifButtonClicked || isShowGif
 						}
 					)}
 					on:click={startGame}

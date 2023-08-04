@@ -22,6 +22,7 @@
 	export let isShowOption: boolean;
 	let isShowGif: boolean;
 	let modalOpen: boolean = false;
+	let isGifButtonClicked: boolean = false;
 
 	async function getDuration(url: any) {
 		const res = await fetch(url);
@@ -56,6 +57,7 @@
 	async function showGif() {
 		duration = await getDuration(quizzesImage);
 		isShowGif = true;
+		isGifButtonClicked = true;
 		if (isHost) {
 			await socket.emit(EmitChannel.GIF_QUESTION, {
 				roomPIN: $page.params.slug,
@@ -132,7 +134,7 @@
 				class={clsx(
 					' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
 					{
-						hidden: isShowGif
+						hidden: isShowGif || !isGifButtonClicked
 					}
 				)}
 				on:click={startGame}
