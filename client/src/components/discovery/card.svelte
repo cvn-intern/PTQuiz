@@ -25,7 +25,7 @@
 	export let amountOfQuestions = '';
 
 	async function handleStart() {
-		goto(`/playGame/${id}`);
+		goto(`/play-game/${id}`);
 	}
 	const levelI18n = (level: string) => {
 		switch (level) {

@@ -18,7 +18,7 @@
 	import InputTextSocket from '$components/playGame/socket/inputTextSocket.svelte';
 	import HostButton from '$components/playGame/socket/hostButton.svelte';
 	import ScoreboardModal from '$components/playGame/socket/scoreboardModal.svelte';
-	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
+	import ProgressBar from '$components/playGame/progressBar.svelte';
 	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
 
 	export let data: LayoutData;

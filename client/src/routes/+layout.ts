@@ -4,7 +4,7 @@ import type { LayoutData } from './$types';
 import { goto } from '$app/navigation';
 export const load: LayoutData = async ({ data, url }) => {
 	const authPaths = ['/login', '/register', '/forgotPassword'];
-	const protectedPaths = ['/dashboard', '/playGame', '/room', '/createQuiz'];
+	const protectedPaths = ['/dashboard', '/play-game', '/room', '/createQuiz'];
 
 	function isAuthPath(pathname: string) {
 		for (const path of authPaths) {

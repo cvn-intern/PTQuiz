@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Socket } from 'socket.io-client';
-	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/playGame/[quizzesId]/play/quizzes.interface';
+	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/play-game/[quizzesId]/play/quizzes.interface';
 	import { page } from '$app/stores';
 	import { onDestroy, onMount } from 'svelte';
 	import { Modal } from 'flowbite-svelte';

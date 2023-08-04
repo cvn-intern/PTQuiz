@@ -32,7 +32,7 @@
 	}
 	function handleClickPlayButton() {
 		if (!buttonPlayClicked) {
-			goto(`/playGame/${quizzesId}/play`);
+			goto(`/play-game/${quizzesId}/play`);
 			buttonPlayClicked = true;
 		}
 	}

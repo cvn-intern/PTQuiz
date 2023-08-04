@@ -14,7 +14,7 @@
 	import InputText from '$components/playGame/singlePlay/inputText.svelte';
 	import ArrangeAnswer from '$components/playGame/singlePlay/arrangeAnswer.svelte';
 	import CrossWords from '$components/playGame/singlePlay/crossWords.svelte';
-	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
+	import ProgressBar from '$components/playGame/progressBar.svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -49,7 +49,7 @@
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 
 	if (!gameInfo) {
-		window.location.href = `/playGame/${quizzesId}`;
+		window.location.href = `/play-game/${quizzesId}`;
 	}
 
 	let original = quizzes[0].time;
@@ -189,7 +189,7 @@
 
 			if (response.status === 200) {
 				toast.success(t.get('common.success'));
-				goto(`/playGame/${quizzesId}/endGame`);
+				goto(`/play-game/${quizzesId}/end-game`);
 			} else {
 				toast.error(result || 'Invalid submit');
 			}
