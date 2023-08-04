@@ -8,7 +8,6 @@ declare global {
 			user: UserDto | undefined;
 			accessToken: string | undefined;
 			lastPage: string;
-            roomPage: string | undefined;
 		}
 	}
 }
