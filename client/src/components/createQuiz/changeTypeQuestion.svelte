@@ -3,6 +3,7 @@
 	import { Button, Dropdown, Chevron, Radio } from 'flowbite-svelte';
 	import { questionData } from '$stores/questionInfoStore';
 	import { t } from '$i18n/translations';
+	import { isSubmitStore } from '$stores/isSubmitStore';
 	export let index: number;
 	export let defaultType = 1;
 	$: typeOfQuestion = (() => {
@@ -16,6 +17,8 @@
 	})();
 	$: questionData.update((data) => {
 		if (defaultType != data[index].type) {
+			isSubmitStore.set(false);
+
 			data[index].options = {
 				optionA: '',
 				optionB: '',

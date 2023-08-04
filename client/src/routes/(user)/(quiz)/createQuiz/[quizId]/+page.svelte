@@ -20,6 +20,7 @@
 	import Toast from '$components/toast.svelte';
 	import ChangeTimeQuestion from '$components/createQuiz/changeTimeQuestion.svelte';
 	import ChangeCategoryQuestion from '$components/createQuiz/changeCategoryQuestion.svelte';
+	import { isSubmitStore } from '$stores/isSubmitStore';
 	let length;
 
 	let isSubmitting: boolean = false;
@@ -198,14 +199,15 @@
 		setTimeout(() => {
 			isDisabled = false;
 		}, 3000);
+		isSubmitStore.set(true);
 		let checkSave = checkInput();
-		console.log(dataSave[index]);
 		if (checkSave !== '') {
 			dismissLoadingToast();
 			showToast('error', checkSave);
 			isSubmitting = false;
 			return;
 		}
+		isSubmitStore.set(false);
 		let url, method;
 		const quizId = $page.params.quizId;
 
