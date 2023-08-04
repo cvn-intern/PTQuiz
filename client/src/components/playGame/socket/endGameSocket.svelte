@@ -14,12 +14,12 @@
 		correct: number;
 		isAnswered: boolean;
 	};
-	let isEndGame: boolean = true;
+	export let isEndGame: boolean;
 	export let participants: Participant[] = [];
 	export let length: number;
 	let showScoreBoard: boolean = false;
 
-	const clientParticipants = participants.filter((participant) => participant.isHost === false);
+	$: clientParticipants = participants.filter((participant) => participant.isHost === false);
 </script>
 
 <div class="w-full h-full flex flex-col">
@@ -47,12 +47,18 @@
 			}`}
 		>
 			{#each clientParticipants.slice(3) as participant, index}
-				<ScoreBoardSocket scoreUser={participant} index={index + 3} {isEndGame} />
+				<ScoreBoardSocket
+					scoreUser={participant}
+					isScoreboard={false}
+					index={index + 3}
+					bind:isEndGame
+					questionLength={length}
+				/>
 			{/each}
 		</div>
 	</div>
 </div>
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} bind:showScoreBoard />
+	<ScoreboardModal {participants} bind:showScoreBoard questionLength={length} />
 {/if}

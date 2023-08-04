@@ -155,8 +155,8 @@ export class SocketGateway
             this.server.to(roomPIN).emit(EmitChannel.ROOM_MESSAGES, {
                 user: {
                     id: client.user.id,
-                    displayName: client.user.displayName,
-                    avatar: client.user.avatar,
+                    displayName: client.aliasName,
+                    avatar: client.aliasAvatar,
                 },
                 content,
             });
