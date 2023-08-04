@@ -215,10 +215,12 @@ export class QuizzesService {
         }
     }
 
-    async filterCategory(categoryName: string, page: number) {
+    async filterCategory(categoryName: string, page: number, userId: string) {
         try {
             page = page || 1;
             const pageSize = 5;
+
+            categoryName = categoryName.toLowerCase();
 
             if (categoryName === 'all' || categoryName === undefined) {
                 const categories = await this.prisma.categories.findMany();
@@ -228,9 +230,18 @@ export class QuizzesService {
                         this.prisma.quizzes.findMany({
                             where: {
                                 isShared: true,
-                                user: {
-                                    role: Role.Admin,
-                                },
+                                OR: [
+                                    {
+                                        user: {
+                                            role: Role.Admin,
+                                        },
+                                    },
+                                    {
+                                        user: {
+                                            id: userId,
+                                        },
+                                    },
+                                ],
                                 category: {
                                     name: category.name,
                                 },
@@ -312,9 +323,18 @@ export class QuizzesService {
                     this.prisma.quizzes.findMany({
                         where: {
                             isShared: true,
-                            user: {
-                                role: Role.Admin,
-                            },
+                            OR: [
+                                {
+                                    user: {
+                                        role: Role.Admin,
+                                    },
+                                },
+                                {
+                                    user: {
+                                        id: userId,
+                                    },
+                                },
+                            ],
                             category: {
                                 name: categoryName,
                             },
@@ -483,6 +503,7 @@ export class QuizzesService {
                     endDate: quiz.endDate,
                     isActivated: quiz.isActivated,
                     isShared: quiz.isShared,
+                    categoryId: quiz.categoryId,
                 },
             });
             return newQuiz;
@@ -526,7 +547,7 @@ export class QuizzesService {
             }
 
             if (image) {
-                if (image.size > +process.env.MAX_FILE_SIZE) {
+                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuizzesError.FILE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
@@ -559,6 +580,7 @@ export class QuizzesService {
                     endDate: quiz.endDate,
                     isActivated: quiz.isActivated,
                     isShared: quiz.isShared,
+                    categoryId: quiz.categoryId,
                 },
             });
         } catch (error) {

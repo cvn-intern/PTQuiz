@@ -46,6 +46,8 @@ export class QuestionDto {
 
     @ValidateIf((o) => o.type === 2)
     @IsNotEmpty({ message: 'Written can not be empty' })
+    @Transform(({ value }) => value.trim())
+    @Transform(({ value }) => value.toUpperCase())
     written = '';
 
     @IsNotEmpty({ message: 'Type can not be empty' })

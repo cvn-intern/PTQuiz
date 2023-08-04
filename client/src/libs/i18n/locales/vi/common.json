@@ -19,7 +19,7 @@
 	"copyRights": "Bản quyền thuộc về DarkHorse 2023",
 	"address": "106 Nguyễn Văn Trỗi, Quận",
 	"city": "Phú Nhuận, Thành phố Hồ Chí Minh",
-	"myQuizzes": "Quizzes của tôi",
+	"myQuizzes": "Bộ câu hỏi của tôi",
 	"history": "Lịch sử",
 	"profile": "Hồ sơ",
 	"loginToYourAccount": "Đăng nhập vào tài khoản của bạn",
@@ -142,5 +142,7 @@
 	"errorWritten": "Câu trả lời không được trống",
 	"errorTitle": "Tiêu đề câu hỏi không được trống",
 	"errorGif": "GIF không được trống",
-	"confirmDelete": "Bạn có chắc chắn muốn xóa?"
+	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
+	"mins": "phút",
+	"secs": "giây"
 }

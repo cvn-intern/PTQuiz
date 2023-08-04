@@ -24,6 +24,7 @@
 
 	let isSubmitting: boolean = false;
 	let isDisabled: boolean = false;
+	let isDisabledNewQuestion: boolean = false;
 
 	length = questionData.subscribe((data) => {
 		length = data;
@@ -122,7 +123,6 @@
 		) {
 			return $t('common.errorAnswer');
 		}
-		console.log('hi em');
 		return '';
 	}
 	function checkInputTextType25() {
@@ -259,6 +259,7 @@
 		if (response.status === 200) {
 			showToast('success', t.get('common.success'));
 			dataSave[index].id = res.data.id;
+			isDisabledNewQuestion = false;
 		} else showToast('error', res.message);
 	}
 	onMount(() => {
@@ -273,16 +274,20 @@
 	}
 </script>
 
-<Toast {form} />
 <div class="w-full text-slate-950 md:p-10 bg-white p-5">
 	<div class="md:flex gap-6 justify-between">
 		<SidebarCreateQuiz
 			classSidaBar="md:w-1/6 md:flex flex-col gap-10 items-center hidden"
 			bind:result={data.result.data}
 			{form}
+			bind:isDisabled={isDisabledNewQuestion}
 		/>
 		<div class="md:hidden block">
-			<MobileSidebar bind:result={data.result.data} {form} />
+			<MobileSidebar
+				bind:result={data.result.data}
+				{form}
+				bind:isDisabled={isDisabledNewQuestion}
+			/>
 		</div>
 
 		<div class="md:w-5/6 w-full">
