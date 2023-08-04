@@ -28,7 +28,7 @@
 	>
 		<ListCategories />
 	</div>
-	<div class="md:hidden text-xl font-medium text-gray-500 px-4 text-end relative z-20">
+	<div class="md:hidden text-base font-medium text-gray-500 px-4 text-end relative z-20">
 		<MobileListCategories />
 	</div>
 	{#each categories as category, indexOfCategory}

@@ -34,7 +34,7 @@
 	})();
 </script>
 
-<Button class="text-slate-900 border bg-gray-200 hover:bg-gray-400 px-10">
+<Button class="text-slate-900 border bg-gray-200 hover:bg-gray-400 px-10 text-base">
 	<Chevron>{tab}</Chevron></Button
 >
 <Dropdown class="p-3 flex flex-col text-center">
