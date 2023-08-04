@@ -10,8 +10,8 @@
 >
 	<div class="title flex flex-col justify-center py-4 lg:pb-20 gap-10">
 		<h1 class="text-5xl md:text-7xl font-bold font-title text-darkGreen">
-			Quiz<sup class="text-5xl text-orangeLogo">P</sup><sup class="text-5xl text-blueLogo"
-				>T</sup
+			Quiz<sup class="text-3xl md:text-5xl text-orangeLogo">P</sup><sup
+				class="text-3xl md:text-5xl text-blueLogo">T</sup
 			>
 		</h1>
 		<h2 class="text-3xl font-semibold">{$t('common.explore')}</h2>

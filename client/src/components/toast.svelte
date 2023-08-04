@@ -5,12 +5,12 @@
 
 	export let form: any;
 	$: {
-		if (form?.isDone) {
+		if (form?.isDone || form?.message?.isDone) {
 			dismissLoadingToast();
 
 			if (form?.isSuccess) {
 				toast.success(t.get('common.success'));
-			} else {
+			} else if (form?.error) {
 				toast.error(form?.error?.message);
 			}
 		} else if (form) {

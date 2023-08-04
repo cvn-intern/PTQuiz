@@ -26,7 +26,7 @@
 	}
 </script>
 
-<div class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full">
+<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
 	{#each fourOptions as option, index}
 		<button
 			class={`rounded-xl flex p-2 md:p-4 gap-2 items-center text-gray-900 shadow-xl  ${

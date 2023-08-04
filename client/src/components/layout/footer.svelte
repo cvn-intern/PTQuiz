@@ -9,13 +9,14 @@
 		'ri:instagram-fill',
 		'mdi:linkedin'
 	];
-
 </script>
 
 <footer class="bg-primary flex flex-col flex-end">
 	<div class="flex flex-col md:items-center">
-		<div class="container flex flex-col items-start px-4 gap-8 md:flex-row md:justify-between lg:px-24 pt-4">
-			<div class="location flex flex-col items-center gap-2">
+		<div
+			class="container flex flex-col items-start px-4 gap-8 md:flex-row md:justify-between lg:px-24 pt-4"
+		>
+			<div class="location flex flex-col items-start md:items-center gap-2">
 				<h1 class="text-xl font-bold" aria-label="">{$t('common.ourLocation')}</h1>
 				<div class="flex flex-col gap-2">
 					<span class="flex gap-2 items-center cursor-pointer">
@@ -35,7 +36,7 @@
 					</span>
 				</div>
 			</div>
-			<div class="about flex flex-col items-center gap-2">
+			<div class="about flex flex-col items-start md:items-center gap-2">
 				<h1 class="text-xl font-bold">{$t('common.aboutUs')}</h1>
 				<ul class="flex flex-col gap-2">
 					<li class="cursor-pointer" aria-label="About us">{$t('common.aboutUs')}</li>
@@ -43,7 +44,7 @@
 					<li class="cursor-pointer" aria-label="FAQS">{$t('common.faq')}</li>
 				</ul>
 			</div>
-			<div class="contact flex flex-col items-center gap-2">
+			<div class="contact flex flex-col items-start md:items-center gap-2">
 				<h1 class="text-xl font-bold">{$t('common.contactUs')}</h1>
 				<div class="flex gap-2 cursor-pointer">
 					{#each contactIcons as icon}

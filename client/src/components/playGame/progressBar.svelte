@@ -8,12 +8,10 @@
 		const timer = Number(stringTimer);
 
 		switch (true) {
-			case timer > 75:
-				return 'blue';
-			case timer > 50:
-				return 'indigo';
-			case timer > 25:
-				return 'purple';
+			case timer > 66.66:
+				return 'green';
+			case timer > 33.33:
+				return 'yellow';
 			case timer > 0:
 				return 'red';
 			default:

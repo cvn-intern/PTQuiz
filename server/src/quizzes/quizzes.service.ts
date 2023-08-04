@@ -461,7 +461,7 @@ export class QuizzesService {
                     const image_upload = await this.cloudinary.uploadFile(
                         image,
                     );
-                    url = image_upload.url;
+                    url = image_upload.secure_url;
                 } else url = process.env.DEFAULT_THUMBNAIL;
             } else url = process.env.DEFAULT_THUMBNAIL;
             const newQuiz = await this.prisma.quizzes.create({
