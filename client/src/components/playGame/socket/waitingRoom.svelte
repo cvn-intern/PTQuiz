@@ -5,6 +5,7 @@
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
 	import ImageModal from '../singlePlay/imageModal.svelte';
+	import SettingsRoom from './settingsRoom.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -13,25 +14,27 @@
 	export let isHost: boolean;
 	export let socket: Socket;
 	export let user: any;
-	$: isPublic = true;
-	$: size = modalOpen ? '500x500' : '100x100';
-	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=${size}`;
-	const handleCopy = () => {
-		navigator.clipboard.writeText(url);
-		toast.success('Copied to clipboard');
-	};
+	// $: isPublic = true;
+	// $: size = modalOpen ? '500x500' : '100x100';
+	// const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=${size}`;
+	// const handleCopy = () => {
+	// 	navigator.clipboard.writeText(url);
+	// 	toast.success('Copied to clipboard');
+	// };
 	let modalOpen = false;
 	$: participantsHost = participants.filter((participant) => participant.isHost)[0];
 	$: participantsNotHost = participants.filter((participant) => !participant.isHost);
-	let valuePassword = '123456';
-	const handleCopyPassword = () => {
-		navigator.clipboard.writeText(valuePassword);
-		toast.success('Copied to clipboard');
-	};
+	// let valuePassword = '123456';
+	// const handleCopyPassword = () => {
+	// 	navigator.clipboard.writeText(valuePassword);
+	// 	toast.success('Copied to clipboard');
+	// };
 </script>
 
 <div
-	class="flex flex-row gap-4 h-full {isHost ? 'justify-between' : 'justify-center'} p-4 relative bg-room bg-cover"
+	class="flex flex-row gap-4 h-full {isHost
+		? 'justify-between'
+		: 'justify-center'} p-4 relative bg-room bg-cover"
 >
 	<div class="w-full flex flex-col justify-between items-center">
 		<div>
@@ -80,7 +83,8 @@
 		</div>
 	</div>
 	{#if isHost}
-		<div class="absolute md:top-0 md:right-2 bottom-0">
+		<SettingsRoom bind:modalOpen {url} {isHost} />
+		<!-- <div class="absolute md:top-0 md:right-2 bottom-0">
 			<div
 				class="flex flex-col w-full justify-center items-center gap-4 md:pt-6 pt-0 {isHost
 					? 'block'
@@ -135,7 +139,7 @@
 					</p>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	{/if}
 	<Chat {participants} {socket} {user} />
 	<button
