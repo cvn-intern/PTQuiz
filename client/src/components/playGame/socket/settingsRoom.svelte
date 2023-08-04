@@ -32,9 +32,6 @@
 			closeModal();
 		}
 	};
-	// onMount(() => {
-	// 	openModal();
-	// });
 </script>
 
 <button class="absolute" on:click={handleModal}>
