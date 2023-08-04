@@ -145,5 +145,6 @@
 	"confirmDelete": "Are you sure you want to delete?",
 	"mins": "mins",
 	"secs": "secs",
+	"viewScoreboard": "View Scoreboard",
 	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question"
 }

@@ -16,12 +16,12 @@
 	const topThreeParticipants = participants.slice(0, 3);
 </script>
 
-<div class="flex justify-center my-28">
+<div class="flex justify-center mt-28 mb-10">
 	<div class="flex items-end">
 		<div
 			class={`${
 				topThreeParticipants.length < 2 ? 'hidden' : ''
-			} bg-run2st text-white p-4 pt-6 rounded-tl-2xl relative h-60 w-36`}
+			} bg-run2st text-white p-4 pt-6 rounded-tl-2xl relative h-52 w-24 md:h-60 md:w-36`}
 		>
 			<div class="absolute -top-14 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 			<div class="flex flex-col items-center text-center gap-4">
-				<h2 class="text-4xl font-semibold">2st</h2>
+				<h2 class="text-2xl md:text-4xl font-semibold">2st</h2>
 				<div>
 					<p>
 						{topThreeParticipants[1]?.displayName
@@ -53,7 +53,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="bg-run1st text-white p-4 pt-6 rounded-t-2xl relative h-72 w-36">
+		<div class="bg-run1st text-white p-4 pt-6 rounded-t-2xl relative w-24 h-64 md:h-72 md:w-36">
 			<div class="absolute -top-20 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
 					<Icon icon="noto:crown" class="text-3xl" />
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			<div class="flex flex-col items-center text-center gap-4">
-				<h2 class="text-4xl font-semibold">1st</h2>
+				<h2 class="text-2xl md:text-4xl font-semibold">1st</h2>
 				<div>
 					<p>
 						{topThreeParticipants[0]?.displayName
@@ -87,7 +87,7 @@
 		</div>
 		<div
 			class={`${topThreeParticipants.length < 3 ? 'hidden' : ''}
-		bg-run3st text-white p-4 pt-6 rounded-tr-2xl relative h-48 w-36`}
+		bg-run3st text-white p-4 pt-6 rounded-tr-2xl relative w-24 h-40 md:h-48 md:w-36`}
 		>
 			<div class="absolute -top-14 z-10 left-1/2 -translate-x-1/2 w-full">
 				<div class="flex flex-col justify-center items-center">
@@ -101,7 +101,7 @@
 				</div>
 			</div>
 			<div class="flex flex-col items-center text-center gap-2">
-				<h2 class="text-4xl font-semibold">3st</h2>
+				<h2 class="text-2xl md:text-4xl font-semibold">3st</h2>
 				<div>
 					<p>
 						{topThreeParticipants[2]?.displayName

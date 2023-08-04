@@ -20,6 +20,7 @@
 	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
 	import type { SocketQuiz } from '../../play-game/[quizzesId]/play/quizzes.interface';
 	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
+	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 
 	export let data: LayoutData;
@@ -209,9 +210,6 @@
 
 	const getScoreBoard = () => {
 		showScoreBoard = true;
-		setTimeout(() => {
-			showScoreBoard = false;
-		}, 5000);
 	};
 	const endGame = () => {
 		socket.emit(ListenChannel.END_GAME, {
@@ -228,7 +226,7 @@
 {:else}
 	<div class="bg-greenLight w-full h-screen p-2">
 		{#if errorMessage}
-			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
+			<ErrorDisplay {errorMessage} />
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
@@ -363,5 +361,5 @@
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} {showScoreBoard} />
+	<ScoreboardModal {participants} bind:showScoreBoard questionLength = {questions.length}/>
 {/if}
