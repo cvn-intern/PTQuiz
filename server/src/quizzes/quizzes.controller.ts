@@ -100,8 +100,13 @@ export class QuizzesController {
     async filterCategory(
         @Query('categoryName') categoryName: string,
         @Query('page') page: number,
+        @Query('userId') userId: string,
     ) {
-        return await this.quizzesService.filterCategory(categoryName, page);
+        return await this.quizzesService.filterCategory(
+            categoryName,
+            page,
+            userId,
+        );
     }
 
     @Get('/all-questions')

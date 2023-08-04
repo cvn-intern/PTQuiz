@@ -12,7 +12,7 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 	const result = await response.json();
 
 	if (result.statusCode !== HttpStatus.CREATED) {
-		throw error(HttpStatus.BAD_REQUEST, result.error);
+		throw error(HttpStatus.BAD_REQUEST, result.error || result.message);
 	}
 	return json(result);
 };

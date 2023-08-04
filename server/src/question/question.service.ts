@@ -4,6 +4,7 @@ import { QuestionResponse } from './type/questionResponse.type';
 import { QuestionDto } from './dto/question.dto';
 import { QuestionError } from '../error/index';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { TypeQuestion } from './type';
 
 @Injectable()
 export class QuestionService {
@@ -20,14 +21,26 @@ export class QuestionService {
                 where: {
                     quizId: quizId,
                 },
+                select: {
+                    question: {
+                        select: {
+                            time: true,
+                        },
+                    },
+                },
             });
             const numberQuestion = questions.length;
+            let time = 0;
+            questions.forEach((question) => {
+                time += question.question.time;
+            });
             await this.prisma.quizzes.update({
                 where: {
                     id: quizId,
                 },
                 data: {
                     numberQuestions: numberQuestion,
+                    durationMins: time,
                 },
             });
         } catch (err) {
@@ -133,7 +146,7 @@ export class QuestionService {
             }
 
             if (image) {
-                if (image.size > parseInt(process.env.MAX_SIZE_IMAGE)) {
+                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuestionError.IMAGE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
@@ -142,6 +155,55 @@ export class QuestionService {
 
                 const image_upload = await this.cloudinary.uploadFile(image);
                 questionData.image = image_upload.secure_url;
+            }
+            if (questionData.type === TypeQuestion.SINGLE_CHOICE) {
+                let totalTrueAnswer = 1;
+                questionData.answerA ? totalTrueAnswer++ : totalTrueAnswer;
+                questionData.answerB ? totalTrueAnswer++ : totalTrueAnswer;
+                questionData.answerC ? totalTrueAnswer++ : totalTrueAnswer;
+                questionData.answerD ? totalTrueAnswer++ : totalTrueAnswer;
+                if (totalTrueAnswer > 1) {
+                    throw new HttpException(
+                        QuestionError.SINGLE_CHOICE_MORE_THAN_ONE_ANSWER,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+            }
+            if (
+                questionData.type === TypeQuestion.SINGLE_CHOICE ||
+                questionData.type === TypeQuestion.MULTIPLE_CHOICE
+            ) {
+                let totalTrueAnswer = 0;
+                questionData.answerA ? totalTrueAnswer++ : totalTrueAnswer;
+                questionData.answerB ? totalTrueAnswer++ : totalTrueAnswer;
+                questionData.answerC ? totalTrueAnswer++ : totalTrueAnswer;
+                questionData.answerD ? totalTrueAnswer++ : totalTrueAnswer;
+                if (totalTrueAnswer === 0) {
+                    throw new HttpException(
+                        QuestionError.MUST_HAVE_CORRECT_ANSWER,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+            }
+            if (
+                questionData.type === TypeQuestion.ESSAY ||
+                questionData.type === TypeQuestion.INPUT_TEXT ||
+                questionData.type === TypeQuestion.ARRANGE_WORD
+            ) {
+                let spaceIndex = questionData.written.indexOf(' ');
+                if (spaceIndex !== -1) {
+                    throw new HttpException(
+                        QuestionError.QUESTION_WRITTEN_INVALID,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+            }
+            //type of question not in enum TypeQuestion
+            if (questionData.type < 0 || questionData.type > 6) {
+                throw new HttpException(
+                    QuestionError.QUESTION_TYPE_INVALID,
+                    HttpStatus.BAD_REQUEST,
+                );
             }
 
             const question = await this.prisma.questions.create({
@@ -208,7 +270,7 @@ export class QuestionService {
             }
 
             if (image) {
-                if (image.size > parseInt(process.env.MAX_SIZE_IMAGE)) {
+                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuestionError.IMAGE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,

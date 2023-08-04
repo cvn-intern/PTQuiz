@@ -120,4 +120,7 @@ export class QuizzesDto {
     @IsNotEmpty({ message: 'IsShared can not be empty' })
     @IsBoolean({ message: 'IsShared must be a boolean' })
     isShared = true;
+
+    @IsOptional()
+    categoryId = 'clkjsrewg0004k6m5dt89zll5';
 }

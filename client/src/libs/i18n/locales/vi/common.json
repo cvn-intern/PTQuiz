@@ -19,7 +19,7 @@
 	"copyRights": "Bản quyền thuộc về DarkHorse 2023",
 	"address": "106 Nguyễn Văn Trỗi, Quận",
 	"city": "Phú Nhuận, Thành phố Hồ Chí Minh",
-	"myQuizzes": "Quizzes của tôi",
+	"myQuizzes": "Bộ câu hỏi của tôi",
 	"history": "Lịch sử",
 	"profile": "Hồ sơ",
 	"loginToYourAccount": "Đăng nhập vào tài khoản của bạn",
@@ -145,5 +145,11 @@
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
 	"openChatHere": "Mở trò chuyện ở đây",
 	"clickHereToCopyLink": "Sao chép liên kết",
-	"waitingForPlayers": "Đang chờ người chơi...."
+	"waitingForPlayers": "Đang chờ người chơi....",
+	"mins": "phút",
+	"secs": "giây",
+	"acceptDeleteQuiz": "Vâng, chắc chắn rồi :D",
+	"cancelDeleteQuiz": "Từ từ để suy nghĩ",
+	"viewScoreboard": "Xem bảng điểm",
+	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi"
 }

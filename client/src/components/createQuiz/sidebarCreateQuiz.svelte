@@ -9,7 +9,7 @@
 	import { indexNow } from '$stores/indexNowStore';
 	import { t } from '$i18n/translations';
 	let isQuestionSave = true;
-	let isDisabled: boolean = false;
+	export let isDisabled: boolean = false;
 	function addQuestion() {
 		isDisabled = true;
 		questionData.subscribe((data) => {
@@ -62,9 +62,9 @@
 			hint: ''
 		};
 		questionData.update((data) => [...data, newQuestion]);
-		setTimeout(() => {
-			isDisabled = false;
-		}, 3000);
+		// setTimeout(() => {
+		// 	isDisabled = false;
+		// }, 3000);
 	}
 	let cardListQuestion: any;
 	questionData.subscribe((data) => {

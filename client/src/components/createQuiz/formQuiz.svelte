@@ -27,6 +27,9 @@
 	};
 	$: if (form?.message?.isDone || form?.isDone) {
 		dismissLoadingToast();
+		if (form?.error?.message) {
+			toast.error(form?.error?.message);
+		}
 		isSubmitting = false;
 	}
 	$: if (form?.isSuccess && !isUpdate) {

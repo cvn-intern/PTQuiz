@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { RoomError } from 'src/error';
 
 @Injectable()
 export class RoomService {
@@ -9,7 +10,7 @@ export class RoomService {
         try {
             if (!body.quizId)
                 throw new HttpException(
-                    'QuizId is required',
+                    RoomError.QUIZID_REQUIRED,
                     HttpStatus.BAD_REQUEST,
                 );
 
@@ -20,7 +21,13 @@ export class RoomService {
             });
             if (!isExistQuiz)
                 throw new HttpException(
-                    'Quiz is not exist',
+                    RoomError.QUIZ_NOT_FOUND,
+                    HttpStatus.BAD_REQUEST,
+                );
+
+            if (isExistQuiz.numberQuestions === 0)
+                throw new HttpException(
+                    RoomError.QUIZ_EMPTY,
                     HttpStatus.BAD_REQUEST,
                 );
 
@@ -34,7 +41,7 @@ export class RoomService {
 
             if (isExistRoom)
                 throw new HttpException(
-                    `Room is already exist. Your room URL is : \n ${process.env.CLIENT_URL}/room/${isExistRoom.PIN}`,
+                    `${RoomError.ROOM_EXIST} \n ${process.env.CLIENT_URL}/room/${isExistRoom.PIN}`,
                     HttpStatus.BAD_REQUEST,
                 );
 
@@ -45,7 +52,10 @@ export class RoomService {
                     userId: userId,
                     count: 0,
                     isStarted: false,
-                    isPublic: false,
+                    isPublic: true,
+                    roomPassword: (
+                        Math.floor(Math.random() * 90000) + 10000
+                    ).toString(),
                     isClosed: false,
                     type: 1,
                     createdAt: new Date(),
@@ -64,7 +74,7 @@ export class RoomService {
         try {
             if (!body.roomId)
                 throw new HttpException(
-                    'RoomId is required',
+                    RoomError.ROOMID_REQUIRED,
                     HttpStatus.BAD_REQUEST,
                 );
 
@@ -76,7 +86,7 @@ export class RoomService {
             });
             if (!room)
                 throw new HttpException(
-                    'Room is not exist',
+                    RoomError.ROOM_NOT_EXIST,
                     HttpStatus.BAD_REQUEST,
                 );
 

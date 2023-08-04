@@ -20,12 +20,12 @@
 	});
 </script>
 
-<button class="absolute right-2" on:click={openModal}>
+<button class="absolute top-10 right-2" on:click={openModal}>
 	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
 </button>
 
 {#if modalIsOpen}
-	<button class="absolute right-2 mt-12 z-50">
+	<button class="absolute top-10 right-2 mt-12 z-50">
 		<div class="bg-primary rounded-xl p-2 shadow-lg relative group flex flex-col">
 			<div class="flex flex-col gap-2 items-center">
 				<div

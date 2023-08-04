@@ -1,9 +1,10 @@
- <script lang="ts">
+<script lang="ts">
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import clsx from 'clsx';
 	import { t } from '$i18n/translations';
 	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
+	import { showToast } from '$libs/toast/toast';
 	export let image = '';
 	export let nameOfQuiz = '';
 	export let author = '';
@@ -21,11 +22,14 @@
 	} else {
 		stringLevel = 'Undefined';
 	}
-	export let time = '';
+	export let time: number;
 	export let amountOfQuestions = '';
 
 	async function handleStart() {
-		goto(`/play-game/${id}`);
+		if (cardInfor?.numberQuestions) goto(`/play-game/${id}`);
+		else {
+			showToast('error', $t('common.theQuizMustHaveAtLeastOneQuestion'));
+		}
 	}
 	const levelI18n = (level: string) => {
 		switch (level) {
@@ -42,11 +46,11 @@
 
 	$: isOpen = false;
 	$: questionList = [];
-	
+
 	const handleClickView = async () => {
 		isOpen = !isOpen;
 		const result = await getQuestionOfQuiz(cardInfor.id);
-		if(result.statusCode === 200) {
+		if (result.statusCode === 200) {
 			questionList = result.data;
 		}
 	};
@@ -55,10 +59,17 @@
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
-			},
+			}
 		});
 		const result = await response.json();
 		return result;
+	}
+
+	function convertSecondsToMinutes(seconds: number): string {
+		if (seconds === 0) return `0 ${$t('common.mins')} : 0 ${$t('common.secs')} `;
+		let minutes = Math.floor(seconds / 60);
+		let remainingSeconds = seconds % 60;
+		return `${minutes} ${$t('common.mins')} : ${remainingSeconds} ${$t('common.secs')}`;
 	}
 </script>
 
@@ -88,7 +99,7 @@
 					</div>
 					<div class="flex items-center gap-2">
 						<Icon icon={'ph:clock'} color={'blue'} />
-						<span class="mr-2 text-gray-400"> {$t('common.time')}: {time}</span>
+						<span class="mr-2 text-gray-400"> {convertSecondsToMinutes(time)}</span>
 					</div>
 				</div>
 				<div class="flex items-start w-full justify-between mt-4 gap-1">
@@ -136,4 +147,4 @@
 		</div>
 	</div>
 </div>
-<DetailQuiz {isOpen} {cardInfor} {questionList}/>
+<DetailQuiz {isOpen} {cardInfor} {questionList} />

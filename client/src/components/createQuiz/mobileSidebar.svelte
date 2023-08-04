@@ -11,6 +11,7 @@
 	};
 	export let form: any;
 	export let result: any;
+	export let isDisabled: boolean;
 </script>
 
 <div class="text-start my-3">
@@ -45,5 +46,10 @@
 		</h5>
 		<CloseButton on:click={() => (hidden1 = true)} class="mb-4 dark:text-white" />
 	</div>
-	<SidebarCreateQuiz {form} classSidaBar={'flex flex-col gap-10 items-center'} bind:result />
+	<SidebarCreateQuiz
+		{form}
+		classSidaBar={'flex flex-col gap-10 items-center'}
+		bind:result
+		bind:isDisabled
+	/>
 </Drawer>

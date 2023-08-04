@@ -6,6 +6,7 @@
 	import { t } from '$i18n/translations';
 	import { gameInfoStore } from '$stores/gameInfoStore';
 	import { onMount } from 'svelte';
+	import { showToast } from '$libs/toast/toast.js';
 	export let data;
 
 	let gameInfo = data.gameInfo;
@@ -31,9 +32,13 @@
 		}
 	}
 	function handleClickPlayButton() {
-		if (!buttonPlayClicked) {
-			goto(`/play-game/${quizzesId}/play`);
-			buttonPlayClicked = true;
+		if (gameInfo?.id) {
+			if (!buttonPlayClicked) {
+				goto(`/play-game/${quizzesId}/play`);
+				buttonPlayClicked = true;
+			}
+		} else {
+			showToast('error', "Cannot find game's information");
 		}
 	}
 </script>
@@ -74,5 +79,4 @@
 			</button>
 		</div>
 	</div>
-	
 </div>

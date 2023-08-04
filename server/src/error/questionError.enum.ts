@@ -30,4 +30,8 @@ export enum QuestionError {
     NOT_AUTHORIZED = 'You are not authorized to update',
     IMAGE_NOT_VALID = 'Image not valid',
     IMAGE_TOO_LARGE = 'Image too large',
+    IMAGE_NOT_FOUND = 'Image not found',
+    SINGLE_CHOICE_MORE_THAN_ONE_ANSWER = 'Single choice can not more than one answer',
+    MULTIPLE_CHOICE_LESS_THAN_TWO_ANSWER = 'Multiple choice can not less than two answer',
+    MUST_HAVE_CORRECT_ANSWER = 'Must have correct answer',
 }

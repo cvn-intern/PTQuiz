@@ -1,9 +1,6 @@
 <script lang="ts">
 	import type { Socket } from 'socket.io-client';
-	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
-	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
-	import { page } from '$app/stores';
 	import Chat from './chat.svelte';
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
@@ -34,7 +31,7 @@
 </script>
 
 <div
-	class="flex flex-row gap-4 h-full {isHost ? 'justify-between' : 'justify-center'} p-4 relative bg-room"
+	class="flex flex-row gap-4 h-full {isHost ? 'justify-between' : 'justify-center'} p-4 relative bg-room bg-cover"
 >
 	<div class="w-full flex flex-col justify-between items-center">
 		<div>
