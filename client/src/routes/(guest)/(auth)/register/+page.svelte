@@ -20,7 +20,7 @@
 	<Toast {form} />
 
 	<div class="w-panel bg-white rounded-3xl shadow-md shadow-zinc-400 my-6">
-		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-8">
+		<div class="w-full p-6 flex justify-between flex-col items-center gap-4">
 			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.signUp')}</h1>
 			<form
 				method="POST"
@@ -36,7 +36,7 @@
 					};
 				}}
 			>
-				<div class="py-4">
+				<div class="py-2">
 					<label for="displayName" class="mb-1 text-black"
 						>{$t('common.displayName')}</label
 					>
@@ -46,7 +46,7 @@
 						id="displayName"
 						required
 						placeholder={$t('common.displayName')}
-						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						class="block w-full p-3 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.displayName}
 						<label for="displayName" class="mb-1 text-red-500"
@@ -54,7 +54,7 @@
 						>
 					{/if}
 				</div>
-				<div class="py-4">
+				<div class="py-2">
 					<label for="email" class="mb-1 text-black">{$t('common.email')}</label>
 					<input
 						type="email"
@@ -62,13 +62,13 @@
 						id="email"
 						required
 						placeholder={$t('common.email')}
-						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						class="block w-full p-3 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
 						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
 					{/if}
 				</div>
-				<div class="py-4">
+				<div class="py-2">
 					<label for="password" class="mb-1 text-black">{$t('common.password')}</label>
 					<input
 						type="password"
@@ -76,13 +76,13 @@
 						id="password"
 						required
 						placeholder={$t('common.password')}
-						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						class="block w-full p-3 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
 						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
 					{/if}
 				</div>
-				<div class="py-4">
+				<div class="py-2">
 					<label for="confirmPassword" class="mb-1 text-black"
 						>{$t('common.confirmPassword')}</label
 					>
@@ -92,7 +92,7 @@
 						id="confirmPassword"
 						required
 						placeholder={$t('common.confirmPassword')}
-						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						class="block w-full p-3 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.confirmPassword}
 						<label for="confirmPassword" class="mb-1 text-red-500"
@@ -106,7 +106,7 @@
 						type="submit"
 						disabled={isSubmitting}
 						id="submit"
-						class={`uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white ${
+						class={`uppercase block w-full p-3 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none text-white ${
 							isSubmitting ? 'opacity-50 cursor-wait' : ''
 						}`}>{$t('common.signUp')}</button
 					>
@@ -126,7 +126,6 @@
 					</p>
 				</div>
 			</div>
-			<div class="flex justify-center items-center" />
 		</div>
 	</div>
 </section>

@@ -143,7 +143,13 @@
 	"errorTitle": "Tiêu đề câu hỏi không được trống",
 	"errorGif": "GIF không được trống",
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
+	"openChatHere": "Mở trò chuyện ở đây",
+	"clickHereToCopyLink": "Sao chép liên kết",
+	"waitingForPlayers": "Đang chờ người chơi....",
 	"mins": "phút",
 	"secs": "giây",
+	"acceptDeleteQuiz": "Vâng, chắc chắn rồi :D",
+	"cancelDeleteQuiz": "Từ từ để suy nghĩ",
+	"viewScoreboard": "Xem bảng điểm",
 	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi"
 }

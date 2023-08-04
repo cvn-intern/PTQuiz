@@ -6,6 +6,8 @@
 	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
 	import { page } from '$app/stores';
 	import Loading from '$components/loading.svelte';
+	import { Button, Modal } from 'flowbite-svelte';
+	let popupModal = false;
 
 	export let title: string;
 	export let description: string;
@@ -65,7 +67,9 @@
 		if (response.status === 200) {
 			const quizIndex = quizzes.findIndex((quiz: any) => quiz.id === id);
 			quizzes.splice(quizIndex, 1);
-			let redirectUrl = `/dashboard/quizzes/${$page.params.page || 1}/${$page.params.sortBy || 0}`;
+			let redirectUrl = `/dashboard/quizzes/${$page.params.page || 1}/${
+				$page.params.sortBy || 0
+			}`;
 
 			if (quizzes.length === 0) {
 				redirectUrl = `/dashboard/quizzes/${parseInt($page.params.page) - 1}/${
@@ -127,13 +131,7 @@
 		</div>
 	</a>
 	<div class="absolute top-5 right-5 z-10">
-		<button
-			on:click={() => {
-				if (confirm($t('common.confirmDelete'))) {
-					deleteQuiz(id);
-				}
-			}}
-		>
+		<button on:click={() => (popupModal = true)}>
 			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
 		</button>
 	</div>
@@ -152,4 +150,29 @@
 		>
 	</div>
 </div>
+<Modal bind:open={popupModal} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			{$t('common.confirmDelete')}
+		</h3>
+		<Button color="red" class="mr-2" on:click={() => deleteQuiz(id)}
+			>{$t('common.acceptDeleteQuiz')}</Button
+		>
+		<Button color="alternative">{$t('common.cancelDeleteQuiz')}</Button>
+	</div>
+</Modal>
 <DetailQuiz {isOpen} cardInfor={quiz} {questionList} />

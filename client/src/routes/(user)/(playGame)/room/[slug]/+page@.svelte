@@ -20,6 +20,7 @@
 	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
 	import type { SocketQuiz } from '../../play-game/[quizzesId]/play/quizzes.interface';
 	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
+	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 
 	export let data: LayoutData;
@@ -217,9 +218,6 @@
 
 	const getScoreBoard = () => {
 		showScoreBoard = true;
-		setTimeout(() => {
-			showScoreBoard = false;
-		}, 5000);
 	};
 	const endGame = () => {
 		socket.emit(ListenChannel.END_GAME, {
@@ -234,17 +232,15 @@
 		<Loading />
 	</div>
 {:else}
-	<div class="bg-greenLight w-full h-screen p-2">
+	<div class="bg-greenLight w-full h-screen">
 		{#if errorMessage}
-			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
-		{:else if beKicked}
-			<h1 class="w-full h-full flex justify-center items-center">You have been kicked</h1>
+			<ErrorDisplay {errorMessage} />
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
 			<EndGameSocket {participants} length={questions.length} />
 		{:else if questions.length > 0}
-			<div class="question h-2/3 pb-4 flex flex-col">
+			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				<div class="py-2">
 					<ProgressBar {stringTimer} />
 				</div>
@@ -272,7 +268,7 @@
 					bind:isShowOption
 				/>
 			</div>
-			<div class="answer h-1/3">
+			<div class="answer h-1/3 p-2">
 				{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
 					<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
 						<SingleChoiceSocket
@@ -374,5 +370,5 @@
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} {showScoreBoard} />
+	<ScoreboardModal {participants} bind:showScoreBoard questionLength={questions.length} />
 {/if}
