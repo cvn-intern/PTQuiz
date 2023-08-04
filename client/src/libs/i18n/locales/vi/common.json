@@ -144,5 +144,6 @@
 	"errorGif": "GIF không được trống",
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
 	"mins": "phút",
-	"secs": "giây"
+	"secs": "giây",
+	"viewScoreboard": "Xem bảng điểm"
 }
