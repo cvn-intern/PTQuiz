@@ -114,7 +114,6 @@ export class QuestionService {
         image: Express.Multer.File,
     ) {
         try {
-            console.log(1);
             if (!quizId) {
                 throw new HttpException(
                     QuestionError.QUIZ_ID_NOT_FOUND,
