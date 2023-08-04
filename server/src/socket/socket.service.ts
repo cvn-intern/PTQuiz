@@ -56,16 +56,15 @@ export class SocketService {
             'https://media4.giphy.com/media/RaxcELylDIaDnbWWtl/giphy.gif?cid=ecf05e47qpagl2cg9lueva249mxoedai6tq0ov4dal00urg4&ep=v1_gifs_related&rid=giphy.gif&ct=s',
             'https://media0.giphy.com/media/m738BWCynXs23KFsnq/giphy.gif?cid=ecf05e47uggl22tfcwf2eiuirg3cdkhyslotnzr5mssrndhb&ep=v1_gifs_related&rid=giphy.gif&ct=s',
         ];
+        const randomAvatar =
+            aliasAvatars[Math.floor(Math.random() * aliasAvatars.length)];
         const user = await this.prisma.users.update({
             where: {
                 id: userId,
             },
             data: {
                 aliasName: aliasName,
-                aliasAvatar:
-                    aliasAvatars[
-                        Math.floor(Math.random() * aliasAvatars.length)
-                    ],
+                aliasAvatar: randomAvatar,
             },
         });
         if (!user) {
@@ -691,6 +690,88 @@ export class SocketService {
             room,
             user,
             roomPassword,
+        };
+    }
+
+    async changeRoomVisibility(
+        roomId: string,
+        userId: string,
+        isPublic: boolean,
+    ) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const result = await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                isPublic: isPublic,
+            },
+        });
+        return result.isPublic;
+    }
+
+    async changeRoomCount(roomId: string, userId: string, count: number) {
+        if (count < 0 || count > 15) {
+            throw new Error(SocketError.SOCKET_ROOM_COUNT_MAX);
+        }
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const result = await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                count,
+            },
+        });
+        return result.count;
+    }
+
+    async findUserSocketId(
+        roomId: string,
+        hostId: string,
+        participantId: string,
+    ) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: hostId,
+                isStarted: false,
+            },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const participant = await this.prisma.room_participants.findFirst({
+            where: {
+                participantId: participantId,
+                roomId: roomId,
+                isFinished: false,
+            },
+        });
+        return {
+            participant,
         };
     }
 }

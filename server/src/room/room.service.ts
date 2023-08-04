@@ -50,7 +50,7 @@ export class RoomService {
                     PIN: Math.floor(Math.random() * 1000000).toString(),
                     quizId: body.quizId,
                     userId: userId,
-                    count: 0,
+                    count: 5,
                     isStarted: false,
                     isPublic: true,
                     roomPassword: (

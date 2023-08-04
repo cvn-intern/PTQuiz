@@ -23,6 +23,9 @@ import { EmitChannel, ListenChannel } from '../socketChannel.enum';
 import { QuestionIdDto } from '../dto/questionId.dto';
 import { JoinRoomDto } from '../dto/joinRoom.dto';
 import { EndGameDto } from '../dto/endGame.dto';
+import { ChangeRoomVisibilityDto } from '../dto/changeRoomVisibility.dto';
+import { ChangeRoomCountDto } from '../dto/changeRoomCount.dto';
+import { KickUserDto } from '../dto/kickUser.dto';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -152,8 +155,8 @@ export class SocketGateway
             this.server.to(roomPIN).emit(EmitChannel.ROOM_MESSAGES, {
                 user: {
                     id: client.user.id,
-                    displayName: client.user.displayName,
-                    avatar: client.user.avatar,
+                    displayName: client.aliasName,
+                    avatar: client.aliasAvatar,
                 },
                 content,
             });
@@ -345,6 +348,72 @@ export class SocketGateway
                 client.user.id,
             );
             client.emit(EmitChannel.ROOM_INFO, roomInfo);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.CHANGE_ROOM_VISIBILITY)
+    async handleChangeRoomVisibility(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: ChangeRoomVisibilityDto,
+    ) {
+        try {
+            const { roomId, isPublic } = data;
+            const result = await this.socketService.changeRoomVisibility(
+                roomId,
+                client.user.id,
+                isPublic,
+            );
+            client.emit(EmitChannel.ROOM_VISIBILITY, {
+                isPublic: result,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.CHANGE_ROOM_COUNT)
+    async handleChangeRoomCount(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: ChangeRoomCountDto,
+    ) {
+        try {
+            const { roomId, count } = data;
+            const result = await this.socketService.changeRoomCount(
+                roomId,
+                client.user.id,
+                count,
+            );
+            client.emit(EmitChannel.ROOM_COUNT, {
+                count: result,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.KICK_USER)
+    async handleKickUser(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: KickUserDto,
+    ) {
+        try {
+            const { roomId, participantId } = data;
+            const { participant } = await this.socketService.findUserSocketId(
+                roomId,
+                client.user.id,
+                participantId,
+            );
+            this.server.to(participant.socketId).emit(EmitChannel.BE_KICKED, {
+                beKicked: true,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,

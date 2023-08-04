@@ -21,6 +21,8 @@ export class WebSocketJwtGuard implements CanActivate {
                 where: { id: payload.id },
                 select: {
                     status: true,
+                    aliasAvatar: true,
+                    aliasName: true,
                 },
             });
             if (!user) {
@@ -34,6 +36,8 @@ export class WebSocketJwtGuard implements CanActivate {
             }
             const client = context.switchToWs().getClient();
             client.user = payload;
+            client.aliasAvatar = user.aliasAvatar;
+            client.aliasName = user.aliasName;
             return true;
         } catch (error) {
             if (error.name === JwtError.TOKEN_EXPIRED_ERROR) {

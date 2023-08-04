@@ -48,6 +48,7 @@
 	let isShowOption: boolean = false;
 	let isJoined: boolean = false;
 	let roomInfo: any;
+	let beKicked: boolean = false;
 
 	let original = 10;
 	let stringTimer: string;
@@ -64,7 +65,11 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-
+    $: {
+        if(beKicked) {
+            errorMessage = 'You have been kicked';
+        }
+    }
 	onMount(() => {
 		socket.emit(ListenChannel.IS_HOST, {
 			roomPIN: $page.params.slug
@@ -185,6 +190,13 @@
 				window.location.href = $page.url.href;
 			}
 		});
+		socket.on(EmitChannel.BE_KICKED, (data: any) => {
+			beKicked = data.beKicked;
+			socket.emit(ListenChannel.LEAVE_ROOM, {
+				roomPIN: $page.params.slug
+			});
+			socket.disconnect();
+		});
 	});
 	onDestroy(() => {
 		socket.emit(ListenChannel.LEAVE_ROOM, {
@@ -230,7 +242,7 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} />
+			<EndGameSocket {participants} length={questions.length} bind:isEndGame/>
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				<div class="py-2">
@@ -354,7 +366,7 @@
 				{isHost}
 				{socket}
 				user={data.user}
-				room={roomInfo.room}
+				room={roomInfo}
 			/>
 		{/if}
 	</div>

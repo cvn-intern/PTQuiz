@@ -2,19 +2,35 @@
 	import Icon from '@iconify/svelte';
 	import ImageModal from '../singlePlay/imageModal.svelte';
 	import toast from 'svelte-french-toast';
+	import type { Socket } from 'socket.io-client';
+	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
+	import { onMount } from 'svelte';
 	export let modalOpen: boolean;
 	export let isHost: boolean;
 	export let url: string;
+	export let room: any;
+	export let socket: Socket;
+	let isCopied = false;
+	let isChangedVisibility = false;
 	let qrModalOpen = false;
-
-	$: isPublic = true;
+	let isPublic = room.room.isPublic;
 	$: size = modalOpen ? '500x500' : '100x100';
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=${size}`;
 	const handleCopy = () => {
+		isCopied = true;
+		setTimeout(() => {
+			isCopied = false;
+		}, 2000);
 		navigator.clipboard.writeText(url);
 		toast.success('Copied to clipboard');
 	};
-	let valuePassword = '123456';
+	let valuePassword = room.roomPassword;
+	onMount(() => {
+		socket.on(EmitChannel.ROOM_VISIBILITY, (data) => {
+			isPublic = data.isPublic;
+			isChangedVisibility = false;
+		});
+	});
 	const handleCopyPassword = () => {
 		navigator.clipboard.writeText(valuePassword);
 		toast.success('Copied to clipboard');
@@ -31,6 +47,13 @@
 		if (event.target === event.currentTarget) {
 			closeModal();
 		}
+	};
+	const changeRoomVisibility = () => {
+		isChangedVisibility = true;
+		socket.emit(ListenChannel.CHANGE_ROOM_VISIBILITY, {
+			roomId: room.room.id,
+			isPublic: !isPublic
+		});
 	};
 </script>
 
@@ -65,7 +88,10 @@
 				<div class="flex flex-col items-center justify-between w-full gap-4">
 					<div class="flex items-center justify-between w-full">
 						<button
-							class="p-2 bg-slate-50/30 shadow-xl rounded-sm"
+							disabled={isCopied}
+							class={`p-2 bg-slate-50/30 shadow-xl rounded-sm cursor-not-allowed ${
+								isCopied ? 'cursor-not-allowed opacity-50' : ''
+							}`}
 							on:click={handleCopy}
 						>
 							<Icon
@@ -74,10 +100,11 @@
 							/>
 						</button>
 						<button
-							class="p-2 bg-slate-50/30 shadow-xl rounded-sm"
-							on:click={() => {
-								isPublic = !isPublic;
-							}}
+							disabled={isChangedVisibility}
+							class={`p-2 bg-slate-50/30 shadow-xl rounded-sm  ${
+								isChangedVisibility ? 'cursor-wait opacity-50' : ''
+							}`}
+							on:click={changeRoomVisibility}
 						>
 							<Icon
 								icon={isPublic ? 'zondicons:lock-open' : 'zondicons:lock-closed'}

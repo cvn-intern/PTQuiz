@@ -13,7 +13,10 @@ export enum EmitChannel {
 	HOST_LEFT = 'host-left',
 	ROOM_INFO = 'room-info',
 	EXCEPTION = 'exception',
-	JOINED = 'joined'
+	JOINED = 'joined',
+	BE_KICKED = 'be-kicked',
+	ROOM_VISIBILITY = 'room-visibility',
+	ROOM_COUNT = 'room-count'
 }
 
 export enum ListenChannel {
@@ -28,5 +31,9 @@ export enum ListenChannel {
 	PICK_ANSWER = 'pick-answer',
 	GET_ANSWER_QUESTION = 'get-answer-question',
 	GIF_QUESTION = 'gif-question',
-	GET_ROOM_INFO = 'get-room-info'
+	GET_ROOM_INFO = 'get-room-info',
+	CHANGE_ROOM_VISIBILITY = 'change-room-visibility',
+	CHANGE_ROOM_COUNT = 'change-room-count',
+	KICK_USER = 'kick-user',
+	BE_KICKED = 'be-kicked'
 }

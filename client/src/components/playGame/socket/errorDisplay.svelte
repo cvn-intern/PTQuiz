@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 
 	export let errorMessage: string;
+	let isClicked = false;
 </script>
 
 <div class="w-full h-full flex flex-col gap-8">
@@ -28,8 +29,13 @@
 			</div>
 			<button
 				type="button"
-				class="button"
+				disabled={isClicked}
+				class={`${isClicked ? 'cursor-not-allowed opacity-50' : ''} button`}
 				on:click={() => {
+					isClicked = true;
+					setTimeout(() => {
+						isClicked = false;
+					}, 2000);
 					window.location.href = $page.url.href;
 				}}
 			>
@@ -60,7 +66,6 @@
 		position: relative;
 		width: 150px;
 		height: 40px;
-		cursor: pointer;
 		display: flex;
 		align-items: center;
 		background-color: var(--bg-color);
@@ -110,10 +115,6 @@
 		transform: translateX(0);
 	}
 
-	.button:active {
-		transform: translate(3px, 3px);
-		box-shadow: 0px 0px var(--main-color);
-	}
 	.arrow-down {
 		display: flex;
 		justify-content: center;
