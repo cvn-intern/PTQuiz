@@ -12,8 +12,8 @@ export const actions = {
 		try {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
-				passingPoint: parseInt(form.get('passingPoint')),
-				point: parseInt(form.get('point')),
+				passingPoint: parseInt(form?.get('passingPoint')),
+				point: parseInt(form?.get('point')),
 				image: form.get('image')
 			});
 			const response = await fetch('/api/quizzes/create', {
@@ -22,6 +22,7 @@ export const actions = {
 				body: form
 			});
 			const result = await response.json();
+			console.log(result);
 
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
@@ -41,6 +42,8 @@ export const actions = {
 					`${error.errors[i].path}`
 				] = error.errors[i].message;
 			}
+
+			if (!error.errors.length) message.error.message = error?.message;
 
 			return fail(400, { message });
 		}

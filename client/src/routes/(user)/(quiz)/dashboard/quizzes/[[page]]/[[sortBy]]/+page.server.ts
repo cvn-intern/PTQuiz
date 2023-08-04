@@ -15,7 +15,9 @@ export async function load({ fetch, params }) {
 				numberOfQuestions: quiz.numberOfQuestions,
 				image: quiz.image,
 				createdAt: quiz.createdAt,
-				id: quiz.id
+				id: quiz.id,
+				durationMins: quiz.durationMins,
+				difficultyLevel: quiz.difficultyLevel,
 			};
 		});
 		return {

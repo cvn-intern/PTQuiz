@@ -48,8 +48,11 @@
 				cardInfor={card}
 			/>
 		{/each}
-		<!-- <Pagination {totalQuizzes} bind:quizzes={cardList} {nameCategory} /> -->
 	</div>
+</div>
+
+<div class="px-4 md:py-8 md:px-12 lg:px-20 md:pt-0 py-4">
+	<Pagination {totalQuizzes} bind:quizzes={cardList} {nameCategory} />
 </div>
 
 <style>

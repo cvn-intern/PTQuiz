@@ -65,7 +65,7 @@
 		if (response.status === 200) {
 			const quizIndex = quizzes.findIndex((quiz: any) => quiz.id === id);
 			quizzes.splice(quizIndex, 1);
-			let redirectUrl = `/dashboard/quizzes/${$page.params.page}/${$page.params.sortBy}`;
+			let redirectUrl = `/dashboard/quizzes/${$page.params.page || 1}/${$page.params.sortBy || 0}`;
 
 			if (quizzes.length === 0) {
 				redirectUrl = `/dashboard/quizzes/${parseInt($page.params.page) - 1}/${

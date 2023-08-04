@@ -133,7 +133,7 @@ export class QuestionService {
             }
 
             if (image) {
-                if (image.size > parseInt(process.env.MAX_SIZE_IMAGE)) {
+                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuestionError.IMAGE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
@@ -208,7 +208,7 @@ export class QuestionService {
             }
 
             if (image) {
-                if (image.size > parseInt(process.env.MAX_SIZE_IMAGE)) {
+                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuestionError.IMAGE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
