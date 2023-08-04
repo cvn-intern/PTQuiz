@@ -11,17 +11,22 @@
 	let numberOfAnswer: number;
 	let isFullAnswer: boolean = false;
 
+	let clientParticipants: any[];
 	$: {
-		numberOfAnswer = participants.filter((participant: any) => {
+		clientParticipants = participants.filter((participant) => participant.isHost === false);
+		numberOfAnswer = clientParticipants.filter((participant: any) => {
 			return participant.isAnswered;
 		}).length;
-		if (numberOfAnswer === participants.length) {
+		if (numberOfAnswer === clientParticipants.length) {
 			isFullAnswer = true;
 		} else {
 			if ($timer <= 0) {
 				isFullAnswer = true;
 			} else isFullAnswer = false;
 		}
+	}
+	$: {
+		console.log(numberOfAnswer);
 	}
 </script>
 
@@ -48,6 +53,6 @@
 		on:click={getScoreBoard}>Score board</button
 	>
 	<div class="h-fit w-fit bg-orangeLogo text-white font-bold py-2 px-4 rounded-md cursor-default">
-		{numberOfAnswer} / {participants.length} Players Answered
+		{numberOfAnswer} / {clientParticipants.length} Players Answered
 	</div>
 </div>

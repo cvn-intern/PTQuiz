@@ -21,6 +21,7 @@
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 	export let countDown: any;
+	export let isHost: boolean;
 
 	type CharacterObject = {
 		char: string;
@@ -156,6 +157,7 @@
 				{#each displayAnswer as input, index}
 					<button
 						class=" w-14 h-16 flex justify-center items-center border-b-2 border-black"
+						disabled={isHost}
 						on:click={() => {
 							removeChooseAnswer(input, index);
 						}}
@@ -170,6 +172,7 @@
 				{#each scrambledAnswerSplit as input, index}
 					<button
 						class="p-3 w-14 h-16 rounded-lg border shadow-lg bg-secondary"
+						disabled={isHost}
 						on:click={() => {
 							addToChooseAnswer(input, index);
 						}}
@@ -186,6 +189,6 @@
 	</div>
 {/if}
 
-{#if showModal}
+{#if showModal && !isHost}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}

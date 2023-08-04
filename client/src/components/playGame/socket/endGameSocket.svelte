@@ -17,6 +17,8 @@
 	let isEndGame: boolean = true;
 	export let participants: Participant[] = [];
 	export let length: number;
+
+	const clientParticipants = participants.filter((participant) => participant.isHost === false);
 </script>
 
 <div class="w-full h-full flex flex-col">
@@ -28,14 +30,14 @@
 			}}>{$t('common.backHome')}</button
 		>
 	</div>
-	<Position {participants} {length} />
+	<Position participants= {clientParticipants} {length} />
 	<div class="flex gap-4 items-center justify-center">
 		<div
 			class={`${
-				participants.length > 3 ? 'bg-white p-4 flex flex-col gap-4 overflow-y-scroll no-scrollbar' : ''
+				clientParticipants.length > 3 ? 'bg-white p-4 flex flex-col gap-4 overflow-y-scroll no-scrollbar' : ''
 			}`}
 		>
-			{#each participants.slice(3) as participant, index}
+			{#each clientParticipants.slice(3) as participant, index}
 				<ScoreBoardSocket scoreUser={participant} index={index + 3} {isEndGame} />
 			{/each}
 		</div>
