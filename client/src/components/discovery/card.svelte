@@ -4,7 +4,7 @@
 	import clsx from 'clsx';
 	import { t } from '$i18n/translations';
 	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
-	import { showToast } from '$libs/toast/toast';
+	import { dismissLoadingToast, showToast } from '$libs/toast/toast';
 	export let image = '';
 	export let nameOfQuiz = '';
 	export let author = '';
@@ -28,6 +28,7 @@
 	async function handleStart() {
 		if (cardInfor?.numberQuestions) goto(`/play-game/${id}`);
 		else {
+			dismissLoadingToast();
 			showToast('error', $t('common.theQuizMustHaveAtLeastOneQuestion'));
 		}
 	}
