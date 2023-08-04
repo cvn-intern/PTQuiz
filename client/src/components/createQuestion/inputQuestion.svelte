@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
+	import { isSubmitStore } from '$stores/isSubmitStore';
 	import { questionData } from '$stores/questionInfoStore';
 	import Editor from 'cl-editor/src/Editor.svelte';
 	import { createEventDispatcher, onMount, tick } from 'svelte';
@@ -10,6 +11,7 @@
 	let imageUrl: string;
 	let typeOfquestion: number;
 	let hint: string;
+
 	$: questionData.subscribe((data: any) => {
 		if (index >= 0 && index < data.length) {
 			title = data[index].title;
@@ -48,14 +50,22 @@
 			return data;
 		});
 	};
-
+	let isSubmit: boolean;
+	$: isSubmitStore.subscribe((data) => {
+		isSubmit = data;
+	});
 </script>
 
 <div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
 	<div class="flex items-center justify-center lg:w-1/3 md:w-1/2 w-1/3 h-full">
 		<label
 			for="dropzone-file"
-			class="2xl:w-full 2xl:h-full xl:w-full xl:h-full lg:w-full lg:h-full md:w-full md:h-full w-full h-full flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+			class="2xl:w-full 2xl:h-full xl:w-full xl:h-full lg:w-full lg:h-full md:w-full md:h-full w-full h-full flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 {imageUrl ===
+				'' &&
+			isSubmit &&
+			typeOfquestion === 6
+				? 'border-red-600'
+				: ''}"
 		>
 			{#if imageUrl}
 				<div class="group hover:opacity-100 w-full h-full flex">
@@ -126,7 +136,10 @@
 	</div>
 	<div class="flex w-full gap-3 h-full md:flex-row flex-col">
 		<textarea
-			class=" md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-2/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none"
+			class=" md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-2/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none {isSubmit &&
+			title === ''
+				? 'border-red-600 border-2'
+				: ''}"
 			placeholder={$t('common.typeYourQuestionHere')}
 			rows="5"
 			bind:value={title}

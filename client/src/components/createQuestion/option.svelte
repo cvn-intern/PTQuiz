@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { t } from '$i18n/translations';
+	import { isSubmitStore } from '$stores/isSubmitStore';
 	import { questionData } from '$stores/questionInfoStore';
+	import type { AnswerType } from '../../routes/(user)/(quiz)/createQuiz/questionType.type';
 	export let question = '';
 	export let optionOfQuestion = '';
 	export let isSingleChoice = false;
@@ -9,12 +11,41 @@
 	let content: string;
 	export let answerValue = false;
 
+	let isPickTrueAnswer: boolean = true;
+	let isSubmit: boolean;
+
+	function isPickAnswer(anser: AnswerType) {
+		if (!isTrueFalse) {
+			if (
+				anser.answerA === false &&
+				anser.answerB === false &&
+				anser.answerC === false &&
+				anser.answerD === false
+			) {
+				return false;
+			}
+		} else {
+			if (anser.answerA === false && anser.answerB === false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+	$: isSubmitStore.subscribe((data) => {
+		isSubmit = data;
+	});
 	$: questionData.subscribe((data) => {
 		if (index >= 0 && index < data.length) {
 			if (question === 'A') content = data[index].options.optionA;
 			if (question === 'B') content = data[index].options.optionB;
 			if (question === 'C') content = data[index].options.optionC;
 			if (question === 'D') content = data[index].options.optionD;
+		}
+	});
+	$: questionData.subscribe((data) => {
+		if (data[index].type === 0 || data[index].type === 1) {
+			isPickTrueAnswer = isPickAnswer(data[index].answers);
 		}
 	});
 	$: questionData.update((data) => {
@@ -76,7 +107,12 @@
 	}
 </script>
 
-<div class="{optionOfQuestion} rounded-xl flex flex-row items-center">
+<div
+	class="{optionOfQuestion} rounded-xl flex flex-row items-center {(isSubmit && content === '') ||
+	(isSubmit && !isPickTrueAnswer)
+		? 'border-red-600 border-2'
+		: ''}"
+>
 	<h1
 		class="{isTrueFalse
 			? 'w-3/4 text-center'
@@ -97,7 +133,7 @@
 		type={isSingleChoice ? 'radio' : 'checkbox'}
 		name="trueAnswer"
 		id=""
-		class="2xl:p-5 2xl:ml-5 xl:p-3 xl:ml-2 lg:p-3 lg:ml-2 md:p-4 md:ml-1 p-2 cursor-pointer {isSingleChoice
+		class="2xl:p-5 2xl:ml-5 xl:p-3 xl:ml-2 lg:p-3 lg:ml-2 md:p-4 md:ml-1 p-2 border-red cursor-pointer {isSingleChoice
 			? ''
 			: 'rounded-lg shadow-lg'}"
 		checked={answerValue}
