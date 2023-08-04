@@ -10,6 +10,7 @@
 	export let participants: any[];
 	export let user: any;
 	export let socket: Socket;
+	import logo from '$assets/logo.png';
 	type Message = {
 		user: {
 			id: string;
@@ -58,32 +59,38 @@
 </script>
 
 <div
-	class="md:w-96 md:max-w-sm max-w-xs w-screen backdrop-opacity-10 backdrop-invert bg-greenLight rounded-t-lg shadow-2xl {isShowChat
+	class="md:w-96 md:max-w-sm max-w-xs w-screen backdrop-opacity-10 backdrop-invert bg-chat rounded-t-lg shadow-shadowChat {isShowChat
 		? 'fixed right-0 bottom-0 z-60'
 		: 'hidden'}"
 >
-	<div class="relative flex flex-col gap-4">
+	<div class="relative flex flex-col gap-2">
+		<div
+			class="w-full bg-white py-0.5 flex justify-between h-12 rounded-t-2xl px-3 items-center"
+		>
+			<img src={logo} alt="" class="w-14 h-14" />
+			<button on:click={handleClickOpenChat}
+				><Icon icon="mingcute:down-fill" class="text-2xl mr-3 text-zinc-700" /></button
+			>
+		</div>
 		<div
 			bind:this={element}
-			class="overflow-y-scroll max-h-halfScreen h-halfScreen px-3 pt-7 no-scrollbar"
+			class="overflow-y-scroll max-h-halfScreen h-halfScreen px-3 no-scrollbar flex flex-col gap-2"
 		>
 			{#each messages as message}
 				{#if message.user.id === user.id}
 					<MyMessage
 						message={message.content}
-						displayName={message.user.displayName}
 						avatar={message.user.avatar}
 					/>
 				{:else}
 					<Message
 						message={message.content}
-						displayName={message.user.displayName}
 						avatar={message.user.avatar}
 					/>
 				{/if}
 			{/each}
 		</div>
-		<form class="flex justify-center w-full relative" on:submit|preventDefault={sendMessage}>
+		<form class="flex justify-center w-full relative pb-1" on:submit|preventDefault={sendMessage}>
 			<input
 				maxlength="80"
 				type="text"
@@ -106,21 +113,13 @@
 				</button>
 			</div>
 		</form>
-		<div class="absolute right-0 z-60 w-full bg-white rounded-md py-0.5 flex justify-end">
-			<button on:click={handleClickOpenChat}
-				><Icon icon="mingcute:down-fill" class="text-2xl mr-3 text-zinc-700" /></button
-			>
-		</div>
 	</div>
 </div>
 <button
 	on:click={handleClickOpenChat}
-	class="shadow-lg rounded-xl backdrop-opacity-10 backdrop-invert h-10 bg-darkGreen md:w-96 text-white border-2 border-gray-300 font-semibold px-2 {isShowChat
+	class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-darkGreen text-white border-2 border-gray-300 font-semibold p-2 {isShowChat
 		? 'hidden'
-		: 'fixed right-0 bottom-0 z-60 '}"
+		: 'fixed right-10 bottom-10 z-60 '}"
 >
-	<div class="flex justify-center items-center gap-2">
-		<Icon icon="et:chat" class="text-2xl" />
-		<p>{$t('common.openChatHere')}</p>
-	</div>
+	<Icon icon="et:chat" class="text-4xl" />
 </button>

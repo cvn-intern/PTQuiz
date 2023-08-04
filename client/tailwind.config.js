@@ -26,7 +26,9 @@ export default {
 				run1st: '#FFAA00',
 				run2st: '#179cd4',
 				run3st: '#23d964',
-				bgChat: '#BAD1CD',
+				bgChat: '#fab73d',
+				bgChat2: '#fab73d',
+				yellowChat: '#E8B100',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -119,6 +121,14 @@ export default {
 			},
 			height: {
 				halfScreen: '50vh'
+			},
+			backgroundImage: {
+				user: "url('https://vapa.vn/wp-content/uploads/2022/12/we-bare-bears-hinh-nen-cute-001-1.jpg')",
+				chat: "url('https://wallpapers.com/images/high/pixel-3-background-04zh8d2aw40nzy0h.webp')",
+				room: "url('./src/assets/background.jpg')"
+			},
+			boxShadow: {
+				shadowChat: 'rgba(149, 157, 165, 0.2) 0 8px 24px'
 			}
 		}
 	},
