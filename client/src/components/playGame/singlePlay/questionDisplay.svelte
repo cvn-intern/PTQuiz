@@ -60,7 +60,14 @@
 	}
 </script>
 
-<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} {quizzesHint} />
+<InformationModal
+	{quizzesType}
+	{quizzesPointer}
+	{quizzesNumber}
+	{quizzesHint}
+	isHost={false}
+	isSingle={true}
+/>
 <div class={`flex justify-center px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
 	{#if isShowOption}
 		<p class="p-4 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-left">

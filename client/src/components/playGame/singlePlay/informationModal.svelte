@@ -7,6 +7,8 @@
 	export let quizzesPointer: number;
 	export let quizzesNumber: number;
 	export let quizzesHint: string | null;
+	export let isHost: boolean;
+	export let isSingle: boolean;
 	import { onMount } from 'svelte';
 	let modalIsOpen = false;
 
@@ -150,10 +152,18 @@
 				</div>
 				<hr class="w-full" />
 				<Button id="hint">
-					<Icon icon="heroicons-outline:light-bulb" class="w-16 h-16 text-yellow-400" />
+					<Icon
+						icon="heroicons-outline:light-bulb"
+						class={`w-16 h-16  ${
+							isSingle || isHost ? 'text-yellow-400' : 'text-gray-200'
+						}`}
+					/>
 				</Button>
-				<Tooltip triggeredBy="#hint" placement="left" class="text-xl">{quizzesHint}</Tooltip
-				>
+				{#if isHost || isSingle}
+					<Tooltip triggeredBy="#hint" placement="left" class="text-xl"
+						>{quizzesHint}</Tooltip
+					>
+				{/if}
 			</div>
 		</div>
 	</button>
