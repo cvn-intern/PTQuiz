@@ -4,6 +4,7 @@
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
 	import SettingsRoom from './settingsRoom.svelte';
+	import Reaction from './reaction.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -70,6 +71,7 @@
 	</div>
 	{#if isHost}
 		<SettingsRoom bind:modalOpen {url} {isHost} />
+		<Reaction {socket} />
 	{/if}
 	<Chat {participants} {socket} {user} />
 	<button

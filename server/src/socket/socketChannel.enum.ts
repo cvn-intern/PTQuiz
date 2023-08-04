@@ -14,6 +14,7 @@ export enum EmitChannel {
     ROOM_INFO = 'room-info',
     EXCEPTION = 'exception',
     JOINED = 'joined',
+    ROOM_REACTIONS = 'room-reactions',
 }
 
 export enum ListenChannel {
@@ -29,4 +30,5 @@ export enum ListenChannel {
     GET_ANSWER_QUESTION = 'get-answer-question',
     GIF_QUESTION = 'gif-question',
     GET_ROOM_INFO = 'get-room-info',
+    SEND_REACTION = 'send-reaction',
 }

@@ -23,6 +23,7 @@ import { EmitChannel, ListenChannel } from '../socketChannel.enum';
 import { QuestionIdDto } from '../dto/questionId.dto';
 import { JoinRoomDto } from '../dto/joinRoom.dto';
 import { EndGameDto } from '../dto/endGame.dto';
+import { ReactionDto } from '../dto/reaction.dto';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -163,6 +164,23 @@ export class SocketGateway
             });
         }
     }
+    @SubscribeMessage(ListenChannel.SEND_REACTION)
+    async handleReaction(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: ReactionDto,
+    ) {
+        try {
+            const { reaction, roomPIN } = data;
+            this.server.to(roomPIN).emit(EmitChannel.ROOM_REACTIONS, {
+                reaction,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
     @SubscribeMessage(ListenChannel.IS_HOST)
     async handleIsHost(
         @ConnectedSocket() client: SocketClient,
