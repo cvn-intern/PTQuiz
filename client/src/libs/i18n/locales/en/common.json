@@ -144,5 +144,7 @@
 	"errorGif": "GIF can't be empty",
 	"confirmDelete": "Are you sure you want to delete?",
 	"mins": "mins",
-	"secs": "secs"
+	"secs": "secs",
+	"acceptDeleteQuiz": "Yes, I'm sure",
+	"cancelDeleteQuiz": "No, cancel"
 }

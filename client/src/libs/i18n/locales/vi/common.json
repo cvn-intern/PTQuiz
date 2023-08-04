@@ -144,5 +144,7 @@
 	"errorGif": "GIF không được trống",
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
 	"mins": "phút",
-	"secs": "giây"
+	"secs": "giây",
+	"acceptDeleteQuiz": "Vâng, chắc chắn rồi :D",
+	"cancelDeleteQuiz": "Từ từ để suy nghĩ"
 }
