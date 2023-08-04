@@ -2,9 +2,11 @@
 	import { TypeQuestion } from '$constants/typeQuestion';
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
+	import { Button, Tooltip } from 'flowbite-svelte';
 	export let quizzesType: number;
 	export let quizzesPointer: number;
 	export let quizzesNumber: number;
+	export let quizzesHint: string | null;
 	import { onMount } from 'svelte';
 	let modalIsOpen = false;
 
@@ -147,7 +149,11 @@
 					{/if}
 				</div>
 				<hr class="w-full" />
-				<Icon icon="heroicons-outline:light-bulb" class="w-16 h-16 text-yellow-400" />
+				<Button id="hint">
+					<Icon icon="heroicons-outline:light-bulb" class="w-16 h-16 text-yellow-400" />
+				</Button>
+				<Tooltip triggeredBy="#hint" placement="left" class="text-xl">{quizzesHint}</Tooltip
+				>
 			</div>
 		</div>
 	</button>

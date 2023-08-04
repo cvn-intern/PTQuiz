@@ -5,6 +5,7 @@ export interface Quiz {
 	title: string;
 	type: number;
 	image: string | null;
+	hint: string | null;
 	options: {
 		[key: string]: string;
 	};
@@ -23,6 +24,7 @@ export interface SocketQuiz {
 	title: string;
 	type: number;
 	image: string | null;
+	hint: string | null;
 	options: {
 		[key: string]: string;
 	};

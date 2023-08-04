@@ -254,6 +254,7 @@
 					quizzesPointer={questionPointer}
 					quizzesImage={questions[questionPointer].image}
 					questionTime={questions[questionPointer].time}
+					quizzesHint={questions[questionPointer].hint}
 					{isHost}
 					{socket}
 					bind:timer
