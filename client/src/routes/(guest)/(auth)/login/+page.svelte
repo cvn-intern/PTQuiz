@@ -79,7 +79,9 @@
 	<Toast {form} />
 
 	<div class=" w-panel rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
-		<div class="w-full p-6 flex justify-evenly flex-col items-center gap-6 my-10">
+		<div
+			class="w-full p-6 flex justify-evenly flex-col items-center xl:gap-6 gap-4 h-full"
+		>
 			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.loginToYourAccount')}</h1>
 			<form
 				method="POST"
@@ -95,7 +97,7 @@
 					showLoadingToast();
 				}}
 			>
-				<div class="py-4">
+				<div class="py-2">
 					{#if !form?.isSuccess && form?.error?.missing?.default}
 						<label for="common" class="mb-1 text-red-500"
 							>{form.error.message}
@@ -118,13 +120,13 @@
 						id="email"
 						placeholder="Email"
 						required
-						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						class="block w-full xl:p-4 p-3 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
 						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>
 					{/if}
 				</div>
-				<div class="py-4">
+				<div class="py-2">
 					<label for="password" class="mb-1 text-black">{$t('common.password')}</label>
 					<input
 						type="password"
@@ -132,7 +134,7 @@
 						id="password"
 						required
 						placeholder={$t('common.password')}
-						class="block w-full p-4 rounded-md border-gray-200 text-black"
+						class="block w-full xl:p-4 p-3 rounded-md border-gray-200 text-black"
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.password}
 						<label for="password" class="mb-1 text-red-500">{form.error.message}</label>
@@ -147,14 +149,14 @@
 					<button
 						type="submit"
 						disabled={isSubmitting}
-						class={`uppercase block w-full p-4 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none ${
+						class={`uppercase block w-full xl:p-4 p-3 rounded-md bg-secondary hover:bg-darkGreen focus:outline-none ${
 							isSubmitting ? 'opacity-50 cursor-wait' : ''
 						}`}>{$t('common.login')}</button
 					>
 				</div>
 			</form>
 			<div>
-				<div class="py-6 space-x-2 text-gray-500 flex">
+				<div class="space-x-2 text-gray-500 flex">
 					{#each signInProviders as provider, i}
 						<button
 							class="border-gray p-2 rounded-md hover:bg-zinc-100 flex items-center gap-2"
