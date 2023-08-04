@@ -144,5 +144,6 @@
 	"errorGif": "GIF can't be empty",
 	"confirmDelete": "Are you sure you want to delete?",
 	"mins": "mins",
-	"secs": "secs"
+	"secs": "secs",
+	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question"
 }

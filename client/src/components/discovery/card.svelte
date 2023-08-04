@@ -4,6 +4,7 @@
 	import clsx from 'clsx';
 	import { t } from '$i18n/translations';
 	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
+	import { showToast } from '$libs/toast/toast';
 	export let image = '';
 	export let nameOfQuiz = '';
 	export let author = '';
@@ -25,7 +26,10 @@
 	export let amountOfQuestions = '';
 
 	async function handleStart() {
-		goto(`/play-game/${id}`);
+		if (cardInfor?.numberQuestions) goto(`/play-game/${id}`);
+		else {
+			showToast('error', $t('common.theQuizMustHaveAtLeastOneQuestion'));
+		}
 	}
 	const levelI18n = (level: string) => {
 		switch (level) {
