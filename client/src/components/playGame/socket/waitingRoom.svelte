@@ -2,6 +2,7 @@
 	import type { Socket } from 'socket.io-client';
 	import toast from 'svelte-french-toast';
 	import Chat from './chat.svelte';
+	import { ListenChannel } from '../../../libs/constants/socketChannel';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -10,7 +11,8 @@
 	export let isHost: boolean;
 	export let socket: Socket;
 	export let user: any;
-    export let room: any;
+	export let room: any;
+    export let roomPassword: string;
 
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=100x100`;
 	const handleCopy = () => {
@@ -29,6 +31,7 @@
 							class="h-10 bg-secondary/90 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
 							on:click={handleCopy}>Click here to copy link</button
 						>
+                        <div>{roomPassword}</div>
 						<img class="hidden md:block" width="120px" src={qrCode} alt="" title="" />
 					</div>
 					<button
@@ -48,7 +51,15 @@
 			class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 w-screenHalf"
 		>
 			{#each participants as participant (participant.displayName)}
-				<div
+				<button
+					on:click={() => {
+						if (isHost) {
+							socket.emit(ListenChannel.KICK_USER, {
+								roomId: room.id,
+								participantId: participant.id
+							});
+						}
+					}}
 					class="rounded-xl md:w-48 h-20 flex items-center justify-between text-white p-2 bg-secondary hover:animate-wiggle col-span-1 shadow-xl"
 				>
 					<p class="truncate w-32">{participant.displayName}</p>
@@ -57,7 +68,7 @@
 						alt={participant.displayName}
 						class="w-10 h-10 rounded-full ml-4"
 					/>
-				</div>
+				</button>
 			{/each}
 		</div>
 	</div>

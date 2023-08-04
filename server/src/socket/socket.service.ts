@@ -693,4 +693,90 @@ export class SocketService {
             roomPassword,
         };
     }
+
+    async changeRoomVisibility(
+        roomId: string,
+        userId: string,
+        isPublic: boolean,
+    ) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                isPublic: isPublic,
+            },
+        });
+    }
+
+    async changeRoomCount(roomId: string, userId: string, count: number) {
+        if (count < 0 || count > 15) {
+            throw new Error(SocketError.SOCKET_ROOM_COUNT_MAX);
+        }
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                count,
+            },
+        });
+    }
+
+    async kickUser(roomId: string, hostId: string, participantId: string) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: hostId,
+            },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const participant = await this.prisma.room_participants.findFirst({
+            where: {
+                participantId: participantId,
+                roomId: roomId,
+                isFinished: false,
+            },
+        });
+        await this.prisma.room_participants.delete({
+            where: {
+                id: participant.id,
+            },
+        });
+        await this.prisma.participants.delete({
+            where: {
+                id: participantId,
+            },
+        });
+        return {
+            participant,
+            roomPin: room.PIN,
+        };
+    }
 }

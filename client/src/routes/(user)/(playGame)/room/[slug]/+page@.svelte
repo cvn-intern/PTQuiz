@@ -47,6 +47,7 @@
 	let isShowOption: boolean = false;
 	let isJoined: boolean = false;
 	let roomInfo: any;
+	let beKicked: boolean = false;
 
 	let original = 10;
 	let stringTimer: string;
@@ -184,6 +185,13 @@
 				window.location.href = $page.url.href;
 			}
 		});
+		socket.on(EmitChannel.BE_KICKED, (data: any) => {
+			beKicked = true;
+			socket.emit(ListenChannel.BE_KICKED, {
+				roomPIN: $page.params.slug
+			});
+			socket.disconnect();
+		});
 	});
 	onDestroy(() => {
 		socket.emit(ListenChannel.LEAVE_ROOM, {
@@ -229,6 +237,8 @@
 	<div class="bg-greenLight w-full h-screen p-2">
 		{#if errorMessage}
 			<h1 class="w-full h-full flex justify-center items-center">{errorMessage}</h1>
+		{:else if beKicked}
+			<h1 class="w-full h-full flex justify-center items-center">You have been kicked</h1>
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
@@ -357,6 +367,7 @@
 				{socket}
 				user={data.user}
 				room={roomInfo.room}
+                roomPassword={roomInfo.roomPassword}
 			/>
 		{/if}
 	</div>
