@@ -199,7 +199,6 @@
 			isDisabled = false;
 		}, 3000);
 		let checkSave = checkInput();
-		console.log(dataSave[index]);
 		if (checkSave !== '') {
 			dismissLoadingToast();
 			showToast('error', checkSave);
