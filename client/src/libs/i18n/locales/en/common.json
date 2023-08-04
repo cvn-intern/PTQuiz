@@ -143,8 +143,13 @@
 	"errorTitle": "Title can't be empty",
 	"errorGif": "GIF can't be empty",
 	"confirmDelete": "Are you sure you want to delete?",
+	"openChatHere": "Open chat here",
+	"clickHereToCopyLink": "Copy link",
+	"waitingForPlayers": "Waiting for players....",
 	"mins": "mins",
 	"secs": "secs",
+	"acceptDeleteQuiz": "Yes, I'm sure",
+	"cancelDeleteQuiz": "No, cancel",
 	"viewScoreboard": "View Scoreboard",
 	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question"
 }

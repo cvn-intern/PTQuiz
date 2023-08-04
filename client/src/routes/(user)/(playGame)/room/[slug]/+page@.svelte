@@ -224,7 +224,7 @@
 		<Loading />
 	</div>
 {:else}
-	<div class="bg-greenLight w-full h-screen p-2">
+	<div class="bg-greenLight w-full h-screen">
 		{#if errorMessage}
 			<ErrorDisplay {errorMessage} />
 		{:else if !isJoined}
@@ -232,7 +232,7 @@
 		{:else if isEndGame}
 			<EndGameSocket {participants} length={questions.length} />
 		{:else if questions.length > 0}
-			<div class="question h-2/3 pb-4 flex flex-col">
+			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				<div class="py-2">
 					<ProgressBar {stringTimer} />
 				</div>
@@ -260,7 +260,7 @@
 					bind:isShowOption
 				/>
 			</div>
-			<div class="answer h-1/3">
+			<div class="answer h-1/3 p-2">
 				{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
 					<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
 						<SingleChoiceSocket
@@ -361,5 +361,5 @@
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} bind:showScoreBoard questionLength = {questions.length}/>
+	<ScoreboardModal {participants} bind:showScoreBoard questionLength={questions.length} />
 {/if}
