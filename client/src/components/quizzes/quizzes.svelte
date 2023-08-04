@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 	import SortBy from './sortBy.svelte';
 	import type { IQuiz } from '../../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/[[sortBy]]/quiz.type';
+	import Icon from '@iconify/svelte';
 
 	export let quizzes: IQuiz[];
 	export let totalQuizzes: number;

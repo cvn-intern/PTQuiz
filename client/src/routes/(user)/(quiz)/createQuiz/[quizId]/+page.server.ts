@@ -32,7 +32,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 			type: question.type,
 			index: 1,
 			time: question.time,
-			hint: question.hint
+			hint: question.hint,
+			
 		};
 		return result;
 	});

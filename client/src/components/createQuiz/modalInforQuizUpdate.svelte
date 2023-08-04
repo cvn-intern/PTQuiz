@@ -19,5 +19,5 @@
 >
 
 <Modal bind:open={formModal} size="md" class="w-full z-50" {outsideclose} autoclose={false}>
-	<FormQuiz bind:result {form} action={'?/updateQuiz'} isUpdate={true} />
+	<FormQuiz bind:result bind:form action={'?/updateQuiz'} isUpdate={true} />
 </Modal>

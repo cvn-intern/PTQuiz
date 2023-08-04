@@ -6,6 +6,7 @@
 	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
+	import { Category } from './interface/category.enum';
 	export let form: any;
 	export let result: any;
 	export let action: string;
@@ -18,18 +19,26 @@
 	};
 
 	const dismissLoadingToast = (): void => {
-		toast.dismiss(sharedToastId.toString());
+		if (sharedToastId) toast.dismiss(sharedToastId.toString());
 	};
 
 	let isSubmitting: boolean = false;
 	$: getMessageError = (name: string): string => {
 		return form?.message?.error?.message?.[name] ?? '';
 	};
+
 	$: if (form?.message?.isDone || form?.isDone) {
-		dismissLoadingToast();
-		if (form?.error?.message) {
+		if (form?.error?.message && !form?.isSuccess) {
 			toast.error(form?.error?.message);
+			dismissLoadingToast();
 		}
+		if (form && form?.isSuccess && form?.success?.message && isUpdate) {
+			dismissLoadingToast();
+			toast.success(t.get('common.success'));
+			form = null;
+		}
+		dismissLoadingToast();
+
 		isSubmitting = false;
 	}
 	$: if (form?.isSuccess && !isUpdate) {
@@ -44,12 +53,23 @@
 		{ value: 2, name: 'Hard' }
 	];
 
+	let categoryList: selectOptionne[] = [
+		{ value: Category.MATH, name: 'Math' },
+		{ value: Category.SCIENCE, name: 'Science' },
+		{ value: Category.ENGLISH, name: 'English' },
+		{ value: Category.HISTORY, name: 'History' },
+		{ value: Category.GEOGRAPHY, name: 'Geography' },
+		{ value: Category.LITERATURE, name: 'Literature' },
+		{ value: Category.OTHER, name: 'Other' }
+	];
+
 	let formData: FieldForm = {
 		title: '',
 		difficultyLevel: '',
 		passingPoint: '',
 		point: '',
-		description: ''
+		description: '',
+		categoryId: ''
 	};
 
 	export const snapshot = {
@@ -85,19 +105,27 @@
 			required: true
 		},
 		{
-			label: `${$t('common.file')}`,
-			name: 'image',
-			type: 'file',
-			required: false
+			label: `${$t('common.category')}`,
+			name: 'categoryId',
+			type: 'select',
+			required: true,
+			selectOptionsList: categoryList
 		},
 		{
 			label: `${$t('common.description')}`,
 			name: 'description',
 			type: 'textarea',
 			required: false
+		},
+		{
+			label: `${$t('common.file')}`,
+			name: 'image',
+			type: 'file',
+			required: false
 		}
 	];
 	$: hiddenInputFile = isUpdate;
+	let category = result['category']?.id || result['category'] || Category.OTHER;
 </script>
 
 <form
@@ -166,7 +194,7 @@
 							JPEG, PNG, JPG (5MB).
 						</p>
 					{/if}
-				{:else if type === 'select'}
+				{:else if type === 'select' && name === 'difficultyLevel'}
 					<Select
 						items={selectOptionsList}
 						bind:value={result[name]}
@@ -175,14 +203,25 @@
 						{name}
 						class="bg-gray-50 border border-graydish text-gray-700 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
 					/>
-				{:else if type === 'textarea'}
-					<textarea
-						maxlength="100"
+				{:else if type === 'select' && name === 'categoryId'}
+					<Select
+						items={selectOptionsList}
+						bind:value={category}
+						{required}
 						id={name}
-						placeholder={label}
 						{name}
-						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+						class="bg-gray-50 border border-graydish text-gray-700 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
 					/>
+				{:else if type === 'textarea'}
+					<div class="relative grid w-full">
+						<textarea
+							maxlength="100"
+							id={name}
+							placeholder={label}
+							{name}
+							class=" bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+						/>
+					</div>
 				{:else if type === 'number'}
 					<input
 						bind:value={result[name]}
