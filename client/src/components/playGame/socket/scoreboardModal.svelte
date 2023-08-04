@@ -3,11 +3,13 @@
 	import { Modal } from 'flowbite-svelte';
 	export let showScoreBoard: boolean;
 	export let participants: any[];
+	const clientParticipants = participants.filter((participant) => participant.isHost === false);
+
 </script>
 
 <Modal bind:open={showScoreBoard} autoclose placement="top-center">
 	<div class="flex flex-col justify-center items-center gap-4">
-		{#each participants as participant, index}
+		{#each clientParticipants as participant, index}
 			<div class="flex gap-4 items-center">
 				<ScoreBoardSocket scoreUser={participant} {index} />
 			</div>

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import QuestionDisplay from '$components/playGame/socket/questionDisplay.svelte';
 	import { TypeQuestion } from '$libs/constants/typeQuestion';
 	import { tweened } from 'svelte/motion';
 	import SingleChoiceSocket from '$components/playGame/socket/singleChoiceSocket.svelte';
@@ -20,6 +19,7 @@
 	import ProgressBar from '$components/playGame/progressBar.svelte';
 	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
 	import type { SocketQuiz } from '../../play-game/[quizzesId]/play/quizzes.interface';
+	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -234,7 +234,7 @@
 				{/if}
 				<div class="h-full flex flex-col gap-4">
 					<div class="question h-2/3">
-						<QuestionDisplay
+						<QuestionDisplaySocket
 							quizzesType={questions[questionPointer].type}
 							quizzesTitle={questions[questionPointer].title}
 							quizzesNumber={questions.length}
@@ -258,6 +258,7 @@
 									{socket}
 									isTrueFalse={false}
 									bind:countDown
+									{isHost}
 								/>
 							</div>
 						{:else if questions[questionPointer].type === TypeQuestion.TRUE_FALSE}
@@ -272,6 +273,7 @@
 									{socket}
 									isTrueFalse={true}
 									bind:countDown
+									{isHost}
 								/>
 							</div>
 						{:else if questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
@@ -284,6 +286,7 @@
 									{socket}
 									{isShowOption}
 									bind:countDown
+									{isHost}
 								/>
 							</div>
 						{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
@@ -295,6 +298,7 @@
 									{showModal}
 									{socket}
 									bind:countDown
+									{isHost}
 								/>
 							</div>
 						{:else if questions[questionPointer].type === TypeQuestion.GUESS_WORDS}
@@ -305,6 +309,7 @@
 								{showModal}
 								{socket}
 								bind:countDown
+								{isHost}
 							/>
 						{:else if questions[questionPointer].type === TypeQuestion.ARRANGE_WORD}
 							<ArrangeAnswerSocket
@@ -314,6 +319,7 @@
 								{showModal}
 								{socket}
 								bind:countDown
+								{isHost}
 							/>
 						{:else if questions[questionPointer].type === TypeQuestion.INPUT_TEXT}
 							<InputTextSocket
@@ -323,6 +329,7 @@
 								{showModal}
 								{socket}
 								bind:countDown
+								{isHost}
 							/>
 						{/if}
 					</div>
@@ -335,5 +342,5 @@
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} {showScoreBoard} />
+	<ScoreboardModal {participants} {showScoreBoard}/>
 {/if}

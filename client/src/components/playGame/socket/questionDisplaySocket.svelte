@@ -160,10 +160,13 @@
 		<button
 			class="h-1/2 w-full flex justify-center items-center"
 			on:click={() => {
-				modalOpen = true;
+				const screenWidth = window.innerWidth;
+				if (screenWidth >= 768) {
+					modalOpen = true;
+				}
 			}}
 		>
-			<img src={quizzesImage} alt="quizzesImage" class="max-h-full rounded-xl shadow-xl" />
+			<img src={quizzesImage} alt="quizzesImage" class="h-full w-auto rounded-xl shadow-xl" />
 		</button>
 		<ImageModal bind:modalOpen imageSrc={quizzesImage} />
 	{/if}

@@ -115,7 +115,7 @@
 	</div>
 	{#if quizzesImage && quizzesType !== TypeQuestion.GIF_SINGLE_CHOICE}
 		<button
-			class=" h-1/2 w-full flex justify-center items-center"
+			class="h-1/2 w-full flex justify-center items-center"
 			on:click={() => {
 				const screenWidth = window.innerWidth;
 				if (screenWidth >= 768) {
