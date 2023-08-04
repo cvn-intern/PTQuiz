@@ -16,6 +16,7 @@
 	export let quizzesNumber: number;
 	export let quizzesPointer: number;
 	export let quizzesImage: string | null;
+	export let quizzesHint: string | null;
 	export let isHost: boolean = false;
 	export let timer: Tweened<number>;
 	export let questionTime: number;
@@ -104,7 +105,14 @@
 	}
 </script>
 
-<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
+<InformationModal
+	{quizzesType}
+	{quizzesPointer}
+	{quizzesNumber}
+	{isHost}
+	{quizzesHint}
+	isSingle={false}
+/>
 <div class={`flex justify-center px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
 	{#if isShowOption}
 		<p class="p-4 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-left">

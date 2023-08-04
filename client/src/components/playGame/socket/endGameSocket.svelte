@@ -23,7 +23,7 @@
 </script>
 
 <div class="w-full h-full flex flex-col">
-	<div class="flex justify-between my-8">
+	<div class="flex justify-between m-8">
 		<button
 			class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-secondary"
 			on:click={() => {

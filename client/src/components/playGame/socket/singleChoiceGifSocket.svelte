@@ -3,8 +3,6 @@
 	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/play-game/[quizzesId]/play/quizzes.interface';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { Modal } from 'flowbite-svelte';
-	import Icon from '@iconify/svelte';
 	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
 	import TrueFalseModal from '$components/trueFalseModal.svelte';
 	import type { Tweened } from 'svelte/motion';
