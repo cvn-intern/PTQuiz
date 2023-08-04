@@ -2,7 +2,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import QuestionDisplay from '$components/playGame/socket/questionDisplay.svelte';
-	import type { SocketQuiz } from '../../playGame/[quizzesId]/play/quizzes.interface';
 	import { TypeQuestion } from '$libs/constants/typeQuestion';
 	import { tweened } from 'svelte/motion';
 	import SingleChoiceSocket from '$components/playGame/socket/singleChoiceSocket.svelte';
@@ -20,6 +19,7 @@
 	import ScoreboardModal from '$components/playGame/socket/scoreboardModal.svelte';
 	import ProgressBar from '$components/playGame/progressBar.svelte';
 	import EndGameSocket from '$components/playGame/socket/endGameSocket.svelte';
+	import type { SocketQuiz } from '../../play-game/[quizzesId]/play/quizzes.interface';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -105,10 +105,18 @@
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
-			timer = tweened(original, {
-				duration: 1000
-			});
+			if (isHost) {
+				original += 4;
+				timer = tweened(original, {
+					duration: 1000
+				});
+			} else {
+				timer = tweened(original, {
+					duration: 1000
+				});
+			}
 			countDown = setInterval(() => {
+				console.log($timer);
 				if ($timer >= 1 && isShowOption) {
 					$timer = Math.floor($timer) - 1;
 				}
@@ -130,10 +138,21 @@
 				};
 			});
 			original = questions[questionPointer].time;
-			timer = tweened(original, {
-				duration: 1000
-			});
-
+			if (isHost) {
+				original += 4;
+				timer = tweened(original, {
+					duration: 1000
+				});
+			} else {
+				timer = tweened(original, {
+					duration: 1000
+				});
+			}
+			countDown = setInterval(() => {
+				if ($timer >= 1 && isShowOption) {
+					$timer = Math.floor($timer) - 1;
+				}
+			}, 1000);
 			if (questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE) {
 				isShowOption = false;
 			} else {
@@ -210,6 +229,7 @@
 						{endGame}
 						{getScoreBoard}
 						{participants}
+						bind:timer
 					/>
 				{/if}
 				<div class="h-full flex flex-col gap-4">
