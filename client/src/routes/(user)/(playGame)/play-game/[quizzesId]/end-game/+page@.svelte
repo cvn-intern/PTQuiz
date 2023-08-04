@@ -30,7 +30,7 @@
 			<button
 				class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-secondary"
 				on:click={() => {
-					goto(`/playGame/${quizzesId}`);
+					goto(`/play-game/${quizzesId}`);
 				}}>{$t('common.playAgain')}</button
 			>
 			<button

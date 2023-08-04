@@ -9,6 +9,13 @@
 	import Loading from '$components/loading.svelte';
 	import logo from '../../assets/logo.png';
 
+	function convertSecondsToMinutes(seconds: number): string {
+		if (seconds === 0) return `0 ${$t('common.mins')} : 0 ${$t('common.secs')} `;
+		let minutes = Math.floor(seconds / 60);
+		let remainingSeconds = seconds % 60;
+		return `${minutes} ${$t('common.mins')} : ${remainingSeconds} ${$t('common.secs')}`;
+	}
+
 	const typeI18n = (type: number) => {
 		switch (type) {
 			case 0:
@@ -70,8 +77,10 @@
 							<td class=" border-r border-l"
 								>{levelI18n(cardInfor?.difficultyLevel)}</td
 							>
-							<td class=" border-r border-l">60p</td>
-							<td class=" border-l">10</td>
+							<td class=" border-r border-l"
+								>{convertSecondsToMinutes(cardInfor?.durationMins)}
+							</td>
+							<td class=" border-l">{questionList.length}</td>
 						</tr>
 					</table>
 				</div>

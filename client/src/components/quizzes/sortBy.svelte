@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { Button, Dropdown, Chevron, Radio } from 'flowbite-svelte';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	export let defaultSort = 0;
+	export let defaultSort: number;
 	export let totalQuizzes: number;
 	export let quizzes: IQuiz[];
+	export let currentPage: number;
+
 	$: typeOfSort = (() => {
 		if (defaultSort === 0) return 'Increase date';
 		if (defaultSort === 1) return 'Decrease date';
@@ -15,14 +16,13 @@
 	async function fetchQuizzes(page: number, sortBy: number) {
 		const response = await fetch(`/api/quizzes/${page}/${sortBy}`);
 		const data = await response.json();
+		defaultSort = sortBy;
 		quizzes = data.quizzesOfUser;
 		totalQuizzes = data.totalQuizzes;
 	}
-	let currentPage = 1;
 	function handleSortChange(sortBy: number) {
-		if ($page.params.page !== undefined) currentPage = parseInt($page.params.page);
+		currentPage = 1;
 		fetchQuizzes(currentPage, sortBy);
-		goto(`/dashboard/quizzes/${currentPage}/${sortBy}`);
 	}
 </script>
 

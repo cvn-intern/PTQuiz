@@ -1,21 +1,28 @@
 <script lang="ts">
+	import type { Tweened } from 'svelte/motion';
+
 	export let questionPointer: number;
 	export let questions: any[];
 	export let nextQuestion: () => void;
 	export let endGame: () => void;
 	export let getScoreBoard: () => void;
 	export let participants: any[];
+	export let timer: Tweened<number>;
 	let numberOfAnswer: number;
 	let isFullAnswer: boolean = false;
 
+	let clientParticipants: any[];
 	$: {
-		numberOfAnswer = participants.filter((participant: any) => {
+		clientParticipants = participants.filter((participant) => participant.isHost === false);
+		numberOfAnswer = clientParticipants.filter((participant: any) => {
 			return participant.isAnswered;
 		}).length;
-		if (numberOfAnswer === participants.length) {
+		if (numberOfAnswer === clientParticipants.length) {
 			isFullAnswer = true;
 		} else {
-			isFullAnswer = false;
+			if ($timer <= 0) {
+				isFullAnswer = true;
+			} else isFullAnswer = false;
 		}
 	}
 </script>
@@ -42,9 +49,7 @@
 		class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
 		on:click={getScoreBoard}>Score board</button
 	>
-	<div
-		class="h-fit w-fit bg-orangeLogo text-white font-bold  py-2 px-4 rounded-md cursor-default"
-	>
-		{numberOfAnswer} / {participants.length} Players Answered
+	<div class="h-fit w-fit bg-orangeLogo text-white font-bold py-2 px-4 rounded-md cursor-default">
+		{numberOfAnswer} / {clientParticipants.length} Players Answered
 	</div>
 </div>

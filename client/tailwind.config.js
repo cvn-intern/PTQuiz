@@ -26,7 +26,9 @@ export default {
 				run1st: '#FFAA00',
 				run2st: '#179cd4',
 				run3st: '#23d964',
-				bgChat: '#BAD1CD',
+				bgChat: '#fab73d',
+				bgChat2: '#fab73d',
+				yellowChat: '#E8B100',
 				primaryColor: {
 					50: '#FFF5F2',
 					100: '#FFF1EE',
@@ -119,6 +121,15 @@ export default {
 			},
 			height: {
 				halfScreen: '50vh'
+			},
+			backgroundImage: {
+				user: "url('https://vapa.vn/wp-content/uploads/2022/12/we-bare-bears-hinh-nen-cute-001-1.jpg')",
+				chat: "url('https://wallpapers.com/images/high/pixel-3-background-04zh8d2aw40nzy0h.webp')",
+				room: "url('https://lh3.googleusercontent.com/fife/AKsag4Mlp7CeAomPddKWlfUdqplY8gYI7QRaB29JBGx4kn0AehQI08kZJxYhqttjWDc9z_SDlAkbYU0r_ObPS61KJ4x_ARJKl3YLKEipCTior05sNk4pgbyvh1Zz2ybLYbLAjeKvxlzUjCZsbHEV001_IbiErZfYJMgNMnQ5VXX0OkBs91TeXWXOBgmJbsCcPYb9CBTsIEu-x4uDWlDNlbY439AprHWeuJcPvcBl1MReTDpfX8f4lthUO_HsLWciM7tl2NWXx4LVLtwz8cw6pMh2lbRNuknTJk-VAAS08eWSry8_JyhVlNqunMTBUz0fFwUSq88z_yyN9jmlFclJ0OZFS_IXaHmTrHE3HIQMcHVghk6Lfu7ke1gcFdHH3HKyZqauSlnioIUnPLphsGxTLyeKPlMzE33OQnS2RA51H96_6xOg3Zcc2vCWoe483JK4sIpVSl1jCFCvdWqwRzKr-5icmLxupNF5QPGZGlMIL2Ko5TDb0cbg5j5flN4b6XEaebBcO3Ap9uRp1rl3R59rxXZT9GCpd9yKmYVo5BJhKz1VNlEAbbUA2BAUMy643mf-XK4EanhcmDCF1qYJDTVlcubOd7G-o3d-Xd5FZsbuqUZnO2Z6VjBWGGWNpE8Mqxvkot4srWw36F1-P9HTldQV4xrXuLnAc6VyckpsbxiXRD12r06W4JTb2zBwASkcUkRWreMLTmlPEDuwabbYsYKcxLbL0mdPb9QPNGylaN4MikIIYRZUOK1KYrCNJPqkNu-9bh_c23oFe5fPsUL0x7dKdeCy6dTG7my6Me5XYQrdt7zf4wW5kyMjn7w_wSF7j-df7PLrfX2ItaI_py6A1rBSZbtOcb5JyRnQkkYX0H2j5HHFI3TaV8rfYzkhqtREL51NavoWXSJZeD30j7s236BiZGqCtdg8S2mJWm3TRFnuyPPZSG8sO_ufPVcWv8Bp9sFgRTnnVEtl8YmSMMb7bCByQHGrracej8rZBGXd7sb7BQusJFIyE-LfhXPARvtlZ7MFkFdTZ1tNjREHT_eCnUlXq8LSmBQMs787fWMoegXbDGB-m4uM0h-sqMNF6szd0gJn-e6mVx4YxaMvldjFUVNvRvDkNWpCjzDSnGpPITErscO3o22l6UlowL5nK6M-2DO3dwxK42WTxcaHhM3To_3wgwRsExRwIh4p9cAo83WCVMGyy7r7lf1bQjSiyZiG1gRyfomKbT4iiMbU6vJuqKSL6otmwy9TKX0ly3m66aKkJFqE2asVTXImui1NgsGjjRu3t7X032HdRQ6t8q8UQq2XeSg8WgQvIXBH8rYkdv5LYygQRw1ofpBh2oa1cc11ZiKl7SVB9RooErYQ31qVWssMS4E_RBtj7nk2ogK4Y1DmMSF0K5abdhPNcu9SGj8Gt1dM18lGqa34OzflXD0NnhKKoHJBzd0fr9TnFuDWCyylYkMPjAubzkp4K7O4iHN5dV7GQydGnSEZUKg6kdS3_nz0mSlXtgMgF_FsuFElSaLEVW8q-Q1C7rlN6Af2OhMjEaCFi_w3I357JHmr=w1920-h969')",
+				room2: "url('https://cdn3.vectorstock.com/i/1000x1000/13/87/tropical-leaves-frame-isolated-nature-background-vector-46891387.jpg')"
+			},
+			boxShadow: {
+				shadowChat: 'rgba(149, 157, 165, 0.2) 0 8px 24px'
 			}
 		}
 	},

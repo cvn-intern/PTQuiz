@@ -14,7 +14,7 @@
 	import InputText from '$components/playGame/singlePlay/inputText.svelte';
 	import ArrangeAnswer from '$components/playGame/singlePlay/arrangeAnswer.svelte';
 	import CrossWords from '$components/playGame/singlePlay/crossWords.svelte';
-	import ProgressBar from '$components/playGame/socket/progressBar.svelte';
+	import ProgressBar from '$components/playGame/progressBar.svelte';
 	export let data;
 
 	let questionPointer = 0;
@@ -49,7 +49,7 @@
 	gameInfoStore.subscribe((val) => (gameInfo = val));
 
 	if (!gameInfo) {
-		window.location.href = `/playGame/${quizzesId}`;
+		window.location.href = `/play-game/${quizzesId}`;
 	}
 
 	let original = quizzes[0].time;
@@ -189,7 +189,7 @@
 
 			if (response.status === 200) {
 				toast.success(t.get('common.success'));
-				goto(`/playGame/${quizzesId}/endGame`);
+				goto(`/play-game/${quizzesId}/end-game`);
 			} else {
 				toast.error(result || 'Invalid submit');
 			}
@@ -285,112 +285,111 @@
 	}
 </script>
 
-<div class="bg-greenLight flex flex-col h-screen w-full font-sans p-2 gap-4">
-	<div class="pt-2">
-		<ProgressBar {stringTimer} />
+<div class="bg-greenLight flex flex-col h-screen w-full font-sans">
+	<div class="question h-2/3 pt-2 pb-4 flex flex-col">
+		<div class="px-2">
+			<ProgressBar {stringTimer} />
+		</div>
+		<QuestionDisplay
+			quizzesHint={quizzes[questionPointer].hint}
+			quizzesType={quizzes[questionPointer].type}
+			quizzesTitle={quizzes[questionPointer].title}
+			quizzesNumber={quizzes.length}
+			quizzesPointer={questionPointer}
+			quizzesImage={quizzes[questionPointer].image}
+			bind:isShowOption
+		/>
 	</div>
-	<div class="h-full p-2 flex flex-col gap-4">
-		<div class="question h-2/3">
-			<QuestionDisplay
-				quizzesType={quizzes[questionPointer].type}
-				quizzesTitle={quizzes[questionPointer].title}
-				quizzesNumber={quizzes.length}
-				quizzesPointer={questionPointer}
-				quizzesImage={quizzes[questionPointer].image}
-				bind:isShowOption
-			/>
-		</div>
-		<div class="answer h-1/3">
-			{#if quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
-				<div
-					class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
-				>
-					{#each fourOptions as opt, index}
-						<SingleChoiceAnswer
-							option={opt}
-							{index}
-							{isAnswerChecked}
-							{selectedAnswerIndex}
-							{pickAnswer}
-							{showModal}
-							{isTrueFalse}
-							bind:isGif
-							bind:isShowOption
-						/>
-					{/each}
-				</div>
-			{:else if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
-				<div class="grid grid-cols-2 grid-rows-2 w-full gap-2 md:gap-4 h-full">
-					{#each fourOptions as opt, index}
-						<SingleChoiceAnswer
-							option={opt}
-							{index}
-							{isAnswerChecked}
-							{selectedAnswerIndex}
-							{pickAnswer}
-							{showModal}
-							{isTrueFalse}
-							bind:isGif
-							bind:isShowOption
-						/>
-					{/each}
-				</div>
-			{:else if quizzes[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
-				<div class="h-full">
-					<MultipleChoiceAnswer
-						bind:multipleChoiceAnswer
-						bind:isMultipleChecked
-						bind:isAnswerChecked
-						{fourOptions}
+	<div class="answer h-1/3">
+		{#if quizzes[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
+			<div
+				class="grid grid-cols-1 gird-rows-4 md:grid-cols-2 md:grid-rows-2 w-full gap-4 h-full"
+			>
+				{#each fourOptions as opt, index}
+					<SingleChoiceAnswer
+						option={opt}
+						{index}
+						{isAnswerChecked}
+						{selectedAnswerIndex}
+						{pickAnswer}
 						{showModal}
+						{isTrueFalse}
+						bind:isGif
+						bind:isShowOption
 					/>
-				</div>
-			{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
-				<div
-					class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
-				>
-					{#each fourOptions.slice(0, 2) as opt, index}
-						{#if opt.contents !== null}
-							<SingleChoiceAnswer
-								option={opt}
-								{index}
-								{isAnswerChecked}
-								{selectedAnswerIndex}
-								{pickAnswer}
-								{showModal}
-								{isTrueFalse}
-								bind:isGif
-								bind:isShowOption
-							/>
-						{/if}
-					{/each}
-				</div>
-			{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
-				<CrossWords
+				{/each}
+			</div>
+		{:else if quizzes[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+			<div class="grid grid-cols-2 grid-rows-2 w-full gap-2 md:gap-4 h-full">
+				{#each fourOptions as opt, index}
+					<SingleChoiceAnswer
+						option={opt}
+						{index}
+						{isAnswerChecked}
+						{selectedAnswerIndex}
+						{pickAnswer}
+						{showModal}
+						{isTrueFalse}
+						bind:isGif
+						bind:isShowOption
+					/>
+				{/each}
+			</div>
+		{:else if quizzes[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
+			<div class="h-full">
+				<MultipleChoiceAnswer
+					bind:multipleChoiceAnswer
+					bind:isMultipleChecked
 					bind:isAnswerChecked
-					bind:answer={quizzes[questionPointer].written}
-					bind:finalAnswer
-					bind:isGuessWordsChecked
+					{fourOptions}
 					{showModal}
 				/>
-			{:else if quizzes[questionPointer].type === TypeQuestion.INPUT_TEXT}
-				<InputText
-					bind:isAnswerChecked
-					bind:answer={quizzes[questionPointer].written}
-					bind:finalAnswer
-					bind:isGuessWordsChecked
-					{showModal}
-					{pickGuessWords}
-				/>
-			{:else if quizzes[questionPointer].type === TypeQuestion.ARRANGE_WORD}
-				<ArrangeAnswer
-					bind:isAnswerChecked
-					bind:answer={quizzes[questionPointer].written}
-					bind:finalAnswer
-					bind:isGuessWordsChecked
-					{showModal}
-				/>
-			{/if}
-		</div>
+			</div>
+		{:else if quizzes[questionPointer].type === TypeQuestion.TRUE_FALSE}
+			<div
+				class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
+			>
+				{#each fourOptions.slice(0, 2) as opt, index}
+					{#if opt.contents !== null}
+						<SingleChoiceAnswer
+							option={opt}
+							{index}
+							{isAnswerChecked}
+							{selectedAnswerIndex}
+							{pickAnswer}
+							{showModal}
+							{isTrueFalse}
+							bind:isGif
+							bind:isShowOption
+						/>
+					{/if}
+				{/each}
+			</div>
+		{:else if quizzes[questionPointer].type === TypeQuestion.GUESS_WORDS}
+			<CrossWords
+				bind:isAnswerChecked
+				bind:answer={quizzes[questionPointer].written}
+				bind:finalAnswer
+				bind:isGuessWordsChecked
+				{showModal}
+			/>
+		{:else if quizzes[questionPointer].type === TypeQuestion.INPUT_TEXT}
+			<InputText
+				bind:isAnswerChecked
+				bind:answer={quizzes[questionPointer].written}
+				bind:finalAnswer
+				bind:isGuessWordsChecked
+				{showModal}
+				{pickGuessWords}
+			/>
+		{:else if quizzes[questionPointer].type === TypeQuestion.ARRANGE_WORD}
+			<ArrangeAnswer
+				bind:isAnswerChecked
+				bind:answer={quizzes[questionPointer].written}
+				bind:finalAnswer
+				bind:isGuessWordsChecked
+				{showModal}
+			/>
+		{/if}
 	</div>
 </div>

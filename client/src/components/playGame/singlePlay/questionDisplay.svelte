@@ -9,9 +9,11 @@
 	export let quizzesTitle: string;
 	export let quizzesNumber: number;
 	export let quizzesPointer: number;
+	export let quizzesHint: string | null;
 	export let quizzesImage: string | null;
 	export let isShowOption: boolean = true;
 
+	let isGifButtonClicked: boolean = false;
 	let modalOpen: boolean = false;
 
 	async function getDuration(url: any) {
@@ -43,6 +45,7 @@
 	async function showGif() {
 		const duration = await getDuration(quizzesImage);
 		isShowGif = true;
+		isGifButtonClicked = true;
 		setTimeout(() => {
 			const gif = document.getElementById('gif');
 			if (gif) {
@@ -57,73 +60,77 @@
 	}
 </script>
 
-<div class="flex flex-col h-full w-full">
-	<div>
-		<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
-		<div class="flex justify-center items-center px-4 flex-1">
-			{#if isShowOption}
-				<p
-					class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center"
+<InformationModal
+	{quizzesType}
+	{quizzesPointer}
+	{quizzesNumber}
+	{quizzesHint}
+	isHost={false}
+	isSingle={true}
+/>
+<div class={`flex justify-center px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
+	{#if isShowOption}
+		<p class="p-4 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-left">
+			{quizzesTitle}
+		</p>
+	{:else}
+		<div class="flex flex-col gap-3 items-center">
+			<p class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center">
+				Hãy xem hình và đoán
+			</p>
+
+			<div class="flex flex-col flex-1 justify-center gap-4">
+				<button
+					class={clsx(
+						' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
+						{
+							hidden: isShowGif
+						}
+					)}
+					on:click={() => {
+						showGif();
+					}}
 				>
-					{quizzesTitle}
-				</p>
-			{:else}
-				<div class="flex flex-col justify-between gap-3 items-center">
-					<p
-						class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center"
-					>
-						Hãy xem hình và đoán
-					</p>
+					Click here!
+				</button>
 
-					<button
-						class={clsx(
-							' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
-							{
-								hidden: isShowGif
-							}
-						)}
-						on:click={() => {
-							showGif();
-						}}
-					>
-						Click here!
-					</button>
+				<button
+					class={clsx(
+						' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
+						{
+							hidden: !isGifButtonClicked || isShowGif
+						}
+					)}
+					on:click={startGame}
+				>
+					Start game!
+				</button>
+			</div>
 
-					<button
-						class={clsx(
-							' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
-							{
-								hidden: isShowGif
-							}
-						)}
-						on:click={startGame}
-					>
-						Start game!
-					</button>
-
-					{#if isShowGif}
-						<div class="h-1/2 w-full flex justify-center items-center">
-							<img
-								id="gif"
-								src={quizzesImage}
-								alt="quizzesImage"
-								class="h-full w-full rounded-xl shadow-xl"
-							/>
-						</div>
-					{/if}
+			{#if isShowGif}
+				<div class="h-full w-full flex justify-center items-center">
+					<img
+						id="gif"
+						src={quizzesImage}
+						alt="quizzesImage"
+						class="h-full w-full rounded-xl shadow-xl"
+					/>
 				</div>
 			{/if}
 		</div>
-	</div>
-	{#if quizzesImage && quizzesType !== TypeQuestion.GIF_SINGLE_CHOICE}
-		<button
-			class="h-1/2 w-full flex justify-center items-center"
-			on:click={() => {
-				modalOpen = true;
-			}}
-		>
-			<img src={quizzesImage} alt="quizzesImage" class="max-h-full rounded-xl shadow-xl" />
-		</button>
-		<ImageModal bind:modalOpen imageSrc={quizzesImage} />
 	{/if}
 </div>
+{#if quizzesImage && quizzesType !== TypeQuestion.GIF_SINGLE_CHOICE}
+	<button
+		class="h-1/2 w-full flex justify-center items-center"
+		on:click={() => {
+			const screenWidth = window.innerWidth;
+			if (screenWidth >= 768) {
+				modalOpen = true;
+			}
+		}}
+	>
+		<img src={quizzesImage} alt="quizzesImage" class="h-full w-auto rounded-xl shadow-xl" />
+	</button>
+	<ImageModal bind:modalOpen imageSrc={quizzesImage} />
+{/if}

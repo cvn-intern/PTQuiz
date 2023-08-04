@@ -4,11 +4,13 @@
 	import Icon from '@iconify/svelte';
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import logo from '../../assets/logo.png';
 	import { t, locale, locales } from '$i18n/translations';
 	import type { LayoutData } from '../../routes/$types';
 	import { AppRoute } from '../../libs/constants/appRoute';
 	import { onMount } from 'svelte';
+	import clsx from 'clsx';
 	export let user: LayoutData;
 
 	const handleChange = async (currentTarget: any) => {
@@ -63,8 +65,8 @@
 	<a class="logo flex items-center gap-2" href="/">
 		<img src={logo} alt="logo" class="hidden md:block w-16" />
 		<h1 class="hidden text-2xl md:block md:text-3xl font-bold font-title text-darkGreen">
-			Quiz<sup class="text-xl text-orangeLogo">P</sup><sup class="text-xl text-blueLogo"
-				>T</sup
+			Quiz<sup class="text-lg md:text-xl text-orangeLogo">P</sup><sup
+				class="text-lg md:text-xl text-blueLogo">T</sup
 			>
 		</h1>
 	</a>
@@ -72,8 +74,12 @@
 	<div class="flex items-center gap-24">
 		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
 			<li>
-				<a href="/" title={$t('common.home')} class="hover:text-secondary"
-					>{$t('common.home')}</a
+				<a
+					href="/"
+					title={$t('common.home')}
+					class={clsx('hover:text-secondary', {
+						'font-black': $page.url.pathname === '/'
+					})}>{$t('common.home')}</a
 				>
 			</li>
 			<li>
@@ -82,7 +88,9 @@
 						goto('/discovery/all');
 					}}
 					title={$t('common.discovery')}
-					class="hover:text-secondary"
+					class={clsx('hover:text-secondary', {
+						'font-black': $page.url.pathname.includes('/discovery')
+					})}
 				>
 					{$t('common.discovery')}
 				</button>

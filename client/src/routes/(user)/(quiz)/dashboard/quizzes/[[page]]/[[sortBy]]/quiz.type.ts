@@ -17,4 +17,6 @@ export interface IQuizAPI {
 	image: string;
 	createdAt: string;
 	id: string;
+	durationMins: number;
+	difficultyLevel: number;
 }

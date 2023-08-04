@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-
 	export let imageSrc: string;
 	export let modalOpen: boolean;
 
@@ -22,7 +20,7 @@
 		type="button"
 		href={'#'}
 	>
-		<div class="relative">
+		<div class="max-w-[40vh] max-h-[40vh]">
 			<img src={imageSrc} alt="quizzesImage" class="rounded-xl shadow-xl scale-[2.5]" />
 		</div>
 	</a>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Socket } from 'socket.io-client';
-	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/playGame/[quizzesId]/play/quizzes.interface';
+	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/play-game/[quizzesId]/play/quizzes.interface';
 	import { page } from '$app/stores';
 	import { onDestroy, onMount } from 'svelte';
 	import { Modal } from 'flowbite-svelte';
@@ -14,6 +14,7 @@
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 	export let countDown: any;
+	export let isHost: boolean;
 
 	let fourOptions: any[] = [];
 	let answers = [false, false, false, false];
@@ -27,7 +28,7 @@
 				id: optionKey,
 				contents: question.options[optionKey],
 				isCorrect: false,
-				disabled: isPicked ? true : false
+				disabled: isHost || isPicked ? true : false
 			}));
 		}
 	}
@@ -92,6 +93,6 @@
 		<p class="text-xl md:text-3xl text-left">{option.contents}</p>
 	</button>
 {/each}
-{#if showModal}
+{#if showModal && !isHost}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}

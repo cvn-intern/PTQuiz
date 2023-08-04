@@ -48,5 +48,6 @@
 	"POINT_MUST_BE_A_NUMBER": "Điểm phải là số",
 	"FILL_ALL_FIELDS": "Vui lòng điền đầy đủ thông tin",
 	"SAVE_ALL_BEFORE_ADD_QUESTION": "Vui lòng lưu tất cả thông tin trước khi thêm câu hỏi",
-	"POINT_MUST_BE_GREATER_THAN_PASSING_POINT": "Tổng điểm phải lớn hơn điểm đạt"
+	"POINT_MUST_BE_GREATER_THAN_PASSING_POINT": "Tổng điểm phải lớn hơn điểm đạt",
+	"UNKNOWN_FILE_FORMAT": "Định dạng file không được hỗ trợ"
 }

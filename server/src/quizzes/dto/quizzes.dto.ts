@@ -55,7 +55,7 @@ export class QuizzesDto {
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'DurationMins can not be empty' })
     @IsNumber({}, { message: 'DurationMins must be a number' })
-    durationMins = -1;
+    durationMins = 0;
 
     @IsOptional()
     @Transform(({ value }) => JSON.parse(value))
@@ -120,4 +120,7 @@ export class QuizzesDto {
     @IsNotEmpty({ message: 'IsShared can not be empty' })
     @IsBoolean({ message: 'IsShared must be a boolean' })
     isShared = true;
+
+    @IsOptional()
+    categoryId = 'clkjsrewg0004k6m5dt89zll5';
 }

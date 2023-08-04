@@ -44,7 +44,8 @@ export enum JwtError {
 
 export enum UserError {
 	FILE_TOO_LARGE = 'File size too large, max file size is 5MB',
-	DISPLAY_NAME_CANNOT_BE_EMPTY = "Display name can't be empty"
+	DISPLAY_NAME_CANNOT_BE_EMPTY = "Display name can't be empty",
+	UNKNOWN_FILE_FORMAT = 'An unknown file format not allowed'
 }
 
 export enum QuizError {
@@ -63,4 +64,17 @@ export enum QuestionError {
 	QUESTION_SUCCESSFULLY_DELETED = 'Question successfully deleted',
 	QUESTION_MISSING_ANSWER = 'Question must have at least one answer',
 	QUESTION_MISSING_CORRECT_ANSWER = 'Question must have at least one correct answer'
+}
+
+export enum SocketError {
+	SOCKET_USER_ALREADY_CONNECTED = "You've already joined this room, please go to the right tab",
+	SOCKET_ROOM_CLOSED = 'Room is closed',
+	SOCKET_ROOM_NOT_FOUND = 'Room does not exist',
+	SOCKET_USER_NOT_FOUND = 'User does not exist',
+	SOCKET_USER_NOT_JOINED = 'User has not joined this room',
+	SOCKET_QUIZ_NOT_FOUND = 'Quiz does not exist',
+	SOCKET_QUESTION_NOT_FOUND = 'Question does not exist',
+	SOCKET_HOST_NOT_FOUND = 'Host does not exist',
+	SOCKET_ROOM_STARTED = 'Room has already started',
+	SOCKET_ROOM_PERMISSION_DENIED = 'You do not have permission to do this'
 }

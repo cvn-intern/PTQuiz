@@ -32,7 +32,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 			type: question.type,
 			index: 1,
 			time: question.time,
-			hint: question.hint
+			hint: question.hint,
+			
 		};
 		return result;
 	});
@@ -54,8 +55,7 @@ export const actions = {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
 				passingPoint: parseInt(form.get('passingPoint')),
-				point: parseInt(form.get('point')),
-				image: form.get('image')
+				point: parseInt(form.get('point'))
 			});
 			const response = await fetch(`/api/quizzes/update/${params.quizId}`, {
 				method: 'PUT',
@@ -66,7 +66,7 @@ export const actions = {
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 200;
 			message.success.message = result.message;
-			message.success.id = result.data.id;
+			message.success.id = result?.data?.id;
 			message.error.message = result.message;
 			return message;
 		} catch (error: any) {
@@ -80,6 +80,8 @@ export const actions = {
 					`${error.errors[i].path}`
 				] = error.errors[i].message;
 			}
+
+			if (!error.errors.length) message.error.message = error?.message;
 
 			return fail(400, { message });
 		}

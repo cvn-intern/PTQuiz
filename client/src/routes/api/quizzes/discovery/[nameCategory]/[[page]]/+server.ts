@@ -2,9 +2,9 @@ import { VITE_API_URL } from '$env/static/private';
 import { HttpStatus } from '$constants/httpStatus';
 import type { RequestHandler } from '../../$types';
 
-export const GET: RequestHandler = async ({ fetch, params }) => {
+export const GET: RequestHandler = async ({ fetch, params, locals }) => {
 	const response = await fetch(
-		`${VITE_API_URL}/quizzes/filter?categoryName=${params.nameCategory}&page=${params.page}`,
+		`${VITE_API_URL}/quizzes/filter?categoryName=${params.nameCategory}&page=${params.page}&userId=${locals?.user?.id}`,
 		{
 			method: 'GET',
 			headers: {

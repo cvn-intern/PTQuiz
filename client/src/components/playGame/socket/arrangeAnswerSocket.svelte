@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/playGame/[quizzesId]/play/quizzes.interface';
+	import type { SocketQuiz } from '../../../routes/(user)/(playGame)/play-game/[quizzesId]/play/quizzes.interface';
 	import type { Socket } from 'socket.io-client';
 	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
 	import { onMount } from 'svelte';
@@ -21,6 +21,7 @@
 	export let isPicked: boolean;
 	export let timer: Tweened<number>;
 	export let countDown: any;
+	export let isHost: boolean;
 
 	type CharacterObject = {
 		char: string;
@@ -177,6 +178,6 @@
 	</div>
 {/if}
 
-{#if showModal}
+{#if showModal && !isHost}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}
