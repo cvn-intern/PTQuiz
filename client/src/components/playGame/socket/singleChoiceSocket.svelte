@@ -13,6 +13,7 @@
 	export let timer: Tweened<number>;
 	export let isTrueFalse: boolean;
 	export let countDown: any;
+	export let isHost: boolean;
 
 	let fourOptions: any[] = [];
 	let timestamp: number;
@@ -20,6 +21,7 @@
 	let isLoading: boolean = false;
 	let answers = [false, false, false, false];
 	let score: number;
+
 	$: {
 		if (!isPicked) {
 			answers = [false, false, false, false];
@@ -29,7 +31,7 @@
 				id: optionKey,
 				contents: question.options[optionKey],
 				isCorrect: false,
-				disabled: isPicked ? true : false
+				disabled: isHost || isPicked ? true : false
 			}));
 		}
 	}
@@ -146,6 +148,6 @@
 	{/each}
 {/if}
 
-{#if showModal && isTimeout}
+{#if showModal && isTimeout && !isHost}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}
