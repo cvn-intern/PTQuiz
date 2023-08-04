@@ -145,6 +145,8 @@
 	"confirmDelete": "Bạn có chắc chắn muốn xóa?",
 	"mins": "phút",
 	"secs": "giây",
+	"acceptDeleteQuiz": "Vâng, chắc chắn rồi :D",
+	"cancelDeleteQuiz": "Từ từ để suy nghĩ",
 	"viewScoreboard": "Xem bảng điểm",
 	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi"
 }
