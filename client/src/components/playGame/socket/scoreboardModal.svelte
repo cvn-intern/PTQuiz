@@ -3,8 +3,11 @@
 	import { Modal } from 'flowbite-svelte';
 	export let showScoreBoard: boolean;
 	export let participants: any[];
-	const clientParticipants = participants.filter((participant) => participant.isHost === false);
-
+	let clientParticipants: any[];
+	
+	$: {
+		clientParticipants = participants.filter((participant) => participant.isHost === false);
+	}
 </script>
 
 <Modal bind:open={showScoreBoard} autoclose placement="top-center">

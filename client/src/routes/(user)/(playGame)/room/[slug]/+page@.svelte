@@ -217,8 +217,8 @@
 		{:else if isEndGame}
 			<EndGameSocket {participants} length={questions.length} />
 		{:else if questions.length > 0}
-			<div class="flex flex-col h-screen w-full font-sans gap-4">
-				<div class="pt-2">
+			<div class="question h-2/3 pb-4 flex flex-col">
+				<div class="py-2">
 					<ProgressBar {stringTimer} />
 				</div>
 				{#if isHost}
@@ -232,108 +232,104 @@
 						bind:timer
 					/>
 				{/if}
-				<div class="h-full flex flex-col gap-4">
-					<div class="question h-2/3">
-						<QuestionDisplaySocket
-							quizzesType={questions[questionPointer].type}
-							quizzesTitle={questions[questionPointer].title}
-							quizzesNumber={questions.length}
-							quizzesPointer={questionPointer}
-							quizzesImage={questions[questionPointer].image}
-							questionTime={questions[questionPointer].time}
-							{isHost}
-							{socket}
+				<QuestionDisplaySocket
+					quizzesType={questions[questionPointer].type}
+					quizzesTitle={questions[questionPointer].title}
+					quizzesNumber={questions.length}
+					quizzesPointer={questionPointer}
+					quizzesImage={questions[questionPointer].image}
+					questionTime={questions[questionPointer].time}
+					{isHost}
+					{socket}
+					bind:timer
+					bind:isShowOption
+				/>
+			</div>
+			<div class="answer h-1/3">
+				{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
+					<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
+						<SingleChoiceSocket
 							bind:timer
-							bind:isShowOption
+							question={questions[questionPointer]}
+							bind:isPicked
+							{showModal}
+							{socket}
+							isTrueFalse={false}
+							bind:countDown
+							{isHost}
 						/>
 					</div>
-					<div class="answer h-1/3">
-						{#if questions[questionPointer].type === TypeQuestion.SINGLE_CHOICE}
-							<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
-								<SingleChoiceSocket
-									bind:timer
-									question={questions[questionPointer]}
-									bind:isPicked
-									{showModal}
-									{socket}
-									isTrueFalse={false}
-									bind:countDown
-									{isHost}
-								/>
-							</div>
-						{:else if questions[questionPointer].type === TypeQuestion.TRUE_FALSE}
-							<div
-								class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
-							>
-								<SingleChoiceSocket
-									bind:timer
-									question={questions[questionPointer]}
-									bind:isPicked
-									{showModal}
-									{socket}
-									isTrueFalse={true}
-									bind:countDown
-									{isHost}
-								/>
-							</div>
-						{:else if questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
-							<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
-								<SingleChoiceGifSocket
-									bind:timer
-									question={questions[questionPointer]}
-									bind:isPicked
-									{showModal}
-									{socket}
-									{isShowOption}
-									bind:countDown
-									{isHost}
-								/>
-							</div>
-						{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
-							<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
-								<MultiChoiceSocket
-									bind:timer
-									question={questions[questionPointer]}
-									bind:isPicked
-									{showModal}
-									{socket}
-									bind:countDown
-									{isHost}
-								/>
-							</div>
-						{:else if questions[questionPointer].type === TypeQuestion.GUESS_WORDS}
-							<CrossWordsSocket
-								bind:timer
-								question={questions[questionPointer]}
-								bind:isPicked
-								{showModal}
-								{socket}
-								bind:countDown
-								{isHost}
-							/>
-						{:else if questions[questionPointer].type === TypeQuestion.ARRANGE_WORD}
-							<ArrangeAnswerSocket
-								bind:timer
-								question={questions[questionPointer]}
-								bind:isPicked
-								{showModal}
-								{socket}
-								bind:countDown
-								{isHost}
-							/>
-						{:else if questions[questionPointer].type === TypeQuestion.INPUT_TEXT}
-							<InputTextSocket
-								bind:timer
-								question={questions[questionPointer]}
-								bind:isPicked
-								{showModal}
-								{socket}
-								bind:countDown
-								{isHost}
-							/>
-						{/if}
+				{:else if questions[questionPointer].type === TypeQuestion.TRUE_FALSE}
+					<div
+						class="grid grid-cols-1 gird-rows-2 md:grid-cols-2 md:grid-rows-1 w-full gap-4 h-full"
+					>
+						<SingleChoiceSocket
+							bind:timer
+							question={questions[questionPointer]}
+							bind:isPicked
+							{showModal}
+							{socket}
+							isTrueFalse={true}
+							bind:countDown
+							{isHost}
+						/>
 					</div>
-				</div>
+				{:else if questions[questionPointer].type === TypeQuestion.GIF_SINGLE_CHOICE}
+					<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
+						<SingleChoiceGifSocket
+							bind:timer
+							question={questions[questionPointer]}
+							bind:isPicked
+							{showModal}
+							{socket}
+							{isShowOption}
+							bind:countDown
+							{isHost}
+						/>
+					</div>
+				{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
+					<div class="grid grid-cols-2 grid-rows-2 w-full gap-4 h-full">
+						<MultiChoiceSocket
+							bind:timer
+							question={questions[questionPointer]}
+							bind:isPicked
+							{showModal}
+							{socket}
+							bind:countDown
+							{isHost}
+						/>
+					</div>
+				{:else if questions[questionPointer].type === TypeQuestion.GUESS_WORDS}
+					<CrossWordsSocket
+						bind:timer
+						question={questions[questionPointer]}
+						bind:isPicked
+						{showModal}
+						{socket}
+						bind:countDown
+						{isHost}
+					/>
+				{:else if questions[questionPointer].type === TypeQuestion.ARRANGE_WORD}
+					<ArrangeAnswerSocket
+						bind:timer
+						question={questions[questionPointer]}
+						bind:isPicked
+						{showModal}
+						{socket}
+						bind:countDown
+						{isHost}
+					/>
+				{:else if questions[questionPointer].type === TypeQuestion.INPUT_TEXT}
+					<InputTextSocket
+						bind:timer
+						question={questions[questionPointer]}
+						bind:isPicked
+						{showModal}
+						{socket}
+						bind:countDown
+						{isHost}
+					/>
+				{/if}
 			</div>
 		{:else}
 			<WaitingRoom {startGame} {url} {participants} {isHost} {socket} user={data.user} />
@@ -342,5 +338,5 @@
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} {showScoreBoard}/>
+	<ScoreboardModal {participants} {showScoreBoard} />
 {/if}
