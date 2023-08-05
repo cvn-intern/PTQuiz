@@ -155,5 +155,12 @@
 	"canNotDeleteQuestion": "Phải có ít nhất một câu hỏi trong bộ câu hỏi",
 	"limitUser": "Giới hạn người",
 	"enterYourMessageHere": "Nhập tin nhắn của bạn ở đây",
-	"startRoom": "Bắt đầu phòng"
+	"startRoom": "Bắt đầu phòng",
+	"beKicked": "Bạn đã bị đá khỏi phòng",
+	"hostReload": "Chủ phòng đã tải lại phòng",
+	"reEnterRoom": "Vào lại phòng",
+	"gameAlreadyStarted": "Trò chơi đã bắt đầu",
+	"roomClosed": "Phòng đã đóng",
+    "aliasName": "Tên ẩn danh",
+    "roomPassword": "Mật khẩu phòng"
 }

@@ -6,6 +6,8 @@
 	import Loading from '../../loading.svelte';
 	import logo from '$assets/logo.png';
 	import toast from 'svelte-french-toast';
+	import { t } from '../../../libs/i18n/translations';
+	import { translateValidation } from '../../../libs/helpers/translateValidation';
 
 	export let socket: Socket;
 	export let isJoined: boolean;
@@ -20,7 +22,7 @@
 	onMount(() => {
 		socket.on(EmitChannel.JOINED, (data: any) => {
 			if (data.status === false) {
-				toast.error(data.message);
+				toast.error(translateValidation(data.message));
 			} else {
 				isJoined = true;
 			}
@@ -34,12 +36,12 @@
 			isDisabled = false;
 		}, 3000);
 		if (aliasName.length > 10 || aliasName.length < 1) {
-			toast.error('Alias name must be between 1 and 10 characters');
+			toast.error(t.get('validation.SOCKET_ALIAS_CONSTRAINT'));
 			return;
 		}
 		if (!isHost) {
 			if (!isPublicRoom && roomPassword.length === 0) {
-				toast.error('Room password must be filled');
+				toast.error(t.get('validation.SOCKET_ROOM_MUST_BE_FILLED'));
 				return;
 			}
 		}
@@ -65,7 +67,7 @@
 			class="flex flex-col gap-2 p-4 bg-white rounded-xl w-[300px] shadow-xl border-2 border-gray-200"
 			on:submit|preventDefault={joinRoom}
 		>
-			<label for="aliasName">Alias Name :</label>
+			<label for="aliasName">{$t('common.aliasName')} :</label>
 			<input
 				type="text"
 				name="alias-name"
@@ -75,7 +77,7 @@
 				class="rounded-lg"
 			/>
 			{#if !isPublicRoom && !isHost}
-				<label for="roomPassword">Room password :</label>
+				<label for="roomPassword">{$t('common.roomPassword')} :</label>
 				<input
 					type="password"
 					name="room-password"

@@ -24,6 +24,7 @@
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
 	import { t } from '../../../../../libs/i18n/translations';
+	import { translateValidation } from '../../../../../libs/helpers/translateValidation';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -80,9 +81,9 @@
 		socket.on(EmitChannel.ROOM_INFO, (data: any) => {
 			roomInfo = data;
 			if (roomInfo.room.isStarted) {
-				errorMessage = 'Game has already started';
+				errorMessage = t.get('common.gameAlreadyStarted');
 			} else if (roomInfo.room.isClosed) {
-				errorMessage = 'Room has been closed';
+				errorMessage = t.get('common.roomClosed');
 			}
 			isLoading = false;
 		});
@@ -112,7 +113,7 @@
 		});
 		socket.on(EmitChannel.EXCEPTION, (data: any) => {
 			isLoading = false;
-			errorMessage = data.message;
+			errorMessage = translateValidation(data.message);
 		});
 		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
@@ -396,7 +397,7 @@
 			/></svg
 		>
 		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			You have been kicked
+			{$t('common.beKicked')}
 		</h3>
 		<Button
 			color="red"
@@ -425,14 +426,14 @@
 			/></svg
 		>
 		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			Host has reloaded the room
+			{$t('common.hostReload')}
 		</h3>
 		<Button
 			color="red"
 			class="mr-2"
 			on:click={() => {
 				window.location.href = $page.url.href;
-			}}>Re-enter room</Button
+			}}>{$t('common.reEnterRoom')}</Button
 		>
 	</div>
 </Modal>

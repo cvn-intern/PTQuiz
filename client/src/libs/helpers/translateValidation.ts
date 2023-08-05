@@ -1,5 +1,5 @@
 import { t } from '$i18n/translations';
-import { AuthError, JwtError, UserError } from '../message/responseMessage.enum';
+import { AuthError, JwtError, SocketError, UserError } from '../message/responseMessage.enum';
 
 export const translateValidation = (message: string) => {
     switch (message) {
@@ -39,6 +39,38 @@ export const translateValidation = (message: string) => {
             return t.get('validation.AVATAR_MUST_BE_LESS_THAN_5MB');
         case UserError.UNKNOWN_FILE_FORMAT:
             return t.get('validation.UNKNOWN_FILE_FORMAT');
+        case SocketError.SOCKET_USER_ALREADY_CONNECTED:
+            return t.get('validation.SOCKET_USER_ALREADY_CONNECTED');
+        case SocketError.SOCKET_ROOM_CLOSED:
+            return t.get('validation.SOCKET_ROOM_CLOSED');
+        case SocketError.SOCKET_ROOM_NOT_FOUND:
+            return t.get('validation.SOCKET_ROOM_NOT_FOUND');
+        case SocketError.SOCKET_USER_NOT_FOUND:
+            return t.get('validation.SOCKET_USER_NOT_FOUND');
+        case SocketError.SOCKET_USER_NOT_JOINED:
+            return t.get('validation.SOCKET_USER_NOT_JOINED');
+        case SocketError.SOCKET_QUIZ_NOT_FOUND:
+            return t.get('validation.SOCKET_QUIZ_NOT_FOUND');
+        case SocketError.SOCKET_QUESTION_NOT_FOUND:
+            return t.get('validation.SOCKET_QUESTION_NOT_FOUND');
+        case SocketError.SOCKET_HOST_NOT_FOUND:
+            return t.get('validation.SOCKET_HOST_NOT_FOUND');
+        case SocketError.SOCKET_ROOM_STARTED:
+            return t.get('validation.SOCKET_ROOM_STARTED');
+        case SocketError.SOCKET_ROOM_PERMISSION_DENIED:
+            return t.get('validation.SOCKET_ROOM_PERMISSION_DENIED');
+        case SocketError.SOCKET_ROOM_WRONG_PASSWORD:
+            return t.get('validation.SOCKET_ROOM_WRONG_PASSWORD');
+        case SocketError.SOCKET_ALIAS_NAME_VALID:
+            return t.get('validation.SOCKET_ALIAS_NAME_VALID');
+        case SocketError.SOCKET_ROOM_COUNT_MAX:
+            return t.get('validation.SOCKET_ROOM_COUNT_MAX');
+        case SocketError.SOCKET_HOST_NOT_JOINED_YET:
+            return t.get('validation.SOCKET_HOST_NOT_JOINED_YET');
+        case SocketError.SOCKET_ROOM_FULL:
+            return t.get('validation.SOCKET_ROOM_FULL');
+        case SocketError.SOCKET_INVALID_FORMAT:
+            return t.get('validation.SOCKET_INVALID_FORMAT');
         default:
             return message;
     }
