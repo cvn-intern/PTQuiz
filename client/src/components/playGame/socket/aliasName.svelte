@@ -46,8 +46,7 @@
 		socket.emit(ListenChannel.JOIN_ROOM, {
 			roomPIN: $page.params.slug,
 			aliasName,
-			roomPassword,
-			isHostJoined: isHost
+			roomPassword
 		});
 		isLoading = true;
 	};
@@ -69,10 +68,9 @@
 			<label for="aliasName">Alias Name :</label>
 			<input
 				type="text"
-				name="aliasName"
-				autocomplete="username"
+				name="alias-name"
 				placeholder="Alias Name"
-				id="aliasName"
+				id="alias-name"
 				bind:value={aliasName}
 				class="rounded-lg"
 			/>
@@ -80,10 +78,9 @@
 				<label for="roomPassword">Room password :</label>
 				<input
 					type="password"
-					name="roomPassword"
-					id="roomPassword"
+					name="room-password"
+					id="room-password"
 					placeholder="Password"
-					autocomplete="current-password"
 					bind:value={roomPassword}
 					class="rounded-lg"
 				/>
