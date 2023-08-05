@@ -170,9 +170,6 @@
 	];
 	$: hiddenInputFile = isUpdate;
 
-	let category = result['category']?.id || result['category'] || Category.OTHER;
-	let stringImgeField = 'JPEG, PNG, JPG (< 1MB).';
-
 	let imageFile;
 	const handleFileChange = (event: any) => {
 		imageFile = event.target.files[0];
