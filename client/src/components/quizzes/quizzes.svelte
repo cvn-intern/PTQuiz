@@ -38,7 +38,9 @@
 				description={quiz.description}
 				numberOfQuestions={quiz.numberOfQuestions}
 				image={quiz.image}
-				createdAt={quiz.createdAt}
+				createdAt={new Date(quiz.createdAt).toLocaleString('vi-VN', {
+					timeZone: 'Asia/Ho_Chi_Minh'
+				})}
 				id={quiz.id}
 				{quiz}
 				bind:quizzes

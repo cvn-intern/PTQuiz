@@ -20,6 +20,10 @@
 	export let quizzes: any;
 	let isDelete = false;
 
+	let date = new Date(createdAt).toLocaleString('vi-VN', {
+		timeZone: 'Asia/Ho_Chi_Minh'
+	});
+
 	let sharedToastId: string | number;
 
 	const dismissLoadingToast = (): void => {
