@@ -6,6 +6,7 @@
 	import Icon from '@iconify/svelte';
 	import SettingsRoom from './settingsRoom.svelte';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -15,6 +16,7 @@
 	export let socket: Socket;
 	export let user: any;
 	export let room: any;
+	console.log('room', room);
 	let modalOpen = false;
 	$: participantsHost = participants.filter((participant) => participant.isHost)[0];
 	$: participantsNotHost = participants.filter((participant) => !participant.isHost);
@@ -36,6 +38,7 @@
 			roomId: room.id
 		});
 	};
+	let isShowKick = false;
 </script>
 
 <div
@@ -46,7 +49,7 @@
 	<div class="w-full flex flex-col justify-between items-center">
 		<div>
 			<div class="flex flex-col justify-between gap-4">
-				<div class="flex flex-col gap-4 justify-center items-center pt-6">
+				<div class="flex flex-col gap-4 justify-center items-center md:pt-6 pt-8">
 					<div
 						class="text-4xl flex items-center gap-2 uppercase text-zinc-700 font-bold text-center"
 					>
@@ -73,37 +76,45 @@
 					{/if}
 				</div>
 			</div>
-			<div class="w-full flex justify-center">
-				<div
-					class="sm:grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 w-screenHalf"
-				>
-					{#each participantsNotHost as participant, index}
-						<div class="flex flex-col items-center gap-2 w-40 p-2">
-							<img
-								src={participant.avatar}
-								alt={participant.displayName}
-								class="w-24 h-24 rounded-md"
-							/>
-							<p class="px-4 bg-white/50 rounded-md">{participant.displayName}</p>
-							{#if isHost}
-								<button
-									disabled={isKicking[index].isKicking}
-									class={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl shadow-xl ${
-										isKicking[index].isKicking
-											? 'cursor-wait animate-pulse'
-											: ''
-									}`}
-									on:click={() => {
-										kickUser(participant.id, index);
-									}}>Kick user</button
-								>
-							{/if}
-						</div>
-					{/each}
-				</div>
+			<div
+				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 md:w-screenHalf w-full max-h-attempt md:max-h-halfScreen overflow-y-scroll no-scrollbar "
+			>
+				{#each participantsNotHost as participant, index}
+					<div class="flex flex-col items-center gap-2 w-40 p-2 relative group/item hover:bg-transparent cursor-pointer">
+						<img
+							src={participant.avatar}
+							alt={participant.displayName}
+							class="w-24 h-24 rounded-md"
+						/>
+						<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700">
+							{participant.displayName}
+						</p>
+						{#if isHost}
+							<button
+								disabled={isKicking[index].isKicking}
+								class={` text-white font-bold py-2 px-4 rounded-xl shadow-xl absolute right-0 group/edit invisible hover:bg-white/30 group-hover/item:visible ${
+									isKicking[index].isKicking ? 'group-hover/edit:text-gray-700 cursor-wait animate-pulse' : ''
+								}`}
+								on:click={() => {
+									kickUser(participant.id, index);
+								}}
+							>
+								<Icon icon="foundation:x" class="text-red-600 text-xl" />
+							</button>
+						{/if}
+					</div>
+				{/each}
 			</div>
 		</div>
 	</div>
+	<button
+		class="absolute left-2"
+		on:click={() => {
+			goto('/');
+		}}
+	>
+		<Icon icon="tabler:home" class="w-10 h-10" />
+	</button>
 	{#if isHost}
 		<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} />
 	{/if}
@@ -111,7 +122,7 @@
 	<button
 		class="{isHost
 			? 'block'
-			: 'hidden'} absolute md:bottom-16 bottom-1/3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 uppercase text-3xl"
+			: 'hidden'} absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 uppercase text-3xl"
 		on:click={startGame}
 	>
 		<p>{$t('common.startBtn')}</p>

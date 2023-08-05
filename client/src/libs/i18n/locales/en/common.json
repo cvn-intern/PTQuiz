@@ -152,5 +152,7 @@
 	"cancelDeleteQuiz": "No, cancel",
 	"viewScoreboard": "View Scoreboard",
 	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question",
-	"canNotDeleteQuestion": "Must have at least one question"
+	"canNotDeleteQuestion": "Must have at least one question",
+	"limitUser": "Limit User",
+	"enterYourMessageHere": "Enter your message here"
 }
