@@ -49,10 +49,11 @@
 			goto(`/room/${result.data.PIN}`);
 		} else {
 			dismissLoadingToast();
-			toast.error(result.message);
 			if (result.message.includes('Room is already exist')) {
 				let url = result.message.match(/(http|https):\/\/[^\s$.?#].[^\s]*$/gm);
 				goto(`${url}`);
+			} else {
+				toast.error(result.message);
 			}
 		}
 	}

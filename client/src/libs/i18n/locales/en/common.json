@@ -156,5 +156,13 @@
 	"startBattle": "Start Battle",
 	"limitUser": "Limit User",
 	"enterYourMessageHere": "Enter your message here",
-	"startRoom": "Start Room"
+	"startRoom": "Start Room",
+	"beKicked": "You have been kicked out of the room",
+	"hostReload": "Host has reloaded the room",
+	"reEnterRoom": "Re-enter room",
+	"gameAlreadyStarted": "Game has already started",
+	"roomClosed": "Room has been closed",
+	"aliasName": "Alias Name",
+	"roomPassword": "Room Password",
+	"copiedToClipboard": "Copied to clipboard"
 }
