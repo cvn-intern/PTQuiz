@@ -111,7 +111,7 @@
 	<Loading />
 {/if}
 
-<div class="relative z-0 w-full">
+<div class="relative z-0 w-full group/item">
 	<a
 		href="#"
 		role="button"
@@ -132,23 +132,22 @@
 			</p>
 		</div>
 	</a>
-	<div class="absolute top-5 right-5 z-10">
+	<div
+		class="absolute top-5 right-5 z-10 flex justify-center gap-2 group-hover/item:visible invisible"
+	>
+		<button aria-label="Edit" on:click={handleEdit}>
+			<Icon icon="uil:edit" class="text-2xl text-cyan-500 hover:text-cyan-800" />
+		</button>
 		<button on:click={() => (popupModal = true)}>
-			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
+			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-400 hover:text-red-600" />
 		</button>
 	</div>
 	<div class="flex flex-row gap-4 absolute bottom-3 right-3 z-10">
 		<button
-			aria-label="Edit"
-			on:click={handleEdit}
-			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-			>{$t('common.editBtn')}</button
-		>
-		<button
 			aria-label="Start"
 			on:click={handleStart}
-			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-			>{$t('common.startBtn')}</button
+			class="block px-3 py-3 rounded-lg bg-yellowLogo hover:bg-yellow-700 text-white focus:outline-none shadow-lg"
+			>{$t('common.startRoom')}</button
 		>
 	</div>
 </div>

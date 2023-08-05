@@ -79,18 +79,18 @@
 </script>
 
 <Card padding="none">
-	<div class="flex flex-col items-center py-4 {effect}  ">
+	<div class="flex flex-col items-center py-2 {effect}  ">
 		<h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
 			{$t('common.question')}
 			{questionStt}
 		</h5>
-		<div class="flex mt-2 space-x-3 lg:mt-3">
-			<Button class="border" on:click={handleDelete} disabled={isSubmitting || isDisabled}
+		<div class="flex mt-2 gap-1 lg:mt-3">
+			<Button class="border p-2" on:click={handleDelete} disabled={isSubmitting || isDisabled}
 				><Icon icon={'iconamoon:trash-light'} class={'text-red-500 text-xl'} /></Button
 			>
 			<Button
 				color="light"
-				class="dark:text-white"
+				class="dark:text-white p-2"
 				on:click={editIndex}
 				disabled={isSubmitting || isDisabled}
 				><Icon icon={'uil:edit'} class={'text-yellow-300 text-xl'} /></Button

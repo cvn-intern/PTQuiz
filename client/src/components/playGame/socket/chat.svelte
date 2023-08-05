@@ -59,7 +59,7 @@
 </script>
 
 <div
-	class="md:w-96 md:max-w-sm w-screen backdrop-opacity-10 backdrop-invert bg-chat rounded-t-lg shadow-shadowChat {isShowChat
+	class="md:w-96 md:max-w-sm w-screen backdrop-opacity-10 backdrop-invert bg-chat bg-cover rounded-t-lg shadow-shadowChat {isShowChat
 		? 'fixed right-0 bottom-0 z-60'
 		: 'hidden'}"
 >
