@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RoomError } from 'src/error';
+import { CreateRoomDto } from './dto/createRoom.dto';
 
 @Injectable()
 export class RoomService {
     constructor(private prisma: PrismaService) {}
 
-    async createRoom(userId: string, body: { quizId: string }) {
+    async createRoom(userId: string, body: CreateRoomDto) {
         try {
             if (!body.quizId)
                 throw new HttpException(
@@ -36,6 +37,7 @@ export class RoomService {
                     quizId: body.quizId,
                     userId: userId,
                     isClosed: false,
+                    type: body.type,
                 },
             });
 
@@ -57,7 +59,7 @@ export class RoomService {
                         Math.floor(Math.random() * 90000) + 10000
                     ).toString(),
                     isClosed: false,
-                    type: 1,
+                    type: body.type,
                     createdAt: new Date(),
                 },
             });

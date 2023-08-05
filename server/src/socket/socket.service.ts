@@ -36,6 +36,27 @@ export class SocketService {
             throw new Error(SocketError.SOCKET_ROOM_CLOSED);
         }
         if (!isHostJoined) {
+            const host = await this.prisma.room_participants.findFirst({
+                where: {
+                    roomId: room.id,
+                    isHost: true,
+                },
+            });
+            if (!host) {
+                return {
+                    status: false,
+                    message: SocketError.SOCKET_HOST_NOT_JOINED_YET,
+                };
+            }
+        }
+        const roomParticipants = await this.getRoomParticipants(roomPIN);
+        if (roomParticipants.length >= room.count) {
+            return {
+                status: false,
+                message: SocketError.SOCKET_ROOM_FULL,
+            };
+        }
+        if (!isHostJoined) {
             if (room.isPublic === false) {
                 if (room.roomPassword !== roomPassword) {
                     return {
@@ -86,6 +107,7 @@ export class SocketService {
         if (room.userId === userId) {
             isHost = true;
         }
+
         const participants = await this.prisma.participants.create({
             data: {
                 userId: user.id,
@@ -659,6 +681,7 @@ export class SocketService {
                 isClosed: true,
                 isStarted: true,
                 count: true,
+                type: true,
             },
         });
         if (!room) {
