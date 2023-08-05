@@ -11,7 +11,7 @@
 
 	function changeTab(tab: string) {
 		currentTab = tab;
-		goto('/discovery/' + tab);
+		goto('/discovery/' + tab + '/1');
 	}
 </script>
 

@@ -8,7 +8,9 @@
 	import { t } from '$i18n/translations.js';
 	import type { TypeCategory } from './category.type.js';
 
+	let totalQuizzes;
 	export let data;
+	$: console.log('data', data);
 	let categories: TypeCategory[];
 	$: categories = data.quizzes;
 	let cssForCurrentTab = ' active dark:text-blue-500 dark:border-blue-500 bg-secondary';
@@ -33,11 +35,17 @@
 	</div>
 	{#each categories as category, indexOfCategory}
 		{#if category.quizzes.length}
+			<div class="hidden">
+				{(totalQuizzes = category.totalQuizzes || data.totalQuizzes)}
+			</div>
+
 			<Category
 				nameCategory={category.category}
 				cardList={category.quizzes}
-				totalQuizzes={category.totalQuizzes}
+				bind:totalQuizzes
 				{indexOfCategory}
+				bind:quizzes={categories}
+				bind:data
 			/>
 		{/if}
 	{/each}
