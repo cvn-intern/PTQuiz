@@ -7,8 +7,8 @@
 	import SettingsRoom from './settingsRoom.svelte';
 	import { onMount } from 'svelte';
 	import { RoomType } from '$components/quizzes/room.enum';
-	import versus from '$assets/versus.png';
-	import versusMobile from '$assets/versusMobile.png';
+	import whiteVersusMobile from '$assets/whiteVersusMobile.png';
+	import whiteVersus from '$assets/whiteVersus.png';
 
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
@@ -51,7 +51,7 @@
 </script>
 
 {#if room.room.type === RoomType.BATTLE}
-	<div class=" p-4 bg-room bg-cover w-full h-screen">
+	<div class=" bg-room bg-cover w-full h-screen">
 		<div class="flex flex-col md:flex-row w-full h-full pb-32">
 			<div
 				class="flex flex-col justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
@@ -61,7 +61,7 @@
 					alt={participantsHost.displayName}
 					class="w-full h-full md:h-1/3 rounded-md"
 				/>
-				<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700">
+				<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl">
 					{participantsHost.displayName}
 				</p>
 			</div>
@@ -69,9 +69,9 @@
 				class="flex justify-center items-centertext-9xl md:w-1/3 h-1/3 py-10 md:py-0 md:h-full"
 			>
 				{#if screenWidth <= 768}
-					<img src={versusMobile} alt="vs" class="w-full h-full" />
+					<img src={whiteVersusMobile} alt="vs" class="w-full h-full" />
 				{:else}
-					<img src={versus} alt="vs" class="w-full h-full" />
+					<img src={whiteVersus} alt="vs" class="w-full h-screen" />
 				{/if}
 			</div>
 			{#if participantsBattle}
@@ -83,7 +83,7 @@
 						alt={participantsBattle.displayName}
 						class="w-full h-full md:h-1/3 rounded-md"
 					/>
-					<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700">
+					<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl">
 						{participantsBattle.displayName}
 					</p>
 				</div>
