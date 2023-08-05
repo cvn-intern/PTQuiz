@@ -1,6 +1,6 @@
 import { MessageDto } from './../dto/message.dto';
 import { CryptoService } from './../../crypto/crypto.service';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import {
     WebSocketGateway,
     ConnectedSocket,
@@ -45,7 +45,11 @@ export class SocketGateway
         private cryptoService: CryptoService,
     ) {}
 
-    handleConnection(@ConnectedSocket() client: Socket): void {}
+    private logger: Logger = new Logger('SocketGateway');
+
+    handleConnection(@ConnectedSocket() client: Socket): void {
+        this.logger.log(`Client connected: ${client.id}`);
+    }
     async handleDisconnect(@ConnectedSocket() client: Socket) {
         try {
             const { roomPIN, isHost } =
@@ -66,7 +70,10 @@ export class SocketGateway
             }
         } catch (error) {}
     }
-    afterInit() {}
+
+    afterInit() {
+        this.logger.log('Socket server initialized');
+    }
 
     @SubscribeMessage(ListenChannel.JOIN_ROOM)
     async handleJoinRoom(
@@ -285,9 +292,15 @@ export class SocketGateway
             const hostSocketId = await this.socketService.getHostSocketId(
                 data.roomPIN,
             );
-            this.server
-                .to(hostSocketId)
-                .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            if (!data.isBattle) {
+                this.server
+                    .to(hostSocketId)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            } else {
+                this.server
+                    .to(data.roomPIN)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            }
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -382,13 +395,18 @@ export class SocketGateway
     ) {
         try {
             const { roomId, count } = data;
+            if (typeof count !== 'number') {
+                throw new WsException({
+                    message: SocketError.SOCKET_INVALID_FORMAT,
+                });
+            }
             const result = await this.socketService.changeRoomCount(
                 roomId,
                 client.user.id,
                 count,
             );
-            client.emit(EmitChannel.ROOM_COUNT, {
-                count: result,
+            this.server.to(result.PIN).emit(EmitChannel.ROOM_COUNT, {
+                count: result.count,
             });
         } catch (error) {
             throw new WsException({

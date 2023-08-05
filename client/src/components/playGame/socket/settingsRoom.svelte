@@ -11,10 +11,17 @@
 	export let url: string;
 	export let room: any;
 	export let socket: Socket;
+	export let count: number;
+	enum RoomCount {
+		FIVE = 5,
+		TEN = 10,
+		FIFTEEN = 15
+	}
 	let isCopied = false;
 	let isChangedVisibility = false;
 	let qrModalOpen = false;
 	let isPublic = room.room.isPublic;
+	let isChangedCount = false;
 	$: size = modalOpen ? '500x500' : '100x100';
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=${size}`;
 	const handleCopy = () => {
@@ -30,6 +37,10 @@
 		socket.on(EmitChannel.ROOM_VISIBILITY, (data) => {
 			isPublic = data.isPublic;
 			isChangedVisibility = false;
+		});
+		socket.on(EmitChannel.ROOM_COUNT, (data) => {
+			isChangedCount = false;
+			count = data.count;
 		});
 	});
 	const handleCopyPassword = () => {
@@ -47,12 +58,10 @@
 			isPublic: !isPublic
 		});
 	};
-	let selected = 5;
-	$: console.log(selected);
 </script>
 
-<button class="absolute right-4" on:click={handleModal}>
-	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
+<button class="absolute top-4 right-4" on:click={handleModal}>
+	<Icon icon="material-symbols:settings-outline" class="w-10 h-10 text-darkGreen" />
 </button>
 
 {#if modalOpen}
@@ -103,12 +112,32 @@
 							>{$t('common.limitUser')}</span
 						>
 						<select
-							class="rounded-lg px-2 py-3 bg-gray-50 text-gray-700 text-base focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary border-0"
-							bind:value={selected}
+							disabled={isChangedCount}
+							on:change={(e) => {
+								const value = parseInt(e?.target?.value);
+								if (
+									value !== RoomCount.FIVE &&
+									value !== RoomCount.TEN &&
+									value !== RoomCount.FIFTEEN
+								) {
+									return;
+								}
+								isChangedCount = true;
+								if (value !== count) {
+									socket.emit(ListenChannel.CHANGE_ROOM_COUNT, {
+										roomId: room.room.id,
+										count: value
+									});
+								}
+							}}
+							class={`rounded-lg px-2 py-3 bg-gray-50 text-gray-700 text-base focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary border-0 ${
+								isChangedCount ? 'cursor-not-allowed opacity-50' : ''
+							}`}
 						>
-							<option value={5}>5</option>
-							<option value={10}>10</option>
-							<option value={15}>15</option>
+							<option value={0} selected disabled>{count}</option>
+							<option value={RoomCount.FIVE}>5</option>
+							<option value={RoomCount.TEN}>10</option>
+							<option value={RoomCount.FIFTEEN}>15</option>
 						</select>
 					</div>
 				</div>

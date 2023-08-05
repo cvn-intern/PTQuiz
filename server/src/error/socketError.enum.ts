@@ -14,4 +14,5 @@ export enum SocketError {
     SOCKET_ROOM_COUNT_MAX = 'Capacity of room is max (15)',
     SOCKET_HOST_NOT_JOINED_YET = 'Host has not joined this room',
     SOCKET_ROOM_FULL = 'Room is full',
+    SOCKET_INVALID_FORMAT = 'Invalid format',
 }

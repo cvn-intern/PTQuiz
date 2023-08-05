@@ -21,6 +21,8 @@
 	export let timer: Tweened<number>;
 	export let questionTime: number;
 	export let isShowOption: boolean;
+	export let isBattle: boolean;
+
 	let isShowGif: boolean;
 	let modalOpen: boolean = false;
 	let isGifButtonClicked: boolean = false;
@@ -110,6 +112,7 @@
 	{quizzesPointer}
 	{quizzesNumber}
 	{isHost}
+	{isBattle}
 	{quizzesHint}
 	isSingle={false}
 />

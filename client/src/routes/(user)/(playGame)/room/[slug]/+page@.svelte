@@ -22,6 +22,9 @@
 	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
 	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
+	import { RoomType } from '$components/quizzes/room.enum';
+	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
+	import { Button, Modal } from 'flowbite-svelte';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -49,6 +52,8 @@
 	let isJoined: boolean = false;
 	let roomInfo: any;
 	let beKicked: boolean = false;
+	let isBattle: boolean;
+	let isHostLeft: boolean = false;
 
 	let original = 10;
 	let stringTimer: string;
@@ -65,11 +70,6 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-    $: {
-        if(beKicked) {
-            errorMessage = 'You have been kicked';
-        }
-    }
 	onMount(() => {
 		socket.emit(ListenChannel.IS_HOST, {
 			roomPIN: $page.params.slug
@@ -87,6 +87,7 @@
 				errorMessage = 'Room has been closed';
 			}
 			isLoading = false;
+			isBattle = roomInfo.room.type === RoomType.BATTLE ? true : false;
 		});
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
@@ -123,7 +124,7 @@
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
-			if (isHost) {
+			if (isHost && !isBattle) {
 				original += 4;
 				timer = tweened(original, {
 					duration: 1000
@@ -155,7 +156,7 @@
 				};
 			});
 			original = questions[questionPointer].time;
-			if (isHost) {
+			if (isHost && !isBattle) {
 				original += 4;
 				timer = tweened(original, {
 					duration: 1000
@@ -187,7 +188,11 @@
 		});
 		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
 			if (!isHost) {
-				window.location.href = $page.url.href;
+				isHostLeft = true;
+				socket.emit(ListenChannel.LEAVE_ROOM, {
+					roomPIN: $page.params.slug
+				});
+				socket.disconnect();
 			}
 		});
 		socket.on(EmitChannel.BE_KICKED, (data: any) => {
@@ -229,6 +234,20 @@
 			participants
 		});
 	};
+
+	$: {
+		if ($timer <= 0 && isBattle && isHost) {
+			if (questionPointer < questions.length - 1) {
+				setTimeout(() => {
+					nextQuestion();
+				}, 5000);
+			} else {
+				setTimeout(() => {
+					endGame();
+				}, 5000);
+			}
+		}
+	}
 </script>
 
 {#if isLoading}
@@ -242,13 +261,17 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} bind:isEndGame/>
+			<EndGameSocket {participants} length={questions.length} bind:isEndGame {isBattle} />
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
-				<div class="py-2">
-					<ProgressBar {stringTimer} />
-				</div>
-				{#if isHost}
+				{#if isBattle}
+					<ScoreBarBattle bind:timer {participants} questionLength={questions.length} />
+				{:else}
+					<div class="py-2">
+						<ProgressBar {stringTimer} />
+					</div>
+				{/if}
+				{#if !isBattle && isHost}
 					<HostButton
 						{nextQuestion}
 						{questionPointer}
@@ -256,6 +279,7 @@
 						{endGame}
 						{getScoreBoard}
 						{participants}
+						{isBattle}
 						bind:timer
 					/>
 				{/if}
@@ -269,6 +293,7 @@
 					quizzesHint={questions[questionPointer].hint}
 					{isHost}
 					{socket}
+					{isBattle}
 					bind:timer
 					bind:isShowOption
 				/>
@@ -282,6 +307,7 @@
 							bind:isPicked
 							{showModal}
 							{socket}
+							{isBattle}
 							isTrueFalse={false}
 							bind:countDown
 							{isHost}
@@ -298,6 +324,7 @@
 							{showModal}
 							{socket}
 							isTrueFalse={true}
+							{isBattle}
 							bind:countDown
 							{isHost}
 						/>
@@ -313,6 +340,7 @@
 							{isShowOption}
 							bind:countDown
 							{isHost}
+							{isBattle}
 						/>
 					</div>
 				{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
@@ -323,6 +351,7 @@
 							bind:isPicked
 							{showModal}
 							{socket}
+							{isBattle}
 							bind:countDown
 							{isHost}
 						/>
@@ -334,6 +363,7 @@
 						bind:isPicked
 						{showModal}
 						{socket}
+						{isBattle}
 						bind:countDown
 						{isHost}
 					/>
@@ -344,6 +374,7 @@
 						bind:isPicked
 						{showModal}
 						{socket}
+						{isBattle}
 						bind:countDown
 						{isHost}
 					/>
@@ -356,6 +387,7 @@
 						{socket}
 						bind:countDown
 						{isHost}
+						{isBattle}
 					/>
 				{/if}
 			</div>
@@ -374,5 +406,68 @@
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} bind:showScoreBoard questionLength={questions.length} />
+	<ScoreboardModal
+		{participants}
+		bind:showScoreBoard
+		questionLength={questions.length}
+		{isBattle}
+	/>
 {/if}
+
+<Modal bind:open={beKicked} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			You have been kicked
+		</h3>
+		<Button
+			color="red"
+			class="mr-2"
+			on:click={() => {
+				window.location.href = '/';
+			}}>OK</Button
+		>
+	</div>
+</Modal>
+
+<Modal bind:open={isHostLeft} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			Host has reloaded the room
+		</h3>
+		<Button
+			color="red"
+			class="mr-2"
+			on:click={() => {
+				window.location.href = $page.url.href;
+			}}>Re-enter room</Button
+		>
+	</div>
+</Modal>
