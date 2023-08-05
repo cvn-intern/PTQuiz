@@ -16,7 +16,6 @@
 	export let socket: Socket;
 	export let user: any;
 	export let room: any;
-	console.log('room', room);
 	let modalOpen = false;
 	$: participantsHost = participants.filter((participant) => participant.isHost)[0];
 	$: participantsNotHost = participants.filter((participant) => !participant.isHost);
@@ -26,6 +25,7 @@
 			isKicking: false
 		};
 	});
+	let count = room.room.count;
 	const kickUser = (id: string, index: any) => {
 		isKicking = isKicking.map((participant) => {
 			if (participant.id === id) {
@@ -59,7 +59,7 @@
 						class="text-2xl py-2 px-4 text-neutral-700 bg-white/40 border rounded-full flex gap-2"
 					>
 						<Icon icon="formkit:people" class="text-3xl" />
-						{participants.length - 1}/{room.room.count - 1}
+						{participants.length}/{count}
 					</div>
 					{#if participantsHost}
 						<div class="flex flex-col items-center gap-2 w-40 relative mt-2">
@@ -77,10 +77,12 @@
 				</div>
 			</div>
 			<div
-				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 md:w-screenHalf w-full max-h-attempt md:max-h-halfScreen overflow-y-scroll no-scrollbar "
+				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 md:w-screenHalf w-full max-h-attempt md:max-h-halfScreen overflow-y-scroll no-scrollbar"
 			>
 				{#each participantsNotHost as participant, index}
-					<div class="flex flex-col items-center gap-2 w-40 p-2 relative group/item hover:bg-transparent cursor-pointer">
+					<div
+						class="flex flex-col items-center gap-2 w-40 p-2 relative group/item hover:bg-transparent cursor-pointer"
+					>
 						<img
 							src={participant.avatar}
 							alt={participant.displayName}
@@ -93,7 +95,9 @@
 							<button
 								disabled={isKicking[index].isKicking}
 								class={` text-white font-bold py-2 px-4 rounded-xl shadow-xl absolute right-0 group/edit invisible hover:bg-white/30 group-hover/item:visible ${
-									isKicking[index].isKicking ? 'group-hover/edit:text-gray-700 cursor-wait animate-pulse' : ''
+									isKicking[index].isKicking
+										? 'group-hover/edit:text-gray-700 cursor-wait animate-pulse'
+										: ''
 								}`}
 								on:click={() => {
 									kickUser(participant.id, index);
@@ -116,7 +120,7 @@
 		<Icon icon="tabler:home" class="w-10 h-10" />
 	</button>
 	{#if isHost}
-		<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} />
+		<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count />
 	{/if}
 	<Chat {participants} {socket} {user} />
 	<button
