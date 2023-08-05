@@ -13,7 +13,6 @@ export const GET: RequestHandler = async ({ fetch, params, locals }) => {
 		}
 	);
 	const result = await response.json();
-	console.log(result);
 	if (response.status === HttpStatus.OK) {
 		return new Response(JSON.stringify(result.data), {
 			status: HttpStatus.OK

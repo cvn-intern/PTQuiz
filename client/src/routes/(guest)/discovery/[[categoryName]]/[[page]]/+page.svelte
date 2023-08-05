@@ -10,7 +10,6 @@
 
 	let totalQuizzes;
 	export let data;
-	$: console.log('data', data);
 	let categories: TypeCategory[];
 	$: categories = data.quizzes;
 	let cssForCurrentTab = ' active dark:text-blue-500 dark:border-blue-500 bg-secondary';
