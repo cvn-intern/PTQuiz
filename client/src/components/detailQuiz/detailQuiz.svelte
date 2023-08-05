@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Modal } from 'flowbite-svelte';
 	export let isOpen: boolean;
-	$: isOpen = isOpen;
+	// let isOpen = isOpen;
 	export let cardInfor: any;
 	export let questionList: any;
 	import { t } from '$i18n/translations';

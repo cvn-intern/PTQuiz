@@ -59,7 +59,7 @@
 </script>
 
 <div
-	class="md:w-96 md:max-w-sm max-w-xs w-screen backdrop-opacity-10 backdrop-invert bg-chat rounded-t-lg shadow-shadowChat {isShowChat
+	class="md:w-96 md:max-w-sm w-screen backdrop-opacity-10 backdrop-invert bg-chat bg-cover rounded-t-lg shadow-shadowChat {isShowChat
 		? 'fixed right-0 bottom-0 z-60'
 		: 'hidden'}"
 >
@@ -92,7 +92,7 @@
 				maxlength="80"
 				type="text"
 				class="border-none rounded-lg w-full p-3 font-semibold"
-				placeholder="Enter message here..."
+				placeholder={$t("common.enterYourMessageHere")}
 				bind:value={messageContent}
 			/>
 			<div class="absolute right-0 top-1/2 -translate-y-1/2 px-2 flex gap-1">
@@ -116,7 +116,7 @@
 	on:click={handleClickOpenChat}
 	class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-secondary text-white border-2 border-gray-300 font-semibold p-2 {isShowChat
 		? 'hidden'
-		: 'fixed right-10 bottom-10 z-60 '}"
+		: 'fixed right-4 md:bottom-10 bottom-3 z-60 '}"
 >
-	<Icon icon="et:chat" class="text-4xl" />
+	<Icon icon="et:chat" class="text-3xl w-10 h-10" />
 </button>

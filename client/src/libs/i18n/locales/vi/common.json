@@ -90,7 +90,7 @@
 	"ifYouDidNotReceiveEmail": "Nếu bạn không nhận được email, nhấn",
 	"here": "vào đây",
 	"toResendIt": "để gửi lại",
-	"title": "Tiêu đề bộ câu hỏi",
+	"title": "Tiêu đề",
 	"category": "Thể loại",
 	"shareYourQuiz": "Chia sẻ bộ câu hỏi của bạn",
 	"customizeTimeQuestion": "Tùy chỉnh thời gian của câu hỏi",
@@ -152,5 +152,8 @@
 	"cancelDeleteQuiz": "Từ từ để suy nghĩ",
 	"viewScoreboard": "Xem bảng điểm",
 	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi",
-	"canNotDeleteQuestion": "Phải có ít nhất một câu hỏi trong bộ câu hỏi"
+	"canNotDeleteQuestion": "Phải có ít nhất một câu hỏi trong bộ câu hỏi",
+	"limitUser": "Giới hạn người",
+	"enterYourMessageHere": "Nhập tin nhắn của bạn ở đây",
+	"startRoom": "Bắt đầu phòng"
 }
