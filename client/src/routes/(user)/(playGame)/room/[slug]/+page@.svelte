@@ -23,6 +23,7 @@
 	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 	import { RoomType } from '$components/quizzes/room.enum';
+	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -262,9 +263,13 @@
 			<EndGameSocket {participants} length={questions.length} bind:isEndGame {isBattle} />
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
-				<div class="py-2">
-					<ProgressBar {stringTimer} />
-				</div>
+				{#if isBattle}
+					<ScoreBarBattle bind:timer {participants} questionLength={questions.length} />
+				{:else}
+					<div class="py-2">
+						<ProgressBar {stringTimer} />
+					</div>
+				{/if}
 				{#if !isBattle && isHost}
 					<HostButton
 						{nextQuestion}
