@@ -53,6 +53,33 @@
 		}
 	}
 
+	async function handleBattle() {
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
+		const response = await fetch(`/api/room/open`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				quizId: id,
+				type: RoomType.BATTLE
+			})
+		});
+		const result = await response.json();
+		if (response.status === 200) {
+			dismissLoadingToast();
+			toast.success(t.get('common.success'));
+			goto(`/room/${result.data.PIN}`);
+		} else {
+			dismissLoadingToast();
+			toast.error(result.message);
+			if (result.message.includes('Room is already exist')) {
+				let url = result.message.match(/(http|https):\/\/[^\s$.?#].[^\s]*$/gm);
+				goto(`${url}`);
+			}
+		}
+	}
+
 	function handleEdit() {
 		goto(`/createQuiz/${id}`);
 	}
@@ -143,6 +170,12 @@
 			on:click={handleEdit}
 			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
 			>{$t('common.editBtn')}</button
+		>
+		<button
+			aria-label="Start Battle"
+			on:click={handleBattle}
+			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
+			>{$t('common.startBattle')}</button
 		>
 		<button
 			aria-label="Start"

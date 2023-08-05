@@ -152,5 +152,6 @@
 	"cancelDeleteQuiz": "Từ từ để suy nghĩ",
 	"viewScoreboard": "Xem bảng điểm",
 	"theQuizMustHaveAtLeastOneQuestion": "Bộ câu hỏi phải có ít nhất một câu hỏi",
-	"canNotDeleteQuestion": "Phải có ít nhất một câu hỏi trong bộ câu hỏi"
+	"canNotDeleteQuestion": "Phải có ít nhất một câu hỏi trong bộ câu hỏi",
+	"startBattle": "Đối kháng"
 }
