@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RoomError } from 'src/error';
 import { CreateRoomDto } from './dto/createRoom.dto';
+import { RoomType } from './types/room.enum';
 
 @Injectable()
 export class RoomService {
@@ -46,13 +47,17 @@ export class RoomService {
                     `${RoomError.ROOM_EXIST} ${process.env.CLIENT_URL}/room/${isExistRoom.PIN}`,
                     HttpStatus.BAD_REQUEST,
                 );
-            const defaultCount = 6;
+            const defaultGroupCount = 6;
+            const defaultBattleCount = 2;
             const room = await this.prisma.rooms.create({
                 data: {
                     PIN: Math.floor(Math.random() * 1000000).toString(),
                     quizId: body.quizId,
                     userId: userId,
-                    count: defaultCount,
+                    count:
+                        body.type === RoomType.GROUP
+                            ? defaultGroupCount
+                            : defaultBattleCount,
                     isStarted: false,
                     isPublic: true,
                     roomPassword: (
