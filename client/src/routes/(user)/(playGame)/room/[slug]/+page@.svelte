@@ -23,7 +23,6 @@
 	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
-	import { t } from '../../../../../libs/i18n/translations';
 
 	export let data: LayoutData;
 	type Participant = {
