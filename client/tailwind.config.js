@@ -65,7 +65,8 @@ export default {
 				titleCard: '3.75rem',
 				boxCardQuestion: '27rem',
 				halfScreen: '50vh',
-				attempt: '40vh'
+				attempt: '40vh',
+				sidebarCreateQuiz: '60vh'
 			},
 			maxWidth: {
 				tagName: '33%',
@@ -120,7 +121,9 @@ export default {
 				100: '100'
 			},
 			height: {
-				halfScreen: '50vh'
+				halfScreen: '50vh',
+				heightImage: '15rem',
+				heightImageMobile: '9.3rem'
 			},
 			backgroundImage: {
 				user: "url('https://vapa.vn/wp-content/uploads/2022/12/we-bare-bears-hinh-nen-cute-001-1.jpg')",
