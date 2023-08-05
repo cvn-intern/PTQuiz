@@ -22,6 +22,8 @@
 	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
 	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
+	import { Button, Modal } from 'flowbite-svelte';
+	import { t } from '../../../../../libs/i18n/translations';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -65,11 +67,6 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-    $: {
-        if(beKicked) {
-            errorMessage = 'You have been kicked';
-        }
-    }
 	onMount(() => {
 		socket.emit(ListenChannel.IS_HOST, {
 			roomPIN: $page.params.slug
@@ -242,7 +239,7 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} bind:isEndGame/>
+			<EndGameSocket {participants} length={questions.length} bind:isEndGame />
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				<div class="py-2">
@@ -376,3 +373,32 @@
 {#if showScoreBoard}
 	<ScoreboardModal {participants} bind:showScoreBoard questionLength={questions.length} />
 {/if}
+
+<Modal bind:open={beKicked} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			You have been kicked
+		</h3>
+		<Button
+			color="red"
+			class="mr-2"
+			on:click={() => {
+				window.location.href = '/';
+			}}>OK</Button
+		>
+	</div>
+</Modal>
