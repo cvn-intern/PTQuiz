@@ -22,8 +22,9 @@
 	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
 	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
+	import { RoomType } from '$components/quizzes/room.enum';
+	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
-	import { t } from '../../../../../libs/i18n/translations';
 	import { translateValidation } from '../../../../../libs/helpers/translateValidation';
 
 	export let data: LayoutData;
@@ -52,6 +53,7 @@
 	let isJoined: boolean = false;
 	let roomInfo: any;
 	let beKicked: boolean = false;
+	let isBattle: boolean;
 	let isHostLeft: boolean = false;
 
 	let original = 10;
@@ -86,6 +88,7 @@
 				errorMessage = t.get('common.roomClosed');
 			}
 			isLoading = false;
+			isBattle = roomInfo.room.type === RoomType.BATTLE ? true : false;
 		});
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
@@ -122,7 +125,7 @@
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
-			if (isHost) {
+			if (isHost && !isBattle) {
 				original += 4;
 				timer = tweened(original, {
 					duration: 1000
@@ -154,7 +157,7 @@
 				};
 			});
 			original = questions[questionPointer].time;
-			if (isHost) {
+			if (isHost && !isBattle) {
 				original += 4;
 				timer = tweened(original, {
 					duration: 1000
@@ -232,6 +235,20 @@
 			participants
 		});
 	};
+
+	$: {
+		if ($timer <= 0 && isBattle && isHost) {
+			if (questionPointer < questions.length - 1) {
+				setTimeout(() => {
+					nextQuestion();
+				}, 5000);
+			} else {
+				setTimeout(() => {
+					endGame();
+				}, 5000);
+			}
+		}
+	}
 </script>
 
 {#if isLoading}
@@ -245,13 +262,17 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} bind:isEndGame />
+			<EndGameSocket {participants} length={questions.length} bind:isEndGame {isBattle} />
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
-				<div class="py-2">
-					<ProgressBar {stringTimer} />
-				</div>
-				{#if isHost}
+				{#if isBattle}
+					<ScoreBarBattle bind:timer {participants} questionLength={questions.length} />
+				{:else}
+					<div class="py-2">
+						<ProgressBar {stringTimer} />
+					</div>
+				{/if}
+				{#if !isBattle && isHost}
 					<HostButton
 						{nextQuestion}
 						{questionPointer}
@@ -259,6 +280,7 @@
 						{endGame}
 						{getScoreBoard}
 						{participants}
+						{isBattle}
 						bind:timer
 					/>
 				{/if}
@@ -272,6 +294,7 @@
 					quizzesHint={questions[questionPointer].hint}
 					{isHost}
 					{socket}
+					{isBattle}
 					bind:timer
 					bind:isShowOption
 				/>
@@ -285,6 +308,7 @@
 							bind:isPicked
 							{showModal}
 							{socket}
+							{isBattle}
 							isTrueFalse={false}
 							bind:countDown
 							{isHost}
@@ -301,6 +325,7 @@
 							{showModal}
 							{socket}
 							isTrueFalse={true}
+							{isBattle}
 							bind:countDown
 							{isHost}
 						/>
@@ -316,6 +341,7 @@
 							{isShowOption}
 							bind:countDown
 							{isHost}
+							{isBattle}
 						/>
 					</div>
 				{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
@@ -326,6 +352,7 @@
 							bind:isPicked
 							{showModal}
 							{socket}
+							{isBattle}
 							bind:countDown
 							{isHost}
 						/>
@@ -337,6 +364,7 @@
 						bind:isPicked
 						{showModal}
 						{socket}
+						{isBattle}
 						bind:countDown
 						{isHost}
 					/>
@@ -347,6 +375,7 @@
 						bind:isPicked
 						{showModal}
 						{socket}
+						{isBattle}
 						bind:countDown
 						{isHost}
 					/>
@@ -359,6 +388,7 @@
 						{socket}
 						bind:countDown
 						{isHost}
+						{isBattle}
 					/>
 				{/if}
 			</div>
@@ -377,7 +407,12 @@
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} bind:showScoreBoard questionLength={questions.length} />
+	<ScoreboardModal
+		{participants}
+		bind:showScoreBoard
+		questionLength={questions.length}
+		{isBattle}
+	/>
 {/if}
 
 <Modal bind:open={beKicked} size="xs" autoclose>

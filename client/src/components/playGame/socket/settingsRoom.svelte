@@ -42,7 +42,6 @@
 			isChangedCount = false;
 			count = data.count;
 		});
-        
 	});
 	const handleCopyPassword = () => {
 		navigator.clipboard.writeText(valuePassword);
@@ -61,8 +60,8 @@
 	};
 </script>
 
-<button class="absolute right-4" on:click={handleModal}>
-	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
+<button class="absolute top-4 right-4" on:click={handleModal}>
+	<Icon icon="material-symbols:settings-outline" class="w-10 h-10 text-darkGreen" />
 </button>
 
 {#if modalOpen}

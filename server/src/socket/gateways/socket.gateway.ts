@@ -292,9 +292,15 @@ export class SocketGateway
             const hostSocketId = await this.socketService.getHostSocketId(
                 data.roomPIN,
             );
-            this.server
-                .to(hostSocketId)
-                .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            if (!data.isBattle) {
+                this.server
+                    .to(hostSocketId)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            } else {
+                this.server
+                    .to(data.roomPIN)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            }
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -399,8 +405,8 @@ export class SocketGateway
                 client.user.id,
                 count,
             );
-            client.emit(EmitChannel.ROOM_COUNT, {
-                count: result,
+            this.server.to(result.PIN).emit(EmitChannel.ROOM_COUNT, {
+                count: result.count,
             });
         } catch (error) {
             throw new WsException({
