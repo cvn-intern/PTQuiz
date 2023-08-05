@@ -12,6 +12,7 @@ import { ResTransformInterceptor } from '../interceptors/response.interceptor';
 import { ResponseMessage } from '../decorators/responseMessage.decorator';
 import { JwtAuthGuard } from '../auth/guard/jwtGuard.guard';
 import { GetCurrentUser } from '../decorators/getCurrentUser.decorator';
+import { CreateRoomDto } from './dto/createRoom.dto';
 
 @Controller('room')
 @UseInterceptors(ResTransformInterceptor)
@@ -24,7 +25,7 @@ export class RoomController {
     @UseGuards(JwtAuthGuard)
     async openRoom(
         @GetCurrentUser('id') userId: string,
-        @Body() body: { quizId: string },
+        @Body() body: CreateRoomDto,
     ) {
         return this.roomService.createRoom(userId, body);
     }

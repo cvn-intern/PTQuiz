@@ -189,7 +189,7 @@ export class QuestionService {
                 questionData.type === TypeQuestion.INPUT_TEXT ||
                 questionData.type === TypeQuestion.ARRANGE_WORD
             ) {
-                let spaceIndex = questionData.written.indexOf(' ');
+                const spaceIndex = questionData.written.indexOf(' ');
                 if (spaceIndex !== -1) {
                     throw new HttpException(
                         QuestionError.QUESTION_WRITTEN_INVALID,
@@ -275,7 +275,7 @@ export class QuestionService {
                 }
 
                 const image_upload = await this.cloudinary.uploadFile(image);
-                questionData.image = image_upload.url;
+                questionData.image = image_upload.secure_url;
             }
             if (questionData.type === TypeQuestion.SINGLE_CHOICE) {
                 let totalTrueAnswer = 0;
@@ -311,7 +311,7 @@ export class QuestionService {
                 questionData.type === TypeQuestion.INPUT_TEXT ||
                 questionData.type === TypeQuestion.ARRANGE_WORD
             ) {
-                let spaceIndex = questionData.written.indexOf(' ');
+                const spaceIndex = questionData.written.indexOf(' ');
                 if (spaceIndex !== -1) {
                     throw new HttpException(
                         QuestionError.QUESTION_WRITTEN_INVALID,
