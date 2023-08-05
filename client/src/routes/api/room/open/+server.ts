@@ -12,7 +12,7 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 		},
 		body: JSON.stringify({
 			quizId: data.quizId,
-            type: data.type
+			type: data.type
 		})
 	});
 	const result = await response.json();
