@@ -51,6 +51,6 @@
 		on:click={getScoreBoard}>Score board</button
 	>
 	<div class="h-fit w-fit bg-orangeLogo text-white font-bold py-2 px-4 rounded-md cursor-default">
-		{numberOfAnswer} / {clientParticipants.length} Players Submit
+		{numberOfAnswer} / {clientParticipants.length} Players Answered
 	</div>
 </div>
