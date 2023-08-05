@@ -127,6 +127,12 @@
 	$: hiddenInputFile = isUpdate;
 	let category = result['category']?.id || result['category'] || Category.OTHER;
 	let stringImgeField = "JPEG, PNG, JPG (< 1MB)."
+
+	let imageFile;
+	const handleFileChange = (event: any) => {
+		imageFile = event.target.files[0];
+		result.image = URL.createObjectURL(imageFile);
+	};
 </script>
 
 <form
@@ -160,15 +166,14 @@
 							name="image"
 							accept="image/*"
 							class="text-base {hiddenInputFile ? 'hidden' : ''}"
+							on:change={handleFileChange}
 						/>
 						{#if result[name] !== ''}
 							<div class="relative">
 								<img
 									src={result[name]}
 									alt="thumbnail"
-									class="w-full h-32 cursor-pointer {hiddenInputFile
-										? ''
-										: 'hidden'}"
+									class="w-full h-32 cursor-pointer"
 								/>
 								<button
 									type="button"
@@ -211,18 +216,17 @@
 						{required}
 						id={name}
 						{name}
-						class="bg-gray-50 border border-graydish text-gray-700 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+						class=" bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
 				{:else if type === 'textarea'}
-					<div class="relative grid w-full">
-						<textarea
-							maxlength="100"
-							id={name}
-							placeholder={label}
-							{name}
-							class=" bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-						/>
-					</div>
+					<input
+						type="text"
+						maxlength="100"
+						id={name}
+						placeholder={label}
+						{name}
+						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+					/>
 				{:else if type === 'number'}
 					<input
 						bind:value={result[name]}
