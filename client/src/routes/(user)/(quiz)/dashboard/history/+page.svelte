@@ -1,22 +1,47 @@
-<script lang="ts">
-	import { t } from '$i18n/translations';
+<script>
+	export let data;
+	console.log(data.result);
+	let games = data.result.data;
 </script>
 
-<div class="flex items-center h-full">
-	<div
-		class="container flex flex-col md:flex-row sm:flex-row items-center justify-between px-5 text-gray-700"
-	>
-		<div class="w-full lg:w-1/2 md:w-1/3 sm:w-1/3 mx-8">
-			<div class="text-7xl text-secondary font-dark font-extrabold mb-8">404</div>
-			<p class="text-2xl md:text-3xl sm:text-2xl font-light mb-8 font-body">
-				{$t('common.haveNotImplement')}
-			</p>
-
-			<a
-				href="/dashboard/quizzes"
-				class=" font-body px-5 inline py-3 text-sm font-medium leading-5 shadow-2xl text-white transition-all duration-400 border border-transparent rounded-lg focus:outline-none bg-secondary active:bg-darkGreen hover:bg-darkGreen"
-				>{$t('common.backDashboard')}</a
-			>
-		</div>
+<div class="container mx-auto p-6">
+	<h1 class="text-4xl mb-6">Game History</h1>
+	<div class="overflow-x-auto">
+		<table class="w-full table-auto">
+			<thead>
+				<tr class="text-left">
+					<th class="px-4 py-2">Game</th>
+					<th class="px-4 py-2">Start date</th>
+					<th class="px-4 py-2">Complete date</th>
+					<th class="px-4 py-2">Score</th>
+					<th class="px-4 py-2">Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each games as game (game.id)}
+					<tr>
+						<td class="border px-4 py-2">{game.quiz.title}</td>
+						<td class="border px-4 py-2">{new Date(game.startedAt).toLocaleString('vi-VN', {
+							timeZone: 'Asia/Ho_Chi_Minh'
+						})}</td>
+						{#if game.completedAt == null}
+							<td class="border px-4 py-2">-</td>
+						{:else}
+							<td class="border px-4 py-2">{new Date(game.completedAt).toLocaleString('vi-VN', {
+								timeZone: 'Asia/Ho_Chi_Minh'
+							})}</td>
+						{/if}
+						<td class="border px-4 py-2">{game.point}</td>
+						<td class="border px-4 py-2">
+							{#if game.point >= game.quiz.passingPoint}
+								<span class="text-green-500">Passed</span>
+							{:else}
+								<span class="text-red-500">Failed</span>
+							{/if}
+						</td></tr
+					>
+				{/each}
+			</tbody>
+		</table>
 	</div>
 </div>
