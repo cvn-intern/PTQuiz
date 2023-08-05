@@ -399,8 +399,8 @@ export class SocketGateway
                 client.user.id,
                 count,
             );
-            client.emit(EmitChannel.ROOM_COUNT, {
-                count: result,
+            this.server.to(result.PIN).emit(EmitChannel.ROOM_COUNT, {
+                count: result.count,
             });
         } catch (error) {
             throw new WsException({
