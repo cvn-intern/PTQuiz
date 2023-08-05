@@ -31,7 +31,7 @@
 			isCopied = false;
 		}, 2000);
 		navigator.clipboard.writeText(url);
-		toast.success('Copied to clipboard');
+		toast.success(t.get('common.copiedToClipboard'));
 	};
 	let valuePassword = room.roomPassword;
 	onMount(() => {
@@ -46,7 +46,7 @@
 	});
 	const handleCopyPassword = () => {
 		navigator.clipboard.writeText(valuePassword);
-		toast.success('Copied to clipboard');
+		toast.success(t.get('common.copiedToClipboard'));
 	};
 	const handleModal = () => {
 		modalOpen = !modalOpen;

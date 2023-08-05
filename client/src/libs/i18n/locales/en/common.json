@@ -163,5 +163,6 @@
 	"gameAlreadyStarted": "Game has already started",
 	"roomClosed": "Room has been closed",
     "aliasName": "Alias Name",
-    "roomPassword": "Room Password"
+    "roomPassword": "Room Password",
+    "copiedToClipboard": "Copied to clipboard"
 }

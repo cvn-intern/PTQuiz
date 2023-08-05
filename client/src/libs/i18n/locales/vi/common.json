@@ -163,5 +163,6 @@
 	"gameAlreadyStarted": "Trò chơi đã bắt đầu",
 	"roomClosed": "Phòng đã đóng",
     "aliasName": "Tên ẩn danh",
-    "roomPassword": "Mật khẩu phòng"
+    "roomPassword": "Mật khẩu phòng",
+    "copiedToClipboard": "Đã sao chép vào clipboard"
 }
