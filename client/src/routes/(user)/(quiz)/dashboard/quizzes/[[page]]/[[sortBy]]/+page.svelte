@@ -21,6 +21,7 @@
 		<div class="flex h-full flex-col gap-4 p-6">
 			<button
 				aria-label="CreateQuiz"
+				title="Add"
 				on:click={handleCreateQuiz}
 				class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none md:w-1/6 w-3/6"
 				>{$t('common.createQuizIntro')}</button

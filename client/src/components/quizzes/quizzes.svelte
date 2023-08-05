@@ -23,9 +23,9 @@
 			<button
 				aria-label="CreateQuiz"
 				on:click={handleCreateQuiz}
-				class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none md:w-1/6 w-2/6 flex items-center justify-center"
+				class="p-2 text-secondary border-2 rounded-lg shadow-xl border-secondary hover:border-green-800 hover:text-green-800 focus:outline-none md:w-1/12 w-1/6 flex items-center justify-center"
 			>
-				<Icon icon="mdi:add-bold" class="w-8 h-8" />
+				<Icon icon="mdi:note-add" class="w-8 h-8" />
 			</button>
 
 			<div class="relative z-10">
