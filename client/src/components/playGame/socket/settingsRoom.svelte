@@ -61,7 +61,7 @@
 </script>
 
 <button class="absolute top-4 right-4" on:click={handleModal}>
-	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
+	<Icon icon="material-symbols:settings-outline" class="w-10 h-10 text-darkGreen" />
 </button>
 
 {#if modalOpen}

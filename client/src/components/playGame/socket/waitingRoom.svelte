@@ -170,7 +170,7 @@
 		goto('/');
 	}}
 >
-	<Icon icon="tabler:home" class="w-10 h-10" />
+	<Icon icon="tabler:home" class="w-10 h-10 text-darkGreen" />
 </button>
 {#if isHost}
 	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count />
