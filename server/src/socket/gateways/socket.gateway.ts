@@ -1,6 +1,6 @@
 import { MessageDto } from './../dto/message.dto';
 import { CryptoService } from './../../crypto/crypto.service';
-import { Logger, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import {
     WebSocketGateway,
     ConnectedSocket,

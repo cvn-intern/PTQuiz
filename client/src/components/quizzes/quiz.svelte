@@ -7,6 +7,7 @@
 	import { page } from '$app/stores';
 	import Loading from '$components/loading.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
+	import { RoomType } from './room.enum';
 	let popupModal = false;
 
 	export let title: string;
@@ -33,7 +34,8 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				quizId: id
+				quizId: id,
+				type: RoomType.GROUP
 			})
 		});
 		const result = await response.json();
