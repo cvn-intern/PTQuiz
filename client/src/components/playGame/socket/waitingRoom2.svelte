@@ -1,55 +1,6 @@
-<script lang="ts">
-	import type { Socket } from 'socket.io-client';
-	import Chat from './chat.svelte';
-	import { EmitChannel, ListenChannel } from '../../../libs/constants/socketChannel';
-	import { t } from '$i18n/translations';
-	import Icon from '@iconify/svelte';
-	import SettingsRoom from './settingsRoom.svelte';
-	import { onMount } from 'svelte';
-	import { RoomType } from '$components/quizzes/room.enum';
-	import whiteVersusMobile from '$assets/whiteVersusMobile.png';
-	import whiteVersus from '$assets/whiteVersus.png';
-	import { goto } from '$app/navigation';
-	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
-
-	export let startGame: () => void;
-	export let url: string;
-	export let participants: Participant[];
-	export let isHost: boolean;
-	export let socket: Socket;
-	export let user: any;
-	export let room: any;
-
-	let modalOpen = false;
-	$: participantsHost = participants.filter((participant) => participant.isHost)[0];
-
-	$: participantsNotHost = participants.filter((participant) => !participant.isHost);
-
-	$: participantsBattle = participants.filter((participant) => !participant.isHost)[0];
-
-	$: isKicking = participantsNotHost.map((participant) => {
-		return {
-			id: participant.id,
-			isKicking: false
-		};
-	});
-	let count = room.room.count;
-	const kickUser = (id: string, index: any) => {
-		isKicking = isKicking.map((participant) => {
-			if (participant.id === id) {
-				participant.isKicking = true;
-			}
-			return participant;
-		});
-		socket.emit(ListenChannel.KICK_USER, {
-			participantId: id,
-			roomId: room.id
-		});
-	};
-	let isShowKick = false;
-	let screenWidth: number;
-	$: screenWidth = window.innerWidth;
-</script>
+let isShowKick = false;
+let screenWidth: number;
+$: screenWidth = window.innerWidth;
 
 {#if room.room.type === RoomType.BATTLE}
 	<div class=" bg-room bg-cover w-full h-screen">

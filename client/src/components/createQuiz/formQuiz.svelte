@@ -126,6 +126,7 @@
 	];
 	$: hiddenInputFile = isUpdate;
 	let category = result['category']?.id || result['category'] || Category.OTHER;
+	let stringImgeField = "JPEG, PNG, JPG (< 1MB)."
 </script>
 
 <form
@@ -191,7 +192,7 @@
 							class="mt-1 text-base text-gray-500 dark:text-gray-300"
 							id="file_input_help"
 						>
-							JPEG, PNG, JPG (5MB).
+							{stringImgeField}
 						</p>
 					{/if}
 				{:else if type === 'select' && name === 'difficultyLevel'}

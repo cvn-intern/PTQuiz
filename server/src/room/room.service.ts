@@ -47,7 +47,7 @@ export class RoomService {
                     `${RoomError.ROOM_EXIST} ${process.env.CLIENT_URL}/room/${isExistRoom.PIN}`,
                     HttpStatus.BAD_REQUEST,
                 );
-            const defaultGroupCount = 6;
+            const defaultGroupCount = 5;
             const defaultBattleCount = 2;
             const room = await this.prisma.rooms.create({
                 data: {

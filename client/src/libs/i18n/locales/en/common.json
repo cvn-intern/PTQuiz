@@ -90,7 +90,7 @@
 	"ifYouDidNotReceiveEmail": "If you didn't receive the email, click",
 	"here": "here",
 	"toResendIt": "to resend it",
-	"title": "Title Quiz",
+	"title": "Title",
 	"category": "Category",
 	"shareYourQuiz": "Share your Quiz",
 	"customizeTimeQuestion": "Customize Time Question",
@@ -153,5 +153,8 @@
 	"viewScoreboard": "View Scoreboard",
 	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question",
 	"canNotDeleteQuestion": "Must have at least one question",
-	"startBattle": "Start Battle"
+	"startBattle": "Start Battle",
+	"limitUser": "Limit User",
+	"enterYourMessageHere": "Enter your message here",
+	"startRoom": "Start Room"
 }

@@ -24,6 +24,7 @@
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 	import { RoomType } from '$components/quizzes/room.enum';
 	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
+	import { Button, Modal } from 'flowbite-svelte';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -52,6 +53,7 @@
 	let roomInfo: any;
 	let beKicked: boolean = false;
 	let isBattle: boolean;
+	let isHostLeft: boolean = false;
 
 	let original = 10;
 	let stringTimer: string;
@@ -67,11 +69,6 @@
 
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
-	}
-	$: {
-		if (beKicked) {
-			errorMessage = 'You have been kicked';
-		}
 	}
 	onMount(() => {
 		socket.emit(ListenChannel.IS_HOST, {
@@ -191,7 +188,11 @@
 		});
 		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
 			if (!isHost) {
-				window.location.href = $page.url.href;
+				isHostLeft = true;
+				socket.emit(ListenChannel.LEAVE_ROOM, {
+					roomPIN: $page.params.slug
+				});
+				socket.disconnect();
 			}
 		});
 		socket.on(EmitChannel.BE_KICKED, (data: any) => {
@@ -412,3 +413,61 @@
 		{isBattle}
 	/>
 {/if}
+
+<Modal bind:open={beKicked} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			You have been kicked
+		</h3>
+		<Button
+			color="red"
+			class="mr-2"
+			on:click={() => {
+				window.location.href = '/';
+			}}>OK</Button
+		>
+	</div>
+</Modal>
+
+<Modal bind:open={isHostLeft} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			Host has reloaded the room
+		</h3>
+		<Button
+			color="red"
+			class="mr-2"
+			on:click={() => {
+				window.location.href = $page.url.href;
+			}}>Re-enter room</Button
+		>
+	</div>
+</Modal>

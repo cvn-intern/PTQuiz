@@ -7,6 +7,8 @@
 	export let nameCategory = '';
 	export let cardList: any[] = [];
 	export let totalQuizzes: number;
+	export let quizzes: any;
+	export let data: any;
 	function addQuiz() {
 		goto('/createQuiz');
 	}
@@ -52,7 +54,7 @@
 </div>
 
 <div class="px-4 md:py-8 md:px-12 lg:px-20 md:pt-0 py-4">
-	<Pagination {totalQuizzes} bind:quizzes={cardList} {nameCategory} />
+	<Pagination bind:totalQuizzes bind:quizzes {nameCategory} bind:data />
 </div>
 
 <style>

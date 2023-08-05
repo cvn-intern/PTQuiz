@@ -56,11 +56,11 @@
 	});
 </script>
 
-<div class="h-1/2 py-6 gap-3 w-full flex flex-row items-center">
-	<div class="flex items-center justify-center lg:w-1/3 md:w-1/2 w-1/3 h-full">
+<div class="gap-3 w-full flex md:flex-row flex-col items-center">
+	<div class="flex items-center justify-center lg:w-1/3 md:w-1/2 w-full">
 		<label
 			for="dropzone-file"
-			class="2xl:w-full 2xl:h-full xl:w-full xl:h-full lg:w-full lg:h-full md:w-full md:h-full w-full h-full flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 {imageUrl ===
+			class=" w-full flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 md:h-heightImage h-heightImageMobile {imageUrl ===
 				'' &&
 			isSubmit &&
 			typeOfquestion === 6
@@ -68,13 +68,9 @@
 				: ''}"
 		>
 			{#if imageUrl}
-				<div class="group hover:opacity-100 w-full h-full flex">
-					<div class="h-full w-full flex items-center">
-						<img
-							class="2xl:w-full 2xl:h-[200px] xl:w-full xl:h-[200px] lg:w-full lg:h-[200px] md:w-full md:h-[200px] w-full h-[200px] object-cover"
-							src={imageUrl}
-							alt="Question"
-						/>
+				<div class="group hover:opacity-100 w-full flex">
+					<div class="w-full flex items-center">
+						<img class="w-full object-fit md:h-heightImage h-heightImageMobile" src={imageUrl} alt="Question" />
 					</div>
 					<div class="relative">
 						<button
@@ -123,7 +119,6 @@
 					</p>
 				</div>
 			{/if}
-
 			<input
 				id="dropzone-file"
 				name="image"
@@ -134,9 +129,9 @@
 			/>
 		</label>
 	</div>
-	<div class="flex w-full gap-3 h-full md:flex-row flex-col">
+	<div class="flex w-full gap-3 md:flex-row flex-col">
 		<textarea
-			class=" md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-2/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none {isSubmit &&
+			class=" placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-2/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none {isSubmit &&
 			title === ''
 				? 'border-red-600 border-2'
 				: ''}"
@@ -147,7 +142,7 @@
 			disabled={typeOfquestion === 4}
 		/>
 		<textarea
-			class="md:h-full placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-1/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none"
+			class=" placeholder-slate-200 2xl:text-3xl xl:text-2xl lg:text-xl md:w-1/3 md:text-xl w-full text-xl border border-gray-300 rounded-xl text-center md:p-10 resize-none"
 			placeholder={$t('common.hint')}
 			rows="5"
 			bind:value={hint}
