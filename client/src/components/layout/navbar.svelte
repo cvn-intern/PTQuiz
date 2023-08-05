@@ -78,7 +78,7 @@
 					href="/"
 					title={$t('common.home')}
 					class={clsx('hover:text-secondary', {
-						'font-black': $page.url.pathname === '/'
+						'text-secondary': $page.url.pathname === '/'
 					})}>{$t('common.home')}</a
 				>
 			</li>
@@ -89,7 +89,7 @@
 					}}
 					title={$t('common.discovery')}
 					class={clsx('hover:text-secondary', {
-						'font-black': $page.url.pathname.includes('/discovery')
+						'text-secondary': $page.url.pathname.includes('/discovery')
 					})}
 				>
 					{$t('common.discovery')}

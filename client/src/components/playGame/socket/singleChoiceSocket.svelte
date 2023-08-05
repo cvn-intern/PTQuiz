@@ -14,6 +14,7 @@
 	export let isTrueFalse: boolean;
 	export let countDown: any;
 	export let isHost: boolean;
+	export let isBattle: boolean;
 
 	let fourOptions: any[] = [];
 	let timestamp: number;
@@ -31,7 +32,7 @@
 				id: optionKey,
 				contents: question.options[optionKey],
 				isCorrect: false,
-				disabled: isHost || isPicked ? true : false
+				disabled: (!isBattle && isHost) || isPicked ? true : false
 			}));
 		}
 	}
@@ -48,7 +49,8 @@
 					answerC: answers[2],
 					answerD: answers[3]
 				}
-			}
+			},
+            isBattle
 		});
 	};
 	onMount(() => {
@@ -148,6 +150,6 @@
 	{/each}
 {/if}
 
-{#if showModal && isTimeout && !isHost}
+{#if showModal && isTimeout && (!isHost || isBattle)}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}

@@ -292,9 +292,15 @@ export class SocketGateway
             const hostSocketId = await this.socketService.getHostSocketId(
                 data.roomPIN,
             );
-            this.server
-                .to(hostSocketId)
-                .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            if (!data.isBattle) {
+                this.server
+                    .to(hostSocketId)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            } else {
+                this.server
+                    .to(data.roomPIN)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            }
         } catch (error) {
             throw new WsException({
                 message: error.message,

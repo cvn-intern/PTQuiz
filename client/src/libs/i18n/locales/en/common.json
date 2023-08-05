@@ -153,6 +153,7 @@
 	"viewScoreboard": "View Scoreboard",
 	"theQuizMustHaveAtLeastOneQuestion": "The quiz must have at least one question",
 	"canNotDeleteQuestion": "Must have at least one question",
+	"startBattle": "Start Battle",
 	"limitUser": "Limit User",
 	"enterYourMessageHere": "Enter your message here",
 	"startRoom": "Start Room"
