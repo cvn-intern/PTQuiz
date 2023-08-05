@@ -17,6 +17,7 @@
 	export let isEndGame: boolean;
 	export let participants: Participant[] = [];
 	export let length: number;
+	export let isBattle: boolean;
 	let showScoreBoard: boolean = false;
 
 	$: clientParticipants = participants.filter((participant) => participant.isHost === false);
@@ -37,28 +38,51 @@
 			}}>{$t('common.backHome')}</button
 		>
 	</div>
-	<Position participants={clientParticipants} {length} />
-	<div class="flex gap-4 items-center justify-center">
-		<div
-			class={`${
-				clientParticipants.length > 3
-					? 'bg-white p-4 flex flex-col gap-4 overflow-y-scroll no-scrollbar'
-					: ''
-			}`}
-		>
-			{#each clientParticipants.slice(3) as participant, index}
-				<ScoreBoardSocket
-					scoreUser={participant}
-					isScoreboard={false}
-					index={index + 3}
-					bind:isEndGame
-					questionLength={length}
-				/>
-			{/each}
+	{#if isBattle}
+		<Position participants={participants} {length} />
+		<div class="flex gap-4 items-center justify-center">
+			<div
+				class={`${
+					participants.length > 3
+						? 'bg-white p-4 flex flex-col gap-4 overflow-y-scroll no-scrollbar'
+						: ''
+				}`}
+			>
+				{#each participants.slice(3) as participant, index}
+					<ScoreBoardSocket
+						scoreUser={participant}
+						isScoreboard={false}
+						index={index + 3}
+						bind:isEndGame
+						questionLength={length}
+					/>
+				{/each}
+			</div>
 		</div>
-	</div>
+	{:else}
+		<Position participants={clientParticipants} {length} />
+		<div class="flex gap-4 items-center justify-center">
+			<div
+				class={`${
+					clientParticipants.length > 3
+						? 'bg-white p-4 flex flex-col gap-4 overflow-y-scroll no-scrollbar'
+						: ''
+				}`}
+			>
+				{#each clientParticipants.slice(3) as participant, index}
+					<ScoreBoardSocket
+						scoreUser={participant}
+						isScoreboard={false}
+						index={index + 3}
+						bind:isEndGame
+						questionLength={length}
+					/>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </div>
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} bind:showScoreBoard questionLength={length} />
+	<ScoreboardModal {participants} bind:showScoreBoard questionLength={length} {isBattle} />
 {/if}

@@ -23,7 +23,7 @@
 	$: essay = essay.replace(' ', '');
 </script>
 
-<div class=" grid xl:gap-3 lg:gap-2 md:gap-3 grid-cols-1 gap-3 h-1/3 w-full">
+<div class="h-60 grid grid-cols-1 gap-3 w-full">
 	<div
 		class=" bg-optionB rounded-xl flex flex-row items-center justify-center {isSubmit &&
 		essay === ''

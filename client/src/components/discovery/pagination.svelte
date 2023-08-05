@@ -1,34 +1,82 @@
 <script lang="ts">
 	import type { IQuiz } from '../routes/(user)/(quiz)/dashboard/quizzes/[[page]]/quiz.type';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let totalQuizzes: number;
 	export let quizzes: IQuiz[];
 	export let nameCategory: string;
+	export let data: any;
 
 	nameCategory = nameCategory.toLowerCase();
 
 	let isShow = true;
 	const quizzesPerPage = 5;
 
-	let currentPage = parseInt($page?.params?.page) | 1;
 	const numberOfPages = Math.ceil(totalQuizzes / quizzesPerPage);
 
 	if (numberOfPages <= 1) {
 		isShow = false;
 	}
 
+	function transformQuizData(quizzes: any[]): any[] {
+		const categories: { [key: string]: quiz[] } = {};
+
+		for (let quizData of quizzes) {
+			const categoryName = quizData.category.name;
+			if (!categories[categoryName]) {
+				categories[categoryName] = [];
+			}
+			categories[categoryName].push(quizData);
+		}
+
+		const output = Object.keys(categories).map((categoryName) => {
+			return [
+				{
+					category: categoryName,
+					quizzes: categories[categoryName]
+				}
+			];
+		});
+
+		return [output];
+	}
+
 	async function fetchQuizzes(page: number) {
 		currentPage = page;
 		const response = await fetch(`/api/quizzes/discovery/${nameCategory}/${page}`);
-		const data = await response.json();
-		quizzes = data.quizzes[0];
-		totalQuizzes = data.totalQuizzes;
+		const result = await response.json();
+		if (response.status === 200) {
+			if (result.length < 1) {
+				const dataParse = transformQuizData(result.quizzes);
+				quizzes = dataParse.quizzes;
+				totalQuizzes = result.totalQuizzes;
+				data = {
+					quizzes: quizzes,
+					totalQuizzes: totalQuizzes
+				};
+			} else {
+				quizzes = result;
+				data = {
+					quizzes: quizzes
+				};
+			}
+		} else {
+			quizzes = [];
+		}
+		return data;
 	}
 
-	function handlePageChange(page: number) {
+	async function handlePageChange(page: number) {
 		currentPage = page;
-		fetchQuizzes(currentPage);
+		data = await fetchQuizzes(currentPage);
+		goto(`/discovery/${nameCategory}/${page}`);
+	}
+
+	$: currentPage = parseInt($page?.params?.page) || 1;
+
+	$: if ($page.params.categoryName === 'all') {
+		currentPage = 1;
 	}
 </script>
 
@@ -66,8 +114,11 @@
 			{#each Array(numberOfPages) as _, i}
 				<li>
 					<a
-						href="/discovery/{nameCategory}/{i + 1}"
-						on:click={() => handlePageChange(i + 1)}
+						href="#"
+						on:click={(e) => {
+							e.preventDefault();
+							handlePageChange(i + 1);
+						}}
 						aria-current="page"
 						class="z-10 flex items-center justify-center px-3 h-8 leading {currentPage ===
 						i + 1

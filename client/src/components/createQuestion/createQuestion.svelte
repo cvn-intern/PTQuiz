@@ -12,23 +12,21 @@
 	export let index: number;
 </script>
 
-<div class="flex flex-col w-full h-full p-6 bg-primary rounded-lg">
-	<div class="h-full flex flex-col w-full">
-		<InputQuestion {index} />
-		{#if typeOfQuestion === 0}
-			<MultiChoice {index} />
-		{:else if typeOfQuestion === 1}
-			<SingleChoice {index} />
-		{:else if typeOfQuestion === 2}
-			<EssayChoice {index} />
-		{:else if typeOfQuestion === 3}
-			<Truefalse {index} />
-		{:else if typeOfQuestion === 4}
-			<ArrangeWord {index} />
-		{:else if typeOfQuestion === 5}
-			<InputText {index} />
-		{:else}
-			<GifSingleChoice {index} />
-		{/if}
-	</div>
+<div class="flex flex-col w-full h-full p-6 bg-primary rounded-lg gap-6">
+	<InputQuestion {index} />
+	{#if typeOfQuestion === 0}
+		<MultiChoice {index} />
+	{:else if typeOfQuestion === 1}
+		<SingleChoice {index} />
+	{:else if typeOfQuestion === 2}
+		<EssayChoice {index} />
+	{:else if typeOfQuestion === 3}
+		<Truefalse {index} />
+	{:else if typeOfQuestion === 4}
+		<ArrangeWord {index} />
+	{:else if typeOfQuestion === 5}
+		<InputText {index} />
+	{:else}
+		<GifSingleChoice {index} />
+	{/if}
 </div>

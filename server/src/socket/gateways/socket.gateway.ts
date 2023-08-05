@@ -1,6 +1,6 @@
 import { MessageDto } from './../dto/message.dto';
 import { CryptoService } from './../../crypto/crypto.service';
-import { Logger, UseGuards } from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import {
     WebSocketGateway,
     ConnectedSocket,
@@ -44,6 +44,7 @@ export class SocketGateway
         public socketService: SocketService,
         private cryptoService: CryptoService,
     ) {}
+
     private logger: Logger = new Logger('SocketGateway');
 
     handleConnection(@ConnectedSocket() client: Socket): void {
@@ -51,7 +52,6 @@ export class SocketGateway
     }
     async handleDisconnect(@ConnectedSocket() client: Socket) {
         try {
-            this.logger.log(`Client disconnected: ${client.id}`);
             const { roomPIN, isHost } =
                 await this.socketService.leaveRoomImmediately(client.id);
             if (roomPIN) {
@@ -70,8 +70,9 @@ export class SocketGateway
             }
         } catch (error) {}
     }
+
     afterInit() {
-        this.logger.log('Initialized!');
+        this.logger.log('Socket server initialized');
     }
 
     @SubscribeMessage(ListenChannel.JOIN_ROOM)
@@ -80,14 +81,18 @@ export class SocketGateway
         @MessageBody() data: JoinRoomDto,
     ) {
         try {
-            const { roomPIN, aliasName, roomPassword, isHostJoined } = data;
+            const { roomPIN, aliasName, roomPassword } = data;
+            const isHost = await this.socketService.checkRoomHost(
+                roomPIN,
+                client.user.id,
+            );
             const result = await this.socketService.joinRoom(
                 roomPIN,
                 client.user.id,
                 client.id,
                 aliasName,
                 roomPassword,
-                isHostJoined,
+                isHost,
             );
             if (result.status === true) {
                 client.join(roomPIN);
@@ -287,9 +292,15 @@ export class SocketGateway
             const hostSocketId = await this.socketService.getHostSocketId(
                 data.roomPIN,
             );
-            this.server
-                .to(hostSocketId)
-                .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            if (!data.isBattle) {
+                this.server
+                    .to(hostSocketId)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            } else {
+                this.server
+                    .to(data.roomPIN)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            }
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -384,13 +395,18 @@ export class SocketGateway
     ) {
         try {
             const { roomId, count } = data;
+            if (typeof count !== 'number') {
+                throw new WsException({
+                    message: SocketError.SOCKET_INVALID_FORMAT,
+                });
+            }
             const result = await this.socketService.changeRoomCount(
                 roomId,
                 client.user.id,
                 count,
             );
-            client.emit(EmitChannel.ROOM_COUNT, {
-                count: result,
+            this.server.to(result.PIN).emit(EmitChannel.ROOM_COUNT, {
+                count: result.count,
             });
         } catch (error) {
             throw new WsException({
