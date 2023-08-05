@@ -162,7 +162,7 @@
 	"reEnterRoom": "Re-enter room",
 	"gameAlreadyStarted": "Game has already started",
 	"roomClosed": "Room has been closed",
-    "aliasName": "Alias Name",
-    "roomPassword": "Room Password",
-    "copiedToClipboard": "Copied to clipboard"
+	"aliasName": "Alias Name",
+	"roomPassword": "Room Password",
+	"copiedToClipboard": "Copied to clipboard"
 }
