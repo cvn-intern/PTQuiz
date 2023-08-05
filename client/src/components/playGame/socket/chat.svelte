@@ -116,7 +116,7 @@
 	on:click={handleClickOpenChat}
 	class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-secondary text-white border-2 border-gray-300 font-semibold p-2 {isShowChat
 		? 'hidden'
-		: 'fixed right-10 bottom-10 z-60 '}"
+		: 'fixed right-2 md:right-10 bottom-10 z-60 '}"
 >
 	<Icon icon="et:chat" class="text-4xl" />
 </button>

@@ -48,12 +48,12 @@
 	};
 </script>
 
-<button class="absolute" on:click={handleModal}>
+<button class="absolute top-0 right-0" on:click={handleModal}>
 	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
 </button>
 
 {#if modalOpen}
-	<div class="absolute md:top-0 md:right-2 bottom-0">
+	<div class="absolute md:top-10 md:right-2 bottom-0">
 		<div
 			class="flex flex-col w-full justify-center items-center gap-4 md:pt-6 pt-0 {isHost
 				? 'block'
