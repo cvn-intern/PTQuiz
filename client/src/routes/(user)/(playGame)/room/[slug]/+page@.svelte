@@ -26,6 +26,7 @@
 	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
 	import { translateValidation } from '../../../../../libs/helpers/translateValidation';
+	import { t } from '../../../../../libs/i18n/translations';
 
 	export let data: LayoutData;
 	type Participant = {

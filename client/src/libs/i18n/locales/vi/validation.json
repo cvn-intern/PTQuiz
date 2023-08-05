@@ -66,6 +66,6 @@
 	"SOCKET_HOST_NOT_JOINED_YET": "Chủ phòng chưa tham gia phòng",
 	"SOCKET_ROOM_FULL": "Phòng đã đầy",
 	"SOCKET_INVALID_FORMAT": "Định dạng không hợp lệ",
-    "SOCKET_ALIAS_CONSTRAINT": "Tên ẩn danh từ 1 đến 10 ký tự",
-    "SOCKET_ROOM_MUST_BE_FILLED": "Vui lòng điền mật khẩu phòng"
+	"SOCKET_ALIAS_CONSTRAINT": "Tên ẩn danh từ 1 đến 10 ký tự",
+	"SOCKET_ROOM_MUST_BE_FILLED": "Vui lòng điền mật khẩu phòng"
 }

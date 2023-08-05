@@ -71,7 +71,7 @@
 			<input
 				type="text"
 				name="alias-name"
-				placeholder="Alias Name"
+				placeholder={$t('common.aliasName')}
 				id="alias-name"
 				bind:value={aliasName}
 				class="rounded-lg"
@@ -82,7 +82,7 @@
 					type="password"
 					name="room-password"
 					id="room-password"
-					placeholder="Password"
+					placeholder={$t('common.roomPassword')}
 					bind:value={roomPassword}
 					class="rounded-lg"
 				/>
