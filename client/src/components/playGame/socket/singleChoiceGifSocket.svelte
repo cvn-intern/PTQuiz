@@ -48,7 +48,8 @@
 					answerC: answers[2],
 					answerD: answers[3]
 				}
-			}
+			},
+            isBattle
 		});
 	};
 	onMount(() => {

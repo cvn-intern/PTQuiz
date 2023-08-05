@@ -5,9 +5,9 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { Modal } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
-	import { tweened, type Tweened } from 'svelte/motion';
 	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
 	import TrueFalseModal from '$components/trueFalseModal.svelte';
+	import type { Tweened } from 'svelte/motion';
 	export let showModal: boolean;
 	export let question: SocketQuiz;
 	export let socket: Socket;
@@ -46,7 +46,8 @@
 					answerC: answers[2],
 					answerD: answers[3]
 				}
-			}
+			},
+            isBattle
 		});
 	};
 	onMount(() => {

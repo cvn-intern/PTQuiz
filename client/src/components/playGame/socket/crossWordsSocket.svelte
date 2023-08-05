@@ -140,7 +140,8 @@
 					answerC: false,
 					answerD: false
 				}
-			}
+			},
+            isBattle
 		});
 	};
 	$: {
