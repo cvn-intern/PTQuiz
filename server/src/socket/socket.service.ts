@@ -4,6 +4,7 @@ import { SocketError } from '../error';
 import { AnswerDto } from './dto';
 import { TypeQuestion } from '../question/type';
 import { AnswerType } from '../question/type/questionInput.type';
+import { RoomCount } from './types/roomCount.enum';
 
 @Injectable()
 export class SocketService {
@@ -746,7 +747,7 @@ export class SocketService {
     }
 
     async changeRoomCount(roomId: string, userId: string, count: number) {
-        if (count < 0 || count > 15) {
+        if (count < RoomCount.MIN || count > RoomCount.MAX) {
             throw new Error(SocketError.SOCKET_ROOM_COUNT_MAX);
         }
         const room = await this.prisma.rooms.findFirst({
