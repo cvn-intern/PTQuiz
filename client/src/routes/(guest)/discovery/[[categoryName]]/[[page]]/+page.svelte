@@ -31,14 +31,25 @@
 	<div class="md:hidden text-base font-medium text-gray-500 px-4 text-end relative z-20">
 		<MobileListCategories />
 	</div>
-	{#each categories as category, indexOfCategory}
-		{#if category.quizzes.length}
+	{#if categories.length === 1}
+		{#each categories as category, indexOfCategory}
 			<Category
 				nameCategory={category.category}
 				cardList={category.quizzes}
 				totalQuizzes={category.totalQuizzes}
 				{indexOfCategory}
 			/>
-		{/if}
-	{/each}
+		{/each}
+	{:else}
+		{#each categories as category, indexOfCategory}
+			{#if category.quizzes.length}
+				<Category
+					nameCategory={category.category}
+					cardList={category.quizzes}
+					totalQuizzes={category.totalQuizzes}
+					{indexOfCategory}
+				/>
+			{/if}
+		{/each}
+	{/if}
 </div>
