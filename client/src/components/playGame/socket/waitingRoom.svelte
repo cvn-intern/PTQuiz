@@ -75,7 +75,7 @@
 			</div>
 			<div class="w-full flex justify-center">
 				<div
-					class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 w-screenHalf"
+					class="sm:grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 w-screenHalf"
 				>
 					{#each participantsNotHost as participant, index}
 						<div class="flex flex-col items-center gap-2 w-40 p-2">

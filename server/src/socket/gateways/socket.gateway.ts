@@ -44,14 +44,10 @@ export class SocketGateway
         public socketService: SocketService,
         private cryptoService: CryptoService,
     ) {}
-    private logger: Logger = new Logger('SocketGateway');
 
-    handleConnection(@ConnectedSocket() client: Socket): void {
-        this.logger.log(`Client connected: ${client.id}`);
-    }
+    handleConnection(@ConnectedSocket() client: Socket): void {}
     async handleDisconnect(@ConnectedSocket() client: Socket) {
         try {
-            this.logger.log(`Client disconnected: ${client.id}`);
             const { roomPIN, isHost } =
                 await this.socketService.leaveRoomImmediately(client.id);
             if (roomPIN) {
@@ -70,9 +66,7 @@ export class SocketGateway
             }
         } catch (error) {}
     }
-    afterInit() {
-        this.logger.log('Initialized!');
-    }
+    afterInit() {}
 
     @SubscribeMessage(ListenChannel.JOIN_ROOM)
     async handleJoinRoom(
@@ -80,14 +74,18 @@ export class SocketGateway
         @MessageBody() data: JoinRoomDto,
     ) {
         try {
-            const { roomPIN, aliasName, roomPassword, isHostJoined } = data;
+            const { roomPIN, aliasName, roomPassword } = data;
+            const isHost = await this.socketService.checkRoomHost(
+                roomPIN,
+                client.user.id,
+            );
             const result = await this.socketService.joinRoom(
                 roomPIN,
                 client.user.id,
                 client.id,
                 aliasName,
                 roomPassword,
-                isHostJoined,
+                isHost,
             );
             if (result.status === true) {
                 client.join(roomPIN);
