@@ -26,6 +26,7 @@
 	let isShowGif: boolean;
 	let modalOpen: boolean = false;
 	let isGifButtonClicked: boolean = false;
+	let screenWidth: number;
 
 	async function getDuration(url: any) {
 		const res = await fetch(url);
@@ -107,6 +108,8 @@
 	}
 </script>
 
+<svelte:window bind:innerWidth={screenWidth} />
+
 <InformationModal
 	{quizzesType}
 	{quizzesPointer}
@@ -170,7 +173,6 @@
 	<button
 		class="h-1/2 w-full flex justify-center items-center"
 		on:click={() => {
-			const screenWidth = window.innerWidth;
 			if (screenWidth >= 768) {
 				modalOpen = true;
 			}

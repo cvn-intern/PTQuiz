@@ -22,6 +22,7 @@
 	let qrModalOpen = false;
 	let isPublic = room.room.isPublic;
 	let isChangedCount = false;
+	let screenWidth: number;
 	$: size = modalOpen ? '500x500' : '100x100';
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=${size}`;
 	const handleCopy = () => {
@@ -60,6 +61,8 @@
 	};
 </script>
 
+<svelte:window bind:innerWidth={screenWidth} />
+
 <button class="absolute top-4 right-4" on:click={handleModal}>
 	<Icon icon="material-symbols:settings-outline" class="w-10 h-10 text-darkGreen" />
 </button>
@@ -76,7 +79,6 @@
 			<button
 				class="hidden md:block"
 				on:click={() => {
-					const screenWidth = window.innerWidth;
 					if (screenWidth >= 768) {
 						modalOpen = true;
 					}
@@ -84,7 +86,6 @@
 			>
 				<button
 					on:click={() => {
-						const screenWidth = window.innerWidth;
 						if (screenWidth >= 768) {
 							qrModalOpen = true;
 						}

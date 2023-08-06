@@ -48,8 +48,9 @@
 	};
 	let isShowKick = false;
 	let screenWidth: number;
-	$: screenWidth = window.innerWidth;
 </script>
+
+<svelte:window bind:innerWidth={screenWidth} />
 
 {#if room.room.type === RoomType.BATTLE}
 	<div class=" bg-room bg-cover w-full h-screen">
@@ -102,7 +103,7 @@
 				<div class="flex flex-col justify-between gap-4">
 					<div class="flex flex-col gap-4 justify-center items-center md:pt-6 pt-8">
 						<div
-							class="text-4xl flex items-center gap-2 uppercase text-zinc-700 font-bold text-center"
+							class="hidden text-4xl md:flex items-center gap-2 uppercase text-zinc-700 font-bold text-center"
 						>
 							{$t('common.waitingForPlayers')}
 						</div>

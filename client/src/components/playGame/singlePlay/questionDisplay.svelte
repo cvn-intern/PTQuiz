@@ -60,6 +60,7 @@
 	}
 </script>
 
+
 <InformationModal
 	{quizzesType}
 	{quizzesPointer}
@@ -67,6 +68,7 @@
 	{quizzesHint}
 	isHost={false}
 	isSingle={true}
+	isBattle={false}
 />
 <div class={`flex justify-center px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
 	{#if isShowOption}
@@ -124,7 +126,6 @@
 	<button
 		class="h-1/2 w-full flex justify-center items-center"
 		on:click={() => {
-			const screenWidth = window.innerWidth;
 			if (screenWidth >= 768) {
 				modalOpen = true;
 			}
