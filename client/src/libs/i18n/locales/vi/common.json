@@ -165,5 +165,16 @@
 	"roomClosed": "Phòng đã đóng",
 	"aliasName": "Tên ẩn danh",
 	"roomPassword": "Mật khẩu phòng",
-	"copiedToClipboard": "Đã sao chép vào clipboard"
+	"copiedToClipboard": "Đã sao chép vào clipboard",
+	"inProgress": "Đang tiến hành",
+	"STT": "Lần ",
+	"notCompleted": "Chưa hoàn thành",
+	"gameHistory": "Lịch sử trò chơi",
+	"noHistory": "Không có lịch sử nào",
+	"quizName": "Tên bộ câu hỏi",
+	"lastestStartedDate": "Ngày bắt đầu gần nhất",
+	"lastestCompletedDate": "Ngày hoàn thành gần nhất",
+	"score": "Điểm",
+	"passed": "Đạt",
+	"failed": "Chưa đạt"
 }

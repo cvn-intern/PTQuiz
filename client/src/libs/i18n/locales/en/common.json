@@ -165,5 +165,16 @@
 	"roomClosed": "Room has been closed",
 	"aliasName": "Alias Name",
 	"roomPassword": "Room Password",
-	"copiedToClipboard": "Copied to clipboard"
+	"copiedToClipboard": "Copied to clipboard",
+	"inProgress": "In Progress",
+	"STT": "No.",
+	"notCompleted": "Not Completed",
+	"gameHistory": "Game History",
+	"noHistory": "You have not played any game yet.",
+	"quizName": "Quiz Name",
+	"lastestStartedDate": "Lastest started date",
+	"lastestCompletedDate": "Lastest completed date",
+	"score": "Score",
+	"passed": "Passed",
+	"failed": "Failed"
 }
