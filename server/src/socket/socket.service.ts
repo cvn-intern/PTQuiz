@@ -4,6 +4,7 @@ import { SocketError } from '../error';
 import { AnswerDto } from './dto';
 import { TypeQuestion } from '../question/type';
 import { AnswerType } from '../question/type/questionInput.type';
+import { RoomCount } from './types/roomCount.enum';
 
 @Injectable()
 export class SocketService {
@@ -36,6 +37,27 @@ export class SocketService {
             throw new Error(SocketError.SOCKET_ROOM_CLOSED);
         }
         if (!isHostJoined) {
+            const host = await this.prisma.room_participants.findFirst({
+                where: {
+                    roomId: room.id,
+                    isHost: true,
+                },
+            });
+            if (!host) {
+                return {
+                    status: false,
+                    message: SocketError.SOCKET_HOST_NOT_JOINED_YET,
+                };
+            }
+        }
+        const roomParticipants = await this.getRoomParticipants(roomPIN);
+        if (roomParticipants.length >= room.count) {
+            return {
+                status: false,
+                message: SocketError.SOCKET_ROOM_FULL,
+            };
+        }
+        if (!isHostJoined) {
             if (room.isPublic === false) {
                 if (room.roomPassword !== roomPassword) {
                     return {
@@ -56,16 +78,15 @@ export class SocketService {
             'https://media4.giphy.com/media/RaxcELylDIaDnbWWtl/giphy.gif?cid=ecf05e47qpagl2cg9lueva249mxoedai6tq0ov4dal00urg4&ep=v1_gifs_related&rid=giphy.gif&ct=s',
             'https://media0.giphy.com/media/m738BWCynXs23KFsnq/giphy.gif?cid=ecf05e47uggl22tfcwf2eiuirg3cdkhyslotnzr5mssrndhb&ep=v1_gifs_related&rid=giphy.gif&ct=s',
         ];
+        const randomAvatar =
+            aliasAvatars[Math.floor(Math.random() * aliasAvatars.length)];
         const user = await this.prisma.users.update({
             where: {
                 id: userId,
             },
             data: {
                 aliasName: aliasName,
-                aliasAvatar:
-                    aliasAvatars[
-                        Math.floor(Math.random() * aliasAvatars.length)
-                    ],
+                aliasAvatar: randomAvatar,
             },
         });
         if (!user) {
@@ -87,6 +108,7 @@ export class SocketService {
         if (room.userId === userId) {
             isHost = true;
         }
+
         const participants = await this.prisma.participants.create({
             data: {
                 userId: user.id,
@@ -605,15 +627,34 @@ export class SocketService {
             },
         });
         const result = scoreBoard.map(async (user) => {
-            const isAnswered = await this.prisma.user_questions.findFirst({
+            let isAnswered = false;
+            const result = await this.prisma.user_questions.findFirst({
                 where: {
                     participantId: user.participant.id,
                     questionId,
                 },
                 select: {
                     givenAnswers: true,
+                    questionRef: {
+                        select: {
+                            type: true,
+                        },
+                    },
                 },
             });
+            if (result) {
+                if (this.isWrittenQuestion(result.questionRef.type)) {
+                    if (result.givenAnswers !== '') {
+                        isAnswered = true;
+                    }
+                } else {
+                    if (result.givenAnswers !== null) {
+                        if (result.givenAnswers !== 'false,false,false,false') {
+                            isAnswered = true;
+                        } else isAnswered = false;
+                    }
+                }
+            }
             return {
                 id: user.participant.id,
                 displayName: user.participant.user.aliasName,
@@ -621,7 +662,7 @@ export class SocketService {
                 isHost: user.isHost,
                 point: user.participant.point,
                 correct: user.participant.correct,
-                isAnswered: isAnswered ? true : false,
+                isAnswered: isAnswered,
             };
         });
         return Promise.all(result);
@@ -659,6 +700,8 @@ export class SocketService {
                 isPublic: true,
                 isClosed: true,
                 isStarted: true,
+                count: true,
+                type: true,
             },
         });
         if (!room) {
@@ -691,6 +734,88 @@ export class SocketService {
             room,
             user,
             roomPassword,
+        };
+    }
+
+    async changeRoomVisibility(
+        roomId: string,
+        userId: string,
+        isPublic: boolean,
+    ) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const result = await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                isPublic: isPublic,
+            },
+        });
+        return result.isPublic;
+    }
+
+    async changeRoomCount(roomId: string, userId: string, count: number) {
+        if (count < RoomCount.MIN || count > RoomCount.MAX) {
+            throw new Error(SocketError.SOCKET_ROOM_COUNT_MAX);
+        }
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const result = await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                count,
+            },
+        });
+        return result;
+    }
+
+    async findUserSocketId(
+        roomId: string,
+        hostId: string,
+        participantId: string,
+    ) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: hostId,
+                isStarted: false,
+            },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const participant = await this.prisma.room_participants.findFirst({
+            where: {
+                participantId: participantId,
+                roomId: roomId,
+                isFinished: false,
+            },
+        });
+        return {
+            participant,
         };
     }
 }

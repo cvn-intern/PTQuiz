@@ -2,30 +2,56 @@
 	import { TypeQuestion } from '$constants/typeQuestion';
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
+	import { Button, Tooltip } from 'flowbite-svelte';
+
 	export let quizzesType: number;
 	export let quizzesPointer: number;
 	export let quizzesNumber: number;
-	import { onMount } from 'svelte';
+	export let quizzesHint: string | null;
+	export let isHost: boolean;
+	export let isBattle: boolean;
+	export let isSingle: boolean;
+	import { onDestroy, onMount } from 'svelte';
 	let modalIsOpen = false;
-
-	const openModal = () => {
+	let screenWidth: number;
+	const handleModal = () => {
 		modalIsOpen = !modalIsOpen;
 	};
 
+	const closeModal = () => {
+		modalIsOpen = false;
+	};
+
 	onMount(() => {
-		const screenWidth = window.innerWidth;
 		if (screenWidth >= 768) {
-			openModal();
+			handleModal();
 		}
+		window.addEventListener('keydown', closeModalOnEscapeKey);
 	});
+
+	onDestroy(() => {
+		window.addEventListener('keydown', closeModalOnEscapeKey);
+	});
+
+	const closeModalOnEscapeKey = (event: KeyboardEvent) => {
+		if (event.key === 'Escape') {
+			closeModal();
+		}
+	};
 </script>
 
-<button class="absolute top-10 right-2" on:click={openModal}>
+<svelte:window bind:innerWidth={screenWidth} />
+
+<button class={`absolute ${isBattle ? 'top-20' : 'top-10'} right-2`} on:click={handleModal}>
 	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
 </button>
 
 {#if modalIsOpen}
-	<button class="absolute top-10 right-2 mt-12 z-50">
+	<button
+		id="modal"
+		class={`modal absolute ${isBattle ? 'top-20' : 'top-10'} right-2 mt-12 z-50`}
+		on:keydown={closeModalOnEscapeKey}
+	>
 		<div class="bg-primary rounded-xl p-2 shadow-lg relative group flex flex-col">
 			<div class="flex flex-col gap-2 items-center">
 				<div
@@ -146,8 +172,21 @@
 						</div>
 					{/if}
 				</div>
-				<hr class="w-full" />
-				<Icon icon="heroicons-outline:light-bulb" class="w-16 h-16 text-yellow-400" />
+
+				{#if !isBattle && (isHost || isSingle)}
+					{#if !quizzesHint && quizzesHint === ''}
+						<hr class="w-full" />
+						<Button id="hint">
+							<Icon
+								icon="heroicons-outline:light-bulb"
+								class="w-16 h-16 text-yellow-400"
+							/>
+						</Button>
+						<Tooltip triggeredBy="#hint" placement="left" class="text-xl"
+							>{quizzesHint}</Tooltip
+						>
+					{/if}
+				{/if}
 			</div>
 		</div>
 	</button>

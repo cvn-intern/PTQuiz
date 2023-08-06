@@ -31,7 +31,7 @@
 			showToast('error', $t('common.theQuizMustHaveAtLeastOneQuestion'));
 		}
 	}
-	const levelI18n = (level: string) => {
+	$: levelI18n = (level: string) => {
 		switch (level) {
 			case 'Easy':
 				return $t('common.easy');
@@ -43,6 +43,27 @@
 				return $t('common.mixed');
 		}
 	};
+	$: categoryOfQuestion = (category: string) => {
+		switch (category) {
+			case 'Math':
+				return $t('common.math');
+			case 'Science':
+				return $t('common.science');
+			case 'English':
+				return $t('common.english');
+			case 'History':
+				return $t('common.history');
+			case 'Geography':
+				return $t('common.geography');
+			case 'Literature':
+				return $t('common.literature');
+			case 'Other':
+				return $t('common.other');
+			default:
+				return $t('common.other');
+		}
+	};
+
 
 	$: isOpen = false;
 	$: questionList = [];
@@ -65,12 +86,12 @@
 		return result;
 	}
 
-	function convertSecondsToMinutes(seconds: number): string {
+	$: convertSecondsToMinutes = (seconds: number) => {
 		if (seconds === 0) return `0 ${$t('common.mins')} : 0 ${$t('common.secs')} `;
 		let minutes = Math.floor(seconds / 60);
 		let remainingSeconds = seconds % 60;
 		return `${minutes} ${$t('common.mins')} : ${remainingSeconds} ${$t('common.secs')}`;
-	}
+	};
 </script>
 
 <div class="max-w-sm lg:w-80 bg-gray-50 shadow-lg rounded-xl p-6">
@@ -112,7 +133,7 @@
 						<p
 							class="flex items-center bg-green-400 text-white text-xs px-2 py-1 rounded-lg mt-1 whitespace-pre-wrap max-h-titleCard overflow-y-hidden"
 						>
-							{category}
+							{categoryOfQuestion(category)}
 						</p>
 					</div>
 				</div>

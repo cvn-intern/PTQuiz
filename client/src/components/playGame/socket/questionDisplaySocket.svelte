@@ -16,13 +16,17 @@
 	export let quizzesNumber: number;
 	export let quizzesPointer: number;
 	export let quizzesImage: string | null;
+	export let quizzesHint: string | null;
 	export let isHost: boolean = false;
 	export let timer: Tweened<number>;
 	export let questionTime: number;
 	export let isShowOption: boolean;
+	export let isBattle: boolean;
+
 	let isShowGif: boolean;
 	let modalOpen: boolean = false;
 	let isGifButtonClicked: boolean = false;
+	let screenWidth: number;
 
 	async function getDuration(url: any) {
 		const res = await fetch(url);
@@ -104,7 +108,17 @@
 	}
 </script>
 
-<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
+<svelte:window bind:innerWidth={screenWidth} />
+
+<InformationModal
+	{quizzesType}
+	{quizzesPointer}
+	{quizzesNumber}
+	{isHost}
+	{isBattle}
+	{quizzesHint}
+	isSingle={false}
+/>
 <div class={`flex justify-center px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
 	{#if isShowOption}
 		<p class="p-4 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-left">
@@ -159,7 +173,6 @@
 	<button
 		class="h-1/2 w-full flex justify-center items-center"
 		on:click={() => {
-			const screenWidth = window.innerWidth;
 			if (screenWidth >= 768) {
 				modalOpen = true;
 			}

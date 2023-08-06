@@ -11,8 +11,52 @@
 	export let result: any;
 	export let action: string;
 	export let isUpdate: boolean;
+	let category = result['category']?.id || result['category'] || Category.OTHER;
+	let stringImgeField = 'JPEG, PNG, JPG (< 1MB).';
 
 	let sharedToastId: string | number;
+
+	$: categoryOfQuizI18n = (category) => {
+		switch (category) {
+			case 'clkjsrewg0004k6m5dt89zll5':
+				return $t('common.math');
+			case 'clkjsqieu0000k6m5sqfi4gj5':
+				return $t('common.science');
+			case 'clk6mp0ik0006j3ngfaep8pb8':
+				return $t('common.english');
+			case 'clkjsrewf0001k6m5bpxteo0t':
+				return $t('common.history');
+			case 'clkjsrewg0002k6m565jmkvvw':
+				return $t('common.geography');
+			case 'clkjsrewg0003k6m5tpo9b8nx':
+				return $t('common.literature');
+			case 'clkjsrewg0004k6m5dt89zll5':
+				return $t('common.other');
+			default:
+				return $t('common.other');
+		}
+	};
+
+	$: labelI18n = (label: string) => {
+		switch (label) {
+			case 'title':
+				return $t('common.title');
+			case 'level':
+				return $t('common.level');
+			case 'passingPoint':
+				return $t('common.passingPoint');
+			case 'totalPoints':
+				return $t('common.totalPoints');
+			case 'category':
+				return $t('common.category');
+			case 'description':
+				return $t('common.description');
+			case 'file':
+				return $t('common.file');
+			default:
+				return '';
+		}
+	};
 
 	const showLoadingToast = (): void => {
 		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
@@ -79,53 +123,58 @@
 
 	const inputFormList: InputForm[] = [
 		{
-			label: `${$t('common.title')}`,
+			label: 'title',
 			name: 'title',
 			type: 'text',
 			required: true
 		},
 		{
-			label: `${$t('common.level')}`,
+			label: 'level',
 			name: 'difficultyLevel',
 			type: 'select',
 			selectOptionsList: levelList,
 			required: true
 		},
 		{
-			label: `${$t('common.passingPoint')}`,
+			label: 'passingPoint',
 			name: 'passingPoint',
 			type: 'number',
 			required: true
 		},
 
 		{
-			label: `${$t('common.totalPoints')}`,
+			label: 'totalPoints',
 			name: 'point',
 			type: 'number',
 			required: true
 		},
 		{
-			label: `${$t('common.category')}`,
+			label: 'category',
 			name: 'categoryId',
 			type: 'select',
 			required: true,
 			selectOptionsList: categoryList
 		},
 		{
-			label: `${$t('common.description')}`,
+			label: 'description',
 			name: 'description',
 			type: 'textarea',
 			required: false
 		},
 		{
-			label: `${$t('common.file')}`,
+			label: 'file',
 			name: 'image',
 			type: 'file',
 			required: false
 		}
 	];
 	$: hiddenInputFile = isUpdate;
-	let category = result['category']?.id || result['category'] || Category.OTHER;
+
+	let imageFile;
+	const handleFileChange = (event: any) => {
+		imageFile = event.target.files[0];
+		result.image = URL.createObjectURL(imageFile);
+	};
 </script>
 
 <form
@@ -150,7 +199,7 @@
 		{#each inputFormList as { label, name, type, required, selectOptionsList }}
 			<div class="w-full">
 				<Label class="space-y-2 block text-base font-medium text-gray-900 dark:text-w">
-					{label} <span class="text-red-600">{required ? '*' : ''}</span>
+					{labelI18n(label)} <span class="text-red-600">{required ? '*' : ''}</span>
 				</Label>
 				{#if type === 'file'}
 					<div>
@@ -159,15 +208,14 @@
 							name="image"
 							accept="image/*"
 							class="text-base {hiddenInputFile ? 'hidden' : ''}"
+							on:change={handleFileChange}
 						/>
 						{#if result[name] !== ''}
 							<div class="relative">
 								<img
 									src={result[name]}
 									alt="thumbnail"
-									class="w-full h-32 cursor-pointer {hiddenInputFile
-										? ''
-										: 'hidden'}"
+									class="w-full h-32 cursor-pointer"
 								/>
 								<button
 									type="button"
@@ -191,7 +239,7 @@
 							class="mt-1 text-base text-gray-500 dark:text-gray-300"
 							id="file_input_help"
 						>
-							JPEG, PNG, JPG (5MB).
+							{stringImgeField}
 						</p>
 					{/if}
 				{:else if type === 'select' && name === 'difficultyLevel'}
@@ -210,14 +258,14 @@
 						{required}
 						id={name}
 						{name}
-						class="bg-gray-50 border border-graydish text-gray-700 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+						class=" bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
 				{:else if type === 'textarea'}
 					<div class="relative grid w-full">
 						<textarea
 							maxlength="100"
 							id={name}
-							placeholder={label}
+							placeholder={labelI18n(label)}
 							{name}
 							class=" bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 						/>
@@ -229,7 +277,7 @@
 						maxlength="50"
 						id={name}
 						type="number"
-						placeholder={label}
+						placeholder={labelI18n(label)}
 						{name}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 					/>
@@ -239,7 +287,7 @@
 						maxlength="50"
 						id={name}
 						type="text"
-						placeholder={label}
+						placeholder={labelI18n(label)}
 						{name}
 						{required}
 						bind:value={result[name]}

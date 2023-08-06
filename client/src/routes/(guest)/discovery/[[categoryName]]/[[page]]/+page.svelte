@@ -8,6 +8,7 @@
 	import { t } from '$i18n/translations.js';
 	import type { TypeCategory } from './category.type.js';
 
+	let totalQuizzes;
 	export let data;
 	let categories: TypeCategory[];
 	$: categories = data.quizzes;
@@ -33,11 +34,17 @@
 	</div>
 	{#each categories as category, indexOfCategory}
 		{#if category.quizzes.length}
+			<div class="hidden">
+				{(totalQuizzes = category.totalQuizzes || data.totalQuizzes)}
+			</div>
+
 			<Category
 				nameCategory={category.category}
 				cardList={category.quizzes}
-				totalQuizzes={category.totalQuizzes}
+				bind:totalQuizzes
 				{indexOfCategory}
+				bind:quizzes={categories}
+				bind:data
 			/>
 		{/if}
 	{/each}

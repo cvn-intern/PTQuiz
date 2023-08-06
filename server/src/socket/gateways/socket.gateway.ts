@@ -1,6 +1,6 @@
 import { MessageDto } from './../dto/message.dto';
 import { CryptoService } from './../../crypto/crypto.service';
-import { Logger, UseGuards } from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import {
     WebSocketGateway,
     ConnectedSocket,
@@ -23,6 +23,9 @@ import { EmitChannel, ListenChannel } from '../socketChannel.enum';
 import { QuestionIdDto } from '../dto/questionId.dto';
 import { JoinRoomDto } from '../dto/joinRoom.dto';
 import { EndGameDto } from '../dto/endGame.dto';
+import { ChangeRoomVisibilityDto } from '../dto/changeRoomVisibility.dto';
+import { ChangeRoomCountDto } from '../dto/changeRoomCount.dto';
+import { KickUserDto } from '../dto/kickUser.dto';
 import { ReactionDto } from '../dto/reaction.dto';
 
 @WebSocketGateway(8082, {
@@ -42,6 +45,7 @@ export class SocketGateway
         public socketService: SocketService,
         private cryptoService: CryptoService,
     ) {}
+
     private logger: Logger = new Logger('SocketGateway');
 
     handleConnection(@ConnectedSocket() client: Socket): void {
@@ -49,7 +53,6 @@ export class SocketGateway
     }
     async handleDisconnect(@ConnectedSocket() client: Socket) {
         try {
-            this.logger.log(`Client disconnected: ${client.id}`);
             const { roomPIN, isHost } =
                 await this.socketService.leaveRoomImmediately(client.id);
             if (roomPIN) {
@@ -68,8 +71,9 @@ export class SocketGateway
             }
         } catch (error) {}
     }
+
     afterInit() {
-        this.logger.log('Initialized!');
+        this.logger.log('Socket server initialized');
     }
 
     @SubscribeMessage(ListenChannel.JOIN_ROOM)
@@ -78,14 +82,18 @@ export class SocketGateway
         @MessageBody() data: JoinRoomDto,
     ) {
         try {
-            const { roomPIN, aliasName, roomPassword, isHostJoined } = data;
+            const { roomPIN, aliasName, roomPassword } = data;
+            const isHost = await this.socketService.checkRoomHost(
+                roomPIN,
+                client.user.id,
+            );
             const result = await this.socketService.joinRoom(
                 roomPIN,
                 client.user.id,
                 client.id,
                 aliasName,
                 roomPassword,
-                isHostJoined,
+                isHost,
             );
             if (result.status === true) {
                 client.join(roomPIN);
@@ -153,8 +161,8 @@ export class SocketGateway
             this.server.to(roomPIN).emit(EmitChannel.ROOM_MESSAGES, {
                 user: {
                     id: client.user.id,
-                    displayName: client.user.displayName,
-                    avatar: client.user.avatar,
+                    displayName: client.aliasName,
+                    avatar: client.aliasAvatar,
                 },
                 content,
             });
@@ -302,9 +310,15 @@ export class SocketGateway
             const hostSocketId = await this.socketService.getHostSocketId(
                 data.roomPIN,
             );
-            this.server
-                .to(hostSocketId)
-                .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            if (!data.isBattle) {
+                this.server
+                    .to(hostSocketId)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            } else {
+                this.server
+                    .to(data.roomPIN)
+                    .emit(EmitChannel.SCORE_BOARD, scoreBoard);
+            }
         } catch (error) {
             throw new WsException({
                 message: error.message,
@@ -363,6 +377,77 @@ export class SocketGateway
                 client.user.id,
             );
             client.emit(EmitChannel.ROOM_INFO, roomInfo);
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.CHANGE_ROOM_VISIBILITY)
+    async handleChangeRoomVisibility(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: ChangeRoomVisibilityDto,
+    ) {
+        try {
+            const { roomId, isPublic } = data;
+            const result = await this.socketService.changeRoomVisibility(
+                roomId,
+                client.user.id,
+                isPublic,
+            );
+            client.emit(EmitChannel.ROOM_VISIBILITY, {
+                isPublic: result,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.CHANGE_ROOM_COUNT)
+    async handleChangeRoomCount(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: ChangeRoomCountDto,
+    ) {
+        try {
+            const { roomId, count } = data;
+            if (typeof count !== 'number') {
+                throw new WsException({
+                    message: SocketError.SOCKET_INVALID_FORMAT,
+                });
+            }
+            const result = await this.socketService.changeRoomCount(
+                roomId,
+                client.user.id,
+                count,
+            );
+            this.server.to(result.PIN).emit(EmitChannel.ROOM_COUNT, {
+                count: result.count,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.KICK_USER)
+    async handleKickUser(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: KickUserDto,
+    ) {
+        try {
+            const { roomId, participantId } = data;
+            const { participant } = await this.socketService.findUserSocketId(
+                roomId,
+                client.user.id,
+                participantId,
+            );
+            this.server.to(participant.socketId).emit(EmitChannel.BE_KICKED, {
+                beKicked: true,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,

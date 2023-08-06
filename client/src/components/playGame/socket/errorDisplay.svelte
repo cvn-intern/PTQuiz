@@ -1,22 +1,23 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { SocketError } from '$libs/message/responseMessage.enum';
-	import { t } from '$i18n/translations';
 	import { goto } from '$app/navigation';
+	import Icon from '@iconify/svelte';
 
 	export let errorMessage: string;
+	let isClicked = false;
 </script>
 
 <div class="w-full h-full flex flex-col gap-8">
-	<div class="p-4">
-		<button
-			class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-secondary flex justify-start"
-			on:click={() => {
-				goto('/dashboard/quizzes');
-			}}>{$t('common.backHome')}</button
-		>
-	</div>
-	<div class="flex flex-col flex-1 items-center py-12">
+	<button
+		class="absolute top-4 left-4"
+		on:click={() => {
+			goto('/');
+		}}
+	>
+		<Icon icon="tabler:home" class="w-12 h-12 text-darkGreen" />
+	</button>
+	<div class="flex flex-col h-full justify-center items-center">
 		<div class="p-4 rounded-xl">
 			<h1 class="text-2xl md:text-4xl font-bold text-center">{errorMessage}</h1>
 		</div>
@@ -28,8 +29,13 @@
 			</div>
 			<button
 				type="button"
-				class="button"
+				disabled={isClicked}
+				class={`${isClicked ? 'cursor-not-allowed opacity-50' : ''} button`}
 				on:click={() => {
+					isClicked = true;
+					setTimeout(() => {
+						isClicked = false;
+					}, 2000);
 					window.location.href = $page.url.href;
 				}}
 			>
@@ -60,7 +66,6 @@
 		position: relative;
 		width: 150px;
 		height: 40px;
-		cursor: pointer;
 		display: flex;
 		align-items: center;
 		background-color: var(--bg-color);
@@ -110,10 +115,6 @@
 		transform: translateX(0);
 	}
 
-	.button:active {
-		transform: translate(3px, 3px);
-		box-shadow: 0px 0px var(--main-color);
-	}
 	.arrow-down {
 		display: flex;
 		justify-content: center;

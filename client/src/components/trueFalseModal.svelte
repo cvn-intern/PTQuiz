@@ -25,6 +25,8 @@
 			closeModal();
 		}
 	}
+
+	
 </script>
 
 {#if modalOpen}

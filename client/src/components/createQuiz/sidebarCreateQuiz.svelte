@@ -80,13 +80,12 @@
 		{form}
 	/>
 	<div
-		class="md:max-h-boxCardQuestion max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4 no-scrollbar"
+		class="md:max-h-sidebarCreateQuiz max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4 no-scrollbar"
 	>
 		{#each cardListQuestion as cardQuestion, index}
 			<CardQuestion questionStt={index + 1} {index} />
 		{/each}
 	</div>
-	<hr class="bg-gray-950" />
 	<Button
 		class="bg-secondary text-white hover:bg-darkGreen"
 		on:click={addQuestion}

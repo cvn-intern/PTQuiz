@@ -22,6 +22,11 @@
 	import QuestionDisplaySocket from '$components/playGame/socket/questionDisplaySocket.svelte';
 	import ErrorDisplay from '$components/playGame/socket/errorDisplay.svelte';
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
+	import { RoomType } from '$components/quizzes/room.enum';
+	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
+	import { translateValidation } from '../../../../../libs/helpers/translateValidation';
+	import { t } from '../../../../../libs/i18n/translations';
+	import NotificationModal from '$components/playGame/socket/notificationModal.svelte';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -48,6 +53,9 @@
 	let isShowOption: boolean = false;
 	let isJoined: boolean = false;
 	let roomInfo: any;
+	let beKicked: boolean = false;
+	let isBattle: boolean;
+	let isHostLeft: boolean = false;
 
 	let original = 10;
 	let stringTimer: string;
@@ -64,7 +72,6 @@
 	$: {
 		stringTimer = (($timer * 100) / original).toString();
 	}
-
 	onMount(() => {
 		socket.emit(ListenChannel.IS_HOST, {
 			roomPIN: $page.params.slug
@@ -77,11 +84,12 @@
 		socket.on(EmitChannel.ROOM_INFO, (data: any) => {
 			roomInfo = data;
 			if (roomInfo.room.isStarted) {
-				errorMessage = 'Game has already started';
+				errorMessage = t.get('common.gameAlreadyStarted');
 			} else if (roomInfo.room.isClosed) {
-				errorMessage = 'Room has been closed';
+				errorMessage = t.get('common.roomClosed');
 			}
 			isLoading = false;
+			isBattle = roomInfo.room.type === RoomType.BATTLE ? true : false;
 		});
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
@@ -109,7 +117,7 @@
 		});
 		socket.on(EmitChannel.EXCEPTION, (data: any) => {
 			isLoading = false;
-			errorMessage = data.message;
+			errorMessage = translateValidation(data.message);
 		});
 		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
@@ -118,7 +126,7 @@
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
-			if (isHost) {
+			if (isHost && !isBattle) {
 				original += 4;
 				timer = tweened(original, {
 					duration: 1000
@@ -150,7 +158,7 @@
 				};
 			});
 			original = questions[questionPointer].time;
-			if (isHost) {
+			if (isHost && !isBattle) {
 				original += 4;
 				timer = tweened(original, {
 					duration: 1000
@@ -182,8 +190,19 @@
 		});
 		socket.on(EmitChannel.HOST_LEFT, (data: any) => {
 			if (!isHost) {
-				window.location.href = $page.url.href;
+				isHostLeft = true;
+				socket.emit(ListenChannel.LEAVE_ROOM, {
+					roomPIN: $page.params.slug
+				});
+				socket.disconnect();
 			}
+		});
+		socket.on(EmitChannel.BE_KICKED, (data: any) => {
+			beKicked = data.beKicked;
+			socket.emit(ListenChannel.LEAVE_ROOM, {
+				roomPIN: $page.params.slug
+			});
+			socket.disconnect();
 		});
 	});
 	onDestroy(() => {
@@ -217,6 +236,28 @@
 			participants
 		});
 	};
+
+	function handleBeKickedClick() {
+		window.location.href = '/';
+	}
+
+	function handleHostLeftClick() {
+		window.location.href = $page.url.href;
+	}
+
+	$: {
+		if ($timer <= 0 && isBattle && isHost) {
+			if (questionPointer < questions.length - 1) {
+				setTimeout(() => {
+					nextQuestion();
+				}, 5000);
+			} else {
+				setTimeout(() => {
+					endGame();
+				}, 5000);
+			}
+		}
+	}
 </script>
 
 {#if isLoading}
@@ -230,13 +271,17 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} />
+			<EndGameSocket {participants} length={questions.length} {isEndGame} {isBattle} />
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
-				<div class="py-2">
-					<ProgressBar {stringTimer} />
-				</div>
-				{#if isHost}
+				{#if isBattle}
+					<ScoreBarBattle bind:timer {participants} questionLength={questions.length} />
+				{:else}
+					<div class="py-2">
+						<ProgressBar {stringTimer} />
+					</div>
+				{/if}
+				{#if !isBattle && isHost}
 					<HostButton
 						{nextQuestion}
 						{questionPointer}
@@ -244,6 +289,7 @@
 						{endGame}
 						{getScoreBoard}
 						{participants}
+						{isBattle}
 						bind:timer
 					/>
 				{/if}
@@ -254,8 +300,10 @@
 					quizzesPointer={questionPointer}
 					quizzesImage={questions[questionPointer].image}
 					questionTime={questions[questionPointer].time}
+					quizzesHint={questions[questionPointer].hint}
 					{isHost}
 					{socket}
+					{isBattle}
 					bind:timer
 					bind:isShowOption
 				/>
@@ -269,6 +317,7 @@
 							bind:isPicked
 							{showModal}
 							{socket}
+							{isBattle}
 							isTrueFalse={false}
 							bind:countDown
 							{isHost}
@@ -285,6 +334,7 @@
 							{showModal}
 							{socket}
 							isTrueFalse={true}
+							{isBattle}
 							bind:countDown
 							{isHost}
 						/>
@@ -300,6 +350,7 @@
 							{isShowOption}
 							bind:countDown
 							{isHost}
+							{isBattle}
 						/>
 					</div>
 				{:else if questions[questionPointer].type === TypeQuestion.MULTIPLE_CHOICE}
@@ -310,6 +361,7 @@
 							bind:isPicked
 							{showModal}
 							{socket}
+							{isBattle}
 							bind:countDown
 							{isHost}
 						/>
@@ -321,6 +373,7 @@
 						bind:isPicked
 						{showModal}
 						{socket}
+						{isBattle}
 						bind:countDown
 						{isHost}
 					/>
@@ -331,6 +384,7 @@
 						bind:isPicked
 						{showModal}
 						{socket}
+						{isBattle}
 						bind:countDown
 						{isHost}
 					/>
@@ -343,6 +397,7 @@
 						{socket}
 						bind:countDown
 						{isHost}
+						{isBattle}
 					/>
 				{/if}
 			</div>
@@ -354,12 +409,36 @@
 				{isHost}
 				{socket}
 				user={data.user}
-				room={roomInfo.room}
+				room={roomInfo}
 			/>
 		{/if}
 	</div>
 {/if}
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} bind:showScoreBoard questionLength={questions.length} />
+	<ScoreboardModal
+		{participants}
+		bind:showScoreBoard
+		questionLength={questions.length}
+		{isBattle}
+		{isEndGame}
+	/>
 {/if}
+
+<NotificationModal
+	bind:open={beKicked}
+	title={$t('common.beKicked')}
+	buttonText={'OK'}
+	onButtonClick={() => {
+		window.location.href = '/';
+	}}
+/>
+
+<NotificationModal
+	bind:open={isHostLeft}
+	title={$t('common.hostReload')}
+	buttonText={$t('common.reEnterRoom')}
+	onButtonClick={() => {
+		window.location.href = $page.url.href;
+	}}
+/>

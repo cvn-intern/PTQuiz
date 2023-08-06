@@ -9,6 +9,7 @@
 	export let quizzesTitle: string;
 	export let quizzesNumber: number;
 	export let quizzesPointer: number;
+	export let quizzesHint: string | null;
 	export let quizzesImage: string | null;
 	export let isShowOption: boolean = true;
 
@@ -59,7 +60,16 @@
 	}
 </script>
 
-<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
+
+<InformationModal
+	{quizzesType}
+	{quizzesPointer}
+	{quizzesNumber}
+	{quizzesHint}
+	isHost={false}
+	isSingle={true}
+	isBattle={false}
+/>
 <div class={`flex justify-center px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
 	{#if isShowOption}
 		<p class="p-4 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-left">
@@ -116,7 +126,6 @@
 	<button
 		class="h-1/2 w-full flex justify-center items-center"
 		on:click={() => {
-			const screenWidth = window.innerWidth;
 			if (screenWidth >= 768) {
 				modalOpen = true;
 			}

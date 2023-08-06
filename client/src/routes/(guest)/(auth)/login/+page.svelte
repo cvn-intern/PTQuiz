@@ -72,16 +72,22 @@
 		}
 	};
 
-	$: if (form?.isSuccess) goto(AppRoute.HOME);
+	$: if (form?.isSuccess) {
+		const roomPage = window.sessionStorage.getItem('room');
+		if (roomPage) {
+			window.sessionStorage.removeItem('room');
+			goto(roomPage);
+		} else {
+			goto(AppRoute.HOME);
+		}
+	}
 </script>
 
 <section class="flex text-white justify-center w-full">
 	<Toast {form} />
 
 	<div class=" w-panel rounded-3xl shadow-md shadow-zinc-400 my-6 border bg-white">
-		<div
-			class="w-full p-6 flex justify-evenly flex-col items-center xl:gap-6 gap-4 h-full"
-		>
+		<div class="w-full p-6 flex justify-evenly flex-col items-center xl:gap-6 gap-4 h-full">
 			<h1 class=" text-secondary text-[20px] font-bold">{$t('common.loginToYourAccount')}</h1>
 			<form
 				method="POST"

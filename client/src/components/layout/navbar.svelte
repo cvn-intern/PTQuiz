@@ -40,7 +40,7 @@
 	let isDropdownOpen = false;
 
 	function toggleDropdown() {
-		isDropdownOpen = true;
+		isDropdownOpen = !isDropdownOpen;
 		document.body.addEventListener('click', unToggleDropdown);
 	}
 
@@ -78,7 +78,7 @@
 					href="/"
 					title={$t('common.home')}
 					class={clsx('hover:text-secondary', {
-						'font-black': $page.url.pathname === '/'
+						'text-secondary': $page.url.pathname === '/'
 					})}>{$t('common.home')}</a
 				>
 			</li>
@@ -89,7 +89,7 @@
 					}}
 					title={$t('common.discovery')}
 					class={clsx('hover:text-secondary', {
-						'font-black': $page.url.pathname.includes('/discovery')
+						'text-secondary': $page.url.pathname.includes('/discovery')
 					})}
 				>
 					{$t('common.discovery')}
@@ -164,10 +164,7 @@
 					{/if}
 				</button>
 				{#if isDropdownOpen}
-					<div
-						class="absolute mt-2 w-full rounded-md shadow-lg"
-						on:click|stopPropagation={() => {}}
-					>
+					<div class="absolute mt-2 w-full rounded-md shadow-lg">
 						{#each $locales as value}
 							<button
 								class="cursor-pointer p-2 hover:bg-gray-200"

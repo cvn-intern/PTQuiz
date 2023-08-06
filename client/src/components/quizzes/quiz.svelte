@@ -7,6 +7,7 @@
 	import { page } from '$app/stores';
 	import Loading from '$components/loading.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
+	import { RoomType } from './room.enum';
 	let popupModal = false;
 
 	export let title: string;
@@ -18,6 +19,10 @@
 	export let quiz: any;
 	export let quizzes: any;
 	let isDelete = false;
+
+	let date = new Date(createdAt).toLocaleString('vi-VN', {
+		timeZone: 'Asia/Ho_Chi_Minh'
+	});
 
 	let sharedToastId: string | number;
 
@@ -33,7 +38,36 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				quizId: id
+				quizId: id,
+				type: RoomType.GROUP
+			})
+		});
+		const result = await response.json();
+		if (response.status === 200) {
+			dismissLoadingToast();
+			toast.success(t.get('common.success'));
+			goto(`/room/${result.data.PIN}`);
+		} else {
+			dismissLoadingToast();
+			if (result.message.includes('Room is already exist')) {
+				let url = result.message.match(/(http|https):\/\/[^\s$.?#].[^\s]*$/gm);
+				goto(`${url}`);
+			} else {
+				toast.error(result.message);
+			}
+		}
+	}
+
+	async function handleBattle() {
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
+		const response = await fetch(`/api/room/open`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				quizId: id,
+				type: RoomType.BATTLE
 			})
 		});
 		const result = await response.json();
@@ -109,7 +143,7 @@
 	<Loading />
 {/if}
 
-<div class="relative z-0 w-full">
+<div class="relative z-0 w-full group/item">
 	<a
 		href="#"
 		role="button"
@@ -130,23 +164,28 @@
 			</p>
 		</div>
 	</a>
-	<div class="absolute top-5 right-5 z-10">
+	<div
+		class="absolute top-5 right-5 z-10 flex justify-center gap-2 group-hover/item:visible invisible"
+	>
+		<button aria-label="Edit" on:click={handleEdit}>
+			<Icon icon="uil:edit" class="text-2xl text-cyan-500 hover:text-cyan-800" />
+		</button>
 		<button on:click={() => (popupModal = true)}>
-			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
+			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-400 hover:text-red-600" />
 		</button>
 	</div>
 	<div class="flex flex-row gap-4 absolute bottom-3 right-3 z-10">
 		<button
-			aria-label="Edit"
-			on:click={handleEdit}
-			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-			>{$t('common.editBtn')}</button
+			aria-label="Start Battle"
+			on:click={handleBattle}
+			class="block px-4 py-2 rounded-md bg-blueLogo hover:bg-darkGreen text-white focus:outline-none"
+			>{$t('common.startBattle')}</button
 		>
 		<button
 			aria-label="Start"
 			on:click={handleStart}
-			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-			>{$t('common.startBtn')}</button
+			class="block px-3 py-3 rounded-lg bg-yellowLogo hover:bg-yellow-700 text-white focus:outline-none shadow-lg"
+			>{$t('common.startRoom')}</button
 		>
 	</div>
 </div>

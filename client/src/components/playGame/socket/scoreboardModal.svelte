@@ -4,6 +4,8 @@
 	export let showScoreBoard: boolean;
 	export let participants: any[];
 	export let questionLength: number;
+	export let isBattle: boolean;
+	export let isEndGame: boolean;
 	let clientParticipants: any[];
 	let isScoreboard: boolean = true;
 
@@ -39,13 +41,14 @@
 			class="flex justify-center items-center bg-primary p-6 rounded-xl shadow-xl max-h-[80vh] overflow-y-scroll no-scrollbar"
 		>
 			<div class="flex flex-col justify-center items-center gap-4">
-				{#each clientParticipants as participant, index}
+				{#each isBattle ? participants : clientParticipants as participant, index}
 					<div class="flex gap-4 items-center">
 						<ScoreBoardSocket
 							scoreUser={participant}
 							{index}
 							{questionLength}
 							{isScoreboard}
+							{isEndGame}
 						/>
 					</div>
 				{/each}
