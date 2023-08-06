@@ -1,17 +1,21 @@
 <script lang="ts">
-	export let reactions: any[] = [];
+	export let messages: any[] = [];
 </script>
 
-<div class="fixed top-0 bottom-0 left-0 right-0 overflow-x-hidden z-0">
-	<div id="clouds">
-		{#each reactions as reaction, index}
-			<div class={`cloud x${(index % 5) + 1} flex items-center justify-center`}>
+<div class="fixed top-0 bottom-0 left-0 right-0 overflow-x-hidden z-0 pointer-events-none">
+	<div id="clouds" class="clouds">
+		{#each messages as message, index}
+			<div class={`cloud x${index + 1} relative flex items-center justify-center gap-2 p-2`}>
 				<img
-					src={reaction.user.avatar}
-					alt={reaction.user.displayName}
-					class="w-12 h-12 rounded-full relative z-10"
+					src={message.user.avatar}
+					alt={message.user.displayName}
+					class="w-auto h-14 rounded-full relative z-10 pointer-events-auto"
 				/>
-				<p class="mt-2 text-center relative z-20">{reaction.message}</p>
+				<p
+					class="mt-2 text-center relative z-10 pointer-events-auto overflow-x-hidden overflow-y-hidden"
+				>
+					{message.content}
+				</p>
 			</div>
 		{/each}
 	</div>
@@ -19,7 +23,8 @@
 
 <style>
 	.clouds {
-		padding: 100px 0;
+		padding: 120px;
+		pointer-events: none;
 	}
 
 	.cloud {
@@ -54,12 +59,12 @@
 	}
 
 	.x1 {
-		animation: moveclouds 15s linear forwards;
+		animation: moveclouds 3s linear forwards;
 	}
 
 	.x2 {
 		left: 200px;
-		animation: moveclouds 25s linear forwards;
+		animation: moveclouds 3s linear forwards;
 		transform: scale(0.6);
 	}
 
@@ -68,8 +73,7 @@
 		top: -200px;
 		transform: scale(0.8);
 		opacity: 0.8;
-
-		animation: moveclouds 20s linear forwards;
+		animation: moveclouds 3s linear forwards;
 	}
 
 	.x4 {
@@ -80,7 +84,7 @@
 		-moz-transform: scale(0.75);
 		transform: scale(0.75);
 		opacity: 0.75;
-		animation: moveclouds 18s linear forwards;
+		animation: moveclouds 3s linear forwards;
 	}
 
 	.x5 {
@@ -92,15 +96,20 @@
 		transform: scale(0.8);
 		opacity: 0.8;
 
-		animation: moveclouds 20s linear forwards;
+		animation: moveclouds 3s linear forwards;
 	}
 
 	@keyframes moveclouds {
 		0% {
-			margin-left: 1000px;
+			margin-left: 60%;
+			opacity: 1;
+		}
+		80% {
+			opacity: 1;
 		}
 		100% {
-			margin-left: -1000px;
+			margin-left: 40%;
+			opacity: 0;
 		}
 	}
 </style>

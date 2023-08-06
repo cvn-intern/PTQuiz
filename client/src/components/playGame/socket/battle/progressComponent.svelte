@@ -15,13 +15,13 @@
 </script>
 
 <div class="flex w-full items-center">
-	<div class="flex flex-col justify-center items-center relative">
+	<div class="flex flex-col justify-center items-center">
 		<img
 			src={participant.avatar}
 			alt={participant.displayName}
 			class="h-6 w-6 md:h-20 md:w-auto rounded-md"
 		/>
-		<p class="bg-white/50 rounded-md font-semibold text-sky-700 text-xs absolute top-20">
+		<p class="bg-white/50 rounded-md font-semibold text-sky-700 text-xs">
 			{participant.displayName}
 		</p>
 	</div>

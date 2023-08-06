@@ -178,15 +178,14 @@ export class SocketGateway
         @MessageBody() data: ReactionDto,
     ) {
         try {
-            const { id, message, roomPIN } = data;
+            const { reaction, roomPIN } = data;
             this.server.to(roomPIN).emit(EmitChannel.ROOM_REACTIONS, {
                 user: {
                     id: client.user.id,
                     displayName: client.aliasName,
                     avatar: client.aliasAvatar,
                 },
-                message,
-                id,
+                reaction,
             });
         } catch (error) {
             throw new WsException({
