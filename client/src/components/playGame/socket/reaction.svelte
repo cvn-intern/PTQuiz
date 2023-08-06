@@ -43,7 +43,7 @@
 	let messages: Message[] = [];
 
 	onMount(() => {
-		socket.on(EmitChannel.ROOM_MESSAGES, async (data) => {
+		socket.on(EmitChannel.HOST_MESSAGE, async (data) => {
 			messages = [...messages, data];
 			await tick();
 		});
@@ -54,7 +54,7 @@
 	});
 
 	const sendMessage = () => {
-		socket.emit(ListenChannel.SEND_MESSAGE, {
+		socket.emit(ListenChannel.SEND_HOST_MESSAGE, {
 			content: messageContent,
 			roomPIN: $page.params.slug
 		});

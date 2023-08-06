@@ -27,6 +27,7 @@ import { ChangeRoomVisibilityDto as SetPrivateRoomDto } from '../dto/changeRoomV
 import { ChangeRoomCountDto as SetRoomCapacityDto } from '../dto/changeRoomCount.dto';
 import { KickUserDto } from '../dto/kickUser.dto';
 import { ReactionDto } from '../dto/reaction.dto';
+import { MessageHostDto } from '../dto/messageHost.dto';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -144,6 +145,28 @@ export class SocketGateway
                     isHost,
                 });
             }
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.SEND_HOST_MESSAGE)
+    async handleHostMessage(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: MessageHostDto,
+    ) {
+        try {
+            const { content, roomPIN } = data;
+            this.server.to(roomPIN).emit(EmitChannel.HOST_MESSAGE, {
+                user: {
+                    id: client.user.id,
+                    displayName: client.aliasName,
+                    avatar: client.aliasAvatar,
+                },
+                content,
+            });
         } catch (error) {
             throw new WsException({
                 message: error.message,
