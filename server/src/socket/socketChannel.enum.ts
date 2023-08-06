@@ -5,7 +5,7 @@ export enum EmitChannel {
     STARTED = 'started',
     ENDED = 'ended',
     QUESTIONS = 'questions',
-    NEXT_QUESTION = 'question-pointer',
+    NEXT_QUESTION = 'next-question',
     ANSWER_RESULT = 'answer-result',
     SCORE_BOARD = 'score-board',
     ANSWER_QUESTION = 'answer-question',
@@ -15,8 +15,8 @@ export enum EmitChannel {
     EXCEPTION = 'exception',
     JOINED = 'joined',
     BE_KICKED = 'be-kicked',
-    IS_PRIVATE_ROOM = 'room-visibility',
-    ROOM_CAPACITY = 'room-count',
+    IS_PRIVATE_ROOM = 'is-private-room',
+    ROOM_CAPACITY = 'room-capacity',
 }
 
 export enum ListenChannel {
@@ -27,7 +27,7 @@ export enum ListenChannel {
     START_QUIZ = 'start-quiz',
     END_QUIZ = 'end-quiz',
     GET_QUESTIONS_BY_QUIZ = 'get-questions-by-quiz',
-    GET_NEXT_QUESTION = 'change-question-pointer',
+    GET_NEXT_QUESTION = 'get-next-question',
     PICK_ANSWER = 'pick-answer',
     GET_ANSWER_QUESTION = 'get-answer-question',
     GET_GIF_QUESTION = 'get-gif-question',

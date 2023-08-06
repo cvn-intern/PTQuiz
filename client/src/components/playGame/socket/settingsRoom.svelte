@@ -127,7 +127,7 @@
 									}
 									isChangedCount = true;
 									if (value !== count) {
-										socket.emit(ListenChannel.SET_PRIVATE_ROOM, {
+										socket.emit(ListenChannel.SET_ROOM_CAPACITY, {
 											roomId: room.room.id,
 											count: value
 										});
