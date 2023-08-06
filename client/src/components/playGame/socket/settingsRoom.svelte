@@ -98,7 +98,7 @@
 			<ImageModal bind:modalOpen={qrModalOpen} imageSrc={qrCode} />
 			<div class="flex flex-col justify-between w-full gap-4">
 				<div
-					class="flex md:flex-row-reverse items-center justify-between w-full h-12 gap-1"
+					class="flex flex-row-reverse items-center justify-between w-full h-12 gap-1"
 				>
 					<button
 						disabled={isCopied}
@@ -145,7 +145,7 @@
 						</div>
 					{/if}
 				</div>
-				<div class="flex md:flex-row-reverse justify-start items-center gap-1 h-12">
+				<div class="flex flex-row-reverse justify-start items-center gap-1 h-12">
 					<button
 						disabled={isChangedVisibility}
 						class={`p-2 bg-slate-50/30 shadow-xl rounded-lg h-full ${

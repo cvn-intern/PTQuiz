@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import Balloon from './balloon.svelte';
 
 	type Participant = {
 		id: string;

@@ -172,5 +172,7 @@
 	"emptyTitle": "Tiêu đề không được trống",
 	"emptyPoint": "Điểm không được trống",
 	"emptyCategory": "Thể loại không được trống",
-	"emptyLevel": "Cấp độ không được trống"
+	"emptyLevel": "Cấp độ không được trống",
+	"winner": "Chiến thắng",
+	"loser": "Thua cuộc"
 }
