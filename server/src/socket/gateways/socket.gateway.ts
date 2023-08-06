@@ -28,6 +28,7 @@ import { ChangeRoomCountDto as SetRoomCapacityDto } from '../dto/changeRoomCount
 import { KickUserDto } from '../dto/kickUser.dto';
 import { ReactionDto } from '../dto/reaction.dto';
 import { MessageHostDto } from '../dto/messageHost.dto';
+import { ParticipantIdDto } from '../dto/participant.dto';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -475,6 +476,28 @@ export class SocketGateway
             );
             this.server.to(participant.socketId).emit(EmitChannel.BE_KICKED, {
                 beKicked: true,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
+    @SubscribeMessage(ListenChannel.GET_ME)
+    async handleGetMe(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: ParticipantIdDto,
+    ) {
+        try {
+            const { participantId, index } = data;
+            const me = await this.socketService.getMe(
+                client.user.id,
+                participantId,
+            );
+            client.emit(EmitChannel.ME, {
+                me,
+                index,
             });
         } catch (error) {
             throw new WsException({

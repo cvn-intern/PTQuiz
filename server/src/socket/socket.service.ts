@@ -814,4 +814,14 @@ export class SocketService {
             participant,
         };
     }
+
+    async getMe(userId: string, participantId: string) {
+        const result = await this.prisma.participants.findFirst({
+            where: {
+                id: participantId,
+                userId: userId,
+            },
+        });
+        return result ? true : false;
+    }
 }
