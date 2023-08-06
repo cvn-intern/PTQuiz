@@ -274,7 +274,7 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} {isEndGame} {isBattle} />
+			<EndGameSocket {participants} length={questions.length} {isEndGame} {isBattle} {socket}/>
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				{#if isBattle}

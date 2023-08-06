@@ -5,7 +5,8 @@
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
 	import ScoreboardModal from './scoreboardModal.svelte';
-	import EndGameBattal from '$components/endGame/endGameBattal.svelte';
+	import EndGameBattle from '$components/endGame/endGameBattle.svelte';
+	import type { Socket } from 'socket.io-client';
 
 	type Participant = {
 		id: string;
@@ -20,6 +21,7 @@
 	export let participants: Participant[] = [];
 	export let length: number;
 	export let isBattle: boolean;
+    export let socket: Socket;
 	let showScoreBoard: boolean = false;
 
 	$: clientParticipants = participants.filter((participant) => participant.isHost === false);
@@ -43,7 +45,7 @@
 		>
 	</div>
 	{#if isBattle}
-		<EndGameBattal {participants} {length} />
+		<EndGameBattle {participants} {length} {socket}/>
 		<div class="flex gap-4 items-center justify-center">
 			<div
 				class={`${
