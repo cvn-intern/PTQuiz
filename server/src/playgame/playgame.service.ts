@@ -252,4 +252,50 @@ export class PlaygameService {
             );
         }
     }
+
+    async getAllHistory(userId: string) {
+        try {
+            const allHistory = await this.prisma.participants.findMany({
+                where: {
+                    userId: userId,
+                    isSingleMode: true,
+                },
+                orderBy: {
+                    startedAt: 'desc',
+                },
+                select: {
+                    quiz: {
+                        select: {
+                            id: true,
+                            title: true,
+                            passingPoint: true,
+                        },
+                    },
+                    startedAt: true,
+                    completedAt: true,
+                    point: true,
+                    correct: true,
+                },
+            });
+            const latestHistoryByQuizId = {};
+
+            allHistory.forEach((history) => {
+                const quizId = history.quiz.id;
+                if (
+                    !latestHistoryByQuizId[quizId] ||
+                    latestHistoryByQuizId[quizId].startedAt < history.startedAt
+                ) {
+                    latestHistoryByQuizId[quizId] = history;
+                }
+            });
+
+            const latestHistory = Object.values(latestHistoryByQuizId);
+            return latestHistory;
+        } catch (error) {
+            throw new HttpException(
+                PlayGameError.NOT_FOUND_QUIZ,
+                HttpStatus.NOT_FOUND,
+            );
+        }
+    }
 }
