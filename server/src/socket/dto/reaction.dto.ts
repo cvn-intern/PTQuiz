@@ -1,4 +1,5 @@
 export class ReactionDto {
-    reaction: string;
+    message: string;
     roomPIN: string;
+    id: number;
 }

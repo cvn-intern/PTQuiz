@@ -11,6 +11,7 @@
 	import whiteVersus from '$assets/whiteVersus.png';
 	import { goto } from '$app/navigation';
 	import clsx from 'clsx';
+	import Reaction from './reaction.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -177,6 +178,7 @@
 {#if isHost}
 	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count />
 {/if}
+<Reaction {socket} {participants} {isHost} isBattle={room.room.type === RoomType.BATTLE} />
 <Chat {participants} {socket} {user} />
 
 <button
