@@ -156,5 +156,6 @@
 	"startBattle": "Start Battle",
 	"limitUser": "Limit User",
 	"enterYourMessageHere": "Enter your message here",
-	"startRoom": "Start Room"
+	"startRoom": "Start Room",
+	"emptyQuiz": "There is no question in this quiz."
 }

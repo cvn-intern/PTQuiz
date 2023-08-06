@@ -156,5 +156,6 @@
 	"startBattle": "Đối kháng",
 	"limitUser": "Giới hạn người",
 	"enterYourMessageHere": "Nhập tin nhắn của bạn ở đây",
-	"startRoom": "Bắt đầu phòng"
+	"startRoom": "Bắt đầu phòng",
+	"emptyQuiz": "Không có câu hỏi nào trong bộ câu hỏi này. "
 }
