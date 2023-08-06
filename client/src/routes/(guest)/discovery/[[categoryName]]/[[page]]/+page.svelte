@@ -6,6 +6,7 @@
 	import MobileListCategories from '$components/discovery/mobileListCategories.svelte';
 	import Dropdown from '$components/dropdown.svelte';
 	import { t } from '$i18n/translations.js';
+	import Icon from '@iconify/svelte';
 	import type { TypeCategory } from './category.type.js';
 
 	let totalQuizzes;
@@ -46,6 +47,35 @@
 				bind:quizzes={categories}
 				bind:data
 			/>
+		{:else}
+			<div class="px-4 md:py-8 md:px-12 lg:px-20">
+				<div class="flex flex-row">
+					<h1
+						class="text-2xl font-semibold font-body mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2"
+					>
+						{category.category}
+					</h1>
+				</div>
+				<div
+					class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center items-center grid-3xl lg:gap-10"
+				>
+					<a
+						href="#"
+						class="cursor-pointer max-w-sm lg:w-80 bg-gray-200 shadow-lg rounded-xl p-6 flex items-center justify-center w-full h-full"
+						on:click={() => goto('/createQuiz')}
+					>
+						<Icon
+							icon="zondicons:add-solid"
+							class="w-20 h-20 text-green-500 hover:w-24 hover:h-24"
+						/>
+					</a>
+					<div class="text-center text-gray-500">
+						<p class="text-2xl font-semibold font-body mb-7 text-zinc-800">
+							{$t('common.noQuizzesFound')}
+						</p>
+					</div>
+				</div>
+			</div>
 		{/if}
 	{/each}
 </div>

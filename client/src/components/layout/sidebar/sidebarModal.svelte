@@ -11,7 +11,13 @@
 	};
 	import logo from '$assets/logo.png';
 	import type { LayoutData } from '../../../routes/$types';
+	import { createEventDispatcher } from 'svelte';
 	export let user: LayoutData;
+	const dispatch = createEventDispatcher();
+	const handleCloseItem = (e) =>{
+		hiddenModal = e.detail.hiddenModal;
+	}
+
 </script>
 
 <Drawer
@@ -21,6 +27,7 @@
 	id="sidebarModal"
 	class="w-1/2 h-full z-50"
 	position="fixed"
+	on:hide={() => dispatch('close')}
 >
 	<div class="flex justify-end">
 		<CloseButton on:click={() => (hiddenModal = true)} class=" dark:text-white" />
@@ -35,27 +42,33 @@
 					name={$t('common.myQuizzes')}
 					icon={'tabler:home'}
 					navigateTo={'/dashboard/quizzes'}
+					on:close={handleCloseItem}
 				/>
 				<SidebarItem
 					name={$t('common.history')}
 					icon={'material-symbols:history'}
 					navigateTo={'/dashboard/history'}
+					on:close={handleCloseItem}
+
 				/>
 				<SidebarItem
 					name={$t('common.profile')}
 					icon={'mingcute:user-setting-fill'}
 					navigateTo={'/dashboard/profile'}
+					on:close={handleCloseItem}
 				/>
 				<SidebarItem
 					name={$t('common.discovery')}
 					icon={'mdi:world'}
 					navigateTo={'/discovery/all'}
+					on:close={handleCloseItem}
 				/>
 			{:else}
 				<SidebarItem
 					name={$t('common.discovery')}
 					icon={'mdi:world'}
 					navigateTo={'/discovery'}
+					on:close={handleCloseItem}
 				/>
 			{/if}
 		</div>

@@ -10,6 +10,9 @@
 	import whiteVersusMobile from '$assets/whiteVersusMobile.png';
 	import whiteVersus from '$assets/whiteVersus.png';
 	import { goto } from '$app/navigation';
+	import clsx from 'clsx';
+	import Thunder from './thunder.svelte';
+	import Reaction from './reaction.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -34,6 +37,7 @@
 		};
 	});
 	let count = room.room.count;
+	let isChangedCount = false;
 	const kickUser = (id: string, index: any) => {
 		isKicking = isKicking.map((participant) => {
 			if (participant.id === id) {
@@ -46,47 +50,59 @@
 			roomId: room.id
 		});
 	};
+	onMount(() => {
+		socket.on(EmitChannel.ROOM_CAPACITY, (data) => {
+			isChangedCount = false;
+			count = data.count;
+		});
+	});
 	let isShowKick = false;
 	let screenWidth: number;
-	$: screenWidth = window.innerWidth;
+
+	let isShowChat = false;
+	const handleClickOpenChat = () => {
+		isShowChat = !isShowChat;
+	};
 </script>
+
+<svelte:window bind:innerWidth={screenWidth} />
 
 {#if room.room.type === RoomType.BATTLE}
 	<div class=" bg-room bg-cover w-full h-screen">
-		<div class="flex flex-col md:flex-row w-full h-full pb-32">
+		<div class="flex flex-col md:flex-row w-full h-full pb-32 px-10">
 			<div
-				class="flex flex-col justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
+				class="flex flex-col pt-10 justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 			>
-				<img
-					src={participantsHost.avatar}
-					alt={participantsHost.displayName}
-					class="w-full h-full md:h-1/3 rounded-md"
-				/>
-				<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl">
-					{participantsHost.displayName}
-				</p>
+				<div class="md:absolute md:-right-1/4 md:top-1/4">
+					<img
+						src={participantsHost.avatar}
+						alt={participantsHost.displayName}
+						class="md:w-40 md:h-40 w-24 h-24 rounded-md"
+					/>
+					<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center">
+						{participantsHost.displayName}
+					</p>
+				</div>
 			</div>
 			<div
-				class="flex justify-center items-centertext-9xl md:w-1/3 h-1/3 py-10 md:py-0 md:h-full"
+				class="flex justify-center items-centertext-9xl md:w-1/3 h-1/3 md:py-0 md:h-full mt-5"
 			>
-				{#if screenWidth <= 768}
-					<img src={whiteVersusMobile} alt="vs" class="w-full h-full" />
-				{:else}
-					<img src={whiteVersus} alt="vs" class="w-full h-screen" />
-				{/if}
+				<Thunder />
 			</div>
 			{#if participantsBattle}
 				<div
 					class="flex flex-col justify-end items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 				>
-					<img
-						src={participantsBattle.avatar}
-						alt={participantsBattle.displayName}
-						class="w-full h-full md:h-1/3 rounded-md"
-					/>
-					<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl">
-						{participantsBattle.displayName}
-					</p>
+					<div class="md:absolute md:-left-1/4 md:bottom-1/4">
+						<img
+							src={participantsBattle.avatar}
+							alt={participantsBattle.displayName}
+							class="md:w-40 md:h-40 w-24 h-24 rounded-md"
+						/>
+						<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center">
+							{participantsBattle.displayName}
+						</p>
+					</div>
 				</div>
 			{/if}
 		</div>
@@ -102,7 +118,7 @@
 				<div class="flex flex-col justify-between gap-4">
 					<div class="flex flex-col gap-4 justify-center items-center md:pt-6 pt-8">
 						<div
-							class="text-4xl flex items-center gap-2 uppercase text-zinc-700 font-bold text-center"
+							class="hidden text-4xl md:flex items-center gap-2 uppercase text-zinc-700 font-bold text-center"
 						>
 							{$t('common.waitingForPlayers')}
 						</div>
@@ -173,15 +189,46 @@
 	<Icon icon="tabler:home" class="w-10 h-10 text-darkGreen" />
 </button>
 {#if isHost}
-	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count />
+	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count bind:isChangedCount />
 {/if}
-<Chat {participants} {socket} {user} />
+{#if !(room.room.type === RoomType.BATTLE)}
+	<Chat {participants} {socket} {user} />
+{/if}
+
+<div class="fixed md:bottom-10 bottom-20 md:left-20 w-full">
+	<Reaction
+		{socket}
+		{participants}
+		{isHost}
+		isBattle={room.room.type === RoomType.BATTLE}
+		{isShowChat}
+	/>
+</div>
+{#if isHost || room.room.type === RoomType.BATTLE}
+	<button
+		on:click={handleClickOpenChat}
+		class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
+			fixed left-2 md:bottom-10 bottom-3 z-60"
+	>
+		<Icon icon="et:chat" class="text-3xl w-10 h-10" />
+	</button>
+{/if}
+
 <button
-	class="{isHost
-		? 'block'
-		: 'hidden'} absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 uppercase text-3xl"
+	class={clsx(
+		isHost ? 'block' : 'hidden',
+		'absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 md:gap-3 uppercase text-3xl',
+		{
+			'cursor-not-allowed opacity-50': participants.length === 1
+		}
+	)}
 	on:click={startGame}
 >
+	<img
+		src="https://cdn.pixabay.com/animation/2022/07/31/06/27/06-27-17-124_512.gif"
+		class="w-10 h-10"
+		alt=""
+	/>
 	<p>{$t('common.startBtn')}</p>
 	<img
 		src="https://cdn.pixabay.com/animation/2022/07/31/06/27/06-27-17-124_512.gif"

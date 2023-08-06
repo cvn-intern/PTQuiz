@@ -287,7 +287,7 @@ export class SocketService {
         };
     }
 
-    async endGame(roomPIN: string, userId: string) {
+    async endQuiz(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN, userId },
         });
@@ -315,7 +315,7 @@ export class SocketService {
         });
     }
 
-    async startGame(roomPIN: string, userId: string) {
+    async startQuiz(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN, userId },
         });
@@ -737,11 +737,7 @@ export class SocketService {
         };
     }
 
-    async changeRoomVisibility(
-        roomId: string,
-        userId: string,
-        isPublic: boolean,
-    ) {
+    async setPrivateRoom(roomId: string, userId: string, isPublic: boolean) {
         const room = await this.prisma.rooms.findFirst({
             where: {
                 id: roomId,
@@ -765,7 +761,7 @@ export class SocketService {
         return result.isPublic;
     }
 
-    async changeRoomCount(roomId: string, userId: string, count: number) {
+    async setRoomCapacity(roomId: string, userId: string, count: number) {
         if (count < RoomCount.MIN || count > RoomCount.MAX) {
             throw new Error(SocketError.SOCKET_ROOM_COUNT_MAX);
         }
@@ -817,5 +813,15 @@ export class SocketService {
         return {
             participant,
         };
+    }
+
+    async getMe(userId: string, participantId: string) {
+        const result = await this.prisma.participants.findFirst({
+            where: {
+                id: participantId,
+                userId: userId,
+            },
+        });
+        return result ? true : false;
     }
 }

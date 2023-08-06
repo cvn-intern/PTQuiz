@@ -4,7 +4,7 @@ import { checkValidToken, getProfile, refreshTokens } from '$helpers/auth';
 import { JwtError } from './libs/message/responseMessage.enum';
 import { HttpStatus } from '$constants/httpStatus';
 import * as cookie from 'cookie';
-import { locale } from '$i18n/translations';
+import { locale, t } from '$i18n/translations';
 export const handle: Handle = async ({ event, resolve }) => {
 	try {
 		const cookies = cookie.parse(event.request.headers.get('cookie') || '');
@@ -127,10 +127,15 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }): Promi
 
 	return fetch(request);
 };
-export const handleError: HandleServerError = async ({ error }) => {
-	const err: any = error;
+export const handleError: HandleServerError = async ({ event }) => {
+	if (event.route.id === null) {
+		return {
+			code: HttpStatus.NOT_FOUND,
+			message: "Page not found"
+		};
+	}
 	return {
-		code: err?.status || HttpStatus.INTERNAL_SERVER_ERROR,
-		message: err?.body?.message || 'Internal Server Error'
+		code: HttpStatus.INTERNAL_SERVER_ERROR,
+		message: "Internal server error"
 	};
 };

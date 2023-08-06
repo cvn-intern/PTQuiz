@@ -18,9 +18,9 @@
 </script>
 
 <div class="flex w-full gap-2 md:gap-4 items-center">
-	<ProgressComponent progress={progressA} color={"yellow"} />
+	<ProgressComponent progress={progressA} color={'yellow'} participant={participantHost} />
 	<div class="px-2 md:px-8 rounded-full text-3xl md:text-7xl">
 		{$timer.toFixed(0)}
 	</div>
-	<ProgressComponent progress={progressB} color={"blue"} />
+	<ProgressComponent progress={progressB} color={'blue'} participant={participantCompetitor} />
 </div>

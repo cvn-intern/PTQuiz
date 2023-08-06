@@ -24,9 +24,10 @@
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 	import { RoomType } from '$components/quizzes/room.enum';
 	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
-	import { Button, Modal } from 'flowbite-svelte';
 	import { translateValidation } from '../../../../../libs/helpers/translateValidation';
 	import { t } from '../../../../../libs/i18n/translations';
+	import NotificationModal from '$components/playGame/socket/notificationModal.svelte';
+	import doorBell from '$assets/doorbell.mp3';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -56,6 +57,7 @@
 	let beKicked: boolean = false;
 	let isBattle: boolean;
 	let isHostLeft: boolean = false;
+	let audio: any;
 
 	let original = 10;
 	let stringTimer: string;
@@ -73,7 +75,7 @@
 		stringTimer = (($timer * 100) / original).toString();
 	}
 	onMount(() => {
-		socket.emit(ListenChannel.IS_HOST, {
+		socket.emit(ListenChannel.CHECK_IS_HOST, {
 			roomPIN: $page.params.slug
 		});
 		setTimeout(() => {
@@ -94,6 +96,7 @@
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
 			if (data.signal === 'join') {
+				audio.play();
 				participants = data.roomParticipants.map((participant: any) => {
 					return {
 						...participant,
@@ -122,7 +125,7 @@
 		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
 		});
-		socket.on(EmitChannel.QUIZ_QUESTIONS, (data: any) => {
+		socket.on(EmitChannel.QUESTIONS, (data: any) => {
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
@@ -148,7 +151,7 @@
 				isShowOption = true;
 			}
 		});
-		socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
+		socket.on(EmitChannel.NEXT_QUESTION, (data: any) => {
 			questionPointer = data.questionPointer;
 			isPicked = false;
 			participants = participants.map((participant: any) => {
@@ -213,15 +216,15 @@
 	});
 	function startGame() {
 		isEndGame = false;
-		socket.emit(ListenChannel.START_GAME, {
+		socket.emit(ListenChannel.START_QUIZ, {
 			roomPIN: $page.params.slug
 		});
-		socket.emit(ListenChannel.GET_QUIZ_QUESTIONS, {
+		socket.emit(ListenChannel.GET_QUESTIONS_BY_QUIZ, {
 			roomPIN: $page.params.slug
 		});
 	}
 	const nextQuestion = () => {
-		socket.emit(ListenChannel.CHANGE_QUESTION_POINTER, {
+		socket.emit(ListenChannel.GET_NEXT_QUESTION, {
 			questionPointer: questionPointer + 1,
 			roomPIN: $page.params.slug
 		});
@@ -231,11 +234,19 @@
 		showScoreBoard = true;
 	};
 	const endGame = () => {
-		socket.emit(ListenChannel.END_GAME, {
+		socket.emit(ListenChannel.END_QUIZ, {
 			roomPIN: $page.params.slug,
 			participants
 		});
 	};
+
+	function handleBeKickedClick() {
+		window.location.href = '/';
+	}
+
+	function handleHostLeftClick() {
+		window.location.href = $page.url.href;
+	}
 
 	$: {
 		if ($timer <= 0 && isBattle && isHost) {
@@ -263,7 +274,7 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} bind:isEndGame {isBattle} />
+			<EndGameSocket {participants} length={questions.length} {isEndGame} {isBattle} {socket}/>
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				{#if isBattle}
@@ -296,6 +307,7 @@
 					{isHost}
 					{socket}
 					{isBattle}
+					{participants}
 					bind:timer
 					bind:isShowOption
 				/>
@@ -413,63 +425,26 @@
 		bind:showScoreBoard
 		questionLength={questions.length}
 		{isBattle}
+		{isEndGame}
 	/>
 {/if}
 
-<Modal bind:open={beKicked} size="xs" autoclose>
-	<div class="text-center">
-		<svg
-			aria-hidden="true"
-			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
-			fill="none"
-			stroke="currentColor"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			><path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-			/></svg
-		>
-		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			{$t('common.beKicked')}
-		</h3>
-		<Button
-			color="red"
-			class="mr-2"
-			on:click={() => {
-				window.location.href = '/';
-			}}>OK</Button
-		>
-	</div>
-</Modal>
+<NotificationModal
+	bind:open={beKicked}
+	title={$t('common.beKicked')}
+	buttonText={'OK'}
+	onButtonClick={() => {
+		window.location.href = '/';
+	}}
+/>
 
-<Modal bind:open={isHostLeft} size="xs" autoclose>
-	<div class="text-center">
-		<svg
-			aria-hidden="true"
-			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
-			fill="none"
-			stroke="currentColor"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			><path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-			/></svg
-		>
-		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			{$t('common.hostReload')}
-		</h3>
-		<Button
-			color="red"
-			class="mr-2"
-			on:click={() => {
-				window.location.href = $page.url.href;
-			}}>{$t('common.reEnterRoom')}</Button
-		>
-	</div>
-</Modal>
+<NotificationModal
+	bind:open={isHostLeft}
+	title={$t('common.hostReload')}
+	buttonText={$t('common.reEnterRoom')}
+	onButtonClick={() => {
+		window.location.href = $page.url.href;
+	}}
+/>
+
+<audio src={doorBell} bind:this={audio} />
