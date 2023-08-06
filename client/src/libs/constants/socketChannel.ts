@@ -15,7 +15,6 @@ export enum EmitChannel {
 	EXCEPTION = 'exception',
 	JOINED = 'joined',
 	BE_KICKED = 'be-kicked',
-	ROOM_REACTIONS = 'room-reactions',
 	IS_PRIVATE_ROOM = 'is-private-room',
 	ROOM_CAPACITY = 'room-capacity',
 	ROOM_REACTIONS = 'room-reactions',
