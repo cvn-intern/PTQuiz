@@ -16,7 +16,7 @@
 	const topThreeParticipants = participants.slice(0, 3);
 </script>
 
-<div class="flex justify-center mt-28 mb-10">
+<div class="flex justify-center mt-20 mb-10">
 	<div class="flex items-end">
 		<div
 			class={`${

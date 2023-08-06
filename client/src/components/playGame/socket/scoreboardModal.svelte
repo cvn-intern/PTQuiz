@@ -5,6 +5,7 @@
 	export let participants: any[];
 	export let questionLength: number;
 	export let isBattle: boolean;
+	export let isEndGame: boolean;
 	let clientParticipants: any[];
 	let isScoreboard: boolean = true;
 
@@ -47,6 +48,7 @@
 							{index}
 							{questionLength}
 							{isScoreboard}
+							{isEndGame}
 						/>
 					</div>
 				{/each}

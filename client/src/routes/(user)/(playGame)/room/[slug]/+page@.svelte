@@ -24,7 +24,9 @@
 	import AliasName from '../../../../../components/playGame/socket/aliasName.svelte';
 	import { RoomType } from '$components/quizzes/room.enum';
 	import ScoreBarBattle from '$components/playGame/socket/battle/scoreBarBattle.svelte';
-	import { Button, Modal } from 'flowbite-svelte';
+	import { translateValidation } from '../../../../../libs/helpers/translateValidation';
+	import { t } from '../../../../../libs/i18n/translations';
+	import NotificationModal from '$components/playGame/socket/notificationModal.svelte';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -82,9 +84,9 @@
 		socket.on(EmitChannel.ROOM_INFO, (data: any) => {
 			roomInfo = data;
 			if (roomInfo.room.isStarted) {
-				errorMessage = 'Game has already started';
+				errorMessage = t.get('common.gameAlreadyStarted');
 			} else if (roomInfo.room.isClosed) {
-				errorMessage = 'Room has been closed';
+				errorMessage = t.get('common.roomClosed');
 			}
 			isLoading = false;
 			isBattle = roomInfo.room.type === RoomType.BATTLE ? true : false;
@@ -115,7 +117,7 @@
 		});
 		socket.on(EmitChannel.EXCEPTION, (data: any) => {
 			isLoading = false;
-			errorMessage = data.message;
+			errorMessage = translateValidation(data.message);
 		});
 		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
@@ -235,6 +237,14 @@
 		});
 	};
 
+	function handleBeKickedClick() {
+		window.location.href = '/';
+	}
+
+	function handleHostLeftClick() {
+		window.location.href = $page.url.href;
+	}
+
 	$: {
 		if ($timer <= 0 && isBattle && isHost) {
 			if (questionPointer < questions.length - 1) {
@@ -261,7 +271,7 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} bind:isEndGame {isBattle} />
+			<EndGameSocket {participants} length={questions.length} {isEndGame} {isBattle} />
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				{#if isBattle}
@@ -411,63 +421,24 @@
 		bind:showScoreBoard
 		questionLength={questions.length}
 		{isBattle}
+		{isEndGame}
 	/>
 {/if}
 
-<Modal bind:open={beKicked} size="xs" autoclose>
-	<div class="text-center">
-		<svg
-			aria-hidden="true"
-			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
-			fill="none"
-			stroke="currentColor"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			><path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-			/></svg
-		>
-		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			You have been kicked
-		</h3>
-		<Button
-			color="red"
-			class="mr-2"
-			on:click={() => {
-				window.location.href = '/';
-			}}>OK</Button
-		>
-	</div>
-</Modal>
+<NotificationModal
+	bind:open={beKicked}
+	title={$t('common.beKicked')}
+	buttonText={'OK'}
+	onButtonClick={() => {
+		window.location.href = '/';
+	}}
+/>
 
-<Modal bind:open={isHostLeft} size="xs" autoclose>
-	<div class="text-center">
-		<svg
-			aria-hidden="true"
-			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
-			fill="none"
-			stroke="currentColor"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			><path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-			/></svg
-		>
-		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			Host has reloaded the room
-		</h3>
-		<Button
-			color="red"
-			class="mr-2"
-			on:click={() => {
-				window.location.href = $page.url.href;
-			}}>Re-enter room</Button
-		>
-	</div>
-</Modal>
+<NotificationModal
+	bind:open={isHostLeft}
+	title={$t('common.hostReload')}
+	buttonText={$t('common.reEnterRoom')}
+	onButtonClick={() => {
+		window.location.href = $page.url.href;
+	}}
+/>

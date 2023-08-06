@@ -26,7 +26,7 @@
 	}
 </script>
 
-<Button class="text-slate-900 border bg-gray-200 hover:bg-gray-400 w-40">
+<Button class="text-slate-900 border bg-gray-200 hover:bg-gray-400 w-40 shadow-lg">
 	<Chevron>{typeOfSort}</Chevron></Button
 >
 <Dropdown class="w-full p-1 space-y-1">
