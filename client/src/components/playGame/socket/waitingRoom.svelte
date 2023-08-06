@@ -11,6 +11,7 @@
 	import whiteVersus from '$assets/whiteVersus.png';
 	import { goto } from '$app/navigation';
 	import clsx from 'clsx';
+	import Thunder from './thunder.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -66,36 +67,36 @@
 			<div
 				class="flex flex-col pt-10 justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 			>
-				<img
-					src={participantsHost.avatar}
-					alt={participantsHost.displayName}
-					class="w-auto h-full md:h-1/3 rounded-md"
-				/>
-				<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl">
-					{participantsHost.displayName}
-				</p>
+				<div class="md:absolute md:-right-1/4 md:top-1/4">
+					<img
+						src={participantsHost.avatar}
+						alt={participantsHost.displayName}
+						class="md:w-40 md:h-40 w-24 h-24 rounded-md"
+					/>
+					<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center">
+						{participantsHost.displayName}
+					</p>
+				</div>
 			</div>
 			<div
-				class="flex justify-center items-centertext-9xl md:w-1/3 h-1/3 py-10 md:py-0 md:h-full"
+				class="flex justify-center items-centertext-9xl md:w-1/3 h-1/3 md:py-0 md:h-full mt-5"
 			>
-				{#if screenWidth <= 768}
-					<img src={whiteVersusMobile} alt="vs" class="w-full h-full" />
-				{:else}
-					<img src={whiteVersus} alt="vs" class="w-full h-screen" />
-				{/if}
+				<Thunder />
 			</div>
 			{#if participantsBattle}
 				<div
 					class="flex flex-col justify-end items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 				>
-					<img
-						src={participantsBattle.avatar}
-						alt={participantsBattle.displayName}
-						class="w-full h-full md:h-1/3 rounded-md"
-					/>
-					<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl">
-						{participantsBattle.displayName}
-					</p>
+					<div class="md:absolute md:-left-1/4 md:bottom-1/4">
+						<img
+							src={participantsBattle.avatar}
+							alt={participantsBattle.displayName}
+							class="md:w-40 md:h-40 w-24 h-24 rounded-md"
+						/>
+						<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center">
+							{participantsBattle.displayName}
+						</p>
+					</div>
 				</div>
 			{/if}
 		</div>
