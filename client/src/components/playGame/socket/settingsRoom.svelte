@@ -13,6 +13,8 @@
 	export let room: any;
 	export let socket: Socket;
 	export let count: number;
+	export let isChangedCount: boolean;
+
 	enum RoomCount {
 		FIVE = 5,
 		TEN = 10,
@@ -22,7 +24,6 @@
 	let isChangedVisibility = false;
 	let qrModalOpen = false;
 	let isPublic = room.room.isPublic;
-	let isChangedCount = false;
 	let screenWidth: number;
 	$: size = modalOpen ? '500x500' : '100x100';
 	const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${url}&amp;size=${size}`;
@@ -36,13 +37,9 @@
 	};
 	let valuePassword = room.roomPassword;
 	onMount(() => {
-		socket.on(EmitChannel.ROOM_VISIBILITY, (data) => {
+		socket.on(EmitChannel.IS_PRIVATE_ROOM, (data) => {
 			isPublic = data.isPublic;
 			isChangedVisibility = false;
-		});
-		socket.on(EmitChannel.ROOM_COUNT, (data) => {
-			isChangedCount = false;
-			count = data.count;
 		});
 	});
 	const handleCopyPassword = () => {
@@ -55,7 +52,7 @@
 
 	const changeRoomVisibility = () => {
 		isChangedVisibility = true;
-		socket.emit(ListenChannel.CHANGE_ROOM_VISIBILITY, {
+		socket.emit(ListenChannel.SET_PRIVATE_ROOM, {
 			roomId: room.room.id,
 			isPublic: !isPublic
 		});
@@ -127,7 +124,7 @@
 									}
 									isChangedCount = true;
 									if (value !== count) {
-										socket.emit(ListenChannel.CHANGE_ROOM_COUNT, {
+										socket.emit(ListenChannel.SET_ROOM_CAPACITY, {
 											roomId: room.room.id,
 											count: value
 										});

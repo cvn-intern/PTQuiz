@@ -8,6 +8,8 @@
 	import toast from 'svelte-french-toast';
 	import { t } from '../../../libs/i18n/translations';
 	import { translateValidation } from '../../../libs/helpers/translateValidation';
+	import { goto } from '$app/navigation';
+	import Icon from '@iconify/svelte';
 
 	export let socket: Socket;
 	export let isJoined: boolean;
@@ -59,6 +61,14 @@
 		<Loading />
 	</div>
 {:else}
+	<button
+		class="absolute top-4 left-4"
+		on:click={() => {
+			goto('/');
+		}}
+	>
+		<Icon icon="tabler:home" class="w-12 h-12 text-darkGreen" />
+	</button>
 	<div class="flex flex-col justify-center items-center h-full gap-4 bg-room bg-cover">
 		<div class="logo flex flex-col items-center">
 			<img src={logo} alt="logo" class="w-52 animate-wiggle" />

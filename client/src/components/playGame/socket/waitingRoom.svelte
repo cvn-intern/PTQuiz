@@ -35,6 +35,7 @@
 		};
 	});
 	let count = room.room.count;
+	let isChangedCount = false;
 	const kickUser = (id: string, index: any) => {
 		isKicking = isKicking.map((participant) => {
 			if (participant.id === id) {
@@ -47,6 +48,12 @@
 			roomId: room.id
 		});
 	};
+	onMount(() => {
+		socket.on(EmitChannel.ROOM_CAPACITY, (data) => {
+			isChangedCount = false;
+			count = data.count;
+		});
+	});
 	let isShowKick = false;
 	let screenWidth: number;
 </script>
@@ -175,7 +182,7 @@
 	<Icon icon="tabler:home" class="w-10 h-10 text-darkGreen" />
 </button>
 {#if isHost}
-	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count />
+	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count bind:isChangedCount />
 {/if}
 <Chat {participants} {socket} {user} />
 
