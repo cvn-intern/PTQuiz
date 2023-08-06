@@ -168,5 +168,9 @@
 	"copiedToClipboard": "Copied to clipboard",
 	"pleaseTryAgain": "please contact the server administrator",
 	"internalServerError": "Internal server error",
-	"notFoundMessage": "We could not find the page you requested"
+	"notFoundMessage": "We could not find the page you requested",
+	"emptyTitle": "Title can't be empty",
+	"emptyPoint": "Point can't be empty",
+	"emptyCategory": "Category can't be empty",
+	"emptyLevel": "Level can't be empty"
 }

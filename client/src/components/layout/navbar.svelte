@@ -9,7 +9,7 @@
 	import { t, locale, locales } from '$i18n/translations';
 	import type { LayoutData } from '../../routes/$types';
 	import { AppRoute } from '../../libs/constants/appRoute';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import clsx from 'clsx';
 	export let user: LayoutData;
 
@@ -37,6 +37,10 @@
 	const toggleSidebar = () => {
 		isHidden = !isHidden;
 	};
+	async function handleClose(e) {
+		isHidden = false;
+	}
+
 	let isDropdownOpen = false;
 
 	function toggleDropdown() {
@@ -54,10 +58,18 @@
 		isDropdownOpen = false;
 		document.body.removeEventListener('click', unToggleDropdown);
 	}
-	async function handleClose(e) {
-		isHidden = false;
-	}
+
+	let dropdownProfileOpen = false;
 	
+	function toggleProfileDropdown() {
+		dropdownProfileOpen = !dropdownProfileOpen;
+		document.body.addEventListener('click', unToggleProfileDropdown);
+	}
+
+	function unToggleProfileDropdown() {
+		dropdownProfileOpen = false;
+		document.body.removeEventListener('click', unToggleProfileDropdown);
+	}
 </script>
 
 <nav
@@ -102,49 +114,72 @@
 		</ul>
 		<div class="flex gap-2 items-center w-userInfo justify-end">
 			{#if user}
-				<button class="flex items-center cursor-pointer">
-					<div
-						aria-label="profile"
-						class="flex items-center gap-2 hover:text-secondary max-w-dropDown"
-					>
-						<img src={user.avatar} alt="user avatar" class="rounded-full w-10 h-10" />
-						<p class="text-xl truncate">{user.displayName}</p>
-					</div>
-					<Icon icon="mingcute:down-line" class="text-2xl" />
+				<button class="relative" on:click|stopPropagation={toggleProfileDropdown}>
+					<button class="flex items-center cursor-pointer" id="user_dropdown">
+						<div
+							aria-label="profile"
+							class="flex items-center gap-2 hover:text-secondary max-w-dropDown"
+						>
+							<img
+								src={user.avatar}
+								alt="user avatar"
+								class="rounded-full w-10 h-10"
+							/>
+							<p class="text-xl truncate">{user.displayName}</p>
+						</div>
+						<Icon icon="mingcute:down-line" class="text-2xl" />
+					</button>
+					{#if dropdownProfileOpen}
+						<div
+							class="absolute mt-2 -bottom-32 right-2 w-full max-w-xs min-w-[150px] rounded-md shadow-lg bg-white p-2"
+						>
+							<a
+								href="#"
+								class="flex gap-2 items-center hover:bg-secondary/30"
+								on:click={() => {
+									goto('/dashboard/quizzes');
+									dropdownProfileOpen = false;
+								}}
+							>
+								<Icon icon="tabler:home" class={'text-2xl'} />
+								<h1 class="text-base">{$t('common.myQuizzes')}</h1>
+							</a>
+							<a
+								href="#"
+								class="flex gap-2 items-center hover:bg-secondary/30"
+								on:click={() => {
+									goto('/dashboard/history');
+									dropdownProfileOpen = false;
+								}}
+							>
+								<Icon icon="material-symbols:history" class={'text-2xl'} />
+								<h1 class="text-base">{$t('common.history')}</h1>
+							</a>
+							<a
+								href="#"
+								class="flex gap-2 items-center hover:bg-secondary/30"
+								on:click={() => {
+									goto('/dashboard/profile');
+									dropdownProfileOpen = false;
+								}}
+							>
+								<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
+								<h1 class="text-base">{$t('common.profile')}</h1>
+							</a>
+							<a
+								href="#"
+								class="flex gap-2 items-center hover:bg-secondary/30"
+								on:click={() => {
+									logout();
+									dropdownProfileOpen = false;
+								}}
+							>
+								<Icon icon="mdi:logout" class={'text-2xl'} />
+								<h1 class="text-base">{$t('common.signOut')}</h1>
+							</a>
+						</div>
+					{/if}
 				</button>
-				<Dropdown class="w-dropDown">
-					<DropdownItem
-						class="flex gap-2 items-center"
-						on:click={() => {
-							goto('/dashboard/quizzes');
-						}}
-					>
-						<Icon icon="tabler:home" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.myQuizzes')}</h1>
-					</DropdownItem>
-					<DropdownItem
-						class="flex gap-2 items-center"
-						on:click={() => {
-							goto('/dashboard/history');
-						}}
-					>
-						<Icon icon="material-symbols:history" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.history')}</h1>
-					</DropdownItem>
-					<DropdownItem
-						class="flex gap-2 items-center"
-						on:click={() => {
-							goto('/dashboard/profile');
-						}}
-					>
-						<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.profile')}</h1>
-					</DropdownItem>
-					<DropdownItem slot="footer" class="flex gap-2 items-center" on:click={logout}>
-						<Icon icon="mdi:logout" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.signOut')}</h1>
-					</DropdownItem>
-				</Dropdown>
 			{:else}
 				<button
 					aria-label="login"
@@ -156,11 +191,8 @@
 					{$t('common.login')}
 				</button>
 			{/if}
-			<div class="relative">
-				<button
-					class=" p-2 rounded-md focus:outline-none bg-primary"
-					on:click|stopPropagation={toggleDropdown}
-				>
+			<button class="relative" on:click|stopPropagation={toggleDropdown}>
+				<button class=" p-2 rounded-md focus:outline-none bg-primary">
 					{#if $locale === 'en'}
 						<Icon icon="twemoji-flag-for-flag-united-kingdom" class="text-3xl" />
 					{:else}
@@ -186,7 +218,7 @@
 						{/each}
 					</div>
 				{/if}
-			</div>
+			</button>
 		</div>
 	</div>
 </nav>
