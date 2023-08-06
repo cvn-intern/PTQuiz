@@ -176,13 +176,13 @@
 			{/if}
 		</div>
 	{/if}
-	{#if isBattle}
-		<div class="absolute md:bottom-2 bottom-4 md:left-20">
-			<Reaction {socket} {participants} {isHost} {isBattle} {isShowChat} />
-		</div>
+	<div class="absolute md:bottom-2 bottom-4 md:left-20">
+		<Reaction {socket} {participants} {isHost} {isBattle} {isShowChat} />
+	</div>
+	{#if isHost || isBattle}
 		<button
 			on:click={handleClickOpenChat}
-			class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-secondary text-white border-2 border-gray-300 font-semibold p-2
+			class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
 			absolute left-2 md:bottom-4 bottom-20"
 		>
 			<Icon icon="et:chat" class="text-3xl w-10 h-10" />
