@@ -73,7 +73,7 @@
 		stringTimer = (($timer * 100) / original).toString();
 	}
 	onMount(() => {
-		socket.emit(ListenChannel.IS_HOST, {
+		socket.emit(ListenChannel.CHECK_IS_HOST, {
 			roomPIN: $page.params.slug
 		});
 		setTimeout(() => {
@@ -122,7 +122,7 @@
 		socket.on(EmitChannel.IS_HOST, (data: any) => {
 			isHost = data.isHost;
 		});
-		socket.on(EmitChannel.QUIZ_QUESTIONS, (data: any) => {
+		socket.on(EmitChannel.QUESTIONS, (data: any) => {
 			questions = data;
 			isPicked = false;
 			original = questions[questionPointer].time;
@@ -148,7 +148,7 @@
 				isShowOption = true;
 			}
 		});
-		socket.on(EmitChannel.QUESTION_POINTER, (data: any) => {
+		socket.on(EmitChannel.NEXT_QUESTION, (data: any) => {
 			questionPointer = data.questionPointer;
 			isPicked = false;
 			participants = participants.map((participant: any) => {
@@ -213,15 +213,15 @@
 	});
 	function startGame() {
 		isEndGame = false;
-		socket.emit(ListenChannel.START_GAME, {
+		socket.emit(ListenChannel.START_QUIZ, {
 			roomPIN: $page.params.slug
 		});
-		socket.emit(ListenChannel.GET_QUIZ_QUESTIONS, {
+		socket.emit(ListenChannel.GET_QUESTIONS_BY_QUIZ, {
 			roomPIN: $page.params.slug
 		});
 	}
 	const nextQuestion = () => {
-		socket.emit(ListenChannel.CHANGE_QUESTION_POINTER, {
+		socket.emit(ListenChannel.GET_NEXT_QUESTION, {
 			questionPointer: questionPointer + 1,
 			roomPIN: $page.params.slug
 		});
@@ -231,7 +231,7 @@
 		showScoreBoard = true;
 	};
 	const endGame = () => {
-		socket.emit(ListenChannel.END_GAME, {
+		socket.emit(ListenChannel.END_QUIZ, {
 			roomPIN: $page.params.slug,
 			participants
 		});

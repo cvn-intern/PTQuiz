@@ -1,4 +1,4 @@
-import { MessageDto } from './../dto/message.dto';
+<!-- import { MessageDto } from './../dto/message.dto';
 import { CryptoService } from './../../crypto/crypto.service';
 import { UseGuards, Logger } from '@nestjs/common';
 import {
@@ -245,7 +245,7 @@ export class SocketGateway
         }
     }
 
-    @SubscribeMessage(ListenChannel.GET_NEXT_QUESTION)
+    @SubscribeMessage(ListenChannel.CHANGE_QUESTION_POINTER)
     async handleGetNextQuestion(
         @ConnectedSocket() client: SocketClient,
         @MessageBody() data: QuestionPointerDto,
@@ -261,7 +261,7 @@ export class SocketGateway
                     message: SocketError.SOCKET_ROOM_PERMISSION_DENIED,
                 });
             }
-            this.server.to(roomPIN).emit(EmitChannel.NEXT_QUESTION, {
+            this.server.to(roomPIN).emit(EmitChannel.QUESTION_POINTER, {
                 questionPointer,
             });
         } catch (error) {
@@ -436,4 +436,32 @@ export class SocketGateway
             });
         }
     }
-}
+} -->
+
+
+## Socket specification
+#### What do we use socket for?
+- Socket.io is a library that enables real-time, bidirectional and event-based communication between the browser and the server.
+- In this project, we use socket.io to create a real-time connection between all clients in the same room. For instance, we use it for displaying all the clients in room and they can chat with each other, displaying quiz questions, display quiz results, etc.
+#### Authentication and authorization with Socket.io
+- Socket.io does not support authentication and authorization out of the box. Therefore, we need to implement it ourselves. We use JWT to authenticate and authorize the client.
+- `WebSocketJwtGuard` is used to verify the token sent from the client to the server. If the token is valid, the client can access the socket server. Otherwise, the client will be disconnected.
+- `@UseGuards(WebSocketJwtGuard)` is used to apply the `WebSocketJwtGuard` to the entire `SocketGateway` class.
+#### Overall description:
+| Description         | Method                    | Listen channel          | Emit channel      |
+| ------------------- | ------------------------- | ----------------------- | ----------------- |
+| Join room           | `handleJoinRoom`          | `JOIN_ROOM`             | `JOINED`          |
+| Leave room          | `handleLeaveRoom`         | `LEAVE_ROOM`            | `ROOM_USERS`      |
+| Send message        | `handleMessage`           | `SEND_MESSAGE`          | `ROOM_MESSAGES`   |
+| Check room host     | `handleCheckIsHost`       | `CHECK_IS_HOST`         | `IS_HOST`         |
+| Start quiz          | `handleStartQuiz`         | `START_QUIZ`            | `STARTED`         |
+| End quiz            | `handleEndQuiz`           | `END_QUIZ`              | `ENDED`           |
+| Get questions       | `handleGetQuestions`      | `GET_QUESTIONS_BY_QUIZ` | `QUESTIONS`       |
+| Get next question   | `handleGetNextQuestion`   | `GET_NEXT_QUESTION`     | `NEXT_QUESTION`   |
+| Pick answer         | `handlePickAnswer`        | `PICK_ANSWER`           | `ANSWER_RESULT`   |
+| Get answer question | `handleGetAnswerQuestion` | `GET_ANSWER_QUESTION`   | `ANSWER_QUESTION` |
+| Gif question        | `handleGifQuestion`       | `GET_GIF_QUESTION`      | `GIF_QUESTION`    |
+| Get room info       | `handleRoomInfo`          | `GET_ROOM_INFO`         | `ROOM_INFO`       |
+| Set private room    | `handleSetPrivateRoom`    | `SET_PRIVATE_ROOM`      | `IS_PRIVATE_ROOM` |
+| Set room capacity   | `handleSetRoomCapacity`   | `SET_ROOM_CAPACITY`     | `ROOM_CAPACITY`   |
+| Kick user           | `handleKickUser`          | `KICK_USER`             | `BE_KICKED`       |

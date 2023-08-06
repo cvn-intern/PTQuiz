@@ -36,11 +36,11 @@
 	};
 	let valuePassword = room.roomPassword;
 	onMount(() => {
-		socket.on(EmitChannel.ROOM_VISIBILITY, (data) => {
+		socket.on(EmitChannel.IS_PRIVATE_ROOM, (data) => {
 			isPublic = data.isPublic;
 			isChangedVisibility = false;
 		});
-		socket.on(EmitChannel.ROOM_COUNT, (data) => {
+		socket.on(EmitChannel.ROOM_CAPACITY, (data) => {
 			isChangedCount = false;
 			count = data.count;
 		});
@@ -55,7 +55,7 @@
 
 	const changeRoomVisibility = () => {
 		isChangedVisibility = true;
-		socket.emit(ListenChannel.CHANGE_ROOM_VISIBILITY, {
+		socket.emit(ListenChannel.SET_ROOM_CAPACITY, {
 			roomId: room.room.id,
 			isPublic: !isPublic
 		});
@@ -127,7 +127,7 @@
 									}
 									isChangedCount = true;
 									if (value !== count) {
-										socket.emit(ListenChannel.CHANGE_ROOM_COUNT, {
+										socket.emit(ListenChannel.SET_PRIVATE_ROOM, {
 											roomId: room.room.id,
 											count: value
 										});
