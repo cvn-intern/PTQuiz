@@ -13,7 +13,7 @@ export const actions = {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
 				passingPoint: parseInt(form?.get('passingPoint')),
-				point: parseInt(form?.get('point')),
+				point: parseInt(form.get('point')),
 				image: form.get('image')
 			});
 			const response = await fetch('/api/quizzes/create', {
@@ -22,7 +22,6 @@ export const actions = {
 				body: form
 			});
 			const result = await response.json();
-
 			message.isDone = true;
 			message.isSuccess = result.statusCode == 201;
 			message.success.id = result?.data?.id;
