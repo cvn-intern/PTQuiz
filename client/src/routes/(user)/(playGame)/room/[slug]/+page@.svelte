@@ -307,6 +307,7 @@
 					{isHost}
 					{socket}
 					{isBattle}
+					{participants}
 					bind:timer
 					bind:isShowOption
 				/>

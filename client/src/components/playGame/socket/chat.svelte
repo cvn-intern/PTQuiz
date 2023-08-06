@@ -53,6 +53,7 @@
 	};
 
 	$: isShowChat = false;
+	
 	const handleClickOpenChat = () => {
 		isShowChat = !isShowChat;
 	};

@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
 	import clsx from 'clsx';
 	import Thunder from './thunder.svelte';
+	import Reaction from './reaction.svelte';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -57,6 +58,11 @@
 	});
 	let isShowKick = false;
 	let screenWidth: number;
+
+	let isShowChat = false;
+	const handleClickOpenChat = () => {
+		isShowChat = !isShowChat;
+	};
 </script>
 
 <svelte:window bind:innerWidth={screenWidth} />
@@ -185,7 +191,28 @@
 {#if isHost}
 	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count bind:isChangedCount />
 {/if}
-<Chat {participants} {socket} {user} />
+{#if !(room.room.type === RoomType.BATTLE)}
+	<Chat {participants} {socket} {user} />
+{/if}
+
+<div class="fixed md:bottom-10 bottom-20 md:left-20 w-full">
+	<Reaction
+		{socket}
+		{participants}
+		{isHost}
+		isBattle={room.room.type === RoomType.BATTLE}
+		{isShowChat}
+	/>
+</div>
+{#if isHost || room.room.type === RoomType.BATTLE}
+	<button
+		on:click={handleClickOpenChat}
+		class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
+			fixed left-2 md:bottom-10 bottom-3 z-60"
+	>
+		<Icon icon="et:chat" class="text-3xl w-10 h-10" />
+	</button>
+{/if}
 
 <button
 	class={clsx(

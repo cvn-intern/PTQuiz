@@ -26,6 +26,7 @@ import { EndGameDto as EndQuizDto } from '../dto/endGame.dto';
 import { ChangeRoomVisibilityDto as SetPrivateRoomDto } from '../dto/changeRoomVisibility.dto';
 import { ChangeRoomCountDto as SetRoomCapacityDto } from '../dto/changeRoomCount.dto';
 import { KickUserDto } from '../dto/kickUser.dto';
+import { ReactionDto } from '../dto/reaction.dto';
 
 @WebSocketGateway(8082, {
     cors: {
@@ -171,6 +172,28 @@ export class SocketGateway
             });
         }
     }
+    @SubscribeMessage(ListenChannel.SEND_REACTION)
+    async handleReaction(
+        @ConnectedSocket() client: SocketClient,
+        @MessageBody() data: ReactionDto,
+    ) {
+        try {
+            const { reaction, roomPIN } = data;
+            this.server.to(roomPIN).emit(EmitChannel.ROOM_REACTIONS, {
+                user: {
+                    id: client.user.id,
+                    displayName: client.aliasName,
+                    avatar: client.aliasAvatar,
+                },
+                reaction,
+            });
+        } catch (error) {
+            throw new WsException({
+                message: error.message,
+            });
+        }
+    }
+
     @SubscribeMessage(ListenChannel.CHECK_IS_HOST)
     async handleCheckIsHost(
         @ConnectedSocket() client: SocketClient,
