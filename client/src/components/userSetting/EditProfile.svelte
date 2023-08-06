@@ -64,15 +64,6 @@
 		</div>
 
 		<div class="relative">
-			<label for="id" class="mb-1">User ID</label>
-			<input
-				aria-label="id"
-				id="id"
-				class="w-full border-2 border-gray-200 rounded-lg p-2 mb-3"
-				disabled
-				placeholder={user.id}
-			/>
-
 			<label for="email" class="mb-1">Email</label>
 			<input
 				aria-label="Email"
