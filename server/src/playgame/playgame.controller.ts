@@ -58,6 +58,17 @@ export class PlaygameController {
         return await this.playgameService.getAllHistory(userId);
     }
 
+    @Get('/detail-history')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Get detail history successfully')
+    @UseGuards(JwtAuthGuard)
+    async getDetailHistory(
+        @GetCurrentUser('id') userId: string,
+        @Query('quizId') quizId: string,
+    ) {
+        return await this.playgameService.getDetailHistory(userId, quizId);
+    }
+
     @Post('/play')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Play successfully')
