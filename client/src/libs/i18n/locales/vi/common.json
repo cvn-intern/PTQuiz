@@ -164,5 +164,8 @@
 	"roomClosed": "Phòng đã đóng",
 	"aliasName": "Tên ẩn danh",
 	"roomPassword": "Mật khẩu phòng",
-	"copiedToClipboard": "Đã sao chép vào clipboard"
+	"copiedToClipboard": "Đã sao chép vào clipboard",
+	"pleaseTryAgain": "vui lòng liên hệ với admin để được hỗ trợ",
+	"internalServerError": "Lỗi máy chủ",
+	"notFoundMessage": "Chúng tôi không thể tìm thấy trang bạn đang yêu cầu"
 }

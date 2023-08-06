@@ -164,5 +164,8 @@
 	"roomClosed": "Room has been closed",
 	"aliasName": "Alias Name",
 	"roomPassword": "Room Password",
-	"copiedToClipboard": "Copied to clipboard"
+	"copiedToClipboard": "Copied to clipboard",
+	"pleaseTryAgain": "please contact the server administrator",
+	"internalServerError": "Internal server error",
+	"notFoundMessage": "We could not find the page you requested"
 }
