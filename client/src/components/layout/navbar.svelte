@@ -90,7 +90,7 @@
 				</button>
 			</li>
 		</ul>
-		<div class="flex gap-2 items-center w-userInfo justify-end">
+		<div class="flex gap-2 items-center md:w-userInfo justify-end">
 			{#if user}
 				<DropdownProfile {user} {logout} />
 			{:else}
