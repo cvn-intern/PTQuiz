@@ -137,6 +137,9 @@
 		const result = await response.json();
 		return result;
 	}
+	async function handleClose(e) {
+		isOpen = false;
+	}
 </script>
 
 {#if isDelete}
@@ -165,7 +168,7 @@
 		</div>
 	</a>
 	<div
-		class="absolute top-5 right-5 z-10 flex justify-center gap-2 group-hover/item:visible invisible"
+		class="absolute md:top-5 md:right-5 right-3 top-1 z-10 flex justify-center gap-2 group-hover/item:visible invisible"
 	>
 		<button aria-label="Edit" on:click={handleEdit}>
 			<Icon icon="uil:edit" class="text-2xl text-cyan-500 hover:text-cyan-800" />
@@ -174,17 +177,19 @@
 			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-400 hover:text-red-600" />
 		</button>
 	</div>
-	<div class="flex flex-row gap-4 absolute bottom-3 right-3 z-10">
+	<div
+		class="flex md:flex-row flex-col md:gap-4 gap-2 absolute bottom-3 right-3 z- md:text-base text-sm"
+	>
 		<button
 			aria-label="Start Battle"
 			on:click={handleBattle}
-			class="block px-4 py-2 rounded-md bg-blueLogo hover:bg-darkGreen text-white focus:outline-none"
+			class="block md:px-4 md:py-2 py-1 px-2 rounded-md bg-blueLogo hover:bg-darkGreen text-white focus:outline-none"
 			>{$t('common.startBattle')}</button
 		>
 		<button
 			aria-label="Start"
 			on:click={handleStart}
-			class="block px-3 py-3 rounded-lg bg-yellowLogo hover:bg-yellow-700 text-white focus:outline-none shadow-lg"
+			class="block md:px-3 md:py-3 py-1 px-2 rounded-lg bg-yellowLogo hover:bg-yellow-700 text-white focus:outline-none shadow-lg"
 			>{$t('common.startRoom')}</button
 		>
 	</div>
@@ -214,4 +219,4 @@
 		<Button color="green">{$t('common.cancelDeleteQuiz')}</Button>
 	</div>
 </Modal>
-<DetailQuiz {isOpen} cardInfor={quiz} {questionList} />
+<DetailQuiz {isOpen} cardInfor={quiz} {questionList} on:close={handleClose} />

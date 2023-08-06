@@ -5,6 +5,7 @@
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
 	import ScoreboardModal from './scoreboardModal.svelte';
+	import EndGameBattal from '$components/endGame/endGameBattal.svelte';
 
 	type Participant = {
 		id: string;
@@ -42,7 +43,7 @@
 		>
 	</div>
 	{#if isBattle}
-		<Position {participants} {length} />
+		<EndGameBattal {participants} {length} />
 		<div class="flex gap-4 items-center justify-center">
 			<div
 				class={`${

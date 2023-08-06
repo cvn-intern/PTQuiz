@@ -176,5 +176,14 @@
 	"lastestCompletedDate": "Lastest completed date",
 	"score": "Score",
 	"passed": "Passed",
-	"failed": "Failed"
+	"failed": "Failed",
+	"pleaseTryAgain": "please contact the server administrator",
+	"internalServerError": "Internal server error",
+	"notFoundMessage": "We could not find the page you requested",
+	"emptyTitle": "Title can't be empty",
+	"emptyPoint": "Point can't be empty",
+	"emptyCategory": "Category can't be empty",
+	"emptyLevel": "Level can't be empty",
+	"winner": "Winner",
+	"loser": "Loser"
 }
