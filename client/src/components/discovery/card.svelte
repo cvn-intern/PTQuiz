@@ -64,7 +64,6 @@
 		}
 	};
 
-
 	$: isOpen = false;
 	$: questionList = [];
 
@@ -92,6 +91,9 @@
 		let remainingSeconds = seconds % 60;
 		return `${minutes} ${$t('common.mins')} : ${remainingSeconds} ${$t('common.secs')}`;
 	};
+	async function handleClose(e) {
+		isOpen = false;
+	}
 </script>
 
 <div class="max-w-sm lg:w-80 bg-gray-50 shadow-lg rounded-xl p-6">
@@ -168,4 +170,4 @@
 		</div>
 	</div>
 </div>
-<DetailQuiz {isOpen} {cardInfor} {questionList} />
+<DetailQuiz {isOpen} {cardInfor} {questionList} on:close={handleClose} />

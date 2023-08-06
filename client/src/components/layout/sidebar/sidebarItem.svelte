@@ -3,10 +3,13 @@
 	import { page } from '$app/stores';
 	import Icon from '@iconify/svelte';
 	import clsx from 'clsx';
+	import { createEventDispatcher } from 'svelte';
 
 	export let name: string;
 	export let icon: string;
 	export let navigateTo: string;
+	const dispatch = createEventDispatcher();
+
 </script>
 
 <button
@@ -20,6 +23,9 @@
 		}
 	)}
 	on:click={() => {
+		dispatch('close',{
+			hiddenModal: true
+		});
 		navigateTo ? goto(navigateTo, { replaceState: true }) : null;
 	}}
 >
