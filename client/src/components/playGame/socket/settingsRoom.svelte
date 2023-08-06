@@ -55,7 +55,7 @@
 
 	const changeRoomVisibility = () => {
 		isChangedVisibility = true;
-		socket.emit(ListenChannel.SET_ROOM_CAPACITY, {
+		socket.emit(ListenChannel.SET_PRIVATE_ROOM, {
 			roomId: room.room.id,
 			isPublic: !isPublic
 		});
