@@ -62,7 +62,7 @@
 				<img
 					src={participantsHost.avatar}
 					alt={participantsHost.displayName}
-					class="w-full h-full md:h-1/3 rounded-md"
+					class="w-auto h-full md:h-1/3 rounded-md"
 				/>
 				<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl">
 					{participantsHost.displayName}

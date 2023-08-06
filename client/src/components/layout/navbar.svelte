@@ -40,7 +40,7 @@
 	let isDropdownOpen = false;
 
 	function toggleDropdown() {
-		isDropdownOpen = true;
+		isDropdownOpen = !isDropdownOpen;
 		document.body.addEventListener('click', unToggleDropdown);
 	}
 
@@ -164,10 +164,7 @@
 					{/if}
 				</button>
 				{#if isDropdownOpen}
-					<div
-						class="absolute mt-2 w-full rounded-md shadow-lg"
-						on:click|stopPropagation={() => {}}
-					>
+					<div class="absolute mt-2 w-full rounded-md shadow-lg">
 						{#each $locales as value}
 							<button
 								class="cursor-pointer p-2 hover:bg-gray-200"
