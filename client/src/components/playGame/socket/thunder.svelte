@@ -3,7 +3,7 @@
       left: 0;
       top:50%;
       width: 150px;
-      height: 50vh;
+      height: 45vh;
       position: relative;
       transform: translateY(-50%);
     }

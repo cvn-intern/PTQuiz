@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import Balloon from './balloon.svelte';
 	import Firework from './firework.svelte';
 	import { t } from '$i18n/translations';
 	import { onMount } from 'svelte';
