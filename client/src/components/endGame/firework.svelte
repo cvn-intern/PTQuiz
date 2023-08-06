@@ -1,4 +1,4 @@
-<div class="pyro w-full">
+<div class="pyro w-full max-h-screen overflow-hidden no-scrollbar">
 	<div class="before" />
 	<div class="after" />
 </div>
@@ -14,7 +14,7 @@
 			-113px -308.66667px #ff009d, -109px -287.66667px #ffb300, -50px -313.66667px #ff006e,
 			226px -31.66667px #ff4000, 180px -351.66667px #ff00d0, -12px -338.66667px #00f6ff,
 			220px -388.66667px #99ff00, -69px -27.66667px #ff0400, -111px -339.66667px #6200ff,
-			155px -237.66667px #00ddff, -152px -380.66667px #00ffd0, -50px -37.66667px #00ffdd,
+			155px -237.66667px #00ddff, -152px -380.66667px #627672, -50px -37.66667px #00ffdd,
 			-95px -175.66667px #a6ff00, -88px 10.33333px #0d00ff, 112px -309.66667px #005eff,
 			69px -415.66667px #ff00a6, 168px -100.66667px #ff004c, -244px 24.33333px #ff6600,
 			97px -325.66667px #ff0066, -211px -182.66667px #00ffa2, 236px -126.66667px #b700ff,
@@ -202,14 +202,14 @@
 
 		20%,
 		39.9% {
-			margin-top: 30%;
+			margin-top: 20%;
 			margin-left: 30%;
 		}
 
 		40%,
 		59.9% {
 			margin-top: 20%;
-			margin-left: 15%;
+			margin-left: 40%;
 		}
 
 		60%,
@@ -221,7 +221,7 @@
 		80%,
 		99.9% {
 			margin-top: 30%;
-			margin-left: 40%;
+			margin-left: 25%;
 		}
 	}
 	@-o-keyframes position {
@@ -233,14 +233,14 @@
 
 		20%,
 		39.9% {
-			margin-top: 40%;
+			margin-top: 20%;
 			margin-left: 30%;
 		}
 
 		40%,
 		59.9% {
 			margin-top: 20%;
-			margin-left: 25%;
+			margin-left: 40%;
 		}
 
 		60%,
@@ -252,26 +252,26 @@
 		80%,
 		99.9% {
 			margin-top: 30%;
-			margin-left: 35%;
+			margin-left: 25%;
 		}
 	}
 	@-ms-keyframes position {
 		0%,
 		19.9% {
 			margin-top: 10%;
-			margin-left: 50%;
+			margin-left: 40%;
 		}
 
 		20%,
 		39.9% {
-			margin-top: 30%;
+			margin-top: 20%;
 			margin-left: 30%;
 		}
 
 		40%,
 		59.9% {
 			margin-top: 20%;
-			margin-left: 10%;
+			margin-left: 40%;
 		}
 
 		60%,
@@ -283,7 +283,7 @@
 		80%,
 		99.9% {
 			margin-top: 30%;
-			margin-left: 30%;
+			margin-left: 25%;
 		}
 	}
 	@keyframes position {
@@ -295,20 +295,20 @@
 
 		20%,
 		39.9% {
-			margin-top: 25%;
-			margin-left: 50%;
+			margin-top: 20%;
+			margin-left: 30%;
 		}
 
 		40%,
 		59.9% {
-			margin-top: 30%;
-			margin-left: 60%;
+			margin-top: 20%;
+			margin-left: 50%;
 		}
 
 		60%,
 		79.9% {
-			margin-top: 30%;
-			margin-left: 55%;
+			margin-top: 25%;
+			margin-left: 20%;
 		}
 
 		80%,

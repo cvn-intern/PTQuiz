@@ -71,7 +71,7 @@
 	<div class=" bg-room bg-cover w-full h-screen">
 		<div class="flex flex-col md:flex-row w-full h-full pb-32 px-10">
 			<div
-				class="flex flex-col pt-10 justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
+				class="flex flex-col pt-10 justify-center md:justify-start items-start gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 			>
 				<div class="md:absolute md:-right-1/4 md:top-1/4">
 					<img
@@ -91,7 +91,7 @@
 			</div>
 			{#if participantsBattle}
 				<div
-					class="flex flex-col justify-end items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
+					class="flex flex-col justify-end items-end relative md:w-1/3 md:h-full"
 				>
 					<div class="md:absolute md:-left-1/4 md:bottom-1/4">
 						<img

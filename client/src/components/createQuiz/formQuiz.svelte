@@ -12,30 +12,11 @@
 	export let action: string;
 	export let isUpdate: boolean;
 	let category = result['category']?.id || result['category'] || Category.OTHER;
-	let stringImgeField = 'JPEG, PNG, JPG (< 1MB).';
-
+	let stringImgeField = 'JPEG, PNG, JPG (< 5MB).';
+	let level = result['difficultyLevel'] || 0;
 	let sharedToastId: string | number;
-
-	$: categoryOfQuizI18n = (category) => {
-		switch (category) {
-			case 'clkjsrewg0004k6m5dt89zll5':
-				return $t('common.math');
-			case 'clkjsqieu0000k6m5sqfi4gj5':
-				return $t('common.science');
-			case 'clk6mp0ik0006j3ngfaep8pb8':
-				return $t('common.english');
-			case 'clkjsrewf0001k6m5bpxteo0t':
-				return $t('common.history');
-			case 'clkjsrewg0002k6m565jmkvvw':
-				return $t('common.geography');
-			case 'clkjsrewg0003k6m5tpo9b8nx':
-				return $t('common.literature');
-			case 'clkjsrewg0004k6m5dt89zll5':
-				return $t('common.other');
-			default:
-				return $t('common.other');
-		}
-	};
+	export let open:boolean;
+	
 
 	$: labelI18n = (label: string) => {
 		switch (label) {
@@ -80,6 +61,7 @@
 			dismissLoadingToast();
 			toast.success(t.get('common.success'));
 			form = null;
+			open = false;
 		}
 		dismissLoadingToast();
 
@@ -92,19 +74,19 @@
 	}
 
 	let levelList: selectOptionne[] = [
-		{ value: 0, name: 'Easy' },
-		{ value: 1, name: 'Medium' },
-		{ value: 2, name: 'Hard' }
+		{ value: 0, name: $t('common.easy') },
+		{ value: 1, name: $t('common.medium') },
+		{ value: 2, name: $t('common.hard') }
 	];
 
 	let categoryList: selectOptionne[] = [
-		{ value: Category.MATH, name: 'Math' },
-		{ value: Category.SCIENCE, name: 'Science' },
-		{ value: Category.ENGLISH, name: 'English' },
-		{ value: Category.HISTORY, name: 'History' },
-		{ value: Category.GEOGRAPHY, name: 'Geography' },
-		{ value: Category.LITERATURE, name: 'Literature' },
-		{ value: Category.OTHER, name: 'Other' }
+		{ value: Category.MATH, name: $t('common.math') },
+		{ value: Category.SCIENCE, name: $t('common.science') },
+		{ value: Category.ENGLISH, name: $t('common.english') },
+		{ value: Category.HISTORY, name: $t('common.history') },
+		{ value: Category.GEOGRAPHY, name: $t('common.geography') },
+		{ value: Category.LITERATURE, name: $t('common.literature') },
+		{ value: Category.OTHER, name: $t('common.other') }
 	];
 
 	let formData: FieldForm = {
@@ -207,7 +189,7 @@
 							type="file"
 							name="image"
 							accept="image/*"
-							class="text-base {hiddenInputFile ? 'hidden' : ''}"
+							class="text-sm {hiddenInputFile ? 'hidden' : ''}"
 							on:change={handleFileChange}
 						/>
 						{#if result[name] !== ''}
@@ -244,8 +226,10 @@
 					{/if}
 				{:else if type === 'select' && name === 'difficultyLevel'}
 					<Select
+						oninvalid="this.setCustomValidity('{$t('common.emptyLevel')}')"
+						oninput="setCustomValidity('')"
 						items={selectOptionsList}
-						bind:value={result[name]}
+						bind:value={level}
 						{required}
 						id={name}
 						{name}
@@ -253,6 +237,8 @@
 					/>
 				{:else if type === 'select' && name === 'categoryId'}
 					<Select
+						oninvalid="this.setCustomValidity('{$t('common.emptyCategory')}')"
+						oninput="setCustomValidity('')"
 						items={selectOptionsList}
 						bind:value={category}
 						{required}
@@ -263,6 +249,7 @@
 				{:else if type === 'textarea'}
 					<div class="relative grid w-full">
 						<textarea
+							rows="1"
 							maxlength="100"
 							id={name}
 							placeholder={labelI18n(label)}
@@ -272,6 +259,8 @@
 					</div>
 				{:else if type === 'number'}
 					<input
+						oninvalid="this.setCustomValidity('{$t('common.emptyPoint')}')"
+						oninput="setCustomValidity('')"
 						bind:value={result[name]}
 						minlength="10"
 						maxlength="50"
@@ -280,9 +269,12 @@
 						placeholder={labelI18n(label)}
 						{name}
 						class="bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+						{required}
 					/>
 				{:else}
 					<input
+						oninvalid="this.setCustomValidity('{$t('common.emptyTitle')}')"
+						oninput="setCustomValidity('')"
 						minlength="1"
 						maxlength="50"
 						id={name}

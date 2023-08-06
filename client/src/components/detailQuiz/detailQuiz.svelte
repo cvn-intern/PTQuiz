@@ -49,6 +49,24 @@
 				return $t('common.mixed');
 		}
 	};
+	const categoryI18n = (category: string) => {
+		switch (category) {
+			case 'Math':
+				return $t('common.math');
+			case 'Science':
+				return $t('common.science');
+			case 'History':
+				return $t('common.history');
+			case 'English':
+				return $t('common.english');
+			case 'Geography':
+				return $t('common.geography');
+			case 'Other':
+				return $t('common.other');
+			default:
+				return $t('common.other');
+		}
+	};
 </script>
 
 <Modal bind:open={isOpen} size="xl" padding="xs" outsideclose on:hide={() => dispatch('close')}>
@@ -74,7 +92,7 @@
 							<th class=" border-l">{$t('common.questions')}</th>
 						</tr>
 						<tr class="p-2">
-							<td class=" border-r">Math</td>
+							<td class=" border-r">{categoryI18n(cardInfor?.category?.name)}</td>
 							<td class=" border-r border-l"
 								>{levelI18n(cardInfor?.difficultyLevel)}</td
 							>

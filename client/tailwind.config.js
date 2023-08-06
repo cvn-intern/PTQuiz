@@ -43,7 +43,7 @@ export default {
 				}
 			},
 			fontFamily: {
-				body: ['Sora'],
+				body: ['STIX Two Text'],
 				title: ['Jost']
 			},
 			loginWidth: {

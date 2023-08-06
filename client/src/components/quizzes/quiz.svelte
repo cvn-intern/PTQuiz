@@ -140,6 +140,7 @@
 	async function handleClose(e) {
 		isOpen = false;
 	}
+	$: console.log('isOpen', isOpen);
 </script>
 
 {#if isDelete}
