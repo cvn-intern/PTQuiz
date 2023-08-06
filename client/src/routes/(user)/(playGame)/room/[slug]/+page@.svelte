@@ -27,6 +27,7 @@
 	import { translateValidation } from '../../../../../libs/helpers/translateValidation';
 	import { t } from '../../../../../libs/i18n/translations';
 	import NotificationModal from '$components/playGame/socket/notificationModal.svelte';
+	import doorBell from '$assets/doorbell.mp3';
 
 	export let data: LayoutData;
 	type Participant = {
@@ -56,6 +57,7 @@
 	let beKicked: boolean = false;
 	let isBattle: boolean;
 	let isHostLeft: boolean = false;
+	let audio: any;
 
 	let original = 10;
 	let stringTimer: string;
@@ -94,6 +96,7 @@
 		socket.on(EmitChannel.ROOM_USERS, (data: any) => {
 			isLoading = false;
 			if (data.signal === 'join') {
+				audio.play();
 				participants = data.roomParticipants.map((participant: any) => {
 					return {
 						...participant,
@@ -442,3 +445,5 @@
 		window.location.href = $page.url.href;
 	}}
 />
+
+<audio src={doorBell} bind:this={audio} />
