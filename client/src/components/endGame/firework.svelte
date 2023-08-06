@@ -1,4 +1,4 @@
-<div class="pyro">
+<div class="pyro w-full">
 	<div class="before" />
 	<div class="after" />
 </div>
@@ -171,7 +171,7 @@
 
 		20%,
 		39.9% {
-			margin-top: 40%;
+			margin-top: 20%;
 			margin-left: 30%;
 		}
 
@@ -202,7 +202,7 @@
 
 		20%,
 		39.9% {
-			margin-top: 40%;
+			margin-top: 30%;
 			margin-left: 30%;
 		}
 
@@ -259,12 +259,12 @@
 		0%,
 		19.9% {
 			margin-top: 10%;
-			margin-left: 90%;
+			margin-left: 50%;
 		}
 
 		20%,
 		39.9% {
-			margin-top: 40%;
+			margin-top: 30%;
 			margin-left: 30%;
 		}
 
@@ -295,26 +295,26 @@
 
 		20%,
 		39.9% {
-			margin-top: 40%;
+			margin-top: 25%;
 			margin-left: 50%;
 		}
 
 		40%,
 		59.9% {
-			margin-top: 50%;
+			margin-top: 30%;
 			margin-left: 60%;
 		}
 
 		60%,
 		79.9% {
 			margin-top: 30%;
-			margin-left: 70%;
+			margin-left: 55%;
 		}
 
 		80%,
 		99.9% {
-			margin-top: 30%;
-			margin-left: 80%;
+			margin-top: 10%;
+			margin-left: 65%;
 		}
 	}
 </style>
