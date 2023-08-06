@@ -15,9 +15,10 @@ export enum EmitChannel {
 	EXCEPTION = 'exception',
 	JOINED = 'joined',
 	BE_KICKED = 'be-kicked',
-	ROOM_REACTIONS = 'room-reactions',
 	IS_PRIVATE_ROOM = 'is-private-room',
 	ROOM_CAPACITY = 'room-capacity',
+	ROOM_REACTIONS = 'room-reactions',
+	HOST_MESSAGE = 'host-message',
 	ME = 'me'
 }
 
@@ -39,5 +40,6 @@ export enum ListenChannel {
 	KICK_USER = 'kick-user',
 	BE_KICKED = 'be-kicked',
 	SEND_REACTION = 'send-reaction',
+	SEND_HOST_MESSAGE = 'send-host-message',
 	GET_ME = 'get-me'
 }
