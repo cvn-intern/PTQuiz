@@ -174,16 +174,18 @@
 				</div>
 
 				{#if !isBattle && (isHost || isSingle)}
-					<hr class="w-full" />
-					<Button id="hint">
-						<Icon
-							icon="heroicons-outline:light-bulb"
-							class="w-16 h-16 text-yellow-400"
-						/>
-					</Button>
-					<Tooltip triggeredBy="#hint" placement="left" class="text-xl"
-						>{quizzesHint}</Tooltip
-					>
+					{#if !quizzesHint && quizzesHint === ''}
+						<hr class="w-full" />
+						<Button id="hint">
+							<Icon
+								icon="heroicons-outline:light-bulb"
+								class="w-16 h-16 text-yellow-400"
+							/>
+						</Button>
+						<Tooltip triggeredBy="#hint" placement="left" class="text-xl"
+							>{quizzesHint}</Tooltip
+						>
+					{/if}
 				{/if}
 			</div>
 		</div>

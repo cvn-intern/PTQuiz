@@ -10,6 +10,7 @@
 	import whiteVersusMobile from '$assets/whiteVersusMobile.png';
 	import whiteVersus from '$assets/whiteVersus.png';
 	import { goto } from '$app/navigation';
+	import clsx from 'clsx';
 	type Participant = { id: string; displayName: string; avatar: string; isHost: boolean };
 
 	export let startGame: () => void;
@@ -54,9 +55,9 @@
 
 {#if room.room.type === RoomType.BATTLE}
 	<div class=" bg-room bg-cover w-full h-screen">
-		<div class="flex flex-col md:flex-row w-full h-full pb-32">
+		<div class="flex flex-col md:flex-row w-full h-full pb-32 px-10">
 			<div
-				class="flex flex-col justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
+				class="flex flex-col pt-10 justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 			>
 				<img
 					src={participantsHost.avatar}
@@ -177,12 +178,22 @@
 	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count />
 {/if}
 <Chat {participants} {socket} {user} />
+
 <button
-	class="{isHost
-		? 'block'
-		: 'hidden'} absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 uppercase text-3xl"
+	class={clsx(
+		isHost ? 'block' : 'hidden',
+		'absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-3 uppercase text-3xl',
+		{
+			'cursor-not-allowed opacity-50': participants.length === 1
+		}
+	)}
 	on:click={startGame}
 >
+	<img
+		src="https://cdn.pixabay.com/animation/2022/07/31/06/27/06-27-17-124_512.gif"
+		class="w-10 h-10"
+		alt=""
+	/>
 	<p>{$t('common.startBtn')}</p>
 	<img
 		src="https://cdn.pixabay.com/animation/2022/07/31/06/27/06-27-17-124_512.gif"
