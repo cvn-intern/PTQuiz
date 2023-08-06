@@ -3,6 +3,9 @@
 	import Icon from '@iconify/svelte';
 	export let questionStt: number;
 	export let index: number;
+	export let isEmptyQuiz: boolean;
+	export let disabled: boolean;
+
 	import { indexNow } from '$stores/indexNowStore';
 	import { questionData } from '$stores/questionInfoStore';
 	import { page } from '$app/stores';
@@ -49,7 +52,35 @@
 		}
 
 		questionData.update((data) => {
-			data.splice(index, 1);
+			if (data.length === 1) {
+				isEmptyQuiz = true;
+				disabled = false;
+				data = [
+					{
+						id: '',
+						categoryId: '',
+						title: '',
+						options: {
+							optionA: '',
+							optionB: '',
+							optionC: '',
+							optionD: ''
+						},
+						answers: {
+							answerA: false,
+							answerB: false,
+							answerC: false,
+							answerD: false
+						},
+						written: '',
+						image: '',
+						type: 1,
+						index: 1,
+						time: 20,
+						hint: ''
+					}
+				];
+			} else data.splice(index, 1);
 
 			if (index >= data.length) {
 				index = data.length > 0 ? data.length - 1 : 0;
@@ -68,13 +99,8 @@
 		else effect = '';
 	});
 	function handleDelete() {
-		if (dataSave.length === 1) {
-			popupModalCannotDelete = true;
-			popupModalCanDelete = false;
-		} else {
-			popupModalCanDelete = true;
-			popupModalCannotDelete = false;
-		}
+		popupModalCanDelete = true;
+		popupModalCannotDelete = false;
 	}
 </script>
 

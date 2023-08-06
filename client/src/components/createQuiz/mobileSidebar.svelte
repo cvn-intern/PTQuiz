@@ -12,6 +12,7 @@
 	export let form: any;
 	export let result: any;
 	export let isDisabled: boolean;
+	export let isEmptyQuiz: boolean;
 </script>
 
 <div class="text-start my-3">
@@ -51,5 +52,6 @@
 		classSidaBar={'flex flex-col gap-10 items-center'}
 		bind:result
 		bind:isDisabled
+		bind:isEmptyQuiz
 	/>
 </Drawer>

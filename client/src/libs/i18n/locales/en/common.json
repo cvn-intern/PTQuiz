@@ -157,6 +157,7 @@
 	"limitUser": "Limit User",
 	"enterYourMessageHere": "Enter your message here",
 	"startRoom": "Start Room",
+	"emptyQuiz": "There is no question in this quiz.",
 	"beKicked": "You have been kicked out of the room",
 	"hostReload": "Host has reloaded the room",
 	"reEnterRoom": "Re-enter room",

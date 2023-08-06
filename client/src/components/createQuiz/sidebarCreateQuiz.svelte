@@ -10,8 +10,14 @@
 	import { t } from '$i18n/translations';
 	let isQuestionSave = true;
 	export let isDisabled: boolean = false;
+	export let isEmptyQuiz: boolean;
+
 	function addQuestion() {
 		isDisabled = true;
+		if (isEmptyQuiz) {
+			isEmptyQuiz = false;
+			return;
+		}
 		questionData.subscribe((data) => {
 			data.forEach((element) => {
 				if (element.id === '') {
@@ -72,20 +78,28 @@
 </script>
 
 <div class={classSidaBar}>
-	<ModalInforQuizUpdate
-		bind:result
-		defaultOpenModal={false}
-		classButton={'"w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"'}
-		nameClassButton={$t('common.updateQuiz')}
-		{form}
-	/>
-	<div
-		class="md:max-h-sidebarCreateQuiz max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4 no-scrollbar"
-	>
-		{#each cardListQuestion as cardQuestion, index}
-			<CardQuestion questionStt={index + 1} {index} />
-		{/each}
-	</div>
+	{#if !isEmptyQuiz}
+		<ModalInforQuizUpdate
+			bind:result
+			defaultOpenModal={false}
+			classButton={'"w-2/3 h-10 text-zinc-950 border bg-gray-200 hover:bg-gray-400"'}
+			nameClassButton={$t('common.updateQuiz')}
+			{form}
+		/>
+		<div
+			class="md:max-h-sidebarCreateQuiz max-h-96 overflow-y-scroll w-full flex flex-col gap-4 border p-4 no-scrollbar"
+		>
+			{#each cardListQuestion as cardQuestion, index}
+				<CardQuestion
+					questionStt={index + 1}
+					{index}
+					bind:isEmptyQuiz
+					bind:disabled={isDisabled}
+				/>
+			{/each}
+		</div>
+	{/if}
+
 	<Button
 		class="bg-secondary text-white hover:bg-darkGreen"
 		on:click={addQuestion}
