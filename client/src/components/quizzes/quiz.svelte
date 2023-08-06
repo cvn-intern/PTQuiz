@@ -137,6 +137,9 @@
 		const result = await response.json();
 		return result;
 	}
+	async function handleClose(e) {
+		isOpen = false;
+	}
 </script>
 
 {#if isDelete}
@@ -214,4 +217,4 @@
 		<Button color="green">{$t('common.cancelDeleteQuiz')}</Button>
 	</div>
 </Modal>
-<DetailQuiz {isOpen} cardInfor={quiz} {questionList} />
+<DetailQuiz {isOpen} cardInfor={quiz} {questionList} on:close={handleClose} />

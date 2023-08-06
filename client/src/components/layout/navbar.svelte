@@ -54,12 +54,16 @@
 		isDropdownOpen = false;
 		document.body.removeEventListener('click', unToggleDropdown);
 	}
+	async function handleClose(e) {
+		isHidden = false;
+	}
+	
 </script>
 
 <nav
 	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0 z-40"
 >
-	<button on:click={toggleSidebar} class="md:hidden">
+	<button on:click={toggleSidebar} class="md:hidden" on:close={handleClose}>
 		<Icon icon="material-symbols:list" class="text-5xl" />
 	</button>
 	<a class="logo flex items-center gap-2" href="/">
@@ -70,7 +74,7 @@
 			>
 		</h1>
 	</a>
-	<SidebarModal hiddenModal={isHidden} {user} />
+	<SidebarModal bind:hiddenModal={isHidden} {user} />
 	<div class="flex items-center gap-24">
 		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
 			<li>
