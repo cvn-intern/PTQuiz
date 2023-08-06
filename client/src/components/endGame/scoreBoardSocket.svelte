@@ -1,10 +1,9 @@
 <script lang="ts">
-	import ProgressBar from '$components/playGame/progressBar.svelte';
 	import Icon from '@iconify/svelte';
 	export let scoreUser: any;
 	export let index: number;
 	export let isScoreboard: boolean;
-	export let isEndGame: boolean = false;
+	export let isEndGame: boolean;
 	export let questionLength: number;
 	import { Progressbar } from 'flowbite-svelte';
 

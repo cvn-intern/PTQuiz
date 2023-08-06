@@ -3,6 +3,7 @@
 	import Position from '$components/endGame/position.svelte';
 	import ScoreBoardSocket from '$components/endGame/scoreBoardSocket.svelte';
 	import { t } from '$i18n/translations';
+	import Icon from '@iconify/svelte';
 	import ScoreboardModal from './scoreboardModal.svelte';
 
 	type Participant = {
@@ -24,22 +25,24 @@
 </script>
 
 <div class="w-full h-full flex flex-col">
-	<div class="flex justify-between m-8">
+	<div class="flex justify-between items-center m-8">
 		<button
-			class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-secondary"
+			class=""
+			on:click={() => {
+				goto('/');
+			}}
+		>
+			<Icon icon="tabler:home" class="w-12 h-12 text-darkGreen" />
+		</button>
+		<button
+			class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-yellowLogo"
 			on:click={() => {
 				showScoreBoard = true;
 			}}>{$t('common.viewScoreboard')}</button
 		>
-		<button
-			class="text-white text-xl font-semibold px-4 py-2 rounded-full bg-redLight"
-			on:click={() => {
-				goto('/dashboard/quizzes');
-			}}>{$t('common.backHome')}</button
-		>
 	</div>
 	{#if isBattle}
-		<Position participants={participants} {length} />
+		<Position {participants} {length} />
 		<div class="flex gap-4 items-center justify-center">
 			<div
 				class={`${
@@ -53,7 +56,7 @@
 						scoreUser={participant}
 						isScoreboard={false}
 						index={index + 3}
-						bind:isEndGame
+						{isEndGame}
 						questionLength={length}
 					/>
 				{/each}
@@ -74,7 +77,7 @@
 						scoreUser={participant}
 						isScoreboard={false}
 						index={index + 3}
-						bind:isEndGame
+						{isEndGame}
 						questionLength={length}
 					/>
 				{/each}
@@ -84,5 +87,11 @@
 </div>
 
 {#if showScoreBoard}
-	<ScoreboardModal {participants} bind:showScoreBoard questionLength={length} {isBattle} />
+	<ScoreboardModal
+		{participants}
+		bind:showScoreBoard
+		questionLength={length}
+		{isBattle}
+		{isEndGame}
+	/>
 {/if}
