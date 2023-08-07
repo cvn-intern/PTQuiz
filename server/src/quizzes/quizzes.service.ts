@@ -483,8 +483,6 @@ export class QuizzesService {
                     HttpStatus.UNAUTHORIZED,
                 );
             }
-
-            console.log(image);
             if (image) {
                 if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
