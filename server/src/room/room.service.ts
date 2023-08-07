@@ -19,6 +19,7 @@ export class RoomService {
             const isExistQuiz = await this.prisma.quizzes.findUnique({
                 where: {
                     id: body.quizId,
+                    isDeleted: false,
                 },
             });
             if (!isExistQuiz)
