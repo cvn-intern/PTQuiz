@@ -240,14 +240,6 @@
 		});
 	};
 
-	function handleBeKickedClick() {
-		window.location.href = '/';
-	}
-
-	function handleHostLeftClick() {
-		window.location.href = $page.url.href;
-	}
-
 	$: {
 		if ($timer <= 0 && isBattle && isHost) {
 			if (questionPointer < questions.length - 1) {

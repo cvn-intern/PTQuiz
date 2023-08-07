@@ -63,7 +63,7 @@
 	}
 
 	.x2 {
-		left: 200px;
+		left: -200px;
 		animation: moveclouds 3s linear forwards;
 		transform: scale(0.6);
 	}
@@ -77,7 +77,7 @@
 	}
 
 	.x4 {
-		left: 470px;
+		left: -200px;
 		top: -250px;
 
 		-webkit-transform: scale(0.75);

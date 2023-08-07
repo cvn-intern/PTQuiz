@@ -177,7 +177,7 @@
 			{/if}
 		</div>
 	{/if}
-	<div class="absolute bottom-2 left-2 md:w-96 w-full">
+	<div class="absolute bottom-2 md:left-2 md:w-96 w-full">
 		<Reaction {socket} {participants} {isHost} {isBattle} {isShowChat} />
 	</div>
 </div>
