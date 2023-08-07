@@ -160,6 +160,12 @@ export class SocketGateway
     ) {
         try {
             const { content, roomPIN } = data;
+            const isInRoom = await this.checkUserIsInRoom(client.id, roomPIN);
+            if (!isInRoom) {
+                throw new WsException({
+                    message: SocketError.SOCKET_ROOM_PERMISSION_DENIED,
+                });
+            }
             this.server.to(roomPIN).emit(EmitChannel.HOST_MESSAGE, {
                 user: {
                     id: client.user.id,
@@ -182,6 +188,12 @@ export class SocketGateway
     ) {
         try {
             const { content, roomPIN } = data;
+            const isInRoom = await this.checkUserIsInRoom(client.id, roomPIN);
+            if (!isInRoom) {
+                throw new WsException({
+                    message: SocketError.SOCKET_ROOM_PERMISSION_DENIED,
+                });
+            }
             this.server.to(roomPIN).emit(EmitChannel.ROOM_MESSAGES, {
                 user: {
                     id: client.user.id,
@@ -203,6 +215,12 @@ export class SocketGateway
     ) {
         try {
             const { reaction, roomPIN } = data;
+            const isInRoom = await this.checkUserIsInRoom(client.id, roomPIN);
+            if (!isInRoom) {
+                throw new WsException({
+                    message: SocketError.SOCKET_ROOM_PERMISSION_DENIED,
+                });
+            }
             this.server.to(roomPIN).emit(EmitChannel.ROOM_REACTIONS, {
                 user: {
                     id: client.user.id,
@@ -504,5 +522,16 @@ export class SocketGateway
                 message: error.message,
             });
         }
+    }
+
+    async checkUserIsInRoom(socketId: string, roomPIN: string) {
+        const sockets = await this.server.in(roomPIN).fetchSockets();
+        const socketIds = sockets.map((socket) => {
+            return socket.id;
+        });
+        if (!socketIds.includes(socketId)) {
+            return false;
+        }
+        return true;
     }
 }
