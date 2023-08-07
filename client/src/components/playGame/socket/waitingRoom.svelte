@@ -160,9 +160,11 @@
 							<img
 								src={participant.avatar}
 								alt={participant.displayName}
-								class="md:w-24 md:h-24 rounded-md w-12 h-12"
+								class="md:w-24 md:h-24 rounded-md w-14 h-14"
 							/>
-							<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700">
+							<p
+								class="px-1 text-sm md:text-base bg-white/50 rounded-md font-semibold text-sky-700"
+							>
 								{participant.displayName}
 							</p>
 							{#if isHost}
