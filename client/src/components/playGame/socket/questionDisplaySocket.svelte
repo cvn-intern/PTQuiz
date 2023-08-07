@@ -126,6 +126,7 @@
 	{isBattle}
 	{quizzesHint}
 	isSingle={false}
+	bind:isShowChat
 />
 <div class={`flex justify-center relative px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
 	{#if isShowOption}
@@ -176,18 +177,9 @@
 			{/if}
 		</div>
 	{/if}
-	<div class="absolute md:bottom-2 bottom-4 md:left-20">
+	<div class="absolute bottom-2 left-2 md:w-96 w-full">
 		<Reaction {socket} {participants} {isHost} {isBattle} {isShowChat} />
 	</div>
-	{#if isHost || isBattle}
-		<button
-			on:click={handleClickOpenChat}
-			class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
-			absolute left-2 md:bottom-4 bottom-20"
-		>
-			<Icon icon="et:chat" class="text-3xl w-10 h-10" />
-		</button>
-	{/if}
 </div>
 {#if quizzesImage && quizzesType !== TypeQuestion.GIF_SINGLE_CHOICE}
 	<button

@@ -79,7 +79,9 @@
 						alt={participantsHost.displayName}
 						class="md:w-40 md:h-40 w-24 h-24 rounded-md"
 					/>
-					<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center">
+					<p
+						class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center"
+					>
 						{participantsHost.displayName}
 					</p>
 				</div>
@@ -90,16 +92,16 @@
 				<Thunder />
 			</div>
 			{#if participantsBattle}
-				<div
-					class="flex flex-col justify-end items-end relative md:w-1/3 md:h-full h-1/3"
-				>
+				<div class="flex flex-col justify-end items-end relative md:w-1/3 md:h-full h-1/3">
 					<div class="absolute md:-left-1/4 md:bottom-1/4 left-1/2 bottom-1/2">
 						<img
 							src={participantsBattle.avatar}
 							alt={participantsBattle.displayName}
 							class="md:w-40 md:h-40 w-24 h-24 rounded-md"
 						/>
-						<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center">
+						<p
+							class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center"
+						>
 							{participantsBattle.displayName}
 						</p>
 					</div>
@@ -188,14 +190,16 @@
 >
 	<Icon icon="tabler:home" class="w-10 h-10 text-darkGreen" />
 </button>
+
 {#if isHost}
 	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count bind:isChangedCount />
 {/if}
+
 {#if !(room.room.type === RoomType.BATTLE)}
 	<Chat {participants} {socket} {user} />
 {/if}
 
-<div class="fixed md:bottom-10 bottom-20 md:left-20 w-full">
+<div class="fixed lg:bottom-10 bottom-20 lg:left-20 w-full md:w-96">
 	<Reaction
 		{socket}
 		{participants}
@@ -208,7 +212,7 @@
 	<button
 		on:click={handleClickOpenChat}
 		class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
-			fixed left-2 md:bottom-10 bottom-3 z-60"
+			fixed left-2 lg:bottom-10 bottom-3 z-60"
 	>
 		<Icon icon="et:chat" class="text-3xl w-10 h-10" />
 	</button>
@@ -217,7 +221,7 @@
 <button
 	class={clsx(
 		isHost ? 'block' : 'hidden',
-		'absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 md:gap-3 uppercase md:text-3xl text-xl',
+		'absolute lg:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 md:gap-3 uppercase md:text-3xl text-xl',
 		{
 			'cursor-not-allowed opacity-50': participants.length === 1
 		}
