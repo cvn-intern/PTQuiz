@@ -20,9 +20,6 @@ export const actions: Actions = {
 
 			const response = await fetch('/api/auth/edit-profile', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				},
 				body: form
 			});
 
