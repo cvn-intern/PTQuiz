@@ -89,6 +89,7 @@ export class PlaygameService {
             const quiz = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
             });
             if (quiz.numberQuestions === 0) {
@@ -232,6 +233,7 @@ export class PlaygameService {
             const { passingPoint } = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
                 select: {
                     passingPoint: true,
