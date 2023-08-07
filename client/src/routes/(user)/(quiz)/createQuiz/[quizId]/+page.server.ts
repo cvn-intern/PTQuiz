@@ -1,10 +1,19 @@
 import type { PageServerLoad } from '../$types';
+import { v2 as cloudinary } from 'cloudinary';
 
 import { InforQuizFormSchema } from '$libs/schema/inforQuiz';
 import { createDefaultMessage } from '../interface/message.interface';
 import type Message from '../interface/message.interface';
 import { questionData, type QuestionData } from '$stores/questionInfoStore';
 import { fail } from '@sveltejs/kit';
+
+cloudinary.config({
+	cloud_name: 'giaphong',
+	api_key: '135154415284668',
+	api_secret: 'EhUTrf5M6fYmUE7TO-XPtKlEwPw',
+	secure: true
+});
+
 export const load: PageServerLoad = async ({ fetch, params }) => {
 	const response = await fetch(`/api/quizzes/get/${params.quizId}`, {
 		method: 'GET'
@@ -50,19 +59,40 @@ export const actions = {
 	updateQuiz: async ({ fetch, request, params }) => {
 		message = createDefaultMessage();
 		const form = await request.formData();
+
+		const fileData = /** @type {File} */ form.get('image');
+
+		const arrayBuffer = await fileData.arrayBuffer();
+		const buffer = new Uint8Array(arrayBuffer);
+		const uploadStream = await new Promise((resolve, reject) => {
+			cloudinary.uploader
+				.upload_stream({}, function (error, result) {
+					if (error) {
+						return reject(error);
+					}
+					return resolve(result);
+				})
+				.end(buffer);
+		});
+
 		try {
 			const validatedData = InforQuizFormSchema.parse({
 				title: form.get('title'),
 				passingPoint: parseInt(form.get('passingPoint')),
-				point: parseInt(form.get('point')),
-				image: form.get('image')
+				point: parseInt(form.get('point'))
 			});
+
 			const response = await fetch(`/api/quizzes/update/${params.quizId}`, {
 				method: 'PUT',
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				},
-				body: form
+				body: JSON.stringify({
+					title: form.get('title'),
+					passingPoint: parseInt(form.get('passingPoint')),
+					point: parseInt(form.get('point')),
+					image: uploadStream.secure_url,
+					difficultyLevel: parseInt(form.get('difficultyLevel')),
+					description: form.get('description'),
+					categoryId: form.get('categoryId')
+				})
 			});
 			const result = await response.json();
 			message.isDone = true;

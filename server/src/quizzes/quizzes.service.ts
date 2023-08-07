@@ -449,12 +449,7 @@ export class QuizzesService {
         }
     }
 
-    async updateQuiz(
-        userId: string,
-        quizId: string,
-        quiz: QuizzesDto,
-        image: Express.Multer.File,
-    ) {
+    async updateQuiz(userId: string, quizId: string, quiz: QuizzesDto) {
         try {
             let url;
             if (!quizId) {
@@ -483,19 +478,6 @@ export class QuizzesService {
                     HttpStatus.UNAUTHORIZED,
                 );
             }
-            if (image) {
-                if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
-                    throw new HttpException(
-                        QuizzesError.FILE_TOO_LARGE,
-                        HttpStatus.BAD_REQUEST,
-                    );
-                } else if (image.size > 0) {
-                    const image_upload = await this.cloudinary.uploadFile(
-                        image,
-                    );
-                    url = image_upload.secure_url;
-                }
-            } else url = quizOfUser.image;
 
             return await this.prisma.quizzes.update({
                 where: {
@@ -505,7 +487,7 @@ export class QuizzesService {
                 data: {
                     title: quiz.title,
                     description: quiz.description,
-                    image: url,
+                    image: quiz.image,
                     durationMins: quiz.durationMins,
                     isRandom: quiz.isRandom,
                     isRandomOption: quiz.isRandomOption,

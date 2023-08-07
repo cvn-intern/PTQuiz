@@ -41,19 +41,12 @@ export class QuizzesController {
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Update Quiz successfully')
     @UseGuards(JwtAuthGuard)
-    @UseInterceptors(FileInterceptor('image'))
     async updateQuiz(
         @GetCurrentUser('id') userId: string,
         @Query('quizId') quizId: string,
-        @UploadedFile() image: Express.Multer.File,
         @Body() quiz: QuizzesDto,
     ) {
-        return await this.quizzesService.updateQuiz(
-            userId,
-            quizId,
-            quiz,
-            image,
-        );
+        return await this.quizzesService.updateQuiz(userId, quizId, quiz);
     }
 
     @Delete('/delete')

@@ -138,4 +138,7 @@ export class QuizzesDto {
         { message: 'Invalid category id' },
     )
     categoryId = 'clkjsrewg0004k6m5dt89zll5';
+
+    @IsString({ message: 'Image URL must be a string' })
+    image: string;
 }
