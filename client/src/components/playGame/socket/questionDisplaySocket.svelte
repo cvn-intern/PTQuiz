@@ -9,6 +9,8 @@
 	import type { Tweened } from 'svelte/motion';
 	import InformationModal from '../singlePlay/informationModal.svelte';
 	import ImageModal from '../singlePlay/imageModal.svelte';
+	import Reaction from './reaction.svelte';
+	import Icon from '@iconify/svelte';
 
 	export let socket: Socket;
 	export let quizzesType: number;
@@ -16,13 +18,18 @@
 	export let quizzesNumber: number;
 	export let quizzesPointer: number;
 	export let quizzesImage: string | null;
+	export let quizzesHint: string | null;
 	export let isHost: boolean = false;
 	export let timer: Tweened<number>;
 	export let questionTime: number;
 	export let isShowOption: boolean;
+	export let isBattle: boolean;
+	export let participants: any[];
+
 	let isShowGif: boolean;
 	let modalOpen: boolean = false;
 	let isGifButtonClicked: boolean = false;
+	let screenWidth: number;
 
 	async function getDuration(url: any) {
 		const res = await fetch(url);
@@ -102,10 +109,26 @@
 			closeGif();
 		}, duration);
 	}
+
+	let isShowChat = false;
+	const handleClickOpenChat = () => {
+		isShowChat = !isShowChat;
+	};
 </script>
 
-<InformationModal {quizzesType} {quizzesPointer} {quizzesNumber} />
-<div class={`flex justify-center px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
+<svelte:window bind:innerWidth={screenWidth} />
+
+<InformationModal
+	{quizzesType}
+	{quizzesPointer}
+	{quizzesNumber}
+	{isHost}
+	{isBattle}
+	{quizzesHint}
+	isSingle={false}
+	bind:isShowChat
+/>
+<div class={`flex justify-center relative px-4 flex-1 ${quizzesImage ? 'h-1/2' : 'h-full'}`}>
 	{#if isShowOption}
 		<p class="p-4 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-left">
 			{quizzesTitle}
@@ -154,12 +177,14 @@
 			{/if}
 		</div>
 	{/if}
+	<div class="absolute bottom-2 left-2 md:w-96 w-full">
+		<Reaction {socket} {participants} {isHost} {isBattle} {isShowChat} />
+	</div>
 </div>
 {#if quizzesImage && quizzesType !== TypeQuestion.GIF_SINGLE_CHOICE}
 	<button
 		class="h-1/2 w-full flex justify-center items-center"
 		on:click={() => {
-			const screenWidth = window.innerWidth;
 			if (screenWidth >= 768) {
 				modalOpen = true;
 			}

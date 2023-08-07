@@ -4,12 +4,26 @@ import { SocketError } from '../error';
 import { AnswerDto } from './dto';
 import { TypeQuestion } from '../question/type';
 import { AnswerType } from '../question/type/questionInput.type';
+import { RoomCount } from './types/roomCount.enum';
 
 @Injectable()
 export class SocketService {
     constructor(private prisma: PrismaService) {}
 
-    async joinRoom(roomPIN: string, userId: string, socketId: string) {
+    async joinRoom(
+        roomPIN: string,
+        userId: string,
+        socketId: string,
+        aliasName: string,
+        roomPassword: string,
+        isHostJoined: boolean,
+    ) {
+        if (aliasName.length > 10 || aliasName.length < 1) {
+            return {
+                status: false,
+                message: SocketError.SOCKET_ALIAS_NAME_VALID,
+            };
+        }
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN },
         });
@@ -22,8 +36,58 @@ export class SocketService {
         if (room.isClosed) {
             throw new Error(SocketError.SOCKET_ROOM_CLOSED);
         }
-        const user = await this.prisma.users.findUnique({
-            where: { id: userId },
+        if (!isHostJoined) {
+            const host = await this.prisma.room_participants.findFirst({
+                where: {
+                    roomId: room.id,
+                    isHost: true,
+                },
+            });
+            if (!host) {
+                return {
+                    status: false,
+                    message: SocketError.SOCKET_HOST_NOT_JOINED_YET,
+                };
+            }
+        }
+        const roomParticipants = await this.getRoomParticipants(roomPIN);
+        if (roomParticipants.length >= room.count) {
+            return {
+                status: false,
+                message: SocketError.SOCKET_ROOM_FULL,
+            };
+        }
+        if (!isHostJoined) {
+            if (room.isPublic === false) {
+                if (room.roomPassword !== roomPassword) {
+                    return {
+                        status: false,
+                        message: SocketError.SOCKET_ROOM_WRONG_PASSWORD,
+                    };
+                }
+            }
+        }
+        const aliasAvatars = [
+            'https://media0.giphy.com/media/RGkEmSasnxTBw5iLvc/giphy.gif',
+            'https://media2.giphy.com/media/iI4yl51ZcrhI3MCtzD/giphy.gif?cid=ecf05e470v04nwqq7w1kozrwj4ugcx8flr1ol0nv4d55349w&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+            'https://media2.giphy.com/media/f6D3bIsKSlV3gOdXaB/giphy.gif?cid=ecf05e47gp2rzwvygpjanxnfllni1c25ojev2rdy7re0j8q6&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+            'https://media4.giphy.com/media/XodmZ5OSlGu5jIRMrH/giphy.gif?cid=ecf05e47mdnh5ksdp0mqk5axyuv96cb89wsj2hs332qus791&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+            'https://media0.giphy.com/media/WAaJJXFVeVKvgs7KsR/giphy.gif?cid=ecf05e47jeg64oncnr21m524yu9ungmsfu4f3fkg3aa6xryu&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+            'https://media4.giphy.com/media/RqhDYE8AVtGWZE33EH/giphy.gif?cid=ecf05e471vq98sjw5lexjt8kct8rhch7hktggsrrmquhzwgx&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+            'https://media1.giphy.com/media/hwrvOUAwdcgwltXhiB/giphy.gif?cid=ecf05e471vq98sjw5lexjt8kct8rhch7hktggsrrmquhzwgx&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+            'https://media4.giphy.com/media/RaxcELylDIaDnbWWtl/giphy.gif?cid=ecf05e47qpagl2cg9lueva249mxoedai6tq0ov4dal00urg4&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+            'https://media0.giphy.com/media/m738BWCynXs23KFsnq/giphy.gif?cid=ecf05e47uggl22tfcwf2eiuirg3cdkhyslotnzr5mssrndhb&ep=v1_gifs_related&rid=giphy.gif&ct=s',
+        ];
+        const randomAvatar =
+            aliasAvatars[Math.floor(Math.random() * aliasAvatars.length)];
+        const user = await this.prisma.users.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                aliasName: aliasName,
+                aliasAvatar: randomAvatar,
+            },
         });
         if (!user) {
             throw new Error(SocketError.SOCKET_USER_NOT_FOUND);
@@ -44,6 +108,7 @@ export class SocketService {
         if (room.userId === userId) {
             isHost = true;
         }
+
         const participants = await this.prisma.participants.create({
             data: {
                 userId: user.id,
@@ -62,8 +127,8 @@ export class SocketService {
             },
         });
         return {
-            id: user.id,
-            displayName: user.displayName,
+            status: true,
+            message: 'Joined successfully',
         };
     }
 
@@ -144,8 +209,8 @@ export class SocketService {
                         user: {
                             select: {
                                 id: true,
-                                displayName: true,
-                                avatar: true,
+                                aliasAvatar: true,
+                                aliasName: true,
                             },
                         },
                         point: true,
@@ -159,8 +224,8 @@ export class SocketService {
         return roomParticipants.map((roomParticipant) => {
             return {
                 id: roomParticipant.participant.id,
-                displayName: roomParticipant.participant.user.displayName,
-                avatar: roomParticipant.participant.user.avatar,
+                displayName: roomParticipant.participant.user.aliasName,
+                avatar: roomParticipant.participant.user.aliasAvatar,
                 isHost: roomParticipant.isHost,
                 point: roomParticipant.participant.point,
                 correct: roomParticipant.participant.correct,
@@ -222,7 +287,7 @@ export class SocketService {
         };
     }
 
-    async endGame(roomPIN: string, userId: string) {
+    async endQuiz(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN, userId },
         });
@@ -250,7 +315,7 @@ export class SocketService {
         });
     }
 
-    async startGame(roomPIN: string, userId: string) {
+    async startQuiz(roomPIN: string, userId: string) {
         const room = await this.prisma.rooms.findFirst({
             where: { PIN: roomPIN, userId },
         });
@@ -545,8 +610,8 @@ export class SocketService {
                         id: true,
                         user: {
                             select: {
-                                displayName: true,
-                                avatar: true,
+                                aliasAvatar: true,
+                                aliasName: true,
                             },
                         },
                         point: true,
@@ -562,23 +627,42 @@ export class SocketService {
             },
         });
         const result = scoreBoard.map(async (user) => {
-            const isAnswered = await this.prisma.user_questions.findFirst({
+            let isAnswered = false;
+            const result = await this.prisma.user_questions.findFirst({
                 where: {
                     participantId: user.participant.id,
                     questionId,
                 },
                 select: {
                     givenAnswers: true,
+                    questionRef: {
+                        select: {
+                            type: true,
+                        },
+                    },
                 },
             });
+            if (result) {
+                if (this.isWrittenQuestion(result.questionRef.type)) {
+                    if (result.givenAnswers !== '') {
+                        isAnswered = true;
+                    }
+                } else {
+                    if (result.givenAnswers !== null) {
+                        if (result.givenAnswers !== 'false,false,false,false') {
+                            isAnswered = true;
+                        } else isAnswered = false;
+                    }
+                }
+            }
             return {
                 id: user.participant.id,
-                displayName: user.participant.user.displayName,
-                avatar: user.participant.user.avatar,
+                displayName: user.participant.user.aliasName,
+                avatar: user.participant.user.aliasAvatar,
                 isHost: user.isHost,
                 point: user.participant.point,
                 correct: user.participant.correct,
-                isAnswered: isAnswered ? true : false,
+                isAnswered: isAnswered,
             };
         });
         return Promise.all(result);
@@ -601,5 +685,143 @@ export class SocketService {
             throw new Error(SocketError.SOCKET_QUESTION_NOT_FOUND);
         }
         return answer;
+    }
+
+    async getRoomInfo(roomPIN: string, userId: string) {
+        let roomPassword = null;
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                PIN: roomPIN,
+            },
+            select: {
+                id: true,
+                PIN: true,
+                userId: true,
+                isPublic: true,
+                isClosed: true,
+                isStarted: true,
+                count: true,
+                type: true,
+            },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        let isHost = false;
+        if (room.userId === userId) {
+            isHost = true;
+            const result = await this.prisma.rooms.findUnique({
+                where: {
+                    id: room.id,
+                },
+                select: {
+                    roomPassword: true,
+                },
+            });
+            roomPassword = result.roomPassword;
+        }
+        const user = await this.prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+            select: {
+                aliasName: true,
+                displayName: true,
+            },
+        });
+        return {
+            isHost,
+            room,
+            user,
+            roomPassword,
+        };
+    }
+
+    async setPrivateRoom(roomId: string, userId: string, isPublic: boolean) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const result = await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                isPublic: isPublic,
+            },
+        });
+        return result.isPublic;
+    }
+
+    async setRoomCapacity(roomId: string, userId: string, count: number) {
+        if (count < RoomCount.MIN || count > RoomCount.MAX) {
+            throw new Error(SocketError.SOCKET_ROOM_COUNT_MAX);
+        }
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: userId,
+            },
+        });
+        if (room.userId !== userId) {
+            throw new Error(SocketError.SOCKET_ROOM_PERMISSION_DENIED);
+        }
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const result = await this.prisma.rooms.update({
+            where: {
+                id: roomId,
+            },
+            data: {
+                count,
+            },
+        });
+        return result;
+    }
+
+    async findUserSocketId(
+        roomId: string,
+        hostId: string,
+        participantId: string,
+    ) {
+        const room = await this.prisma.rooms.findFirst({
+            where: {
+                id: roomId,
+                userId: hostId,
+                isStarted: false,
+            },
+        });
+        if (!room) {
+            throw new Error(SocketError.SOCKET_ROOM_NOT_FOUND);
+        }
+        const participant = await this.prisma.room_participants.findFirst({
+            where: {
+                participantId: participantId,
+                roomId: roomId,
+                isFinished: false,
+            },
+        });
+        return {
+            participant,
+        };
+    }
+
+    async getMe(userId: string, participantId: string) {
+        const result = await this.prisma.participants.findFirst({
+            where: {
+                id: participantId,
+                userId: userId,
+            },
+        });
+        return result ? true : false;
     }
 }

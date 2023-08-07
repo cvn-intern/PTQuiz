@@ -7,6 +7,8 @@
 	export let nameCategory = '';
 	export let cardList: any[] = [];
 	export let totalQuizzes: number;
+	export let quizzes: any;
+	export let data: any;
 	function addQuiz() {
 		goto('/createQuiz');
 	}
@@ -15,7 +17,7 @@
 <div class="px-4 md:py-8 md:px-12 lg:px-20">
 	<div class="flex flex-row">
 		<h1
-			class="text-2xl font-semibold font-body mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2"
+			class="text-2xl font-semibold mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2"
 		>
 			{nameCategory}
 		</h1>
@@ -52,7 +54,7 @@
 </div>
 
 <div class="px-4 md:py-8 md:px-12 lg:px-20 md:pt-0 py-4">
-	<Pagination {totalQuizzes} bind:quizzes={cardList} {nameCategory} />
+	<Pagination bind:totalQuizzes bind:quizzes {nameCategory} bind:data />
 </div>
 
 <style>

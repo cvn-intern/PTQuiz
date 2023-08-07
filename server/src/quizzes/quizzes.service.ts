@@ -176,6 +176,11 @@ export class QuizzesService {
                     point: true,
                     passingPoint: true,
                     difficultyLevel: true,
+                    category: {
+                        select: {
+                            id: true,
+                        },
+                    },
                 },
             });
         } catch (err) {
@@ -271,9 +276,18 @@ export class QuizzesService {
                         this.prisma.quizzes.count({
                             where: {
                                 isShared: true,
-                                user: {
-                                    role: Role.Admin,
-                                },
+                                OR: [
+                                    {
+                                        user: {
+                                            role: Role.Admin,
+                                        },
+                                    },
+                                    {
+                                        user: {
+                                            id: userId,
+                                        },
+                                    },
+                                ],
                                 category: {
                                     name: category.name,
                                 },
@@ -364,15 +378,20 @@ export class QuizzesService {
                     this.prisma.quizzes.count({
                         where: {
                             isShared: true,
-                            user: {
-                                role: Role.Admin,
-                            },
-                            quizQuestions: {
-                                some: {
-                                    question: {
-                                        categoryId: categoryName,
+                            OR: [
+                                {
+                                    user: {
+                                        role: Role.Admin,
                                     },
                                 },
+                                {
+                                    user: {
+                                        id: userId,
+                                    },
+                                },
+                            ],
+                            category: {
+                                name: categoryName,
                             },
                         },
                     }),
@@ -556,7 +575,7 @@ export class QuizzesService {
                     const image_upload = await this.cloudinary.uploadFile(
                         image,
                     );
-                    url = image_upload.url;
+                    url = image_upload.secure_url;
                 }
             } else url = quizOfUser.image;
 

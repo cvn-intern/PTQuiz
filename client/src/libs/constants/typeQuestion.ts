@@ -7,3 +7,4 @@ export enum TypeQuestion {
 	INPUT_TEXT = 5,
 	GIF_SINGLE_CHOICE = 6
 }
+

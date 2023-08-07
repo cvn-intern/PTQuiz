@@ -13,6 +13,9 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 
 	const result = await response.json();
 
+	if (result.statusCode == HttpStatus.PAYLOAD_TOO_LARGE)
+		throw error(HttpStatus.PAYLOAD_TOO_LARGE, "File's size is too large.");
+
 	if (result.statusCode !== HttpStatus.OK) {
 		throw error(HttpStatus.BAD_REQUEST, result.message);
 	}

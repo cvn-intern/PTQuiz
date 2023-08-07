@@ -1,18 +1,15 @@
 <script lang="ts">
-    export let message: string;
-    export let displayName: string;
-    export let avatar: string;
+	export let message: string;
+	export let avatar: string;
 </script>
+
 <div>
-	<span class="text-xs text-neutral-600 pl-3">{displayName}</span>
-	<div
-		class="flex gap-2 items-center backdrop-opacity-10 backdrop-invert bg-white/30 rounded-2xl w-full truncate"
-	>
-		<img
-			src={avatar}
-			alt=""
-			class="w-10 h-8"
-		/>
-		<p class="text-neutral-700 text-xs">{message}</p>
+	<div class="flex items-center gap-2">
+		<img src={avatar} alt="" class="w-10 h-10 rounded-full" />
+		<div
+			class="flex gap-2 items-center text-darkGreen bg-white rounded-md max-w-full truncate justify-start border-2 max-h-20 whitespace-pre-wrap p-2 "
+		>
+			{message}
+		</div>
 	</div>
 </div>

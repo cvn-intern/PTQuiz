@@ -1,16 +1,18 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { Chevron, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import logo from '../../assets/logo.png';
-	import { t, locale, locales } from '$i18n/translations';
+	import { t, locale } from '$i18n/translations';
 	import type { LayoutData } from '../../routes/$types';
 	import { AppRoute } from '../../libs/constants/appRoute';
-	import { onMount } from 'svelte';
 	import clsx from 'clsx';
+	import DropdownProfile from '$components/dropdown/dropdownProfile.svelte';
+	import DropdownLanguage from '$components/dropdown/dropdownLanguage.svelte';
+	import { onMount } from 'svelte';
+	import Loading from '$components/loading.svelte';
 	export let user: LayoutData;
 
 	const handleChange = async (currentTarget: any) => {
@@ -37,29 +39,26 @@
 	const toggleSidebar = () => {
 		isHidden = !isHidden;
 	};
-	let isDropdownOpen = false;
-
-	function toggleDropdown() {
-		isDropdownOpen = true;
-		document.body.addEventListener('click', unToggleDropdown);
+	async function handleClose(e) {
+		isHidden = false;
 	}
-
+	let isLoading = false;
 	function handleOptionClick(value: any) {
 		$locale = value;
 		handleChange({ target: { value } });
-		isDropdownOpen = false;
+		window.location.reload();
+		isLoading = true;
 	}
 
-	function unToggleDropdown() {
-		isDropdownOpen = false;
-		document.body.removeEventListener('click', unToggleDropdown);
-	}
 </script>
 
+{#if isLoading}
+	<Loading />
+{/if}
 <nav
 	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0 z-40"
 >
-	<button on:click={toggleSidebar} class="md:hidden">
+	<button on:click={toggleSidebar} class="md:hidden" on:close={handleClose}>
 		<Icon icon="material-symbols:list" class="text-5xl" />
 	</button>
 	<a class="logo flex items-center gap-2" href="/">
@@ -70,7 +69,7 @@
 			>
 		</h1>
 	</a>
-	<SidebarModal hiddenModal={isHidden} {user} />
+	<SidebarModal bind:hiddenModal={isHidden} {user} />
 	<div class="flex items-center gap-24">
 		<ul class="hidden md:flex gap-2 md:gap-8 text-xl font-medium">
 			<li>
@@ -78,7 +77,7 @@
 					href="/"
 					title={$t('common.home')}
 					class={clsx('hover:text-secondary', {
-						'font-black': $page.url.pathname === '/'
+						'text-secondary': $page.url.pathname === '/'
 					})}>{$t('common.home')}</a
 				>
 			</li>
@@ -89,58 +88,16 @@
 					}}
 					title={$t('common.discovery')}
 					class={clsx('hover:text-secondary', {
-						'font-black': $page.url.pathname.includes('/discovery')
+						'text-secondary': $page.url.pathname.includes('/discovery')
 					})}
 				>
 					{$t('common.discovery')}
 				</button>
 			</li>
 		</ul>
-		<div class="flex gap-2 items-center w-userInfo justify-end">
+		<div class="flex gap-2 items-center md:w-userInfo justify-end">
 			{#if user}
-				<button class="flex items-center cursor-pointer">
-					<div
-						aria-label="profile"
-						class="flex items-center gap-2 hover:text-secondary max-w-dropDown"
-					>
-						<img src={user.avatar} alt="user avatar" class="rounded-full w-10 h-10" />
-						<p class="text-xl truncate">{user.displayName}</p>
-					</div>
-					<Icon icon="mingcute:down-line" class="text-2xl" />
-				</button>
-				<Dropdown class="w-dropDown">
-					<DropdownItem
-						class="flex gap-2 items-center"
-						on:click={() => {
-							goto('/dashboard/quizzes');
-						}}
-					>
-						<Icon icon="tabler:home" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.myQuizzes')}</h1>
-					</DropdownItem>
-					<DropdownItem
-						class="flex gap-2 items-center"
-						on:click={() => {
-							goto('/dashboard/history');
-						}}
-					>
-						<Icon icon="material-symbols:history" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.history')}</h1>
-					</DropdownItem>
-					<DropdownItem
-						class="flex gap-2 items-center"
-						on:click={() => {
-							goto('/dashboard/profile');
-						}}
-					>
-						<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.profile')}</h1>
-					</DropdownItem>
-					<DropdownItem slot="footer" class="flex gap-2 items-center" on:click={logout}>
-						<Icon icon="mdi:logout" class={'text-2xl'} />
-						<h1 class="text-base">{$t('common.signOut')}</h1>
-					</DropdownItem>
-				</Dropdown>
+				<DropdownProfile {user} {logout} />
 			{:else}
 				<button
 					aria-label="login"
@@ -152,40 +109,7 @@
 					{$t('common.login')}
 				</button>
 			{/if}
-			<div class="relative">
-				<button
-					class=" p-2 rounded-md focus:outline-none bg-primary"
-					on:click|stopPropagation={toggleDropdown}
-				>
-					{#if $locale === 'en'}
-						<Icon icon="twemoji-flag-for-flag-united-kingdom" class="text-3xl" />
-					{:else}
-						<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
-					{/if}
-				</button>
-				{#if isDropdownOpen}
-					<div
-						class="absolute mt-2 w-full rounded-md shadow-lg"
-						on:click|stopPropagation={() => {}}
-					>
-						{#each $locales as value}
-							<button
-								class="cursor-pointer p-2 hover:bg-gray-200"
-								on:click={() => handleOptionClick(value)}
-							>
-								{#if value === 'en'}
-									<Icon
-										icon="twemoji-flag-for-flag-united-kingdom"
-										class="text-3xl"
-									/>
-								{:else}
-									<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
-								{/if}
-							</button>
-						{/each}
-					</div>
-				{/if}
-			</div>
+			<DropdownLanguage {handleOptionClick} />
 		</div>
 	</div>
 </nav>

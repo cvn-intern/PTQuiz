@@ -2,10 +2,15 @@
 	import Icon from '@iconify/svelte';
 	export let scoreUser: any;
 	export let index: number;
-	export let isEndGame: boolean = false;
+	export let isScoreboard: boolean;
+	export let isEndGame: boolean;
+	export let questionLength: number;
+	import { Progressbar } from 'flowbite-svelte';
+
+	$: stringQuestion = ((scoreUser.correct * 100) / questionLength).toString();
 </script>
 
-<div class="w-96 p-2 rounded-lg bg-white shadow-md">
+<div class="w-96 p-2 rounded-lg bg-white shadow-md flex flex-col gap-1">
 	<div class="flex flex-row justify-between gap-2 items-center">
 		<div class="flex items-center gap-2">
 			<Icon icon="mdi:medal" class="text-2xl text-primaryColor-400" />
@@ -26,4 +31,7 @@
 			</div>
 		</div>
 	</div>
+	{#if isScoreboard}
+		<Progressbar progress={stringQuestion} size="h-1" color="blue" />
+	{/if}
 </div>

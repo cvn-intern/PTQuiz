@@ -12,6 +12,7 @@
 	let formModal = defaultOpenModal;
 	export let outsideclose = true;
 	export let nameClassButton: string;
+	
 </script>
 
 <Button on:click={() => (formModal = true)} class={classButton}>
@@ -19,5 +20,5 @@
 >
 
 <Modal bind:open={formModal} size="md" class="w-full z-50" {outsideclose} autoclose={false}>
-	<FormQuiz bind:result {form} action={'?/updateQuiz'} isUpdate={true} />
+	<FormQuiz bind:result bind:form action={'?/updateQuiz'} isUpdate={true} bind:open={formModal} />
 </Modal>

@@ -23,6 +23,7 @@
 	export let timer: Tweened<number>;
 	export let countDown: any;
 	export let isHost: boolean;
+	export let isBattle: boolean;
 
 	type CharacterObject = {
 		char: string;
@@ -139,7 +140,8 @@
 					answerC: false,
 					answerD: false
 				}
-			}
+			},
+			isBattle
 		});
 	};
 	$: {
@@ -167,7 +169,7 @@
 			>
 				{#each displayAnswer as input}
 					<input
-						disabled={isHost || isDisable}
+						disabled={(!isBattle && isHost) || isDisable}
 						type="text"
 						class={`${
 							isDisable ? 'bg-gray-200' : 'bg-white'
@@ -187,6 +189,6 @@
 	</div>
 {/if}
 
-{#if showModal && isTimeout && !isHost}
+{#if showModal && isTimeout && (!isHost || isBattle)}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}

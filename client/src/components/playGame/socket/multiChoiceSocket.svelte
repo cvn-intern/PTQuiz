@@ -5,9 +5,9 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { Modal } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
-	import { tweened, type Tweened } from 'svelte/motion';
 	import { EmitChannel, ListenChannel } from '$constants/socketChannel';
 	import TrueFalseModal from '$components/trueFalseModal.svelte';
+	import type { Tweened } from 'svelte/motion';
 	export let showModal: boolean;
 	export let question: SocketQuiz;
 	export let socket: Socket;
@@ -15,6 +15,7 @@
 	export let timer: Tweened<number>;
 	export let countDown: any;
 	export let isHost: boolean;
+	export let isBattle: boolean;
 
 	let fourOptions: any[] = [];
 	let answers = [false, false, false, false];
@@ -28,7 +29,7 @@
 				id: optionKey,
 				contents: question.options[optionKey],
 				isCorrect: false,
-				disabled: isHost || isPicked ? true : false
+				disabled: (!isBattle && isHost) || isPicked ? true : false
 			}));
 		}
 	}
@@ -45,7 +46,8 @@
 					answerC: answers[2],
 					answerD: answers[3]
 				}
-			}
+			},
+            isBattle
 		});
 	};
 	onMount(() => {
@@ -93,6 +95,6 @@
 		<p class="text-xl md:text-3xl text-left">{option.contents}</p>
 	</button>
 {/each}
-{#if showModal && !isHost}
+{#if showModal && (!isHost || isBattle)}
 	<TrueFalseModal bind:open={showModal} isTrue={isCorrect} />
 {/if}

@@ -2,6 +2,8 @@
 	export let open: boolean;
 	let modalOpen = false;
 	export let isTrue: boolean;
+	import correctSound from '$assets/correctSound.mp3';
+	import wrongSound from '$assets/wrongSound.mp3';
 
 	import trueOption from '../assets/trueOption.png';
 	import falseOption from '../assets/falseOption.png';
@@ -36,8 +38,10 @@
 	>
 		<div class="flex justify-center items-center">
 			{#if isTrue}
+				<audio src={correctSound} autoplay />
 				<img src={trueOption} class="w-32 h-32 md:w-60 md:h-60" alt="True Option" />
 			{:else}
+				<audio src={wrongSound} autoplay />
 				<img src={falseOption} class="w-32 h-32 md:w-60 md:h-60" alt="False Option" />
 			{/if}
 		</div>

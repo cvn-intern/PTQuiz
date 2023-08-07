@@ -9,4 +9,10 @@ export enum SocketError {
     SOCKET_HOST_NOT_FOUND = 'Host does not exist',
     SOCKET_ROOM_STARTED = 'Room has already started',
     SOCKET_ROOM_PERMISSION_DENIED = 'You do not have permission to do this',
+    SOCKET_ROOM_WRONG_PASSWORD = 'Enter wrong password',
+    SOCKET_ALIAS_NAME_VALID = 'Alias name is not valid',
+    SOCKET_ROOM_COUNT_MAX = 'Capacity of room is max (15)',
+    SOCKET_HOST_NOT_JOINED_YET = 'Host has not joined this room',
+    SOCKET_ROOM_FULL = 'Room is full',
+    SOCKET_INVALID_FORMAT = 'Invalid format',
 }

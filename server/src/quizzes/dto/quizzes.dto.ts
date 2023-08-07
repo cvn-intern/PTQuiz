@@ -1,8 +1,10 @@
 import {
     IsBoolean,
+    IsIn,
     IsNotEmpty,
     IsNumber,
     IsOptional,
+    IsString,
     Length,
     Validate,
     ValidationArguments,
@@ -51,11 +53,17 @@ export class QuizzesDto {
     @IsOptional()
     description = '';
 
+    @Transform(({ value }) => Number(value))
+    @IsNotEmpty({ message: 'Level can not be empty' })
+    @IsNumber({}, { message: 'Level must be a number' })
+    @IsIn([0, 1, 2], { message: 'Invalid level' })
+    difficultyLevel: number;
+
     @IsOptional()
     @Transform(({ value }) => Number(value))
     @IsNotEmpty({ message: 'DurationMins can not be empty' })
     @IsNumber({}, { message: 'DurationMins must be a number' })
-    durationMins = -1;
+    durationMins = 0;
 
     @IsOptional()
     @Transform(({ value }) => JSON.parse(value))
@@ -87,12 +95,6 @@ export class QuizzesDto {
     passingPoint: number;
 
     @IsOptional()
-    @Transform(({ value }) => Number(value))
-    @IsNotEmpty({ message: 'Difficulty can not be empty' })
-    @IsNumber({}, { message: 'Difficulty must be a number' })
-    difficultyLevel = 1;
-
-    @IsOptional()
     @Transform(({ value }) => new Date())
     @IsNotEmpty({ message: 'Start date can not be empty' })
     startDate = new Date();
@@ -121,6 +123,19 @@ export class QuizzesDto {
     @IsBoolean({ message: 'IsShared must be a boolean' })
     isShared = true;
 
-    @IsOptional()
+    @IsString({ message: 'CategoryId must be a string' })
+    @IsNotEmpty({ message: 'CategoryId can not be empty' })
+    @IsIn(
+        [
+            'clk6mopdw0005j3ngsixir2g2',
+            'clk6mp0ik0006j3ngfaep8pb8',
+            'clkjsqieu0000k6m5sqfi4gj5',
+            'clkjsrewf0001k6m5bpxteo0t',
+            'clkjsrewg0002k6m565jmkvvw',
+            'clkjsrewg0003k6m5tpo9b8nx',
+            'clkjsrewg0004k6m5dt89zll5',
+        ],
+        { message: 'Invalid category id' },
+    )
     categoryId = 'clkjsrewg0004k6m5dt89zll5';
 }

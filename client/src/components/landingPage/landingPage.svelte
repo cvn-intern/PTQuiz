@@ -3,6 +3,8 @@
 	import PlayGame from '../../assets/playgame.png';
 	import CreateQuiz from '../../assets/createquiz.png';
 	import { t } from '$i18n/translations';
+	import Dropdown from '$components/dropdown.svelte';
+	import DropdownProfile from '$components/dropdown/dropdownProfile.svelte';
 </script>
 
 <div

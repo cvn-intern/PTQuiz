@@ -6,6 +6,9 @@
 	import DetailQuiz from '$components/detailQuiz/detailQuiz.svelte';
 	import { page } from '$app/stores';
 	import Loading from '$components/loading.svelte';
+	import { Button, Modal } from 'flowbite-svelte';
+	import { RoomType } from './room.enum';
+	let popupModal = false;
 
 	export let title: string;
 	export let description: string;
@@ -16,6 +19,10 @@
 	export let quiz: any;
 	export let quizzes: any;
 	let isDelete = false;
+
+	let date = new Date(createdAt).toLocaleString('vi-VN', {
+		timeZone: 'Asia/Ho_Chi_Minh'
+	});
 
 	let sharedToastId: string | number;
 
@@ -31,7 +38,8 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				quizId: id
+				quizId: id,
+				type: RoomType.GROUP
 			})
 		});
 		const result = await response.json();
@@ -41,10 +49,39 @@
 			goto(`/room/${result.data.PIN}`);
 		} else {
 			dismissLoadingToast();
-			toast.error(result.message);
 			if (result.message.includes('Room is already exist')) {
 				let url = result.message.match(/(http|https):\/\/[^\s$.?#].[^\s]*$/gm);
 				goto(`${url}`);
+			} else {
+				toast.error(result.message);
+			}
+		}
+	}
+
+	async function handleBattle() {
+		sharedToastId = toast.loading(t.get('common.loading'), { duration: 20000 });
+		const response = await fetch(`/api/room/open`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				quizId: id,
+				type: RoomType.BATTLE
+			})
+		});
+		const result = await response.json();
+		if (response.status === 200) {
+			dismissLoadingToast();
+			toast.success(t.get('common.success'));
+			goto(`/room/${result.data.PIN}`);
+		} else {
+			dismissLoadingToast();
+			if (result.message.includes('Room is already exist')) {
+				let url = result.message.match(/(http|https):\/\/[^\s$.?#].[^\s]*$/gm);
+				goto(`${url}`);
+			} else {
+				toast.error(result.message);
 			}
 		}
 	}
@@ -65,7 +102,9 @@
 		if (response.status === 200) {
 			const quizIndex = quizzes.findIndex((quiz: any) => quiz.id === id);
 			quizzes.splice(quizIndex, 1);
-			let redirectUrl = `/dashboard/quizzes/${$page.params.page || 1}/${$page.params.sortBy || 0}`;
+			let redirectUrl = `/dashboard/quizzes/${$page.params.page || 1}/${
+				$page.params.sortBy || 0
+			}`;
 
 			if (quizzes.length === 0) {
 				redirectUrl = `/dashboard/quizzes/${parseInt($page.params.page) - 1}/${
@@ -99,13 +138,16 @@
 		const result = await response.json();
 		return result;
 	}
+	async function handleClose(e) {
+		isOpen = false;
+	}
 </script>
 
 {#if isDelete}
 	<Loading />
 {/if}
 
-<div class="relative z-0 w-full">
+<div class="relative z-0 w-full group/item">
 	<a
 		href="#"
 		role="button"
@@ -126,30 +168,56 @@
 			</p>
 		</div>
 	</a>
-	<div class="absolute top-5 right-5 z-10">
-		<button
-			on:click={() => {
-				if (confirm($t('common.confirmDelete'))) {
-					deleteQuiz(id);
-				}
-			}}
-		>
-			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-600" />
+	<div
+		class="absolute md:top-5 md:right-5 right-3 top-1 z-10 flex justify-center gap-2 group-hover/item:visible invisible"
+	>
+		<button aria-label="Edit" on:click={handleEdit}>
+			<Icon icon="uil:edit" class="text-2xl text-cyan-500 hover:text-cyan-800" />
+		</button>
+		<button on:click={() => (popupModal = true)}>
+			<Icon icon="iconamoon:trash-fill" class="text-2xl text-red-400 hover:text-red-600" />
 		</button>
 	</div>
-	<div class="flex flex-row gap-4 absolute bottom-3 right-3 z-10">
+	<div
+		class="flex md:flex-row flex-col md:gap-4 gap-2 absolute bottom-3 right-3 z- md:text-base text-sm"
+	>
 		<button
-			aria-label="Edit"
-			on:click={handleEdit}
-			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-			>{$t('common.editBtn')}</button
+			aria-label="Start Battle"
+			on:click={handleBattle}
+			class="block md:px-4 md:py-2 py-1 px-2 rounded-md bg-blueLogo hover:bg-darkGreen text-white focus:outline-none"
+			>{$t('common.startBattle')}</button
 		>
 		<button
 			aria-label="Start"
 			on:click={handleStart}
-			class="block px-4 py-2 rounded-md bg-secondary hover:bg-darkGreen text-white focus:outline-none"
-			>{$t('common.startBtn')}</button
+			class="block md:px-3 md:py-3 py-1 px-2 rounded-lg bg-yellowLogo hover:bg-yellow-700 text-white focus:outline-none shadow-lg"
+			>{$t('common.startRoom')}</button
 		>
 	</div>
 </div>
-<DetailQuiz {isOpen} cardInfor={quiz} {questionList} />
+<Modal bind:open={popupModal} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-red-400 dark:text-red-400"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			{$t('common.confirmDelete')}
+		</h3>
+		<Button color="red" class="mr-2" on:click={() => deleteQuiz(id)}
+			>{$t('common.acceptDeleteQuiz')}</Button
+		>
+		<Button color="green">{$t('common.cancelDeleteQuiz')}</Button>
+	</div>
+</Modal>
+<DetailQuiz {isOpen} cardInfor={quiz} {questionList} on:close={handleClose} />

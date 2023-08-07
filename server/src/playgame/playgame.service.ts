@@ -252,4 +252,94 @@ export class PlaygameService {
             );
         }
     }
+
+    async getAllHistory(userId: string) {
+        try {
+            const allHistory = await this.prisma.participants.findMany({
+                where: {
+                    userId: userId,
+                    isSingleMode: true,
+                },
+                orderBy: {
+                    startedAt: 'desc',
+                },
+                select: {
+                    quiz: {
+                        select: {
+                            id: true,
+                            title: true,
+                            passingPoint: true,
+                            difficultyLevel: true,
+                            durationMins: true,
+                            category: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                            description: true,
+                            image: true,
+                            numberQuestions: true,
+                        },
+                    },
+                    startedAt: true,
+                    completedAt: true,
+                    point: true,
+                    correct: true,
+                },
+            });
+            const latestHistoryByQuizId = {};
+
+            allHistory.forEach((history) => {
+                const quizId = history.quiz.id;
+                if (
+                    !latestHistoryByQuizId[quizId] ||
+                    latestHistoryByQuizId[quizId].startedAt < history.startedAt
+                ) {
+                    latestHistoryByQuizId[quizId] = history;
+                }
+            });
+
+            const latestHistory = Object.values(latestHistoryByQuizId);
+            return latestHistory;
+        } catch (error) {
+            throw new HttpException(
+                PlayGameError.NOT_FOUND_QUIZ,
+                HttpStatus.NOT_FOUND,
+            );
+        }
+    }
+
+    async getDetailHistory(userId: string, quizId: string) {
+        try {
+            if (!quizId) {
+                throw new HttpException(
+                    PlayGameError.NOT_FOUND_QUIZ,
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
+            const detailHistory = await this.prisma.participants.findMany({
+                where: {
+                    userId: userId,
+                    quizId: quizId,
+                    isSingleMode: true,
+                },
+                orderBy: {
+                    startedAt: 'desc',
+                },
+                select: {
+                    startedAt: true,
+                    completedAt: true,
+                    point: true,
+                    correct: true,
+                },
+            });
+            return detailHistory;
+        } catch (error) {
+            throw new HttpException(
+                PlayGameError.NOT_FOUND_QUIZ,
+                HttpStatus.NOT_FOUND,
+            );
+        }
+    }
 }

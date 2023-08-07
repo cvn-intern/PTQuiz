@@ -2,30 +2,62 @@
 	import { TypeQuestion } from '$constants/typeQuestion';
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
+	import { Button, Tooltip } from 'flowbite-svelte';
+
 	export let quizzesType: number;
 	export let quizzesPointer: number;
 	export let quizzesNumber: number;
-	import { onMount } from 'svelte';
-	let modalIsOpen = false;
+	export let quizzesHint: string | null;
+	export let isHost: boolean;
+	export let isBattle: boolean;
+	export let isSingle: boolean;
+	export let isShowChat: boolean;
+	import { onDestroy, onMount } from 'svelte';
 
-	const openModal = () => {
+	let modalIsOpen = false;
+	let screenWidth: number;
+
+	const handleModal = () => {
 		modalIsOpen = !modalIsOpen;
 	};
 
+	const closeModal = () => {
+		modalIsOpen = false;
+	};
+
+	const openModal = () => {
+		modalIsOpen = true;
+	};
+
 	onMount(() => {
-		const screenWidth = window.innerWidth;
 		if (screenWidth >= 768) {
 			openModal();
 		}
 	});
+
+	const closeModalOnEscapeKey = (event: KeyboardEvent) => {
+		if (event.key === 'Escape') {
+			closeModal();
+		}
+	};
+
+	const handleClickOpenChat = () => {
+		isShowChat = !isShowChat;
+	};
 </script>
 
-<button class="absolute top-10 right-2" on:click={openModal}>
+<svelte:window bind:innerWidth={screenWidth} />
+
+<button class={`absolute ${isBattle ? 'top-20' : 'top-10'} right-2 z-50`} on:click={handleModal}>
 	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
 </button>
 
 {#if modalIsOpen}
-	<button class="absolute top-10 right-2 mt-12 z-50">
+	<button
+		id="modal"
+		class={`modal absolute ${isBattle ? 'top-20' : 'top-10'} right-2 mt-12 z-50`}
+		on:keydown={closeModalOnEscapeKey}
+	>
 		<div class="bg-primary rounded-xl p-2 shadow-lg relative group flex flex-col">
 			<div class="flex flex-col gap-2 items-center">
 				<div
@@ -146,8 +178,32 @@
 						</div>
 					{/if}
 				</div>
-				<hr class="w-full" />
-				<Icon icon="heroicons-outline:light-bulb" class="w-16 h-16 text-yellow-400" />
+
+				{#if isHost || isBattle}
+					<hr class="w-full" />
+					<button
+						on:click={handleClickOpenChat}
+						class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
+			"
+					>
+						<Icon icon="et:chat" class="text-3xl w-10 h-10" />
+					</button>
+				{/if}
+
+				{#if !isBattle && (isHost || isSingle)}
+					{#if !quizzesHint && quizzesHint === ''}
+						<hr class="w-full" />
+						<Button id="hint">
+							<Icon
+								icon="heroicons-outline:light-bulb"
+								class="w-16 h-16 text-yellow-400"
+							/>
+						</Button>
+						<Tooltip triggeredBy="#hint" placement="left" class="text-xl"
+							>{quizzesHint}</Tooltip
+						>
+					{/if}
+				{/if}
 			</div>
 		</div>
 	</button>

@@ -22,6 +22,7 @@
 	import ChangeCategoryQuestion from '$components/createQuiz/changeCategoryQuestion.svelte';
 	import { isSubmitStore } from '$stores/isSubmitStore';
 	let length;
+	let isEmptyQuiz: boolean = true;
 
 	let isSubmitting: boolean = false;
 	let isDisabled: boolean = false;
@@ -92,6 +93,11 @@
 				default:
 					categoryOfQuestion = 0;
 					break;
+			}
+			if (data?.length <= 1 && data[0].id === '' && isEmptyQuiz) {
+				isEmptyQuiz = true;
+			} else {
+				isEmptyQuiz = false;
 			}
 		} catch {
 			indexNow.set({
@@ -277,41 +283,51 @@
 </script>
 
 <div class="w-full text-slate-950 md:p-10 bg-white p-5">
-	<div class="md:flex gap-6 justify-between">
+	<div class="lg:flex gap-6 justify-between">
 		<SidebarCreateQuiz
-			classSidaBar="md:w-1/6 md:flex flex-col gap-10 items-center hidden"
+			classSidaBar="lg:w-1/6 lg:flex flex-col gap-5 items-center hidden"
 			bind:result={data.result.data}
 			{form}
 			bind:isDisabled={isDisabledNewQuestion}
+			bind:isEmptyQuiz
 		/>
-		<div class="md:hidden block">
+		<div class="lg:hidden block">
 			<MobileSidebar
 				bind:result={data.result.data}
 				{form}
 				bind:isDisabled={isDisabledNewQuestion}
+				bind:isEmptyQuiz
 			/>
 		</div>
 
-		<div class="md:w-5/6 w-full">
-			<div class="flex justify-between gap-10">
-				<div class="flex gap-4 sm:flex-row flex-col">
-					<ChangeTypeQuestion bind:defaultType={typeOfQuestion} {index} />
-					<ChangeTimeQuestion bind:defaultTime={timeOfQuestion} {index} />
-					<ChangeCategoryQuestion bind:defaultCategory={categoryOfQuestion} {index} />
+		{#if isEmptyQuiz}
+			<div class="w-full flex justify-center items-center">
+				<div class="flex flex-col items-center">
+					<h1 class="text-2xl font-bold text-center">{$t('common.emptyQuiz')}</h1>
 				</div>
+			</div>
+		{:else}
+			<div class="lg:w-5/6 w-full flex flex-col gap-2">
+				<div class="flex justify-between gap-10">
+					<div class="flex gap-4 sm:flex-row flex-col">
+						<ChangeTypeQuestion bind:defaultType={typeOfQuestion} {index} />
+						<ChangeTimeQuestion bind:defaultTime={timeOfQuestion} {index} />
+						<ChangeCategoryQuestion bind:defaultCategory={categoryOfQuestion} {index} />
+					</div>
 
-				<div class="flex gap-2 sm:flex-row flex-col">
-					<Button class="bg-red-500" on:click={exit}>{$t('common.exit')}</Button>
-					<Button
-						class="bg-green-600"
-						disabled={isSubmitting || isDisabled}
-						on:click={handleSave}>{$t('common.save')}</Button
-					>
+					<div class="flex gap-2 sm:flex-row flex-col">
+						<Button class="bg-red-500" on:click={exit}>{$t('common.exit')}</Button>
+						<Button
+							class="bg-green-600"
+							disabled={isSubmitting || isDisabled}
+							on:click={handleSave}>{$t('common.save')}</Button
+						>
+					</div>
+				</div>
+				<div class="w-full md:my-3 my-5">
+					<CreateQuestion {typeOfQuestion} {index} />
 				</div>
 			</div>
-			<div class="w-full h-full md:my-3 my-5">
-				<CreateQuestion {typeOfQuestion} {index} />
-			</div>
-		</div>
+		{/if}
 	</div>
 </div>

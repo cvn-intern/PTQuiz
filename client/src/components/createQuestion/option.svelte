@@ -44,8 +44,10 @@
 		}
 	});
 	$: questionData.subscribe((data) => {
-		if (data[index].type === 0 || data[index].type === 1) {
-			isPickTrueAnswer = isPickAnswer(data[index].answers);
+		if (index >= 0 && index < data.length) {
+			if (data[index].type === 0 || data[index].type === 1) {
+				isPickTrueAnswer = isPickAnswer(data[index].answers);
+			}
 		}
 	});
 	$: questionData.update((data) => {

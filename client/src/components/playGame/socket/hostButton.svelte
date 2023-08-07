@@ -8,6 +8,7 @@
 	export let getScoreBoard: () => void;
 	export let participants: any[];
 	export let timer: Tweened<number>;
+	export let isBattle: boolean;
 	let numberOfAnswer: number;
 	let isFullAnswer: boolean = false;
 
@@ -24,9 +25,6 @@
 				isFullAnswer = true;
 			} else isFullAnswer = false;
 		}
-	}
-	$: {
-		console.log(numberOfAnswer);
 	}
 </script>
 

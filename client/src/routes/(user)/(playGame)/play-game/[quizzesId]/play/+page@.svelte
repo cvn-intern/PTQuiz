@@ -291,6 +291,7 @@
 			<ProgressBar {stringTimer} />
 		</div>
 		<QuestionDisplay
+			quizzesHint={quizzes[questionPointer].hint}
 			quizzesType={quizzes[questionPointer].type}
 			quizzesTitle={quizzes[questionPointer].title}
 			quizzesNumber={quizzes.length}

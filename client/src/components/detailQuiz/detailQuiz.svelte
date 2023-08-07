@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { Modal } from 'flowbite-svelte';
 	export let isOpen: boolean;
-	$: isOpen = isOpen;
 	export let cardInfor: any;
 	export let questionList: any;
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
-	import Loading from '$components/loading.svelte';
 	import logo from '../../assets/logo.png';
+	import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
 	function convertSecondsToMinutes(seconds: number): string {
 		if (seconds === 0) return `0 ${$t('common.mins')} : 0 ${$t('common.secs')} `;
@@ -48,9 +49,27 @@
 				return $t('common.mixed');
 		}
 	};
+	const categoryI18n = (category: string) => {
+		switch (category) {
+			case 'Math':
+				return $t('common.math');
+			case 'Science':
+				return $t('common.science');
+			case 'History':
+				return $t('common.history');
+			case 'English':
+				return $t('common.english');
+			case 'Geography':
+				return $t('common.geography');
+			case 'Other':
+				return $t('common.other');
+			default:
+				return $t('common.other');
+		}
+	};
 </script>
 
-<Modal bind:open={isOpen} size="xl" padding="xs" outsideclose>
+<Modal bind:open={isOpen} size="xl" padding="xs" outsideclose on:hide={() => dispatch('close')}>
 	<div>
 		<div class="flex md:flex-row flex-col gap-6">
 			<div>
@@ -73,7 +92,7 @@
 							<th class=" border-l">{$t('common.questions')}</th>
 						</tr>
 						<tr class="p-2">
-							<td class=" border-r">Math</td>
+							<td class=" border-r">{categoryI18n(cardInfor?.category?.name)}</td>
 							<td class=" border-r border-l"
 								>{levelI18n(cardInfor?.difficultyLevel)}</td
 							>

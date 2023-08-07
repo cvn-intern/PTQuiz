@@ -6,14 +6,26 @@
 	import { isSubmitStore } from '$stores/isSubmitStore';
 	export let index: number;
 	export let defaultType = 1;
+
 	$: typeOfQuestion = (() => {
-		if (defaultType === 0) return t.get('common.multiChoice');
-		if (defaultType === 1) return t.get('common.singleChoice');
-		if (defaultType === 2) return t.get('common.crossCharacter');
-		if (defaultType === 3) return t.get('common.trueFalse');
-		if (defaultType === 4) return t.get('common.arrangeWord');
-		if (defaultType === 5) return t.get('common.inputText');
-		if (defaultType === 6) return t.get('common.gifSingleChoice');
+		switch (defaultType) {
+			case 0:
+				return $t('common.multiChoice');
+			case 1:
+				return $t('common.singleChoice');
+			case 2:
+				return $t('common.crossCharacter');
+			case 3:
+				return $t('common.trueFalse');
+			case 4:
+				return $t('common.arrangeWord');
+			case 5:
+				return $t('common.inputText');
+			case 6:
+				return $t('common.gifSingleChoice');
+			default:
+				return $t('common.singleChoice');
+		}
 	})();
 	$: questionData.update((data) => {
 		if (defaultType != data[index].type) {

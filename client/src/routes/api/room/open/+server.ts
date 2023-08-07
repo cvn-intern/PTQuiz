@@ -11,7 +11,8 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			quizId: data.quizId
+			quizId: data.quizId,
+			type: data.type
 		})
 	});
 	const result = await response.json();
