@@ -4,6 +4,7 @@
 	import { questionData } from '$stores/questionInfoStore';
 	import { t } from '$i18n/translations';
 	import { isSubmitStore } from '$stores/isSubmitStore';
+	import { TypeQuestion } from '../../routes/(user)/(quiz)/createQuiz/interface/typeQuestion.enum';
 	export let index: number;
 	export let defaultType = 1;
 
@@ -48,7 +49,7 @@
 			};
 			data[index].title = '';
 		}
-		if (data[index].type === 4) {
+		if (data[index].type === TypeQuestion.ARRANGE_WORD) {
 			data[index].title = 'Arrange word correctly';
 		}
 		return data;
