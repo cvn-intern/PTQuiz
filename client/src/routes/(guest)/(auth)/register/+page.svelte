@@ -4,9 +4,10 @@
 	import { t } from '$i18n/translations';
 	import type Message from '../login/interface/message.interface';
 	import Toast from '$components/toast.svelte';
+	import { onMount } from 'svelte';
 
 	export let form: Message;
-
+	let displayNameInput: any;
 	let isSubmitting = false;
 	$: {
 		if (form?.isDone) {
@@ -14,6 +15,10 @@
 		}
 	}
 	$: if (form?.isSuccess) goto('/register/loading');
+
+	onMount(() => {
+		displayNameInput.focus();
+	});
 </script>
 
 <section class="flex justify-center w-full">
@@ -47,6 +52,7 @@
 						required
 						placeholder={$t('common.displayName')}
 						class="block w-full p-3 rounded-md border-gray-200 text-black"
+						bind:this={displayNameInput}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.displayName}
 						<label for="displayName" class="mb-1 text-red-500"
