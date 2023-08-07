@@ -2,6 +2,7 @@
 	import { t } from '$i18n/translations';
 	import { isSubmitStore } from '$stores/isSubmitStore';
 	import { questionData } from '$stores/questionInfoStore';
+	import { TypeQuestion } from '../../routes/(user)/(quiz)/createQuiz/interface/typeQuestion.enum';
 	import type { AnswerType } from '../../routes/(user)/(quiz)/createQuiz/questionType.type';
 	export let question = '';
 	export let optionOfQuestion = '';
@@ -24,12 +25,9 @@
 			) {
 				return false;
 			}
-		} else {
-			if (anser.answerA === false && anser.answerB === false) {
-				return false;
-			}
+		} else if (anser.answerA === false && anser.answerB === false) {
+			return false;
 		}
-
 		return true;
 	}
 	$: isSubmitStore.subscribe((data) => {
@@ -45,7 +43,12 @@
 	});
 	$: questionData.subscribe((data) => {
 		if (index >= 0 && index < data.length) {
-			if (data[index].type === 0 || data[index].type === 1) {
+			if (
+				data[index].type === TypeQuestion.MULTIPLE_CHOICE ||
+				data[index].type === TypeQuestion.SINGLE_CHOICE ||
+				data[index].type === TypeQuestion.TRUE_FALSE ||
+				data[index].type === TypeQuestion.GIF_SINGLE_CHOICE
+			) {
 				isPickTrueAnswer = isPickAnswer(data[index].answers);
 			}
 		}

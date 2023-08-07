@@ -13,6 +13,7 @@
 
 	export let form;
 	export let data;
+	let emailInput: any;
 
 	let isSubmitting = false;
 
@@ -29,6 +30,7 @@
 			const firebase = window.firebase;
 			await initializeFirebase(firebase);
 		}
+		emailInput.focus();
 	});
 
 	const signInProviders = ['Google', 'Facebook', 'Github'];
@@ -60,6 +62,7 @@
 
 			if (response) {
 				goto(AppRoute.HOME);
+				dismissLoadingToast();
 				toast.success($t('common.success'));
 			} else {
 				throw new Error('Invalid credentials');
@@ -127,6 +130,7 @@
 						placeholder="Email"
 						required
 						class="block w-full xl:p-4 p-3 rounded-md border-gray-200 text-black"
+						bind:this={emailInput}
 					/>
 					{#if !form?.isSuccess && form?.error?.missing?.email}
 						<label for="email" class="mb-1 text-red-500">{form.error.message}</label>

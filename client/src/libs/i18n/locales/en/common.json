@@ -16,7 +16,7 @@
 	"help": "Help",
 	"faq": "FAQs",
 	"contactUs": "Contact Us",
-	"copyRights": "Copyrights by DarkHorse 2023",
+	"copyRights": "© 2023 DarkHorse - All Rights Reserved.",
 	"address": "106 Nguyen Van Troi, Phu Nhuan",
 	"city": "District, Ho Chi Minh City",
 	"myQuizzes": "My Quizzes",
@@ -185,5 +185,10 @@
 	"emptyCategory": "Category can't be empty",
 	"emptyLevel": "Level can't be empty",
 	"winner": "Winner",
-	"loser": "Loser"
+	"loser": "Loser",
+	"notGif": "Require GIF",
+	"increaseDate": "Increase Date",
+	"decreaseDate": "Decrease Date",
+	"titleAZ": "Title A-Z",
+	"titleZA": "Title Z-A"
 }

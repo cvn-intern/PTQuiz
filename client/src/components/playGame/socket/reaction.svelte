@@ -84,7 +84,7 @@
 </script>
 
 {#if isHost || isBattle}
-	<div class={`${isShowChat ? 'hidden' : 'block'} relative w-96`}>
+	<div class={`${isShowChat ? 'block' : 'hidden'} relative `}>
 		<form
 			class="flex justify-center w-full relative pb-1"
 			on:submit|preventDefault={sendMessage}

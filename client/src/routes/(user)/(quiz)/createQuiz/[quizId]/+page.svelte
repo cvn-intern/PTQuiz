@@ -21,6 +21,7 @@
 	import ChangeTimeQuestion from '$components/createQuiz/changeTimeQuestion.svelte';
 	import ChangeCategoryQuestion from '$components/createQuiz/changeCategoryQuestion.svelte';
 	import { isSubmitStore } from '$stores/isSubmitStore';
+	import { TypeQuestion } from '../interface/typeQuestion.enum';
 	let length;
 	let isEmptyQuiz: boolean = true;
 
@@ -113,7 +114,7 @@
 	questionData.subscribe((data) => {
 		dataSave = data;
 	});
-	function checkInputChoiceType01() {
+	function checkInputMultiAndSingleType() {
 		if (
 			dataSave[index].options.optionA === '' ||
 			dataSave[index].options.optionB === '' ||
@@ -132,13 +133,13 @@
 		}
 		return '';
 	}
-	function checkInputTextType25() {
+	function checkInputEssayAndInputTextType() {
 		if (dataSave[index].written === '') {
 			return $t('common.errorWritten');
 		}
 		return '';
 	}
-	function checkInputChoiceType3() {
+	function checkInputTrueFalseType() {
 		if (
 			dataSave[index].answers.answerA === false &&
 			dataSave[index].answers.answerB === false
@@ -147,13 +148,13 @@
 		}
 		return '';
 	}
-	function checkInputTextType4() {
+	function checkInputArrangeWordType() {
 		if (dataSave[index].written === '') {
 			return $t('common.errorWritten');
 		}
 		return '';
 	}
-	function checkInputImageType6() {
+	function checkInputGifSingleType() {
 		if (
 			dataSave[index].options.optionA === '' ||
 			dataSave[index].options.optionB === '' ||
@@ -180,20 +181,26 @@
 		if (dataSave[index].title === '') {
 			return $t('common.errorTitle');
 		}
-		if (dataSave[index].type === 1 || dataSave[index].type === 0) {
-			return checkInputChoiceType01();
+		if (
+			dataSave[index].type === TypeQuestion.MULTIPLE_CHOICE ||
+			dataSave[index].type === TypeQuestion.SINGLE_CHOICE
+		) {
+			return checkInputMultiAndSingleType();
 		}
-		if (dataSave[index].type === 2 || dataSave[index].type === 5) {
-			return checkInputTextType25();
+		if (
+			dataSave[index].type === TypeQuestion.ESSAY ||
+			dataSave[index].type === TypeQuestion.INPUT_TEXT
+		) {
+			return checkInputEssayAndInputTextType();
 		}
-		if (dataSave[index].type === 3) {
-			return checkInputChoiceType3();
+		if (dataSave[index].type === TypeQuestion.TRUE_FALSE) {
+			return checkInputTrueFalseType();
 		}
-		if (dataSave[index].type === 4) {
-			return checkInputTextType4();
+		if (dataSave[index].type === TypeQuestion.ARRANGE_WORD) {
+			return checkInputArrangeWordType();
 		}
-		if (dataSave[index].type === 6) {
-			return checkInputImageType6();
+		if (dataSave[index].type === TypeQuestion.GIF_SINGLE_CHOICE) {
+			return checkInputGifSingleType();
 		}
 		return '';
 	}
@@ -250,7 +257,7 @@
 			await fetch(dataSave[index].image)
 				.then((res) => res.blob())
 				.then((blob) => {
-					const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+					const file = new File([blob], 'image.jpg', { type: blob.type });
 					formData.append('image', file);
 				});
 		} else {

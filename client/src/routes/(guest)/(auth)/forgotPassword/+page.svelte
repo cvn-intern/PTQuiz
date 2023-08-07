@@ -8,6 +8,7 @@
 	import { showLoadingToast, showToast } from '$libs/toast/toast';
 	export let form;
 	export let data;
+	let emailInput: any;
 	let isSubmitting = false;
 	$: {
 		if (form?.isDone) {
@@ -22,6 +23,7 @@
 		if (data.user) {
 			goto(AppRoute.HOME);
 		}
+		emailInput.focus();
 	});
 </script>
 
@@ -53,6 +55,7 @@
 						required
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
+						bind:this={emailInput}
 					/>
 				</div>
 				<div class="pt-4">

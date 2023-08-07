@@ -43,7 +43,7 @@ export default {
 				}
 			},
 			fontFamily: {
-				body: ['Sora'],
+				body: ['Nunito Sans'],
 				title: ['Jost']
 			},
 			loginWidth: {
@@ -54,7 +54,7 @@ export default {
 				ipad: '17rem',
 				mobile: '12rem',
 				panel: '446px',
-				userInfo: '260px',
+				userInfo: '250px',
 				dropDown: '220px',
 				screenHalf: '65vw'
 			},

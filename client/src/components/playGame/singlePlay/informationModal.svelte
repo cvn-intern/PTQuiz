@@ -11,9 +11,12 @@
 	export let isHost: boolean;
 	export let isBattle: boolean;
 	export let isSingle: boolean;
+	export let isShowChat: boolean;
 	import { onDestroy, onMount } from 'svelte';
+
 	let modalIsOpen = false;
 	let screenWidth: number;
+
 	const handleModal = () => {
 		modalIsOpen = !modalIsOpen;
 	};
@@ -22,15 +25,14 @@
 		modalIsOpen = false;
 	};
 
+	const openModal = () => {
+		modalIsOpen = true;
+	};
+
 	onMount(() => {
 		if (screenWidth >= 768) {
-			handleModal();
+			openModal();
 		}
-		window.addEventListener('keydown', closeModalOnEscapeKey);
-	});
-
-	onDestroy(() => {
-		window.addEventListener('keydown', closeModalOnEscapeKey);
 	});
 
 	const closeModalOnEscapeKey = (event: KeyboardEvent) => {
@@ -38,11 +40,15 @@
 			closeModal();
 		}
 	};
+
+	const handleClickOpenChat = () => {
+		isShowChat = !isShowChat;
+	};
 </script>
 
 <svelte:window bind:innerWidth={screenWidth} />
 
-<button class={`absolute ${isBattle ? 'top-20' : 'top-10'} right-2`} on:click={handleModal}>
+<button class={`absolute ${isBattle ? 'top-20' : 'top-10'} right-2 z-50`} on:click={handleModal}>
 	<Icon icon="material-symbols:settings-outline" class="w-10 h-10" />
 </button>
 
@@ -172,6 +178,17 @@
 						</div>
 					{/if}
 				</div>
+
+				{#if isHost || isBattle}
+					<hr class="w-full" />
+					<button
+						on:click={handleClickOpenChat}
+						class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
+			"
+					>
+						<Icon icon="et:chat" class="text-3xl w-10 h-10" />
+					</button>
+				{/if}
 
 				{#if !isBattle && (isHost || isSingle)}
 					{#if !quizzesHint && quizzesHint === ''}

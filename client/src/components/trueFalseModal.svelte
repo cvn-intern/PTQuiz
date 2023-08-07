@@ -36,7 +36,6 @@
 		on:click={handleBackdropClick}
 		on:keydown={handleKeyDown}
 	>
-		<!-- Audio when open modal -->
 		<div class="flex justify-center items-center">
 			{#if isTrue}
 				<audio src={correctSound} autoplay />

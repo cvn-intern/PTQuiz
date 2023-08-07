@@ -1,16 +1,18 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { Chevron, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
 	import SidebarModal from './sidebar/sidebarModal.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import logo from '../../assets/logo.png';
-	import { t, locale, locales } from '$i18n/translations';
+	import { t, locale } from '$i18n/translations';
 	import type { LayoutData } from '../../routes/$types';
 	import { AppRoute } from '../../libs/constants/appRoute';
-	import { createEventDispatcher, onMount } from 'svelte';
 	import clsx from 'clsx';
+	import DropdownProfile from '$components/dropdown/dropdownProfile.svelte';
+	import DropdownLanguage from '$components/dropdown/dropdownLanguage.svelte';
+	import { onMount } from 'svelte';
+	import Loading from '$components/loading.svelte';
 	export let user: LayoutData;
 
 	const handleChange = async (currentTarget: any) => {
@@ -40,35 +42,9 @@
 	async function handleClose(e) {
 		isHidden = false;
 	}
-
-	let isDropdownOpen = false;
-
-	function toggleDropdown() {
-		isDropdownOpen = !isDropdownOpen;
-		document.body.addEventListener('click', unToggleDropdown);
-	}
-
 	function handleOptionClick(value: any) {
 		$locale = value;
 		handleChange({ target: { value } });
-		isDropdownOpen = false;
-	}
-
-	function unToggleDropdown() {
-		isDropdownOpen = false;
-		document.body.removeEventListener('click', unToggleDropdown);
-	}
-
-	let dropdownProfileOpen = false;
-	
-	function toggleProfileDropdown() {
-		dropdownProfileOpen = !dropdownProfileOpen;
-		document.body.addEventListener('click', unToggleProfileDropdown);
-	}
-
-	function unToggleProfileDropdown() {
-		dropdownProfileOpen = false;
-		document.body.removeEventListener('click', unToggleProfileDropdown);
 	}
 </script>
 
@@ -112,74 +88,9 @@
 				</button>
 			</li>
 		</ul>
-		<div class="flex gap-2 items-center w-userInfo justify-end">
+		<div class="flex gap-2 items-center md:w-userInfo justify-end">
 			{#if user}
-				<button class="relative" on:click|stopPropagation={toggleProfileDropdown}>
-					<button class="flex items-center cursor-pointer" id="user_dropdown">
-						<div
-							aria-label="profile"
-							class="flex items-center gap-2 hover:text-secondary max-w-dropDown"
-						>
-							<img
-								src={user.avatar}
-								alt="user avatar"
-								class="rounded-full w-10 h-10"
-							/>
-							<p class="text-xl truncate">{user.displayName}</p>
-						</div>
-						<Icon icon="mingcute:down-line" class="text-2xl" />
-					</button>
-					{#if dropdownProfileOpen}
-						<div
-							class="absolute mt-2 -bottom-32 right-2 w-full max-w-xs min-w-[150px] rounded-md shadow-lg bg-white p-2"
-						>
-							<a
-								href="#"
-								class="flex gap-2 items-center hover:bg-secondary/30"
-								on:click={() => {
-									goto('/dashboard/quizzes');
-									dropdownProfileOpen = false;
-								}}
-							>
-								<Icon icon="tabler:home" class={'text-2xl'} />
-								<h1 class="text-base">{$t('common.myQuizzes')}</h1>
-							</a>
-							<a
-								href="#"
-								class="flex gap-2 items-center hover:bg-secondary/30"
-								on:click={() => {
-									goto('/dashboard/history');
-									dropdownProfileOpen = false;
-								}}
-							>
-								<Icon icon="material-symbols:history" class={'text-2xl'} />
-								<h1 class="text-base">{$t('common.history')}</h1>
-							</a>
-							<a
-								href="#"
-								class="flex gap-2 items-center hover:bg-secondary/30"
-								on:click={() => {
-									goto('/dashboard/profile');
-									dropdownProfileOpen = false;
-								}}
-							>
-								<Icon icon="mingcute:user-setting-fill" class={'text-2xl'} />
-								<h1 class="text-base">{$t('common.profile')}</h1>
-							</a>
-							<a
-								href="#"
-								class="flex gap-2 items-center hover:bg-secondary/30"
-								on:click={() => {
-									logout();
-									dropdownProfileOpen = false;
-								}}
-							>
-								<Icon icon="mdi:logout" class={'text-2xl'} />
-								<h1 class="text-base">{$t('common.signOut')}</h1>
-							</a>
-						</div>
-					{/if}
-				</button>
+				<DropdownProfile {user} {logout} />
 			{:else}
 				<button
 					aria-label="login"
@@ -191,34 +102,7 @@
 					{$t('common.login')}
 				</button>
 			{/if}
-			<button class="relative" on:click|stopPropagation={toggleDropdown}>
-				<button class=" p-2 rounded-md focus:outline-none bg-primary">
-					{#if $locale === 'en'}
-						<Icon icon="twemoji-flag-for-flag-united-kingdom" class="text-3xl" />
-					{:else}
-						<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
-					{/if}
-				</button>
-				{#if isDropdownOpen}
-					<div class="absolute mt-2 w-full rounded-md shadow-lg">
-						{#each $locales as value}
-							<button
-								class="cursor-pointer p-2 hover:bg-gray-200"
-								on:click={() => handleOptionClick(value)}
-							>
-								{#if value === 'en'}
-									<Icon
-										icon="twemoji-flag-for-flag-united-kingdom"
-										class="text-3xl"
-									/>
-								{:else}
-									<Icon icon="twemoji-flag-for-flag-vietnam" class="text-3xl" />
-								{/if}
-							</button>
-						{/each}
-					</div>
-				{/if}
-			</button>
+			<DropdownLanguage {handleOptionClick} />
 		</div>
 	</div>
 </nav>

@@ -9,7 +9,7 @@
 	export let data;
 
 	export let form;
-
+	let passwordInput: any;
 	let isSubmitting = false;
 	$: {
 		if (form?.isDone) {
@@ -23,6 +23,7 @@
 		if (data.user) {
 			goto(AppRoute.HOME);
 		}
+		passwordInput.focus();
 	});
 </script>
 
@@ -54,6 +55,7 @@
 						required
 						placeholder={$t('common.newPassword')}
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
+						bind:this={passwordInput}
 					/>
 				</div>
 				<div class="py-4">

@@ -144,12 +144,30 @@ export class QuestionService {
                 );
             }
 
+            if (questionData.type === TypeQuestion.GIF_SINGLE_CHOICE) {
+                if (!image) {
+                    throw new HttpException(
+                        QuestionError.GIF_IMAGE_REQUIRED,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+            }
+
             if (image) {
                 if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuestionError.IMAGE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
                     );
+                }
+
+                if (questionData.type === TypeQuestion.GIF_SINGLE_CHOICE) {
+                    if (image.mimetype !== 'image/gif') {
+                        throw new HttpException(
+                            QuestionError.GIF_IMAGE_REQUIRED,
+                            HttpStatus.BAD_REQUEST,
+                        );
+                    }
                 }
 
                 const image_upload = await this.cloudinary.uploadFile(image);
@@ -197,6 +215,7 @@ export class QuestionService {
                     );
                 }
             }
+
             if (questionData.type < 0 || questionData.type > 6) {
                 throw new HttpException(
                     QuestionError.QUESTION_TYPE_INVALID,
@@ -266,12 +285,29 @@ export class QuestionService {
                 );
             }
 
+            if (questionData.type === TypeQuestion.GIF_SINGLE_CHOICE) {
+                if (!image) {
+                    throw new HttpException(
+                        QuestionError.GIF_IMAGE_REQUIRED,
+                        HttpStatus.BAD_REQUEST,
+                    );
+                }
+            }
+
             if (image) {
                 if (image.size > parseInt(process.env.MAX_FILE_SIZE)) {
                     throw new HttpException(
                         QuestionError.IMAGE_TOO_LARGE,
                         HttpStatus.BAD_REQUEST,
                     );
+                }
+                if (questionData.type === TypeQuestion.GIF_SINGLE_CHOICE) {
+                    if (image.mimetype !== 'image/gif') {
+                        throw new HttpException(
+                            QuestionError.GIF_IMAGE_REQUIRED,
+                            HttpStatus.BAD_REQUEST,
+                        );
+                    }
                 }
 
                 const image_upload = await this.cloudinary.uploadFile(image);

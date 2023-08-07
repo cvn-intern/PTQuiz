@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import Category from '$components/discovery/category.svelte';
 	import { t } from '$i18n/translations.js';
 
-	let cssForCurrentTab = ' active dark:text-blue-500 dark:border-blue-500 bg-secondary';
+	let cssForCurrentTab = ' active text-white dark:text-blue-500 dark:border-blue-500 bg-secondary';
 	let cssForOtherTab =
-		' border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300';
-	let currentTab = $page.params.categoryName;
+		' border-transparent hover:text-secondary/80 hover:border-gray-800 dark:hover:text-gray-300';
+	let currentTab : string;
+	$: currentTab = $page.params.categoryName;
 	let isClicked = false;
 	if (currentTab === undefined) {
 		currentTab = 'all';
@@ -30,7 +30,7 @@
 			: cssForOtherTab}"
 	>
 		<button
-			class="w-full h-full py-3 px-4"
+			class="w-full h-full py-2 px-4"
 			on:click={() => changeTab('all')}
 			disabled={isClicked}>{$t('common.all')}</button
 		>
@@ -41,7 +41,7 @@
 			: cssForOtherTab}"
 	>
 		<button
-			class="w-full h-full py-3 px-4"
+			class="w-full h-full py-2 px-4"
 			on:click={() => changeTab('math')}
 			disabled={isClicked}>{$t('common.math')}</button
 		>
@@ -52,7 +52,7 @@
 			: cssForOtherTab}"
 	>
 		<button
-			class="w-full h-full py-3 px-4"
+			class="w-full h-full py-2 px-4"
 			on:click={() => changeTab('science')}
 			disabled={isClicked}>{$t('common.science')}</button
 		>
@@ -63,7 +63,7 @@
 			: cssForOtherTab}"
 	>
 		<button
-			class="w-full h-full py-3 px-4"
+			class="w-full h-full py-2 px-4"
 			on:click={() => changeTab('history')}
 			disabled={isClicked}>{$t('common.history')}</button
 		>
@@ -85,7 +85,7 @@
 			: cssForOtherTab}"
 	>
 		<button
-			class="w-full h-full py-3 px-4"
+			class="w-full h-full py-2 px-4"
 			on:click={() => changeTab('geography')}
 			disabled={isClicked}
 		>
@@ -98,7 +98,7 @@
 			: cssForOtherTab}"
 	>
 		<button
-			class="w-full h-full py-3 px-4"
+			class="w-full h-full py-2 px-4"
 			on:click={() => changeTab('other')}
 			disabled={isClicked}>{$t('common.other')}</button
 		>

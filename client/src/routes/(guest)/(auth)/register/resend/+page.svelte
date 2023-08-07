@@ -8,6 +8,7 @@
 	export let form;
 	export let data;
 	let isSubmitting = false;
+	let emailInput: any;
 	$: {
 		if (form?.isDone) {
 			isSubmitting = false;
@@ -49,6 +50,7 @@
 		if (data.user) {
 			goto(AppRoute.HOME);
 		}
+		emailInput.focus();
 	});
 </script>
 
@@ -78,6 +80,7 @@
 						id="email"
 						placeholder="Email"
 						class="block w-full p-4 rounded-md border-gray-200 text-zinc-400"
+						bind:this={emailInput}
 					/>
 				</div>
 				<div class="pt-4">

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TrueFalseModal from '$components/trueFalseModal.svelte';
+	import { onMount } from 'svelte';
 	export let answer: any;
 	export let showModal: boolean;
 	export let isAnswerChecked: boolean;
@@ -20,7 +21,11 @@
 
 	let chooseAnswer: CharacterObject[] = [];
 	let displayAnswer: CharacterObject[];
+	let textInput: any;
 
+	onMount(() => {
+		textInput.focus();
+	});
 	function checkAnswer(finalAnswer: string, answer: string) {
 		if (finalAnswer === answer) {
 			return true;
@@ -106,15 +111,27 @@
 <div class="flex flex-col h-full gap-8">
 	<div class="flex flex-col items-center">
 		<div class="flex flex-wrap justify-center gap-2 bg-white p-2 md:p-4 rounded-xl">
-			{#each displayAnswer as input}
-				<input
-					type="text"
-					class="w-14 h-16 border-b-2 border-b-black text-4xl border-transparent focus:border-transparent focus:border-b-2 focus:border-b-green-500 focus:ring-0 uppercase"
-					value={input.char}
-					maxlength="1"
-					on:input={(event) => handleInput(event, input.id)}
-					on:keydown={(event) => handleKeyDown(event, input.id)}
-				/>
+			{#each displayAnswer as input, index}
+				{#if index === 0}
+					<input
+						type="text"
+						class="w-14 h-16 border-b-2 border-b-black text-4xl border-transparent focus:border-transparent focus:border-b-2 focus:border-b-green-500 focus:ring-0 uppercase"
+						value={input.char}
+						maxlength="1"
+						on:input={(event) => handleInput(event, input.id)}
+						on:keydown={(event) => handleKeyDown(event, input.id)}
+						bind:this={textInput}
+					/>
+				{:else}
+					<input
+						type="text"
+						class="w-14 h-16 border-b-2 border-b-black text-4xl border-transparent focus:border-transparent focus:border-b-2 focus:border-b-green-500 focus:ring-0 uppercase"
+						value={input.char}
+						maxlength="1"
+						on:input={(event) => handleInput(event, input.id)}
+						on:keydown={(event) => handleKeyDown(event, input.id)}
+					/>
+				{/if}
 			{/each}
 		</div>
 	</div>
