@@ -3,7 +3,7 @@
 	import { Button, Label, Select } from 'flowbite-svelte';
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
-	import type { FieldForm, InputForm, selectOptionne } from './interface/createQuiz.interface';
+	import type { FieldForm, InputForm } from './interface/createQuiz.interface';
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import { Category } from './interface/category.enum';
@@ -15,8 +15,7 @@
 	let stringImgeField = 'JPEG, PNG, JPG (< 5MB).';
 	let level = result['difficultyLevel'] || 0;
 	let sharedToastId: string | number;
-	export let open:boolean;
-	
+	export let open: boolean;
 
 	$: labelI18n = (label: string) => {
 		switch (label) {
@@ -36,6 +35,39 @@
 				return $t('common.file');
 			default:
 				return '';
+		}
+	};
+
+	$: optionLevel = (level: number) => {
+		switch (level) {
+			case 0:
+				return $t('common.easy');
+			case 1:
+				return $t('common.medium');
+			case 2:
+				return $t('common.hard');
+			default:
+				return $t('common.easy');
+		}
+	};
+	$: optionCategory = (category: Category) => {
+		switch (category) {
+			case Category.MATH:
+				return $t('common.math');
+			case Category.SCIENCE:
+				return $t('common.science');
+			case Category.ENGLISH:
+				return $t('common.english');
+			case Category.HISTORY:
+				return $t('common.history');
+			case Category.GEOGRAPHY:
+				return $t('common.geography');
+			case Category.LITERATURE:
+				return $t('common.literature');
+			case Category.OTHER:
+				return $t('common.other');
+			default:
+				return $t('common.other');
 		}
 	};
 
@@ -73,22 +105,6 @@
 		goto(`/createQuiz/${form?.success?.id}`);
 	}
 
-	let levelList: selectOptionne[] = [
-		{ value: 0, name: $t('common.easy') },
-		{ value: 1, name: $t('common.medium') },
-		{ value: 2, name: $t('common.hard') }
-	];
-
-	let categoryList: selectOptionne[] = [
-		{ value: Category.MATH, name: $t('common.math') },
-		{ value: Category.SCIENCE, name: $t('common.science') },
-		{ value: Category.ENGLISH, name: $t('common.english') },
-		{ value: Category.HISTORY, name: $t('common.history') },
-		{ value: Category.GEOGRAPHY, name: $t('common.geography') },
-		{ value: Category.LITERATURE, name: $t('common.literature') },
-		{ value: Category.OTHER, name: $t('common.other') }
-	];
-
 	let formData: FieldForm = {
 		title: '',
 		difficultyLevel: '',
@@ -114,7 +130,6 @@
 			label: 'level',
 			name: 'difficultyLevel',
 			type: 'select',
-			selectOptionsList: levelList,
 			required: true
 		},
 		{
@@ -134,8 +149,7 @@
 			label: 'category',
 			name: 'categoryId',
 			type: 'select',
-			required: true,
-			selectOptionsList: categoryList
+			required: true
 		},
 		{
 			label: 'description',
@@ -228,24 +242,38 @@
 					<Select
 						oninvalid="this.setCustomValidity('{$t('common.emptyLevel')}')"
 						oninput="setCustomValidity('')"
-						items={selectOptionsList}
 						bind:value={level}
 						{required}
 						id={name}
 						{name}
 						class="bg-gray-50 border border-graydish text-gray-700 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
-					/>
+					>
+						<option value={0}>{optionLevel(0)}</option>
+						<option value={1}>{optionLevel(1)}</option>
+						<option value={2}>{optionLevel(2)}</option>
+					</Select>
 				{:else if type === 'select' && name === 'categoryId'}
 					<Select
 						oninvalid="this.setCustomValidity('{$t('common.emptyCategory')}')"
 						oninput="setCustomValidity('')"
-						items={selectOptionsList}
 						bind:value={category}
 						{required}
 						id={name}
 						{name}
 						class=" bg-gray-50 border border-graydish text-gray-900 text-base rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-					/>
+					>
+						<option value={Category.MATH}>{optionCategory(Category.MATH)} </option>
+						<option value={Category.ENGLISH}>{optionCategory(Category.ENGLISH)}</option>
+						<option value={Category.SCIENCE}>{optionCategory(Category.SCIENCE)}</option>
+						<option value={Category.HISTORY}>{optionCategory(Category.HISTORY)}</option>
+						<option value={Category.GEOGRAPHY}
+							>{optionCategory(Category.GEOGRAPHY)}</option
+						>
+						<option value={Category.LITERATURE}
+							>{optionCategory(Category.LITERATURE)}</option
+						>
+						<option value={Category.OTHER}>{optionCategory(Category.OTHER)}</option>
+					</Select>
 				{:else if type === 'textarea'}
 					<div class="relative grid w-full">
 						<textarea
