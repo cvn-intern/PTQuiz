@@ -21,7 +21,7 @@
 	export let participants: Participant[] = [];
 	export let length: number;
 	export let isBattle: boolean;
-    export let socket: Socket;
+	export let socket: Socket;
 	let showScoreBoard: boolean = false;
 
 	$: clientParticipants = participants.filter((participant) => participant.isHost === false);
@@ -45,7 +45,7 @@
 		>
 	</div>
 	{#if isBattle}
-		<EndGameBattle {participants} {length} {socket}/>
+		<EndGameBattle {participants} {length} {socket} />
 		<div class="flex gap-4 items-center justify-center">
 			<div
 				class={`${
@@ -67,14 +67,8 @@
 		</div>
 	{:else}
 		<Position participants={clientParticipants} {length} />
-		<div class="flex gap-4 items-center justify-center">
-			<div
-				class={`${
-					clientParticipants.length > 3
-						? 'bg-white p-4 flex flex-col gap-4 overflow-y-scroll no-scrollbar'
-						: ''
-				}`}
-			>
+		<div class="flex overflow-y-scroll no-scrollbar items-center justify-center">
+			<div class={`${clientParticipants.length > 3 ? 'p-4 flex flex-col gap-4 ' : ''}`}>
 				{#each clientParticipants.slice(3) as participant, index}
 					<ScoreBoardSocket
 						scoreUser={participant}
