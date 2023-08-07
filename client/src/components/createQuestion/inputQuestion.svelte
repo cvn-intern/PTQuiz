@@ -4,6 +4,7 @@
 	import { questionData } from '$stores/questionInfoStore';
 	import Editor from 'cl-editor/src/Editor.svelte';
 	import { createEventDispatcher, onMount, tick } from 'svelte';
+	import { TypeQuestion } from '../../routes/(user)/(quiz)/createQuiz/interface/typeQuestion.enum';
 	export let index: number;
 	let title: string;
 	let imageFile;
@@ -27,7 +28,7 @@
 			data[index].image = imageUrl;
 			data[index].hint = hint;
 		}
-		if (data[index].type === 4) {
+		if (data[index].type === TypeQuestion.ARRANGE_WORD) {
 			data[index].title = $t('common.titleOfArrangeWord');
 			title = $t('common.titleOfArrangeWord');
 		}
@@ -70,7 +71,11 @@
 			{#if imageUrl}
 				<div class="group hover:opacity-100 w-full flex">
 					<div class="w-full flex items-center">
-						<img class="w-full object-fit md:h-heightImage h-heightImageMobile" src={imageUrl} alt="Question" />
+						<img
+							class="w-full object-fit md:h-heightImage h-heightImageMobile"
+							src={imageUrl}
+							alt="Question"
+						/>
 					</div>
 					<div class="relative">
 						<button
