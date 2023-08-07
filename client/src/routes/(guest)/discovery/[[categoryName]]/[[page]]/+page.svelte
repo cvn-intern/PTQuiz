@@ -48,11 +48,11 @@
 					</h1>
 				</div>
 				<div
-					class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 justify-items-center items-center grid-3xl lg:gap-10"
+					class="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:grid-cols-2 items-center justify-items-center grid-3xl lg:gap-10"
 				>
 					<a
 						href="#"
-						class="cursor-pointer max-w-sm lg:w-80 bg-gray-200 shadow-lg rounded-xl p-6 flex items-center justify-center w-full h-full"
+						class="cursor-pointer max-w-sm lg:w-80 bg-gray-200 shadow-lg rounded-xl flex items-center justify-center w-full h-[580px]"
 						on:click={() => goto('/createQuiz')}
 					>
 						<Icon

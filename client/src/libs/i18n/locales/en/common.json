@@ -186,5 +186,9 @@
 	"emptyLevel": "Level can't be empty",
 	"winner": "Winner",
 	"loser": "Loser",
-	"notGif": "Require GIF"
+	"notGif": "Require GIF",
+	"increaseDate": "Increase Date",
+	"decreaseDate": "Decrease Date",
+	"titleAZ": "Title A-Z",
+	"titleZA": "Title Z-A"
 }
