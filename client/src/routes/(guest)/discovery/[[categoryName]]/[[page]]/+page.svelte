@@ -13,15 +13,6 @@
 	export let data;
 	let categories: TypeCategory[];
 	$: categories = data.quizzes;
-	let cssForCurrentTab = ' active dark:text-blue-500 dark:border-blue-500 bg-secondary';
-	let cssForOtherTab =
-		' border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300';
-	let currentTab = $page.params.categoryName;
-
-	function changeTab(tab: string) {
-		currentTab = tab;
-		goto('/discovery/' + tab);
-	}
 </script>
 
 <div class="py-8 w-screen">

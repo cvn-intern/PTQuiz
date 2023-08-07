@@ -185,5 +185,6 @@
 	"emptyCategory": "Thể loại không được trống",
 	"emptyLevel": "Cấp độ không được trống",
 	"winner": "Chiến thắng",
-	"loser": "Thua cuộc"
+	"loser": "Thua cuộc",
+	"notGif": "Yêu cầu phải là GIF"
 }

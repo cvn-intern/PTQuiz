@@ -173,6 +173,17 @@
 		if (dataSave[index].image === '') {
 			return $t('common.errorGif');
 		}
+		// console.log(dataSave[index].image);
+		// if (dataSave[index].image.type !== 'image/gif') {
+		// 	return $t('common.notGif');
+		// }
+
+		// let result = await fetch(dataSave[index].image);
+		// let blob = await result.blob();
+		// if (blob.type !== 'image/gif') {
+		// 	return $t('common.notGif');
+		// }
+
 		return '';
 	}
 
@@ -250,7 +261,8 @@
 			await fetch(dataSave[index].image)
 				.then((res) => res.blob())
 				.then((blob) => {
-					const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+					console.log(blob);
+					const file = new File([blob], 'image.jpg', { type: blob.type });
 					formData.append('image', file);
 				});
 		} else {

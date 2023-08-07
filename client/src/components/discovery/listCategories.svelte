@@ -6,7 +6,8 @@
 	let cssForCurrentTab = ' active text-white dark:text-blue-500 dark:border-blue-500 bg-secondary';
 	let cssForOtherTab =
 		' border-transparent hover:text-secondary/80 hover:border-gray-800 dark:hover:text-gray-300';
-	let currentTab = $page.params.categoryName;
+	let currentTab : string;
+	$: currentTab = $page.params.categoryName;
 	let isClicked = false;
 	if (currentTab === undefined) {
 		currentTab = 'all';
