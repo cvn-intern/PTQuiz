@@ -75,7 +75,10 @@
 			>
 				{#if participantsHost}
 					<div class="absolute md:-right-1/4 md:top-1/4 right-1/2 top-1/2">
-						<Icon icon="emojione-v1:crown" class="text-4xl md:text-6xl absolute -top-5 md:-top-10 left-4 md:left-6" />
+						<Icon
+							icon="emojione-v1:crown"
+							class="text-4xl md:text-6xl absolute -top-5 md:-top-10 left-4 md:left-6"
+						/>
 						<img
 							src={participantsHost.avatar}
 							alt={participantsHost.displayName}
@@ -121,7 +124,7 @@
 		<div class="w-full flex flex-col justify-between items-center">
 			<div>
 				<div class="flex flex-col justify-between gap-4">
-					<div class="flex flex-col gap-4 justify-center items-center md:pt-6 pt-8">
+					<div class="flex flex-col gap-4 justify-center items-center">
 						<div
 							class="hidden text-4xl md:flex items-center gap-2 uppercase text-zinc-700 font-bold text-center"
 						>
@@ -149,16 +152,16 @@
 					</div>
 				</div>
 				<div
-					class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 items-center justify-center gap-4 md:w-screenHalf w-full max-h-attempt md:max-h-halfScreen overflow-y-scroll no-scrollbar"
+					class="grid md:grid-cols-5 grid-cols-4 items-center justify-center gap-4 w-full"
 				>
 					{#each participantsNotHost as participant, index}
 						<div
-							class="flex flex-col items-center gap-2 w-40 p-2 relative group/item hover:bg-transparent cursor-pointer"
+							class="flex flex-col items-center gap-2 md:w-40 w-20 p-2 relative group/item hover:bg-transparent cursor-pointer"
 						>
 							<img
 								src={participant.avatar}
 								alt={participant.displayName}
-								class="w-24 h-24 rounded-md"
+								class="md:w-24 md:h-24 rounded-md w-12 h-12"
 							/>
 							<p class="px-4 bg-white/50 rounded-md font-semibold text-sky-700">
 								{participant.displayName}

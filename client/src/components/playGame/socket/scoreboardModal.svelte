@@ -38,7 +38,7 @@
 		on:keydown={handleKeyDown}
 	>
 		<div
-			class="flex justify-center items-center bg-primary p-6 rounded-xl shadow-xl max-h-[80vh] overflow-y-scroll no-scrollbar"
+			class="bg-primary p-6 rounded-xl shadow-xl max-h-[80vh] overflow-y-scroll no-scrollbar"
 		>
 			<div class="flex flex-col justify-center items-center gap-4">
 				{#each isBattle ? participants : clientParticipants as participant, index}
