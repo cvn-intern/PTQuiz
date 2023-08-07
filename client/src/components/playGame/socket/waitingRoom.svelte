@@ -24,6 +24,8 @@
 	export let room: any;
 
 	let modalOpen = false;
+	$: length = participants.length;
+
 	$: participantsHost = participants.filter((participant) => participant.isHost)[0];
 
 	$: participantsNotHost = participants.filter((participant) => !participant.isHost);
@@ -163,7 +165,7 @@
 								class="md:w-24 md:h-24 rounded-md w-14 h-14"
 							/>
 							<p
-								class="px-1 text-sm md:text-base bg-white/50 rounded-md font-semibold text-sky-700"
+								class="px-1 text-center text-sm md:text-base bg-white/50 rounded-md font-semibold text-sky-700"
 							>
 								{participant.displayName}
 							</p>
@@ -199,7 +201,16 @@
 </button>
 
 {#if isHost}
-	<SettingsRoom bind:modalOpen {url} {isHost} {room} {socket} bind:count bind:isChangedCount />
+	<SettingsRoom
+		bind:modalOpen
+		{url}
+		{isHost}
+		{room}
+		{socket}
+		bind:count
+		bind:isChangedCount
+		bind:length
+	/>
 {/if}
 
 {#if !(room.room.type === RoomType.BATTLE)}

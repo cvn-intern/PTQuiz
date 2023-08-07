@@ -14,6 +14,7 @@
 	export let socket: Socket;
 	export let count: number;
 	export let isChangedCount: boolean;
+	export let length: number;
 
 	enum RoomCount {
 		FIVE = 5,
@@ -121,7 +122,7 @@
 										return;
 									}
 									if (value !== count) {
-										if (value < count) {
+										if (value < length) {
 											toast.error($t('common.errorLimitUser'));
 											return;
 										}
