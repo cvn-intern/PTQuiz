@@ -54,6 +54,10 @@
 	});
 
 	const sendMessage = () => {
+		isDisabled = true;
+		setTimeout(() => {
+			isDisabled = false;
+		}, 1000);
 		socket.emit(ListenChannel.SEND_HOST_MESSAGE, {
 			content: messageContent,
 			roomPIN: $page.params.slug

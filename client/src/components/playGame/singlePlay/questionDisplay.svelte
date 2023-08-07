@@ -15,6 +15,7 @@
 
 	let isGifButtonClicked: boolean = false;
 	let modalOpen: boolean = false;
+	let screenWidth: number;
 
 	async function getDuration(url: any) {
 		const res = await fetch(url);
@@ -60,12 +61,14 @@
 	}
 </script>
 
+<svelte:window bind:innerWidth={screenWidth} />
 
 <InformationModal
 	{quizzesType}
 	{quizzesPointer}
 	{quizzesNumber}
 	{quizzesHint}
+	isShowChat={false}
 	isHost={false}
 	isSingle={true}
 	isBattle={false}
@@ -78,7 +81,7 @@
 	{:else}
 		<div class="flex flex-col gap-3 items-center">
 			<p class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center">
-				Hãy xem hình và đoán
+				{$t('common.watchGif')}
 			</p>
 
 			<div class="flex flex-col flex-1 justify-center gap-4">
@@ -93,7 +96,7 @@
 						showGif();
 					}}
 				>
-					Click here!
+					{$t('common.clickHere')}
 				</button>
 
 				<button
@@ -105,7 +108,7 @@
 					)}
 					on:click={startGame}
 				>
-					Start game!
+					{$t('common.startBtn')}
 				</button>
 			</div>
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Tweened } from 'svelte/motion';
+	import { t } from '$i18n/translations';
 
 	export let questionPointer: number;
 	export let questions: any[];
@@ -35,7 +36,7 @@
 			class={`h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl ${
 				isFullAnswer ? '' : 'opacity-50 cursor-not-allowed'
 			}`}
-			on:click={nextQuestion}>Next</button
+			on:click={nextQuestion}>{$t('common.next')}</button
 		>
 	{:else}
 		<button
@@ -43,14 +44,15 @@
 			class={`h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl ${
 				isFullAnswer ? '' : 'opacity-50 cursor-not-allowed'
 			}`}
-			on:click={endGame}>End game</button
+			on:click={endGame}>{$t('common.endGame')}</button
 		>
 	{/if}
 	<button
 		class="h-fit w-fit bg-secondary hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
-		on:click={getScoreBoard}>Score board</button
+		on:click={getScoreBoard}>{$t('common.viewScoreboard')}</button
 	>
 	<div class="h-fit w-fit bg-orangeLogo text-white font-bold py-2 px-4 rounded-md cursor-default">
-		{numberOfAnswer} / {clientParticipants.length} Players Answered
+		{numberOfAnswer} / {clientParticipants.length}
+		{$t('common.playersAnswered')}
 	</div>
 </div>

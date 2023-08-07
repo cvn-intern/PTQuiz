@@ -33,7 +33,7 @@ export enum ListenChannel {
 	GET_NEXT_QUESTION = 'get-next-question',
 	PICK_ANSWER = 'pick-answer',
 	GET_ANSWER_QUESTION = 'get-answer-question',
-	GET_GIF_QUESTION = 'get-gif-question',
+	GET_GIF_QUESTION = 'gif-question',
 	GET_ROOM_INFO = 'get-room-info',
 	SET_PRIVATE_ROOM = 'set-private-room',
 	SET_ROOM_CAPACITY = 'set-room-capacity',

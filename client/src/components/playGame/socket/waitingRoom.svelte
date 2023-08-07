@@ -75,6 +75,7 @@
 			>
 				{#if participantsHost}
 					<div class="absolute md:-right-1/4 md:top-1/4 right-1/2 top-1/2">
+						<Icon icon="emojione-v1:crown" class="text-4xl md:text-6xl absolute -top-5 md:-top-10 left-4 md:left-6" />
 						<img
 							src={participantsHost.avatar}
 							alt={participantsHost.displayName}
