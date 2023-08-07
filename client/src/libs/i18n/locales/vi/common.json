@@ -195,5 +195,6 @@
 	"clickHere": "Nhấn vào đây",
 	"next": "Tiếp theo",
 	"endGame": "Kết thúc",
-	"playersAnswered": "Đã trả lời"
+	"playersAnswered": "Đã trả lời",
+	"errorLimitUser": "Không thể thiết lập sức chứa của phòng thấp hơn số người đang tham gia"
 }

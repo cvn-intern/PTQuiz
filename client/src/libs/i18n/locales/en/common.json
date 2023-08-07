@@ -195,5 +195,6 @@
 	"clickHere": "Click Here",
 	"next": "Next",
 	"endGame": "End Game",
-	"playersAnswered": "Player Answered"
+	"playersAnswered": "Player Answered",
+	"errorLimitUser": "Cannot set room's capacity less than current number of players"
 }
