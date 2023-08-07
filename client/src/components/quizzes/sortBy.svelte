@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { Button, Dropdown, Chevron, Radio } from 'flowbite-svelte';
 	import { page } from '$app/stores';
+	import { t } from '$i18n/translations';
 	export let defaultSort: number;
 	export let totalQuizzes: number;
 	export let quizzes: IQuiz[];
 	export let currentPage: number;
 
 	$: typeOfSort = (() => {
-		if (defaultSort === 0) return 'Increase date';
-		if (defaultSort === 1) return 'Decrease date';
-		if (defaultSort === 2) return 'Title [a-z]';
-		if (defaultSort === 3) return 'Title [z-a]';
+		if (defaultSort === 0) return $t('common.increaseDate');
+		if (defaultSort === 1) return $t('common.decreaseDate');
+		if (defaultSort === 2) return $t('common.titleAZ');
+		if (defaultSort === 3) return $t('common.titleZA');
 	})();
 
 	async function fetchQuizzes(page: number, sortBy: number) {
@@ -35,7 +36,7 @@
 			name="typeOfSort"
 			bind:group={defaultSort}
 			value={0}
-			on:click={() => handleSortChange(0)}>Increase date</Radio
+			on:click={() => handleSortChange(0)}>{$t('common.increaseDate')}</Radio
 		>
 	</li>
 	<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -43,7 +44,7 @@
 			name="typeOfSort"
 			bind:group={defaultSort}
 			value={1}
-			on:click={() => handleSortChange(1)}>Decrease date</Radio
+			on:click={() => handleSortChange(1)}>{$t('common.decreaseDate')}</Radio
 		>
 	</li>
 	<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -51,7 +52,7 @@
 			name="typeOfSort"
 			bind:group={defaultSort}
 			value={2}
-			on:click={() => handleSortChange(2)}>Title [a-z]</Radio
+			on:click={() => handleSortChange(2)}>{$t('common.titleAZ')}</Radio
 		>
 	</li>
 	<li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -59,7 +60,7 @@
 			name="typeOfSort"
 			bind:group={defaultSort}
 			value={3}
-			on:click={() => handleSortChange(3)}>Title [z-a]</Radio
+			on:click={() => handleSortChange(3)}>{$t('common.titleZA')}</Radio
 		>
 	</li>
 </Dropdown>

@@ -186,5 +186,9 @@
 	"emptyLevel": "Cấp độ không được trống",
 	"winner": "Chiến thắng",
 	"loser": "Thua cuộc",
-	"notGif": "Yêu cầu phải là GIF"
+	"notGif": "Yêu cầu phải là GIF",
+	"increaseDate": "Ngày tăng",
+	"decreaseDate": "Ngày giảm",
+	"titleaz": "Tiêu đề A-Z",
+	"titleza": "Tiêu đề Z-A"
 }

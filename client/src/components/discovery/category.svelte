@@ -16,9 +16,7 @@
 
 <div class="px-4 md:py-8 md:px-12 lg:px-20">
 	<div class="flex flex-row">
-		<h1
-			class="text-2xl font-semibold mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2"
-		>
+		<h1 class="text-2xl font-semibold mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2">
 			{nameCategory}
 		</h1>
 	</div>
@@ -28,7 +26,7 @@
 		{#if indexOfCategory === 0}
 			<a
 				href="#"
-				class="cursor-pointer max-w-sm lg:w-80 bg-gray-200 shadow-lg rounded-xl p-6 flex items-center justify-center w-full h-full"
+				class="cursor-pointer max-w-sm lg:w-80 bg-gray-200 shadow-lg rounded-xl p-6 flex items-center justify-center w-full h-[580px]"
 				on:click={() => addQuiz()}
 			>
 				<Icon
