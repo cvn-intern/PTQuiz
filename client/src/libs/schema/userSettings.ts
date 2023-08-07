@@ -5,7 +5,13 @@ const ProfileFormSchema = z.object({
 	displayName: z
 		.string()
 		.min(3, t.get('validation.DISPLAY_NAME_MUST_BE_AT_LEAST_3_CHARACTERS'))
-		.max(20, t.get('validation.DISPLAY_NAME_TOO_LONG'))
+		.max(20, t.get('validation.DISPLAY_NAME_TOO_LONG')),
+	avatar: z
+		.any()
+		.refine(
+			(file) => file?.size <= import.meta.env.VITE_MAX_FILE_SIZE,
+			t.get('validation.IMAGE_MUST_BE_LESS_THAN_5MB')
+		)
 });
 
 const PasswordFormSchema = z

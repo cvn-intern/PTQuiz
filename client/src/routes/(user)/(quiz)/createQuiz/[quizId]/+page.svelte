@@ -257,7 +257,7 @@
 			await fetch(dataSave[index].image)
 				.then((res) => res.blob())
 				.then((blob) => {
-					const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+					const file = new File([blob], 'image.jpg', { type: blob.type });
 					formData.append('image', file);
 				});
 		} else {

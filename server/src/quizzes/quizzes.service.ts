@@ -17,28 +17,6 @@ export class QuizzesService {
         private cloudinary: CloudinaryService,
     ) {}
 
-    findMostCategoryInQuiz(arrCategory) {
-        const frequencyMap = {};
-        let maxCount = 0;
-        let mostCategoryInQuiz = '';
-
-        for (let i = 0; i < arrCategory.length; i++) {
-            const currentString = arrCategory[i];
-            frequencyMap[currentString] =
-                (frequencyMap[currentString] || 0) + 1;
-
-            if (frequencyMap[currentString] > maxCount) {
-                maxCount = frequencyMap[currentString];
-                mostCategoryInQuiz = currentString;
-            }
-        }
-
-        return mostCategoryInQuiz;
-    }
-    findIndexOfCategory(discovery, category) {
-        return discovery.findIndex((item) => item.category === category);
-    }
-
     async getAllQuizzesOfUser(userId: string, page: number, sortBy: number) {
         try {
             page = page || 1;
@@ -80,75 +58,6 @@ export class QuizzesService {
         } catch (err) {
             throw new HttpException(
                 QuizzesError.FAILED_GET_ALL_QUIZZES,
-                HttpStatus.BAD_REQUEST,
-            );
-        }
-    }
-
-    async getDiscovery() {
-        try {
-            const quizzes = await this.prisma.quizzes.findMany({
-                where: {
-                    isShared: true,
-                    user: {
-                        role: Role.Admin,
-                    },
-                },
-                select: {
-                    id: true,
-                    quizQuestions: {
-                        select: {
-                            question: {
-                                select: {
-                                    categoryId: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            });
-            const quizzesOfdiscovery = quizzes.map((quiz) => {
-                const categories = quiz.quizQuestions.map(
-                    (question) => question.question.categoryId,
-                );
-                return {
-                    quizId: quiz.id,
-                    categories: this.findMostCategoryInQuiz(categories),
-                };
-            });
-            const discovery = [];
-            for (let index = 0; index < quizzesOfdiscovery.length; index++) {
-                if (quizzesOfdiscovery[index].categories !== '') {
-                    const category = await this.prisma.categories.findUnique({
-                        where: {
-                            id: quizzesOfdiscovery[index].categories,
-                        },
-                        select: {
-                            name: true,
-                        },
-                    });
-                    const indexOfCategory = this.findIndexOfCategory(
-                        discovery,
-                        category.name,
-                    );
-                    const quizzes = await this.getInfoOfPublicQuiz(
-                        quizzesOfdiscovery[index].quizId,
-                    );
-                    if (indexOfCategory === -1) {
-                        discovery.push({
-                            category: category.name,
-                            quizzes: [quizzes],
-                        });
-                    } else {
-                        discovery[indexOfCategory].quizzes.push(quizzes);
-                    }
-                }
-            }
-
-            return discovery;
-        } catch (error) {
-            throw new HttpException(
-                QuizzesError.FAILED_GET_DISCOVERY,
                 HttpStatus.BAD_REQUEST,
             );
         }

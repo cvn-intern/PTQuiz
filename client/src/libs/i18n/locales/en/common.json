@@ -185,5 +185,6 @@
 	"emptyCategory": "Category can't be empty",
 	"emptyLevel": "Level can't be empty",
 	"winner": "Winner",
-	"loser": "Loser"
+	"loser": "Loser",
+	"notGif": "Require GIF"
 }

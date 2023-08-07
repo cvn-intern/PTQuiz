@@ -34,4 +34,5 @@ export enum QuestionError {
     SINGLE_CHOICE_MORE_THAN_ONE_ANSWER = 'Single choice can not more than one answer',
     MULTIPLE_CHOICE_LESS_THAN_TWO_ANSWER = 'Multiple choice can not less than two answer',
     MUST_HAVE_CORRECT_ANSWER = 'Must have correct answer',
+    GIF_IMAGE_REQUIRED = 'Gif image required',
 }
