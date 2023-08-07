@@ -75,20 +75,19 @@
 			>
 				{#if participantsHost}
 					<div class="absolute md:-right-1/4 md:top-1/4 right-1/2 top-1/2">
-						<Icon
-							icon="emojione-v1:crown"
-							class="text-4xl md:text-6xl absolute -top-5 md:-top-10 left-4 md:left-6"
-						/>
-						<img
-							src={participantsHost.avatar}
-							alt={participantsHost.displayName}
-							class="md:w-40 md:h-40 w-24 h-24 rounded-md"
-						/>
-						<p
-							class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center"
-						>
-							{participantsHost.displayName}
-						</p>
+						<div class="flex flex-col items-center justify-center">
+							<Icon icon="emojione-v1:crown" class="text-4xl md:text-6xl" />
+							<img
+								src={participantsHost.avatar}
+								alt={participantsHost.displayName}
+								class="md:w-40 md:h-40 w-24 h-24 rounded-md"
+							/>
+							<p
+								class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center"
+							>
+								{participantsHost.displayName}
+							</p>
+						</div>
 					</div>
 				{/if}
 			</div>
@@ -205,24 +204,28 @@
 	<Chat {participants} {socket} {user} />
 {/if}
 
-<div class="fixed lg:bottom-10 bottom-20 lg:left-20 w-full md:w-96">
-	<Reaction
-		{socket}
-		{participants}
-		{isHost}
-		isBattle={room.room.type === RoomType.BATTLE}
-		{isShowChat}
-	/>
+<div class="fixed lg:bottom-10 bottom-20 w-full md:w-96">
+	<div class="flex items-center gap-1 w-full">
+		{#if isHost || room.room.type === RoomType.BATTLE}
+			<button
+				on:click={handleClickOpenChat}
+				class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
+			z-60"
+			>
+				<Icon icon="et:chat" class="text-3xl w-10 h-10" />
+			</button>
+		{/if}
+		<div class="w-full">
+			<Reaction
+				{socket}
+				{participants}
+				{isHost}
+				isBattle={room.room.type === RoomType.BATTLE}
+				{isShowChat}
+			/>
+		</div>
+	</div>
 </div>
-{#if isHost || room.room.type === RoomType.BATTLE}
-	<button
-		on:click={handleClickOpenChat}
-		class="shadow-lg shadow-darkGreen/30 rounded-full backdrop-opacity-10 backdrop-invert bg-orangeLogo text-white border-2 border-gray-300 font-semibold p-2
-			fixed left-2 lg:bottom-10 bottom-3 z-60"
-	>
-		<Icon icon="et:chat" class="text-3xl w-10 h-10" />
-	</button>
-{/if}
 
 <button
 	class={clsx(
