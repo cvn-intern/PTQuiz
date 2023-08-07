@@ -59,7 +59,9 @@ export const actions = {
 			});
 			const response = await fetch(`/api/quizzes/update/${params.quizId}`, {
 				method: 'PUT',
-				headers: { type: 'multipart/form-data' },
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				},
 				body: form
 			});
 			const result = await response.json();
