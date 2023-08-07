@@ -8,9 +8,6 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
 
 	const response = await fetch(`${VITE_API_URL}/user/edit-profile`, {
 		method: 'POST',
-		headers: {
-			'Content-Type': 'multipart/form-data'
-		},
 		body: formData
 	});
 

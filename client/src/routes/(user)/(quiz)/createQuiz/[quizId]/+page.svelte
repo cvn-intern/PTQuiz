@@ -266,9 +266,6 @@
 
 		const response = await fetch(url, {
 			method: method,
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			},
 			body: formData
 		});
 		isSubmitting = false;
