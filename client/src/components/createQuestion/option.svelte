@@ -24,12 +24,9 @@
 			) {
 				return false;
 			}
-		} else {
-			if (anser.answerA === false && anser.answerB === false) {
-				return false;
-			}
+		} else if (anser.answerA === false && anser.answerB === false) {
+			return false;
 		}
-
 		return true;
 	}
 	$: isSubmitStore.subscribe((data) => {
@@ -45,7 +42,12 @@
 	});
 	$: questionData.subscribe((data) => {
 		if (index >= 0 && index < data.length) {
-			if (data[index].type === 0 || data[index].type === 1) {
+			if (
+				data[index].type === 0 ||
+				data[index].type === 1 ||
+				data[index].type === 3 ||
+				data[index].type === 6
+			) {
 				isPickTrueAnswer = isPickAnswer(data[index].answers);
 			}
 		}
