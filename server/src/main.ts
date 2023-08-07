@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
+import { json, urlencoded } from 'express';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -27,6 +28,8 @@ async function bootstrap() {
             },
         }),
     );
+    app.use(json({ limit: '6mb' }));
+    app.use(urlencoded({ extended: true, limit: '6mb' }));
     await app.listen(8080);
 }
 bootstrap();
