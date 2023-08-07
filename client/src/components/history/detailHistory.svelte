@@ -6,6 +6,7 @@
 	import { t } from '$i18n/translations';
 	import Icon from '@iconify/svelte';
 	import logo from '../../assets/logo.png';
+	import { createEventDispatcher } from 'svelte';
 
 	function convertSecondsToMinutes(seconds: number): string {
 		if (seconds === 0) return `0 ${$t('common.mins')} : 0 ${$t('common.secs')} `;
@@ -42,9 +43,10 @@
 				return $t('common.other');
 		}
 	};
+	const dispatch = createEventDispatcher();
 </script>
 
-<Modal bind:open={isOpen} size="xl" padding="xs" outsideclose>
+<Modal bind:open={isOpen} size="xl" padding="xs" outsideclose on:hide={() => dispatch('close')}>
 	<div>
 		<div class="flex md:flex-row flex-col gap-6">
 			<div>
