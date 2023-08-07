@@ -8,14 +8,10 @@ export const PUT: RequestHandler = async ({ fetch, request, params }) => {
 
 	const response = await fetch(`${VITE_API_URL}/quizzes/update/?quizId=${params.quizId}`, {
 		method: 'PUT',
-		headers: {
-			'Content-Type': 'multipart/form-data'
-		},
 		body: formData
 	});
 
 	const result = await response.json();
-
 	if (result.statusCode == HttpStatus.PAYLOAD_TOO_LARGE)
 		throw error(HttpStatus.PAYLOAD_TOO_LARGE, "File's size is too large.");
 
