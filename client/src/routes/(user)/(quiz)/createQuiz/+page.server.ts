@@ -18,7 +18,9 @@ export const actions = {
 			});
 			const response = await fetch('/api/quizzes/create', {
 				method: 'POST',
-				headers: { type: 'multipart/form-data' },
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				},
 				body: form
 			});
 			const result = await response.json();

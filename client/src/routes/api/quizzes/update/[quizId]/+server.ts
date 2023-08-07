@@ -8,6 +8,9 @@ export const PUT: RequestHandler = async ({ fetch, request, params }) => {
 
 	const response = await fetch(`${VITE_API_URL}/quizzes/update/?quizId=${params.quizId}`, {
 		method: 'PUT',
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		},
 		body: formData
 	});
 
