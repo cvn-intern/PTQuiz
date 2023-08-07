@@ -11,6 +11,8 @@
 	import clsx from 'clsx';
 	import DropdownProfile from '$components/dropdown/dropdownProfile.svelte';
 	import DropdownLanguage from '$components/dropdown/dropdownLanguage.svelte';
+	import { onMount } from 'svelte';
+	import Loading from '$components/loading.svelte';
 	export let user: LayoutData;
 
 	const handleChange = async (currentTarget: any) => {
@@ -40,16 +42,19 @@
 	async function handleClose(e) {
 		isHidden = false;
 	}
-
-	let isDropdownOpen = false;
-
+	let isLoading = false;
 	function handleOptionClick(value: any) {
 		$locale = value;
 		handleChange({ target: { value } });
-		isDropdownOpen = false;
+		window.location.reload();
+		isLoading = true;
 	}
+
 </script>
 
+{#if isLoading}
+	<Loading />
+{/if}
 <nav
 	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0 z-40"
 >
