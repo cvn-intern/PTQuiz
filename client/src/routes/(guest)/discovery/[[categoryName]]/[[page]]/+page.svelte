@@ -51,7 +51,7 @@
 			<div class="px-4 md:py-8 md:px-12 lg:px-20">
 				<div class="flex flex-row">
 					<h1
-						class="text-2xl font-semibold font-body mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2"
+						class="text-2xl font-semibold mb-7 w-1/12 text-zinc-800 border-spacing-3 border-b-2"
 					>
 						{category.category}
 					</h1>
@@ -70,7 +70,7 @@
 						/>
 					</a>
 					<div class="text-center text-gray-500">
-						<p class="text-2xl font-semibold font-body mb-7 text-zinc-800">
+						<p class="text-2xl font-semibold mb-7 text-zinc-800">
 							{$t('common.noQuizzesFound')}
 						</p>
 					</div>

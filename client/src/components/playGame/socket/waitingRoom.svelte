@@ -71,9 +71,9 @@
 	<div class=" bg-room bg-cover w-full h-screen">
 		<div class="flex flex-col md:flex-row w-full h-full pb-32 px-10">
 			<div
-				class="flex flex-col pt-10 justify-center md:justify-start items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
+				class="flex flex-col pt-10 justify-center md:justify-start items-start gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 			>
-				<div class="md:absolute md:-right-1/4 md:top-1/4">
+				<div class="absolute md:-right-1/4 md:top-1/4 right-1/2 top-1/2">
 					<img
 						src={participantsHost.avatar}
 						alt={participantsHost.displayName}
@@ -91,9 +91,9 @@
 			</div>
 			{#if participantsBattle}
 				<div
-					class="flex flex-col justify-end items-center gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
+					class="flex flex-col justify-end items-end relative md:w-1/3 md:h-full h-1/3"
 				>
-					<div class="md:absolute md:-left-1/4 md:bottom-1/4">
+					<div class="absolute md:-left-1/4 md:bottom-1/4 left-1/2 bottom-1/2">
 						<img
 							src={participantsBattle.avatar}
 							alt={participantsBattle.displayName}
@@ -217,7 +217,7 @@
 <button
 	class={clsx(
 		isHost ? 'block' : 'hidden',
-		'absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 md:gap-3 uppercase text-3xl',
+		'absolute md:bottom-10 bottom-3 left-1/2 -translate-x-1/2 xl:w-1/6 sm:w-2/6 w-3/6 h-16 bg-yellowLogo hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-xl shadow-xl shawdow-yellowLogo/40 border-2 border-gray-200/40 flex justify-center items-center gap-1 md:gap-3 uppercase md:text-3xl text-xl',
 		{
 			'cursor-not-allowed opacity-50': participants.length === 1
 		}
