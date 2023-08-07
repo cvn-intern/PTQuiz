@@ -178,19 +178,19 @@
 		40%,
 		59.9% {
 			margin-top: 20%;
-			margin-left: 40%;
+			margin-left: 50%;
 		}
 
 		60%,
 		79.9% {
-			margin-top: 30%;
+			margin-top: 25%;
 			margin-left: 20%;
 		}
 
 		80%,
 		99.9% {
-			margin-top: 30%;
-			margin-left: 25%;
+			margin-top: 10%;
+			margin-left: 65%;
 		}
 	}
 	@-moz-keyframes position {
@@ -209,19 +209,19 @@
 		40%,
 		59.9% {
 			margin-top: 20%;
-			margin-left: 40%;
+			margin-left: 50%;
 		}
 
 		60%,
 		79.9% {
-			margin-top: 30%;
+			margin-top: 25%;
 			margin-left: 20%;
 		}
 
 		80%,
 		99.9% {
-			margin-top: 30%;
-			margin-left: 25%;
+			margin-top: 10%;
+			margin-left: 65%;
 		}
 	}
 	@-o-keyframes position {
@@ -240,19 +240,19 @@
 		40%,
 		59.9% {
 			margin-top: 20%;
-			margin-left: 40%;
+			margin-left: 50%;
 		}
 
 		60%,
 		79.9% {
-			margin-top: 30%;
+			margin-top: 25%;
 			margin-left: 20%;
 		}
 
 		80%,
 		99.9% {
-			margin-top: 30%;
-			margin-left: 25%;
+			margin-top: 10%;
+			margin-left: 65%;
 		}
 	}
 	@-ms-keyframes position {
@@ -271,19 +271,19 @@
 		40%,
 		59.9% {
 			margin-top: 20%;
-			margin-left: 40%;
+			margin-left: 50%;
 		}
 
 		60%,
 		79.9% {
-			margin-top: 30%;
+			margin-top: 25%;
 			margin-left: 20%;
 		}
 
 		80%,
 		99.9% {
-			margin-top: 30%;
-			margin-left: 25%;
+			margin-top: 10%;
+			margin-left: 65%;
 		}
 	}
 	@keyframes position {

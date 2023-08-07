@@ -43,7 +43,7 @@ export default {
 				}
 			},
 			fontFamily: {
-				body: ['STIX Two Text'],
+				body: ['Nunito Sans'],
 				title: ['Jost']
 			},
 			loginWidth: {
