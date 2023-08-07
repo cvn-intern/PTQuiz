@@ -26,7 +26,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex md:flex-row flex-col justify-between items-center border-t pt-2 w-full">
+	<div
+		class="flex md:flex-row flex-col justify-between items-center border-t pt-2 w-full md:text-base text-sm"
+	>
 		<div class="ak-bar-item ak-footer-copyright">
 			{$t('common.copyRights')}
 		</div>
@@ -73,19 +75,17 @@
 </footer>
 
 <style>
-	.menu-item {
-		&::before {
-			content: '';
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 0;
-			height: 2px;
-			background-color: #53c28a;
-			transition: width 0.5s ease-in-out;
-		}
-		&:hover::before {
-			width: 100%;
-		}
+	.menu-item ::before {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 0;
+		height: 2px;
+		background-color: #53c28a;
+		transition: width 0.5s ease-in-out;
+	}
+	.menu-item:hover ::before {
+		width: 100%;
 	}
 </style>

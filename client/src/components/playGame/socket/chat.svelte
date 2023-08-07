@@ -44,7 +44,7 @@
 		isDisabled = true;
 		setTimeout(() => {
 			isDisabled = false;
-		}, 3000);
+		}, 1000);
 		socket.emit(ListenChannel.SEND_MESSAGE, {
 			content: messageContent,
 			roomPIN: $page.params.slug
@@ -53,7 +53,7 @@
 	};
 
 	$: isShowChat = false;
-	
+
 	const handleClickOpenChat = () => {
 		isShowChat = !isShowChat;
 	};
@@ -93,7 +93,7 @@
 				maxlength="80"
 				type="text"
 				class="border-none rounded-lg w-full p-3 font-semibold"
-				placeholder={$t("common.enterYourMessageHere")}
+				placeholder={$t('common.enterYourMessageHere')}
 				bind:value={messageContent}
 			/>
 			<div class="absolute right-0 top-1/2 -translate-y-1/2 px-2 flex gap-1">

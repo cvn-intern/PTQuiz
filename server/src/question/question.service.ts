@@ -37,6 +37,7 @@ export class QuestionService {
             await this.prisma.quizzes.update({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
                 data: {
                     numberQuestions: numberQuestion,
@@ -123,6 +124,7 @@ export class QuestionService {
             const existQuiz = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
             });
             if (!existQuiz) {

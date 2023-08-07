@@ -26,6 +26,7 @@ export class QuizzesService {
                     this.prisma.quizzes.findMany({
                         where: {
                             userId: userId,
+                            isDeleted: false,
                         },
                         select: {
                             createdAt: true,
@@ -51,6 +52,7 @@ export class QuizzesService {
                     this.prisma.quizzes.count({
                         where: {
                             userId: userId,
+                            isDeleted: false,
                         },
                     }),
                 ]);
@@ -69,6 +71,7 @@ export class QuizzesService {
                 where: {
                     id: quizId,
                     userId: userId,
+                    isDeleted: false,
                 },
                 select: {
                     user: {
@@ -105,6 +108,7 @@ export class QuizzesService {
                 where: {
                     id: quizId,
                     isShared: true,
+                    isDeleted: false,
                 },
                 select: {
                     user: {
@@ -159,6 +163,7 @@ export class QuizzesService {
                                 category: {
                                     name: category.name,
                                 },
+                                isDeleted: false,
                             },
                             select: {
                                 category: {
@@ -200,6 +205,7 @@ export class QuizzesService {
                                 category: {
                                     name: category.name,
                                 },
+                                isDeleted: false,
                             },
                         }),
                     ]);
@@ -261,6 +267,7 @@ export class QuizzesService {
                             category: {
                                 name: categoryName,
                             },
+                            isDeleted: false,
                         },
                         select: {
                             category: {
@@ -302,6 +309,7 @@ export class QuizzesService {
                             category: {
                                 name: categoryName,
                             },
+                            isDeleted: false,
                         },
                     }),
                 ]);
@@ -327,6 +335,7 @@ export class QuizzesService {
             const quiz = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
             });
             const questions = await this.prisma.quiz_questions.findMany({
@@ -457,6 +466,7 @@ export class QuizzesService {
             const quizOfUser = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
             });
 
@@ -491,6 +501,7 @@ export class QuizzesService {
             return await this.prisma.quizzes.update({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
                 data: {
                     title: quiz.title,
@@ -526,6 +537,7 @@ export class QuizzesService {
             const quizOfUser = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
             });
             if (!quizOfUser) {
@@ -540,66 +552,12 @@ export class QuizzesService {
                     HttpStatus.UNAUTHORIZED,
                 );
             }
-            const rooms = await this.prisma.rooms.findMany({
-                where: {
-                    quizId: quizId,
-                },
-            });
-            rooms.forEach(async (room) => {
-                const roomParticipants =
-                    await this.prisma.room_participants.findMany({
-                        where: {
-                            roomId: room.id,
-                        },
-                    });
-                roomParticipants.forEach(async (roomParticipant) => {
-                    await this.prisma.room_participants.delete({
-                        where: {
-                            id: roomParticipant.id,
-                        },
-                    });
-                    await this.prisma.user_questions.deleteMany({
-                        where: {
-                            participantId: roomParticipant.participantId,
-                        },
-                    });
-                    await this.prisma.participants.delete({
-                        where: {
-                            id: roomParticipant.participantId,
-                        },
-                    });
-                });
-                await this.prisma.rooms.delete({
-                    where: {
-                        id: room.id,
-                    },
-                });
-            });
-            const participants = await this.prisma.participants.findMany({
-                where: {
-                    quizId: quizId,
-                },
-            });
-            participants.forEach(async (participant) => {
-                await this.prisma.user_questions.deleteMany({
-                    where: {
-                        participantId: participant.id,
-                    },
-                });
-                await this.prisma.participants.delete({
-                    where: {
-                        id: participant.id,
-                    },
-                });
-            });
-            await this.prisma.quiz_questions.deleteMany({
-                where: {
-                    quizId: quizId,
-                },
-            });
-            return await this.prisma.quizzes.delete({
+            return await this.prisma.quizzes.update({
                 where: {
                     id: quizId,
+                },
+                data: {
+                    isDeleted: true,
                 },
             });
         } catch (error) {
@@ -611,6 +569,7 @@ export class QuizzesService {
             const quiz = await this.prisma.quizzes.findUnique({
                 where: {
                     id: quizId,
+                    isDeleted: false,
                 },
             });
             if (!quiz) {

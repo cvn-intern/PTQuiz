@@ -240,14 +240,6 @@
 		});
 	};
 
-	function handleBeKickedClick() {
-		window.location.href = '/';
-	}
-
-	function handleHostLeftClick() {
-		window.location.href = $page.url.href;
-	}
-
 	$: {
 		if ($timer <= 0 && isBattle && isHost) {
 			if (questionPointer < questions.length - 1) {
@@ -274,7 +266,13 @@
 		{:else if !isJoined}
 			<AliasName {socket} bind:isJoined {roomInfo} />
 		{:else if isEndGame}
-			<EndGameSocket {participants} length={questions.length} {isEndGame} {isBattle} {socket}/>
+			<EndGameSocket
+				{participants}
+				length={questions.length}
+				{isEndGame}
+				{isBattle}
+				{socket}
+			/>
 		{:else if questions.length > 0}
 			<div class="question h-2/3 pb-4 flex flex-col p-2">
 				{#if isBattle}

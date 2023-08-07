@@ -73,18 +73,21 @@
 			<div
 				class="flex flex-col pt-10 justify-center md:justify-start items-start gap-2 relative mt-2 md:w-1/3 h-1/3 md:h-full"
 			>
-				<div class="absolute md:-right-1/4 md:top-1/4 right-1/2 top-1/2">
-					<img
-						src={participantsHost.avatar}
-						alt={participantsHost.displayName}
-						class="md:w-40 md:h-40 w-24 h-24 rounded-md"
-					/>
-					<p
-						class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center"
-					>
-						{participantsHost.displayName}
-					</p>
-				</div>
+				{#if participantsHost}
+					<div class="absolute md:-right-1/4 md:top-1/4 right-1/2 top-1/2">
+						<Icon icon="emojione-v1:crown" class="text-4xl md:text-6xl absolute -top-5 md:-top-10 left-4 md:left-6" />
+						<img
+							src={participantsHost.avatar}
+							alt={participantsHost.displayName}
+							class="md:w-40 md:h-40 w-24 h-24 rounded-md"
+						/>
+						<p
+							class="px-4 bg-white/50 rounded-md font-semibold text-sky-700 text-3xl text-center"
+						>
+							{participantsHost.displayName}
+						</p>
+					</div>
+				{/if}
 			</div>
 			<div
 				class="flex justify-center items-centertext-9xl md:w-1/3 h-1/3 md:py-0 md:h-full mt-5"

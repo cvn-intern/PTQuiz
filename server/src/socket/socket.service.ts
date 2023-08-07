@@ -341,6 +341,7 @@ export class SocketService {
         const quiz = await this.prisma.quizzes.findUnique({
             where: {
                 id: quizId,
+                isDeleted: false,
             },
         });
         if (!quiz) {

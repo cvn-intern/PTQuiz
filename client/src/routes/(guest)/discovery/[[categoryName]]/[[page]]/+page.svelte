@@ -70,3 +70,10 @@
 		{/if}
 	{/each}
 </div>
+<style>
+	@media (min-width: 1700px) {
+		.grid-3xl {
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
+	}
+</style>

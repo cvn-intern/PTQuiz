@@ -191,7 +191,7 @@
 				{/if}
 
 				{#if !isBattle && (isHost || isSingle)}
-					{#if !quizzesHint && quizzesHint === ''}
+					{#if quizzesHint && quizzesHint !== ''}
 						<hr class="w-full" />
 						<Button id="hint">
 							<Icon

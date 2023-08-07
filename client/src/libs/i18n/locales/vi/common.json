@@ -189,6 +189,11 @@
 	"notGif": "Yêu cầu phải là GIF",
 	"increaseDate": "Ngày tăng",
 	"decreaseDate": "Ngày giảm",
-	"titleaz": "Tiêu đề A-Z",
-	"titleza": "Tiêu đề Z-A"
+	"titleAZ": "Tiêu đề A-Z",
+	"titleZA": "Tiêu đề Z-A",
+	"watchGif": "Hãy xem hình và đoán",
+	"clickHere": "Nhấn vào đây",
+	"next": "Tiếp theo",
+	"endGame": "Kết thúc",
+	"playersAnswered": "Đã trả lời"
 }
