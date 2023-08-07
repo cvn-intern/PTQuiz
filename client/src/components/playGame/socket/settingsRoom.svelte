@@ -16,7 +16,7 @@
 	export let isChangedCount: boolean;
 
 	enum RoomCount {
-		FIVE = 5,
+		FIVE = 2,
 		TEN = 10,
 		FIFTEEN = 15
 	}
@@ -120,13 +120,12 @@
 									) {
 										return;
 									}
-									isChangedCount = true;
 									if (value !== count) {
 										if (value < count) {
 											toast.error($t('common.errorLimitUser'));
-											isChangedCount = false;
 											return;
 										}
+										isChangedCount = true;
 										socket.emit(ListenChannel.SET_ROOM_CAPACITY, {
 											roomId: room.room.id,
 											count: value
