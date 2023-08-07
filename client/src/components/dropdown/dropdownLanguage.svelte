@@ -26,7 +26,7 @@
 		<div class="absolute rounded-md shadow-lg">
 			{#each $locales as value}
 				<button
-					class="cursor-pointer p-2 hover:bg-gray-200 flex flex-col"
+					class="cursor-pointer mt-1 hover:bg-gray-200 flex flex-col"
 					on:click={() => handleOptionClick(value)}
 				>
 					{#if value === 'en'}
@@ -39,4 +39,3 @@
 		</div>
 	{/if}
 </div>
-
