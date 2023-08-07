@@ -9,15 +9,14 @@ export const PUT: RequestHandler = async ({ fetch, request, params }) => {
 		`${VITE_API_URL}/question/update?questionId=${params.questionId}`,
 		{
 			method: 'PUT',
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			},
 			body: formData
 		}
 	);
 
-	console.log('Form data: ', formData);
-
 	const result = await response.json();
-	console.log('result update question: ', result);
-
 	if (result.statusCode == HttpStatus.PAYLOAD_TOO_LARGE)
 		throw error(HttpStatus.PAYLOAD_TOO_LARGE, "File's size is too large.");
 
