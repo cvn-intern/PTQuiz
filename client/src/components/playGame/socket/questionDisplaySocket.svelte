@@ -135,35 +135,39 @@
 		</p>
 	{:else}
 		<div class="flex flex-col justify-between gap-3 items-center">
-			<p class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center">
-				Hãy xem hình và đoán
-			</p>
+			{#if isHost}
+				<p
+					class="p-2 text-3xl md:text-5xl lg:text-7xl font-semibold text-black text-center"
+				>
+					{$t('common.watchGif')}
+				</p>
 
-			<button
-				class={clsx(
-					' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
-					{
-						hidden: isShowGif
-					}
-				)}
-				on:click={() => {
-					showGif();
-				}}
-			>
-				Click here!
-			</button>
+				<button
+					class={clsx(
+						' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
+						{
+							hidden: isShowGif
+						}
+					)}
+					on:click={() => {
+						showGif();
+					}}
+				>
+					{$t('common.clickHere')}
+				</button>
 
-			<button
-				class={clsx(
-					' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
-					{
-						hidden: isShowGif || !isGifButtonClicked
-					}
-				)}
-				on:click={startGame}
-			>
-				Start game!
-			</button>
+				<button
+					class={clsx(
+						' text-white font-bold text-xl justify-center transition duration-200 ease-in-out transform px-4 py-4 w-48 border-b-4 border-zinc-500 hover:border-b-2 bg-blueLogo rounded-2xl hover:translate-y-px ',
+						{
+							hidden: isShowGif || !isGifButtonClicked
+						}
+					)}
+					on:click={startGame}
+				>
+					{$t('common.startBtn')}
+				</button>
+			{/if}
 
 			{#if isShowGif}
 				<div class="h-1/2 w-full flex justify-center items-center">

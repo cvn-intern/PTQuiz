@@ -81,7 +81,7 @@
 						<button
 							on:click={handleDeleteImage}
 							class="absolute top-0 right-0 bg-red-600 text-white opacity-0 group-hover:opacity-100 px-2 py-1 rounded"
-							>Delete</button
+							>{$t('common.delete')}</button
 						>
 					</div>
 				</div>

@@ -190,5 +190,10 @@
 	"increaseDate": "Increase Date",
 	"decreaseDate": "Decrease Date",
 	"titleAZ": "Title A-Z",
-	"titleZA": "Title Z-A"
+	"titleZA": "Title Z-A",
+	"watchGif": "Watch the Gif and Answer",
+	"clickHere": "Click Here",
+	"next": "Next",
+	"endGame": "End Game",
+	"playersAnswered": "Player Answered"
 }
