@@ -1,86 +1,91 @@
 <script>
 	import Icon from '@iconify/svelte';
 	import { t } from '$i18n/translations';
+	import { goto } from '$app/navigation';
 
 	const contactIcons = [
-		'ic:baseline-facebook',
-		'mdi:twitter',
-		'ic:baseline-telegram',
-		'ri:instagram-fill',
-		'mdi:linkedin'
+		'logos:facebook',
+		'logos:twitter',
+		'logos:telegram',
+		'skill-icons:instagram',
+		'devicon:linkedin'
 	];
 </script>
 
-<footer class="navbar bg-primary w-full px-4 lg:px-16 py-4 items-center">
+<footer class="navbar bg-primary w-full px-4 lg:px-16 py-4 items-center flex flex-col gap-2">
 	<div class="flex flex-col w-full">
-		<div class="flex justify-between">
-			<div>DarkHorse Team</div>
+		<div class="flex md:flex-row flex-col justify-between items-center gap-2">
+			<h1 class="uppercase font-bold text-red-800">DarkHorse Team</h1>
 			<div class="flex gap-2 cursor-pointer">
 				{#each contactIcons as icon}
-					<Icon {icon} class="text-2xl" />
+					<Icon
+						{icon}
+						class="text-2xl p-2 border w-10 h-10 rounded-lg hover:bg-black/20"
+					/>
 				{/each}
 			</div>
 		</div>
 	</div>
-	<div class="">
-		<div class="container">
-			<div class="ak-bar-inner">
-				<div class="ak-row ak-row-items-middle ak-row-responsive">
-					<div class="ak-column ak-column-left ak-column-grow">
-						<div class="ak-inner-row ak-row-items-middle ak-justify-content-left">
-							<div class="ak-bar-item ak-footer-copyright">
-								{$t('common.copyRights')}
-							</div>
-						</div>
-					</div>
-					<div class="ak-column ak-column-right ak-column-grow">
-						<div class="ak-inner-row ak-row-items-middle ak-justify-content-right">
-							<div class="ak-bar-item ak-footer-menu-container">
-								<ul
-									id="menu-footer-navigation"
-									class="ak-menu ak-menu-wide ak-menu-style-2 ak-footer-menu"
-								>
-									<li
-										id="menu-item-547"
-										class="menu-item menu-item-type-custom menu-item-object-custom menu-item-547"
-									>
-										<a
-											href="https://themeforest.net/item/newsy-viral-news-magazine-wordpress-theme/34626838&amp;ref=akbilisim"
-											><span>Buy Now</span></a
-										>
-									</li>
-									<li
-										id="menu-item-548"
-										class="menu-item menu-item-type-custom menu-item-object-custom menu-item-548"
-									>
-										<a
-											href="https://support.akbilisim.com/docs/newsy/introduction"
-											><span>Documentation</span></a
-										>
-									</li>
-									<li
-										id="menu-item-549"
-										class="menu-item menu-item-type-custom menu-item-object-custom menu-item-549"
-									>
-										<a href="https://support.akbilisim.com/"
-											><span>Support Center</span></a
-										>
-									</li>
-									<li
-										id="menu-item-550"
-										class="menu-item menu-item-type-custom menu-item-object-custom menu-item-550"
-									>
-										<a
-											href="https://themeforest.net/user/akbilisim?ref=akbilisim"
-											><span>Contact Us</span></a
-										>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+	<div class="flex md:flex-row flex-col justify-between items-center border-t pt-2 w-full">
+		<div class="ak-bar-item ak-footer-copyright">
+			{$t('common.copyRights')}
+		</div>
+		<div class="p-2">
+			<ul
+				id="menu-footer-navigation"
+				class="flex flex-row justify-between items-center gap-4"
+			>
+				<li class="menu-item relative">
+					<a
+						href="#"
+						on:click={() => {
+							goto('/discovery/all');
+						}}><span>{$t('common.discovery')}</span></a
+					>
+				</li>
+				<li class="menu-item relative">
+					<a
+						href="#"
+						on:click={() => {
+							goto('/dashboard/quizzes');
+						}}><span> {$t('common.myQuizzes')}</span></a
+					>
+				</li>
+				<li class="menu-item relative">
+					<a
+						href="#"
+						on:click={() => {
+							goto('/dashboard/history');
+						}}><span>{$t('common.history')}</span></a
+					>
+				</li>
+				<li class="menu-item relative">
+					<a
+						href="#"
+						on:click={() => {
+							goto('/dashboard/profile');
+						}}><span>{$t('common.profile')}</span></a
+					>
+				</li>
+			</ul>
 		</div>
 	</div>
 </footer>
+
+<style>
+	.menu-item {
+		&::before {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 0;
+			height: 2px;
+			background-color: #53c28a;
+			transition: width 0.5s ease-in-out;
+		}
+		&:hover::before {
+			width: 100%;
+		}
+	}
+</style>

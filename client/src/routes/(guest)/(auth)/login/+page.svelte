@@ -60,6 +60,7 @@
 
 			if (response) {
 				goto(AppRoute.HOME);
+				dismissLoadingToast();
 				toast.success($t('common.success'));
 			} else {
 				throw new Error('Invalid credentials');

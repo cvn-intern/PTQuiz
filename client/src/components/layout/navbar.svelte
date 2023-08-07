@@ -42,19 +42,12 @@
 	async function handleClose(e) {
 		isHidden = false;
 	}
-	let isLoading = false;
 	function handleOptionClick(value: any) {
 		$locale = value;
 		handleChange({ target: { value } });
-		window.location.reload();
-		isLoading = true;
 	}
-
 </script>
 
-{#if isLoading}
-	<Loading />
-{/if}
 <nav
 	class="navbar bg-primary w-full flex justify-between px-4 lg:px-16 py-4 items-center sticky top-0 z-40"
 >
